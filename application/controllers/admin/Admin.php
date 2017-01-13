@@ -7,7 +7,7 @@ class Admin extends CI_Controller {
     public function __construct() {
         parent::__construct();        
         $this->load->model(['Users_model']);
-        $this->load->library(['encryption', 'upload']);
+        $this->load->library(['encryption', 'upload']);        
     }
 
     public function index() {
@@ -15,7 +15,7 @@ class Admin extends CI_Controller {
         $data['user_data'] = $this->session->userdata('admin');
         
         if (!empty($data['user_data'])) {
-            $this->Users_model->update_user_data($data['user_data']['id'], ['last_login' => date('Y-m-d H:i:s')]);
+            // $this->Users_model->update_user_data($data['user_data']['id'], ['last_login' => date('Y-m-d H:i:s')]);
             redirect('admin/dashboard');
         }
 
@@ -23,7 +23,6 @@ class Admin extends CI_Controller {
 
             $email = $this->input->post('username');
             $password = $this->input->post('password');
-            $remember_me = $this->input->post('remember_me');
 
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
             $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email, 'role_id' => 1], false, true);                        
@@ -31,14 +30,13 @@ class Admin extends CI_Controller {
 
                 $db_pass = $this->encrypt->decode($user_data['password']);
 
-                if ($db_pass == $password) {
-
+                if ($db_pass == $password) {                    
                     $user_login = $this->session->userdata('user');
                     if(!empty($user_login)){
                         $this->session->set_flashdata('message', ['message'=>'Can not allow login because of user login.Try another browser.','class'=>'alert alert-danger']);
                         redirect('admin/login');
                     }
-                    $this->session->set_userdata(['admin_data' => $user_data]); // Start Loggedin User Session
+                    $this->session->set_userdata(['admin' => $user_data]); // Start Loggedin User Session
                     $this->session->set_flashdata('message', ['message' => 'Login Successfull', 'class' => 'alert alert-success']);
                     $this->Users_model->update_user_data($user_data['id'], ['last_login' => date('Y-m-d H:i:s')]); // update last login time
                     redirect('admin/dashboard');
