@@ -81,7 +81,20 @@ class Users_model extends CI_Model {
         return $user_id;
     }
 
+    /*  Check For User Account Verify or Not */
+    public function CheckActivationCode($code)
+    {
+        $this->db->where('activation_code',$code);
+        $query = $this->db->get('users');   
+        if ($query->num_rows() > 0)
+        {   
+            return true;
+        }
+        else
+        { 
+            return false;
+        }
+    }
+
 }
 
-/* End of file User_model.php */
-/* Location: ./application/models/Users_model.php */

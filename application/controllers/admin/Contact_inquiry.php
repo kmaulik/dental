@@ -65,14 +65,22 @@ class Contact_inquiry extends CI_Controller {
      */
      public function reply(){
 
+                         
+        //------ For Email Template -----------
+        /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
+        $html_content=mailer('contact_inquiry','AccountActivation'); 
+        $username= $this->input->post('name');
+        $html_content = str_replace("@USERNAME@",$username,$html_content);
+        $html_content = str_replace("@MESSAGE@",$this->input->post('message'),$html_content);
+        //--------------------------------------
+
         $email_config = mail_config();
         $this->email->initialize($email_config);
-                 
-        $this->email
-                ->from('demo.narola@gmail.com', 'Dental')
-                ->to($this->input->post('email'))
-                ->subject('Dental - Contact Inquiry Reply')
-                ->message($this->input->post('message'));
+        $subject=config('site_name').' - Contact Inquiry Reply';    
+        $this->email->from(config('contact_email'), config('sender_name'))
+                    ->to($this->input->post('email'))
+                    ->subject($subject)
+                    ->message($html_content);
 
        if($this->email->send()){
         $where = 'id = ' . $this->db->escape($this->input->post('id'));
