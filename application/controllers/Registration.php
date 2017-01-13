@@ -24,11 +24,12 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('birth_date', 'birth date', 'required');
         $this->form_validation->set_rules('agree', 'terms and condition', 'required');
 
-        if($this->form_validation->run() == FALSE){
+        if($this->form_validation->run() == FALSE){            
             $data['country_list']=$this->Country_model->get_result('country');
             $data['subview']='front/registration/registration_patient';
-            $this->load->view('front/layouts/layout_main',$data);
+            $this->load->view('front/layouts/layout_main',$data);        
         }else{
+
             $data=array(
                 'role_id' => $this->input->post('role_id'),
                 'fname' => $this->input->post('fname'),
