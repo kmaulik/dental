@@ -59,11 +59,10 @@ class Survey extends CI_Controller {
 
 			if(is_int($id)){
 				$this->session->set_flashdata('message',['message'=>'Survey successfully updated.','class'=>'success']);
-				redirect('admin/survey');
 			}else{
-				$this->session->set_flashdata('message',['message'=>'Something went wrong...!!','class'=>'danger']);
-				redirect('admin/survey');
+				$this->session->set_flashdata('message',['message'=>'Something went wrong...!!','class'=>'danger']);				
 			}			
+			redirect('admin/survey');
 		}
 
 		$data['subview'] = 'admin/survey/edit';
@@ -83,11 +82,7 @@ class Survey extends CI_Controller {
 		$this->session->set_flashdata('message',['message'=>'Survey successfully deleted.','class'=>'success']);
 		redirect('admin/survey');
 	}
-
-	public function test(){
-		$this->load->view('admin/survey/test');	
-	}
-
+		
 	// v! AJAX call to get list of survey list
 	// ------------------------------------------------------------------------
 	public function list_survey(){
@@ -131,8 +126,33 @@ class Survey extends CI_Controller {
 	public function add_question($survey_id){
 
 		$data['survey_id'] = $survey_id;
-		if($_POST){				
-			pr($_POST,1);
+		
+		if($_POST){
+
+			$ques = $this->input->post('ques');
+			$opt_type = $this->input->post('opt_type');
+			$is_required = $this->input->post('is_required');
+			$opt_choice = $this->input->post('opt_choice');
+			$status = $this->input->post('status');
+
+			if(!empty($opt_choice)){ $opt_choice = implode(',',$opt_choice); }
+			
+			$total_cnt = (int)$this->Survey_model->get_question_count($survey_id);
+			$total_cnt = $total_cnt+1;			
+
+			$ins_data = [
+							'ques'=>$ques,
+							'opt_type'=>$opt_type,
+							'opt_choice'=>$opt_choice,
+							'is_required'=>$is_required,
+							'ques_order'=>$total_cnt,
+							'status'=>$status,
+							'survey_id'=>$survey_id
+						];
+
+			$this->Survey_model->insert_question($ins_data);			
+			$this->session->set_flashdata('message',['message'=>'Survey Question Successfully added','class'=>'success']);
+			redirect('admin/survey/questions/'.$survey_id);
 		}
 
 		$data['subview'] = 'admin/survey/ques_add';
@@ -140,10 +160,12 @@ class Survey extends CI_Controller {
 	}
 
 	public function delete_question(){
+		
 		$question_id = $this->input->post('question_id');
+		$survey_id = $this->input->post('survey_id');
 		$this->Survey_model->delete_ques($question_id);
 		$this->session->set_flashdata('message',['message'=>'Survey Question successfully deleted.','class'=>'success']);
-		redirect('admin/survey');
+		redirect('admin/survey/questions/'.$survey_id);
 	}
 }
 

@@ -40,9 +40,8 @@ class Survey_model extends CI_Model {
         $this->db->update('survey',['is_deleted'=>'1','status'=>'inactive']);
     }
 
-
     // v! Get Survey data id id is passed then it will take where cluse as id otherwise need to pass as key,value pair
-    public function get_survey_data($data,$is_single=TRUE){        
+    public function get_survey_data($data,$is_single=TRUE){
         if(is_array($data) == false){ $this->db->where('id',$data); }else{ $this->db->where($data); }
         $ret_data = $this->db->get('survey')->row_array();
         if($is_single == FALSE){
@@ -82,14 +81,15 @@ class Survey_model extends CI_Model {
         }
 
         $this->db->order_by('ques_order');
+        $this->db->where('is_deleted','0');
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
         $res_data = $this->db->get('survey_ques')->result_array();
         return $res_data;
     }
 
     public function delete_ques($ques_id){
-        $this->db->where('id',$ques_id);
-        $this->db->delete('survey_ques');
+        $this->db->where('id',$ques_id);        
+        $this->db->update('survey_ques',['is_deleted'=>'1']);
     }
 
     public function update_ques_data($id, $data) {
@@ -104,6 +104,12 @@ class Survey_model extends CI_Model {
         return $last_id;
     }
 
+    public function insert_question($data){
+        $this->db->insert('survey_ques',$data);
+        $last_id = $this->db->insert_id();
+        return $last_id;
+    }
+    
 }
 
 /* End of file Survey_model.php */

@@ -17,6 +17,12 @@
     </div>
 </div>
 <div class="content">
+
+    <?php
+        $message = $this->session->flashdata('message');
+        echo my_flash($message);
+    ?>
+
     <div class="row">
         <div class="panel panel-flat">
             <div class="panel-heading text-right">
@@ -28,7 +34,7 @@
             <table class="table datatable-basic">
                 <thead>
                     <tr>
-                        <th>User ID.</th>
+                        <th>Question ID.</th>
                         <th>Question</th>
                         <th >Answer Type</th>
                         <th>Answer Options</th>
@@ -71,6 +77,7 @@
 <!-- Delete Question Form  Start-->
 <form action="<?php echo base_url().'admin/survey/delete_question'; ?>" method="POST" id="delete_form">
     <input type="hidden" name="question_id" id="question_id" value="">
+    <input type="hidden" name="survey_id" id="survey_id" value="<?php echo $survey_id; ?>">
 </form>
 <!-- END Here -->
 
@@ -109,8 +116,10 @@
                     sortable: false,                    
                     visible: true,
                     render:function(data, type, full, meta){
-                        if(full['opt_choice'] == null){
+                        if(full['opt_choice'] == null || full['opt_choice'] == ''){
                             return 'No Options';
+                        }else{                            
+                            return full['opt_choice'];
                         }
                     }
                 },
@@ -167,17 +176,20 @@
 
         $( "#sortable-list-placeholder" ).disableSelection();
 
-        function delete_confirm(del_id){
-            $('#question_id').val(del_id);
-            bootbox.confirm('Are you sure ?',function(res){
-                if(res){
-                    $('#delete_form').submit();
-                }else{
-                    $('#question_id').val(''); 
-                }
-            });
-        }
+        
     });
 
+    function delete_confirm(del_id){
+        $('#question_id').val(del_id);
+        bootbox.confirm('Are you sure ?',function(res){
+            if(res){
+                $('#delete_form').submit();
+            }else{
+                $('#question_id').val(''); 
+            }
+        });
+    }
+
+    $('div.alert').delay(4000).slideUp(700);
 </script>
 

@@ -19,8 +19,7 @@
 <div class="content">
     <div class="row">
         <div class="col-md-12">
-            <form class="form-horizontal form-validate" id="form_survey_ques" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="blog_slug" id="blog_slug" value="<?php echo (isset($record['blog_slug'])) ? $record['blog_slug'] : set_value('blog_slug'); ?>">
+            <form class="form-horizontal form-validate" id="form_survey_ques" method="POST" enctype="multipart/form-data">                
                 <div class="panel panel-flat">
                     <div class="panel-body">
                         <div class="form-group">
@@ -82,17 +81,16 @@
                             <label class="col-lg-3 control-label">Status? </label>
                             <div class="col-lg-9">
                                 <label class="radio-inline">
-                                    <input type="radio" name="status" class="styled" value="1">
+                                    <input type="radio" name="status" class="styled" value="active">
                                     Active
                                 </label>
 
                                 <label class="radio-inline">
-                                    <input type="radio" name="status" class="styled" checked="checked" value="0">
+                                    <input type="radio" name="status" class="styled" checked="checked" value="inactive">
                                     In-active
                                 </label>
                             </div>
                         </div> 
-
 
                         <div class="form-group text-right">
                             <div class="col-lg-5">
@@ -139,23 +137,33 @@
 
             $('.survey_no_options').show();
             $('.survey_options').html(new_str).hide();
+
+            
         }
     }
 
     function add_option(){
         //.survey_options
         var new_str = '';            
-        new_str += '<div class="form-group box_'+total_boxes+'"><label class="col-lg-3 control-label"></label>';
-        new_str += '<div class="col-lg-4"><input type="text" placeholder="Enter Option" name="opt_choice[]" id="" class="form-control ">';
-        new_str += '</div> <a class="btn btn-xs border-primary text-primary-900 btn-flat btn-icon" title="Delete" onclick="remove_option(this)">';
-        new_str += '<i class="icon-minus-circle2"></i> </a> </div>';
-        total_boxes++;
-        $('.survey_options').append(new_str);
+        var total_textboxes = $('.survey_options .form-group').size();
+        if(total_textboxes < 4){
+            
+            new_str += '<div class="form-group box_'+total_boxes+'"><label class="col-lg-3 control-label"></label>';
+            new_str += '<div class="col-lg-4"><input type="text" placeholder="Enter Option" name="opt_choice[]" id="opt_'+total_boxes+'" class="form-control ">';
+            new_str += '</div> <a class="btn btn-xs border-primary text-primary-900 btn-flat btn-icon" title="Delete" onclick="remove_option(this)">';
+            new_str += '<i class="icon-minus-circle2"></i> </a> </div>';
 
+            $('.survey_options').append(new_str);
+
+            total_boxes++;
+
+        }else{
+            bootbox.alert('Can not add more than 4 Options');
+        }        
     }
 
     function remove_option(obj){
-        console.log($(obj).parent().remove());
+        $(obj).parent().remove();
     }
 
     // v! Create fancy radio buttons
@@ -183,5 +191,8 @@
             }            
         }
     });
+
+    
+
 
 </script>
