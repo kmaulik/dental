@@ -55,11 +55,11 @@ class Registration extends CI_Controller {
                 ->message('Successfully Register With Dental');
                 $this->email->send();
                 $this->session->set_flashdata('success', 'Registration Successfull'); 
-                $this->redirect('login');   
+                redirect('login');   
             } 
             else{
                 $this->session->set_flashdata('error', 'Error Into Registration. Please Try Again !!'); 
-                $this->redirect('registration/patient');
+                redirect('registration/patient');
 
             } 
         }

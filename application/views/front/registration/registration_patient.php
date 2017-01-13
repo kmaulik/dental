@@ -100,7 +100,7 @@
 					<?php echo form_error('country_id','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
 					<div class="form-group">
-						<input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="Zip code" value="<?php echo set_value('zipcode'); ?>" >
+						<input type="text" name="zipcode" id="zipcode" class="form-control" onblur="check_zipcode()" placeholder="Zip code" value="<?php echo set_value('zipcode'); ?>" >
 					</div>
 					<?php echo form_error('zipcode','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
@@ -144,7 +144,7 @@
 
 				<div class="row">
 					<div class="col-md-12 col-sm-12 col-xs-12 text-right">
-						<button type="submit" class="btn btn-primary" onclick="check_zipcode()"><i class="fa fa-check"></i> REGISTER</button>
+						<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> REGISTER</button>
 					</div>
 				</div>
 			</form>
@@ -167,18 +167,24 @@
 <script>
 function check_zipcode()
 {
+	$(".valid-zip").remove();
 	var zipcode = $('#zipcode').val();
 	if(zipcode != '')
 	{
 		$.ajax({
-	       url : "http://maps.googleapis.com/maps/api/geocode/json?address=santa+cruz&components=postal_code:"+zipcode+"&sensor=false",
+	       url : "http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:"+zipcode+"&sensor=false",
 	       method: "POST",
 	       success:function(data){
-	           latitude = data.results[0].geometry.location.lat;
-	           longitude= data.results[0].geometry.location.lng;
+	       	   if(data.status != 'OK'){
+					$("#zipcode").parent().after('<div class="alert alert-mini alert-danger valid-zip">Please Enter Valid Zipcode</div>');
+	           }
+	           else{
+	           		latitude = data.results[0].geometry.location.lat;
+	           		longitude= data.results[0].geometry.location.lng;
+	           		$("#latitude").val(latitude);
+	           		$("#longitude").val(longitude);
+	           }
 	           
-	           $("#latitude").val(latitude);
-	           $("#longitude").val(longitude);
 	       }
 		});	
 	}
@@ -187,13 +193,10 @@ function check_zipcode()
  function zip_validate(){
  	var longitude = $('#longitude').val();
 	var latitude = $('#latitude').val();
-	console.log("Long : "+longitude+" = Lat : "+latitude);
 	if(longitude == '' || latitude == ''){
-		$(".valid-zip").remove();
-		$("#zipcode").parent().after('<div class="alert alert-mini alert-danger valid-zip">Please Enter Valid Zipcode</div>');
 		return false;
 	}else{
-		return false;
+		return true;
 	}
  } 
 </script>
