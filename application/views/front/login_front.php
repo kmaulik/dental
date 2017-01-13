@@ -95,7 +95,7 @@
 				<!-- ALERT -->
 				<?php if($this->session->flashdata('success')) : ?>
 				<div class="alert alert-mini alert-success margin-bottom-30">
-					<strong>Oh snap!</strong> <?=$this->session->flashdata('success');?>
+					<?=$this->session->flashdata('success');?>
 				</div>
 				<?php endif; ?>
 				<?php if($this->session->flashdata('error')) : ?>

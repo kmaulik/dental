@@ -19,7 +19,7 @@
 			<!-- ALERT -->
 				<?php if($this->session->flashdata('success')) : ?>
 				<div class="alert alert-mini alert-success margin-bottom-30">
-					<strong>Oh snap!</strong> <?=$this->session->flashdata('success');?>
+					<?=$this->session->flashdata('success');?>
 				</div>
 				<?php endif; ?>
 				<?php if($this->session->flashdata('error')) : ?>
@@ -187,12 +187,13 @@ function check_zipcode()
  function zip_validate(){
  	var longitude = $('#longitude').val();
 	var latitude = $('#latitude').val();
-
+	console.log("Long : "+longitude+" = Lat : "+latitude);
 	if(longitude == '' || latitude == ''){
-		$("#zipcode").parent().before('<div class="alert alert-mini alert-danger">Please Enter Valid Zipcode</div>');
+		$(".valid-zip").remove();
+		$("#zipcode").parent().after('<div class="alert alert-mini alert-danger valid-zip">Please Enter Valid Zipcode</div>');
 		return false;
 	}else{
-		return true;
+		return false;
 	}
  } 
 </script>
