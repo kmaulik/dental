@@ -7,7 +7,7 @@ class Dashboard extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(['Users_model']);
-        $this->load->library(['encryption', 'upload']);
+        $this->load->library(['encryption', 'upload']);        
     }
 
     /**
@@ -15,8 +15,7 @@ class Dashboard extends CI_Controller {
      */
     public function index() {
         $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id'], 'role_id' => 1], false, true);
-
+        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id'], 'role_id' => 1], false, true);        
         if (empty($data['user_data'])) { redirect('admin/login'); }        
             
         $data['subview'] = 'admin/dashboard';
@@ -27,7 +26,7 @@ class Dashboard extends CI_Controller {
      * function use for logout from admin panel.(HDA)
      */
     public function log_out() {                
-        $this->session->unset_userdata('');
+        $this->session->unset_userdata('admin');
         $this->session->set_flashdata('message', array('message' => 'Log out Successfully.', 'class' => 'alert alert-success'));
         redirect('admin/login');
     }
