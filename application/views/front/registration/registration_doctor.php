@@ -16,18 +16,6 @@
 <section>
 	<div class="container">
 		<div class="row">
-			<!-- ALERT -->
-				<?php if($this->session->flashdata('success')) : ?>
-				<div class="alert alert-mini alert-success margin-bottom-30">
-					<?=$this->session->flashdata('success');?>
-				</div>
-				<?php endif; ?>
-				<?php if($this->session->flashdata('error')) : ?>
-				<div class="alert alert-mini alert-danger margin-bottom-30">
-					<strong>Oh snap!</strong> <?=$this->session->flashdata('error');?>
-				</div>
-				<?php endif; ?>
-				<!-- /ALERT -->
 			<!-- LEFT TEXT -->
 			<div class="col-md-5 col-md-offset-1">
 
@@ -72,9 +60,14 @@
 
 						<!-- Password -->
 						<div class="form-group">
-							<input type="password" name="password" class="form-control" placeholder="Password">
+							<input type="password" name="password" class="form-control" placeholder="Password" value="<?php echo set_value('password'); ?>">
 						</div>
 						<?php echo form_error('password','<div class="alert alert-mini alert-danger">','</div>'); ?>
+
+						<div class="form-group">
+							<input type="password" name="c_password" class="form-control" placeholder="Confirm Password" value="<?php echo set_value('c_password'); ?>">
+						</div>
+						<?php echo form_error('c_password','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
 						<div class="form-group">
 							<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
@@ -165,6 +158,7 @@
 <!-- / --> 
 
 <script>
+check_zipcode();
 function check_zipcode()
 {
 	$(".valid-zip").remove();
@@ -176,6 +170,8 @@ function check_zipcode()
 	       method: "POST",
 	       success:function(data){
 	       	   if(data.status != 'OK'){
+	       	   		$("#latitude").val('');
+	           		$("#longitude").val('');
 					$("#zipcode").parent().after('<div class="alert alert-mini alert-danger valid-zip">Please Enter Valid Zipcode</div>');
 	           }
 	           else{
@@ -194,6 +190,9 @@ function check_zipcode()
  	var longitude = $('#longitude').val();
 	var latitude = $('#latitude').val();
 	if(longitude == '' || latitude == ''){
+		$(".alert").remove();
+		$(".valid-zip").remove();
+		$("#zipcode").parent().after('<div class="alert alert-mini alert-danger valid-zip">Please Enter Valid Zipcode</div>');
 		return false;
 	}else{
 		return true;

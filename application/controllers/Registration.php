@@ -15,6 +15,7 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('lname', 'last name', 'required');      
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
+        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');
         $this->form_validation->set_rules('address', 'address', 'required');
         $this->form_validation->set_rules('city', 'city', 'required');
         $this->form_validation->set_rules('country_id', 'country', 'required');
@@ -88,6 +89,7 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('lname', 'last name', 'required');      
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
+        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');
         $this->form_validation->set_rules('address', 'address', 'required');
         $this->form_validation->set_rules('city', 'city', 'required');
         $this->form_validation->set_rules('country_id', 'country', 'required');

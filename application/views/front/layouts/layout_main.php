@@ -215,6 +215,11 @@
                             <li class="dropdown active"><!-- HOME -->
                                 <a href="<?=base_url()?>">HOME</a>
                             </li>
+                            <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
+                                <li class="dropdown"><!-- HOME -->
+                                <a href="<?=base_url('rfp')?>">RFP</a>
+                            </li>
+                            <?php endif;?>
                             <!-- <li class="dropdown">
                                 <a href="<?=base_url('login')?>">LOGIN</a>
                             </li>
@@ -264,10 +269,7 @@
 <!-- JAVASCRIPT FILES -->
 <script type="text/javascript">var plugin_path = '<?= DEFAULT_PLUGINS_PATH ?>';</script> 
 
-
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>scripts.js"></script>
-
-
 
 <!-- REVOLUTION SLIDER -->
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.tools.min.js"></script>
