@@ -43,6 +43,8 @@ class Registration extends CI_Controller {
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
                 'birth_date' => $this->input->post('birth_date'),
+                'longitude' => $this->input->post('longitude'),
+                'latitude' => $this->input->post('latitude'),
                 'activation_code'  => $rand,
                 'is_blocked' => '1', // 1 Means Aacount is Blocked  
                 );
@@ -114,6 +116,8 @@ class Registration extends CI_Controller {
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
                 'birth_date' => $this->input->post('birth_date'),
+                'longitude' => $this->input->post('longitude'),
+                'latitude' => $this->input->post('latitude'),
                 'activation_code'  => $rand,
                 'is_blocked' => '1', // 1 Means Aacount is Blocked  
                 );
@@ -249,6 +253,8 @@ class Registration extends CI_Controller {
             redirect('login');
         }
            
-    }      
+    }
+
+     
 
 }

@@ -99,7 +99,10 @@
                                     </li>   
                                     <li class="<?php echo ($controller == 'email_template') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/email_template'; ?>"><i class="icon-envelop"></i> <span>Email Template</span></a>
-                                    </li> 
+                                    </li>
+                                    <li class="<?php echo ($controller == 'testimonial') ? 'active' : ''; ?>">
+                                        <a href="<?php echo base_url() . 'admin/testimonial'; ?>"><i class="icon-address-book"></i> <span>Testimonial</span></a>
+                                    </li>  
                                     <li class="<?php echo ($controller == 'settings') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/settings'; ?>"><i class="icon-gear"></i> <span>Settings</span></a>
                                     </li>                                                            

@@ -19,10 +19,10 @@
             <!-- /col #1 -->
 
             <!-- col #2 -->
-            <div class="col-md-4">
+           <!--  <div class="col-md-4">
                 <h3 class="letter-spacing-1">KEEP IN TOUCH</h3>
 
-                <!-- Newsletter Form -->
+                
                 <p>Subscribe to Our Newsletter to get Important News & Offers</p>
 
                 <form class="validate" action="php/newsletter.php" method="post" data-success="Subscribed! Thank you!" data-toastr-position="bottom-right">
@@ -34,10 +34,10 @@
                         </span>
                     </div>
                 </form>
-                <!-- /Newsletter Form -->
+              
 
 
-            </div>
+            </div> -->
             <!-- /col #2 -->
 
         </div>

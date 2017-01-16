@@ -59,4 +59,10 @@ class Login extends CI_Controller {
         
     }
 
+    function logout(){
+            $this->session->unset_userdata('client');
+            $this->session->set_flashdata('success','Logout Successfull');
+            redirect('login');
+    }    
+
 }
