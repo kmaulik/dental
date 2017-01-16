@@ -13,7 +13,7 @@ class Users extends CI_Controller {
     /**
      * Function load view of users list.(HPA)
      */
-    public function index() {        
+    public function index() {
         $data['subview'] = 'admin/users/index';
         $this->load->view('admin/layouts/layout_main', $data);
     }
@@ -21,14 +21,13 @@ class Users extends CI_Controller {
     /**
      * Function is used to get result based on datatable in user list page
      */
-    public function list_user() {        
+    public function list_user() {
         $final['recordsTotal'] = $this->Admin_users_model->get_users_count();
         $final['redraw'] = 1;
         // $final['recordsFiltered'] = $this->admin_users_model->get_users_result(TBL_USER,$select,'count');
         $final['recordsFiltered'] = $final['recordsTotal'];
-    $final['data'] = $this->Admin_users_model->get_all_users();
+        $final['data'] = $this->Admin_users_model->get_all_users();
         echo json_encode($final);
-
     }
 
     public function action($action, $user_id) {
@@ -98,6 +97,16 @@ class Users extends CI_Controller {
         }
         $data['subview'] = 'admin/users/manage';
         $this->load->view('admin/layouts/layout_main', $data);
+    }
+
+    public function check_unique(){
+        $email_id = $this->input->post('email_id');
+        $res = $this->Users_model->check_if_user_unique($email_id);
+        if($res == 0){
+            echo json_encode(TRUE);
+        }else{
+            echo json_encode(FALSE);
+        }        
     }
 
 }

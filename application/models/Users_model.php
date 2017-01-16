@@ -4,11 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Users_model extends CI_Model {
 
-    public function __construct()
-    {
-        parent::__construct();
-        
-    }
     /*
       v! Function will check if user is exist or not (spark id - vpa)
       check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
@@ -37,7 +32,6 @@ class Users_model extends CI_Model {
     }
 
     /* v! Update data into users table */
-
     public function update_user_data($id, $data) {
         //$data['modified_date'] = date('Y-m-d H:i:s');
         if (is_array($id)) {
@@ -49,41 +43,9 @@ class Users_model extends CI_Model {
         $last_id = $this->db->affected_rows();
         return $last_id;
     }
-
-    // -------------------------------------------------------- Table - forgot_pass----------------------------------------------------
-
-    public function check_if_user_forgot_pass($data = array(), $is_total_rows = false, $is_single = false) {
-        $this->db->where($data);
-        if ($is_total_rows == true) {
-            $res_data = $this->db->get('forgot_pass')->num_rows();
-        } else {
-            if ($is_single == true) {
-                $res_data = $this->db->get('forgot_pass')->row_array();
-            } else {
-                $res_data = $this->db->get('forgot_pass')->result_array();
-            }
-        }
-        return $res_data;
-    }
-
-    /* v! Insert data into forgot_pass table */
-    public function insert_forgot_pass_data($data) {
-        $user_id = $data['user_id'];
-        $all_rows_no = $this->db->get_where('forgot_pass', ['user_id' => $user_id])->row_array();
-
-        if (count($all_rows_no) == 0) {
-            $this->db->insert('forgot_pass', $data);
-            $user_id = $this->db->insert_id();
-        } else {
-            $this->db->where('user_id', $user_id);
-            $this->db->update('forgot_pass', $data);
-        }
-        return $user_id;
-    }
-
+ 
     /*  Check For User Account Verify or Not */
-    public function CheckActivationCode($code)
-    {
+    public function CheckActivationCode($code){
         $this->db->where('activation_code',$code);
         $query = $this->db->get('users');   
         if ($query->num_rows() > 0)
@@ -95,6 +57,37 @@ class Users_model extends CI_Model {
             return false;
         }
     }
+
+    public function check_if_user_unique($username){
+        $res = $this->db->get_where('users',['email_id'=>$username])->num_rows();
+        return $res;
+    }
+
+    public function get_all_patients(){
+        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
+
+        $this->db->where('role_id', 5); // Role id - 5 recognise as patient Id
+        $this->db->where('is_deleted !=', 1);
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+
+        $this->db->limit($this->input->get('length'), $this->input->get('start'));
+        $res_data = $this->db->get('users')->result_array();
+        return $res_data;
+    }
+
+    public function get_patients_count(){
+        $this->db->where('role_id', 5);
+        $this->db->where('is_deleted !=', 1);
+        $res_data = $this->db->get('users')->num_rows();
+        return $res_data;
+    }
+
 
 }
 

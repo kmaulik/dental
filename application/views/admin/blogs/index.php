@@ -111,5 +111,5 @@ $(document).on( "click",".btn_delete", function(e) {
     });
 
 // Auto hide Flash messages
-    $('div.alert').delay(4000).slideUp(350);
+$('div.alert').delay(4000).slideUp(350);
 </script>
