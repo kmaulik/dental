@@ -19,6 +19,7 @@
 <div class="content">
     <div class="row">
         <div class="col-md-12">
+            
             <form class="form-horizontal form-validate" id="form_survey_ques" method="POST" enctype="multipart/form-data">                
                 <div class="panel panel-flat">
                     <div class="panel-body">

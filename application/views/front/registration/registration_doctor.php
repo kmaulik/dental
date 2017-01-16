@@ -105,11 +105,9 @@
 					<?php echo form_error('zipcode','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
 					<div class="form-group">
-						<select name="gender" class="form-control" id="gender">
-							<option value="" selected disabled>Select Gender</option>
-							<option value="Male">Male</option>
-							<option value="Female">Female</option>
-							<option value="Other">Other</option>
+						<select name="gender" class="form-control" id="gender">							
+							<option value="male">Male</option>
+							<option value="female">Female</option>							
 						</select>		
 					</div>
 					<script>
