@@ -25,4 +25,15 @@ class Example extends CI_Controller
 		}
 
 	}
+
+	public function test(){
+		$this->load->library('Unirest');
+		$headers = array('Accept' => 'application/json');
+		$response = $this->unirest->get('https://secure.ultracart.com/cgi-bin/UCApi?merchantId=FEED&login=webapp&password=Uafae3Vu&function=QueryOrder&OrderID=FEED-201701122216-599286',$headers);	
+
+		echo "<pre>";
+			print_r(htmlentities($response->raw_body));
+		echo "</pre>";
+
+	}
 }

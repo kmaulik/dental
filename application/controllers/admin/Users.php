@@ -101,12 +101,27 @@ class Users extends CI_Controller {
 
     public function check_unique(){
         $email_id = $this->input->post('email_id');
-        $res = $this->Users_model->check_if_user_unique($email_id);
-        if($res == 0){
-            echo json_encode(TRUE);
-        }else{
-            echo json_encode(FALSE);
-        }        
+        $old_email_id = $this->input->post('old_email_id');
+
+        if($old_email_id != ''){
+            if($old_email_id != $email_id){
+                $res = $this->Users_model->check_if_user_unique($email_id);
+                if($res == 0){
+                    echo json_encode(TRUE);
+                }else{
+                    echo json_encode(FALSE);
+                }
+            }else{
+                echo json_encode(TRUE);
+            }
+        }else{            
+            $res = $this->Users_model->check_if_user_unique($email_id);
+            if($res == 0){
+                echo json_encode(TRUE);
+            }else{
+                echo json_encode(FALSE);
+            }        
+        }
     }
 
 }

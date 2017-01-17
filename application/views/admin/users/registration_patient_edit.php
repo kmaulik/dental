@@ -12,10 +12,11 @@
         <ul class="breadcrumb">
             <li><a href="<?php echo site_url('admin/home'); ?>"><i class="icon-home2 position-left"></i> Home</a></li>
             <li><a href="<?php echo site_url('admin/patient'); ?>"><i class="icon-users4 position-left"></i> Patient </a></li>
-            <li class="active">Add</li>
+            <li class="active">Edit</li>
         </ul>
     </div>
 </div>
+
 <div class="content">
     <div class="row">
         <div class="col-md-12">
@@ -25,49 +26,35 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">First Name:</label>
                             <div class="col-lg-3">
-                                <input type="text" name="fname" class="form-control" placeholder="First Name" >
+                                <input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php echo $patient_data['fname']; ?>" >
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Last Name:</label>
                             <div class="col-lg-3">
-                                <input type="text" name="lname" class="form-control" placeholder="Last Name" >
+                                <input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php echo $patient_data['lname']; ?>" >
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Email:</label>
                             <div class="col-lg-3">
-                                <input type="email" name="email_id" id="email_id" class="form-control" placeholder="Email" >
+                                <input type="email" name="email_id" id="email_id" class="form-control" placeholder="Email" value="<?php echo $patient_data['email_id']; ?>" >
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">Password:</label>
-                            <div class="col-lg-3">
-                                <input type="password" name="password" id="password" minlength="5"  class="form-control" placeholder="Password">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">Repeat Password:</label>
-                            <div class="col-lg-3">
-                                <input type="password" name="re_password" class="form-control" placeholder="Password">
-                            </div>
-                        </div>
+                        </div>                     
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
-                                <textarea rows="4" name="address" class="form-control" placeholder="Your Address"></textarea>
+                                <textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo $patient_data['address']; ?></textarea>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">City:</label>
                             <div class="col-lg-3">
-                                <input type="text" name="city" class="form-control" placeholder="City" >
+                                <input type="text" name="city" class="form-control" placeholder="City" value="<?php echo $patient_data['city']; ?>" >
                             </div>
                         </div>
 
@@ -87,7 +74,7 @@
                             <label class="col-lg-3 control-label">Zipcode:</label>
                             <div class="col-lg-3">
                                 <input type="text" name="zipcode" id="zipcode" class="form-control" onblur="check_zipcode()" 
-                                      placeholder="Zip code">
+                                      placeholder="Zip code" value="<?php echo $patient_data['zipcode']; ?>">
                                 <span id="zipcode_error">
                                     
                                 </span>
@@ -107,21 +94,21 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Phone:</label>
                             <div class="col-lg-3">
-                                <input type="text" name="phone" minlength="6" class="form-control" placeholder="Phone">
+                                <input type="text" name="phone" minlength="6" class="form-control" placeholder="Phone" value="<?php echo $patient_data['phone']; ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Birth Date:</label>
                             <div class="col-lg-3">
-                                <input type="text" name="birth_date" class="form-control" id="anytime-date" placeholder="Birth Date">
+                                <input type="text" name="birth_date" class="form-control" id="anytime-date" placeholder="Birth Date" 
+                                       value="<?php echo $patient_data['birth_date']; ?>">
                             </div>
                         </div>
 
-                        <div class="text-right">
-                            <input type="hidden" name="role_id" value="5">  <!-- 5 => Patient Role -->
-                            <input type="hidden" name="longitude" id="longitude">
-                            <input type="hidden" name="latitude" id="latitude">
+                        <div class="text-right">                            
+                            <input type="hidden" name="longitude" id="longitude" value="<?php echo $patient_data['longitude']; ?>">
+                            <input type="hidden" name="latitude" id="latitude" value="<?php echo $patient_data['latitude']; ?>">
                             <button class="btn btn-success" type="submit">Save <i class="icon-arrow-right14 position-right"></i></button>
                         </div>
                     </div>
@@ -143,7 +130,7 @@
         // Fixed width. Single select
         $('.select').select2({
             minimumResultsForSearch: Infinity,
-            width: 250
+            width: 250            
         });
 
         $("#anytime-date").AnyTime_picker({
@@ -153,6 +140,7 @@
 
 
     });
+    
 
     function check_zipcode(){    
         $(".valid-zip").remove();
@@ -214,11 +202,9 @@
                 remote:{
                     url:"<?php echo base_url().'admin/users/check_unique'; ?>",
                     type:"POST",
-                    data:{email_id:function () {return $("#email_id").val();}}
+                    data:{email_id:function () {return $("#email_id").val();},old_email_id:function(){ return '<?php echo $patient_data["email_id"]; ?>'; }}
                 }
-            },
-            password:{required: true,maxlength: 12 },
-            re_password:{equalTo:"#password"},
+            },            
             address:{required: true },
             city:{required: true },
             country_id:{required: true },
@@ -232,5 +218,8 @@
             }            
         }
     });
+    
+    $("#country_id").val("<?php echo $patient_data['country_id']; ?>");
+    $("#gender").val("<?php echo $patient_data['gender']; ?>");
 
 </script>

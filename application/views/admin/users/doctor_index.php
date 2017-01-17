@@ -59,7 +59,7 @@
             dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
             order: [[0, "asc"]],
             ordering: false,
-            ajax: '<?php echo base_url()."admin/patient/list_user"; ?>',
+            ajax: '<?php echo base_url()."admin/doctor/list_user"; ?>',
             columns: [
                 {
                     data: "test_id",

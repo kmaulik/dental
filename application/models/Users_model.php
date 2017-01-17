@@ -31,6 +31,15 @@ class Users_model extends CI_Model {
         return $last_id;
     }
 
+    public function get_data($data,$is_single = false){
+        $this->db->where($data);        
+        if($is_single == true){            
+            return $this->db->get('users')->row_array();
+        }else{
+            return $this->db->get('users')->result_array();    
+        }
+    }
+
     /* v! Update data into users table */
     public function update_user_data($id, $data) {
         //$data['modified_date'] = date('Y-m-d H:i:s');
@@ -63,6 +72,10 @@ class Users_model extends CI_Model {
         return $res;
     }
 
+    // ------------------------------------------------------------------------
+    // Patient Section
+    // ------------------------------------------------------------------------
+    
     public function get_all_patients(){
         $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
 
@@ -88,6 +101,33 @@ class Users_model extends CI_Model {
         return $res_data;
     }
 
+    // ------------------------------------------------------------------------
+    // Doctor Section
+    // ------------------------------------------------------------------------
+    public function get_all_doctors(){
+        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
+
+        $this->db->where('role_id', 4); // Role id - 5 recognise as patient Id
+        $this->db->where('is_deleted !=', 1);
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+
+        $this->db->limit($this->input->get('length'), $this->input->get('start'));
+        $res_data = $this->db->get('users')->result_array();
+        return $res_data;
+    }
+
+    public function get_doctors_count(){
+        $this->db->where('role_id', 4);
+        $this->db->where('is_deleted !=', 1);
+        $res_data = $this->db->get('users')->num_rows();
+        return $res_data;
+    }    
 
 }
 

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Patient extends CI_Controller {
+class Doctor extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
@@ -9,7 +9,7 @@ class Patient extends CI_Controller {
 	}
 
 	public function index(){
-		$data['subview'] = 'admin/users/patient_index';
+	   $data['subview'] = 'admin/users/doctor_index';
         $this->load->view('admin/layouts/layout_main', $data);
 	}
 
@@ -128,19 +128,14 @@ class Patient extends CI_Controller {
      * Function is used to get result based on datatable in user list page
      */
     public function list_user() {
-        $final['recordsTotal'] = $this->Users_model->get_patients_count();
+        $final['recordsTotal'] = $this->Users_model->get_doctors_count();
         $final['redraw'] = 1;        
         $final['recordsFiltered'] = $final['recordsTotal'];
-        $final['data'] = $this->Users_model->get_all_patients();
+        $final['data'] = $this->Users_model->get_all_doctors();
         echo json_encode($final);
-    }
-
-    // v! $this->Users_model->update_user_data
-    public function update_patient($id){
-
     }
     
 }
 
-/* End of file Patient.php */
-/* Location: ./application/controllers/admin/Patient.php */
+/* End of file Doctor.php */
+/* Location: ./application/controllers/admin/Doctor.php */
