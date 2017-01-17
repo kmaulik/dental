@@ -79,7 +79,7 @@
 				<?php endif; ?>
 				<?php if($this->session->flashdata('error')) : ?>
 				<div class="alert alert-mini alert-danger margin-bottom-30">
-					<strong>Oh snap!</strong> <?=$this->session->flashdata('error');?>
+					<?=$this->session->flashdata('error');?>
 				</div>
 				<?php endif; ?>
 				<!-- /ALERT -->

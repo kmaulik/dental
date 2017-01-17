@@ -4,7 +4,7 @@
 		<h1>Doctor Registration</h1>
 
 		<!-- breadcrumbs -->
-		<ol class="breadcrumb">
+		<ol class="breadcrumb">			
 			<li><a href="<?=base_url();?>">Home</a></li>
 			<li class="active">Doctor Registration</li>
 		</ol><!-- /breadcrumbs -->
@@ -144,7 +144,7 @@
 			<!-- ALERT -->
 			<?php if($this->session->flashdata('error')) : ?>
 			<div class="alert alert-mini alert-danger margin-bottom-30">
-				<strong>Oh snap!</strong> <?=$this->session->flashdata('error');?>
+				<?=$this->session->flashdata('error');?>
 			</div>
 		<?php endif; ?>
 		<!-- /ALERT -->

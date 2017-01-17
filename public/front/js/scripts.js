@@ -1988,6 +1988,32 @@
 			}
 		});
 
+
+		/** Textarea Char Limit  (@DHK)
+		 *********************** **/
+		jQuery("textarea.char-count").on('keyup', function() {
+			var _t		= jQuery(this),
+				chars 	= this.value.length,
+				_limit	= _t.attr('data-maxlength') || 200;
+
+			if (chars > parseInt(_limit)) {
+				// Allow only specific limit of character
+				_t.val(_t.val().substring(0,_limit));
+			} else {
+
+				var _data_info = _t.attr('data-info');
+
+				if(_data_info == '' || _data_info == undefined) {
+					var _infoContainer = _t.next('div');
+					jQuery('span', _infoContainer).text(chars + '/' + _limit);
+				} else {
+					jQuery('#' +_data_info).text(chars + '/' + _limit);
+				}
+
+
+			}
+		});
+
 	}
 
 

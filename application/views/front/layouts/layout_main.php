@@ -90,6 +90,14 @@
                         <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
                         <ul class="dropdown-menu pull-right">
                             <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
+                            
+                            <?php if($this->session->userdata['client']['role_id'] == 4) :?>  <!-- For Doctor Profile--> 
+                            <li><a tabindex="-1" href="<?=base_url('doctor')?>"><i class="fa fa-user"></i> PROFILE</a></li>
+                            <?php endif; ?>
+
+                            <?php if($this->session->userdata['client']['role_id'] == 5) :?> <!-- For Patient Profile-->
+                            <li><a tabindex="-1" href="<?=base_url('patient')?>"><i class="fa fa-user"></i> PROFILE</a></li>
+                            <?php endif; ?>
                             <li class="divider"></li>
                             <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
                         </ul>

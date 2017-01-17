@@ -30,8 +30,14 @@ class Admin extends CI_Controller {
 
                 $db_pass = $this->encrypt->decode($user_data['password']);
 
-                if ($db_pass == $password) {                    
-                    $user_login = $this->session->userdata('user');
+                if ($db_pass == $password) {   
+
+                    if($user_data['is_blocked'] == 1){
+                        $this->session->set_flashdata('error','Your Account is Deactivated, Please contact to admin');
+                        redirect('admin/login');
+                    }
+                                     
+                    $user_login = $this->session->userdata('admin');
                     if(!empty($user_login)){
                         $this->session->set_flashdata('message', ['message'=>'Can not allow login because of user login.Try another browser.','class'=>'alert alert-danger']);
                         redirect('admin/login');
