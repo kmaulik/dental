@@ -52,8 +52,8 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="form-group">
-							<div class="col-md-12">
+						<div class="col-md-6">
+							<div class="form-group">
 								<label>Treatment Category</label>
 								<select name="treatment_cat_id" class="form-control select2" id="treatment_cat_id">
 									<option value="">Select Treatment Category</option>
@@ -62,14 +62,15 @@
 									<?php endforeach;?>
 								</select>	
 							</div>
+							<?php echo form_error('treatment_cat_id','<div class="alert alert-mini alert-danger">','</div>'); ?>
 							<script>
 								$("#treatment_cat_id").val("<?=set_value('treatment_cat_id')?>");
 							</script>	
 						</div>
 					</div>	
 					<div class="row">
-						<div class="form-group">
-							<div class="col-md-12 col-sm-12" id="primary">
+						<div class="col-md-12 col-sm-12" id="primary">
+							<div class="form-group">
 								<div class="table-responsive">	
 									<table class="table table-bordered">
 										<thead>
@@ -113,8 +114,11 @@
 										</tbody>	
 									</table>
 								</div>	
-							</div>	
-							<div class="col-md-12 col-sm-12" id="permenant">
+							</div>
+							<?php echo form_error('teeth[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>		
+						<div class="col-md-12 col-sm-12" id="permenant">
+							<div class="form-group">
 								<div class="table-responsive">	
 									<table class="table table-bordered">
 										<thead>
