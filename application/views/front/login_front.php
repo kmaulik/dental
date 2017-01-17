@@ -57,17 +57,6 @@
 						</div>
 						<?php echo form_error('password','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
-						<div class="form-group">
-							<label class="radio">
-								<input type="radio" name="role_id" value="5" checked="checked">
-								<i></i> Patient
-							</label>
-							<label class="radio">
-								<input type="radio" name="role_id" value="4">
-								<i></i> Doctor
-							</label>
-						</div>
-
 					</div>
 
 					<div class="row">
@@ -100,7 +89,7 @@
 				<?php endif; ?>
 				<?php if($this->session->flashdata('error')) : ?>
 				<div class="alert alert-mini alert-danger margin-bottom-30">
-					<strong>Oh snap!</strong> <?=$this->session->flashdata('error');?>
+					<?=$this->session->flashdata('error');?>
 				</div>
 				<?php endif; ?>
 				<!-- /ALERT -->

@@ -28,15 +28,16 @@ class Login extends CI_Controller {
 
             $email = $this->input->post('email_id');
             $password = $this->input->post('password');
-            $role_id = $this->input->post('role_id');
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
-            $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email, 'role_id' => $role_id], false, true);                        
+            $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email], false, true);                        
             if (!empty($user_data)) {
-
                 $db_pass = $this->encrypt->decode($user_data['password']);
 
                 if ($db_pass == $password) {
-
+                    if($user_data['is_blocked'] == 1){
+                        $this->session->set_flashdata('error','Your Account is Deactivated, Please contact to admin');
+                        redirect('login');
+                    }
                     $user_login = $this->session->userdata('client');
                     if(!empty($user_login)){
                         $this->session->set_flashdata('error','Can not allow login because of user login.Try another browser.');
