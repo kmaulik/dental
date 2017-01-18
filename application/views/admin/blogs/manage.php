@@ -34,7 +34,7 @@
                             <div class="col-lg-9">
                                 <input type="file" id="img_path" name="img_path[]" multiple="multiple" class="file-styled">
                                 <input type="hidden" value="<?= isset($record['img_path']) ? $record['img_path'] : '' ?>" name="Himg_path" id="Himg_path">
-                                <span class="help-block">Please Upload Only Image File</span>
+                                <span class="help-block">Please upload only image file With .jpg, .jpeg, .png, .gif extension (Size : 1140px * 475px)</span>
                             </div>
                         </div>    
                         <div class="form-group">

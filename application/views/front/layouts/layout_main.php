@@ -176,6 +176,9 @@
                             <li class="dropdown active"><!-- HOME -->
                                 <a href="<?=base_url()?>">HOME</a>
                             </li>
+                            <li class="dropdown active"><!-- HOME -->
+                                <a href="<?=base_url('blog')?>">BLOG</a>
+                            </li>
                             <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
                                 <li class="dropdown"><!-- HOME -->
                                 <a href="<?=base_url('rfp')?>">RFP</a>

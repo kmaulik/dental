@@ -57,8 +57,37 @@ function pagination_config() {
     
     $config['last_tag_open'] = "<li>";
     $config['last_tagl_close'] = "</li>";
-    $config['num_links'] = "10";
+    $config['num_links'] = 5;       
+    $config['page_query_string'] = TRUE;
+    $config['query_string_segment'] = 'per_page';
+    return $config;
+}
 
+
+function pagination_front_config() {
+
+    $config['full_tag_open'] = '<div><ul class="pagination nomargin">';
+    $config['full_tag_close'] = '</ul></div>';
+    $config['num_tag_open'] = '<li>';
+    $config['num_tag_close'] = '</li>';
+    
+    $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+    $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+
+    $config['next_tag_open'] = "<li>";
+    $config['next_tagl_close'] = "</li>";
+
+    $config['prev_tag_open'] = "<li>";
+    $config['prev_tagl_close'] = "</li>";
+
+    $config['first_tag_open'] = "<li>";
+    $config['first_tagl_close'] = "</li>";
+    
+    $config['last_tag_open'] = "<li>";
+    $config['last_tagl_close'] = "</li>";
+    $config['num_links'] = 5;       
+    $config['page_query_string'] = TRUE;
+    $config['query_string_segment'] = 'per_page';
     return $config;
 }
 
@@ -126,6 +155,19 @@ function fetch_email_content($template_name)
         $res='';
     }
     return $res;
+}
+
+
+/* For Fetch User Name By Id (DHK)
+/* Param 1 : 
+*/
+function fetch_username($user_id)
+{
+    $CI =& get_instance();
+    $CI->db->where('id',$user_id);
+    $query = $CI->db->get('users');
+    $res=$query->row_array();
+    return $res['fname']." ".$res['lname'];
 }
 
 /* For Email Template (DHK)
