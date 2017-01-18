@@ -11,7 +11,7 @@
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li class="active"><i class="icon-users4 position-left"></i> Doctor</li>
+            <li class="active">Doctor</li>
         </ul>
     </div>
 </div>

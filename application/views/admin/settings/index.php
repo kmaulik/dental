@@ -13,8 +13,8 @@
     </div>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
-            <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Home</a></li>
-            <li><a href="<?php echo site_url('admin/settings'); ?>"><i class="icon-gear position-left"></i> <?php echo $heading; ?></a></li>
+            <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
+            <li><a href="<?php echo site_url('admin/settings'); ?>"><?php echo $heading; ?></a></li>
            
         </ul>
     </div>

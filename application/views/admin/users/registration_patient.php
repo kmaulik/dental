@@ -5,13 +5,13 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-user"></i> <span class="text-semibold"></span></h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Patient</h4>
         </div>
     </div>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
-            <li><a href="<?php echo site_url('admin/home'); ?>"><i class="icon-home2 position-left"></i> Home</a></li>
-            <li><a href="<?php echo site_url('admin/patient'); ?>"><i class="icon-users4 position-left"></i> Patient </a></li>
+            <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
+            <li><a href="<?php echo site_url('admin/patient'); ?>"> Patient </a></li>
             <li class="active">Add</li>
         </ul>
     </div>

@@ -149,7 +149,7 @@
 
 
                     <!-- Logo -->
-                    <a class="logo pull-left" href="index.html">
+                    <a class="logo pull-left" href="<?php echo base_url(); ?>">
                         <img src="<?= DEFAULT_IMAGE_PATH ?>logo_dark.png" alt="" />
                     </a>
 

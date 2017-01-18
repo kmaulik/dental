@@ -11,7 +11,7 @@
     </div>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
-            <li><a href="<?php echo site_url('admin/home'); ?>"><i class="icon-home2 position-left"></i> Home</a></li>
+            <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
             <li><a href="<?php echo site_url('admin/survey'); ?>"> Survey</a></li>
             <li class="active">Add</li>
         </ul>
