@@ -83,28 +83,40 @@ class Blogs extends CI_Controller {
         }
         if ($this->input->post()) {
          
-            //--------------- Upload Image -----------
-            $avtar['msg']='';
-            $path = "uploads/blogs/";
-            /**
-            * Upload Image 
-            * Param1 : Location
-            * Param2 : HTML File ControlName
-            * Param3 : Extension (image,pdf,excel,doc)
-            * Param4 : Size Limit (In. Byte) (Ex. 2*1024*1024) 
-            * Param5 : Old File Name (Optional) 
-            * */
-            $avtar = $this->filestorage->FileInsert($path, 'img_path', 'image', 2097152,$this->input->post('Himg_path'));
+            //--------------- For Multiple File Upload  -----------
+            $img_path='';
+            if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
+            {
+                $location='uploads/blogs/';
+                foreach($_FILES['img_path']['name'] as $key=>$data){
+                    $res=$this->filestorage->FileArrayInsert($location,'img_path','image','10485760',$key); // 10 MB
+                    if($res['status'] == '1'){
+                        if($key == 0){
+                            $img_path=$res['msg'];
+                        }else{
+                            $img_path=$img_path."|".$res['msg'];
+                        }
+                    }
+                }
+                //--------- For Delete Old Image -------
+                if($this->input->post('Himg_path') != '')
+                {
+                    $old_img=explode('|',$this->input->post('Himg_path'));
+                    foreach ($old_img as $key => $img) {
+                        $this->filestorage->DeleteImage($location,$img);
+                    }
+                }    
+                
+            }
+            else{
+                $img_path = $this->input->post('Himg_path');
+            }
             //----------------------------------------
-            if ($avtar['status'] == 0) {
-               $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'danger']);
-           }
-           else{
             $update_array = [
                 'blog_title'        => $this->input->post('blog_title'),
                 'blog_slug'         => $this->input->post('blog_slug'),
                 'blog_description'  => $this->input->post('blog_description'),
-                'img_path'          => $avtar['msg'],
+                'img_path'          => $img_path,
                 'is_blocked'        => $this->input->post('is_blocked'),
             ];
 
@@ -115,8 +127,7 @@ class Blogs extends CI_Controller {
             else{
   
                  $this->session->set_flashdata('message', ['message'=>'Error Into Update Blog!','class'=>'danger']);
-            } 
-        }               
+            }               
         redirect('admin/blogs');
     }
     $data['subview'] = 'admin/blogs/manage';
@@ -127,49 +138,46 @@ class Blogs extends CI_Controller {
      * Load view for Add blog 
      * */
 
-     public function add() {
+    public function add() {
         
-       $data['title'] = 'Admin add blog';
-       $data['heading'] = 'Add blog';
-       if ($this->input->post()) {
-           
-                //--------------- Upload Image Max 2 MB-----------
-        $avtar['msg']='';
-        $path = "uploads/blogs/";
-                /**
-                * Upload Image
-                * Param1 : Location
-                * Param2 : HTML File ControlName
-                * Param3 : Extension (image,pdf,excel,doc)
-                * Param4 : Size Limit (In. Byte) (Ex. 2*1024*1024)  
-                * Param5 : Old File Name (Optional) 
-                * */
-                $avtar = $this->filestorage->FileInsert($path, 'img_path', 'image', 2097152);
-                //----------------------------------------
-                if ($avtar['status'] == 0) {
-                   $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'danger']);
-               }
-               else{
-                $insert_array = [
-                    'blog_title'        => $this->input->post('blog_title'),
-                    'blog_slug'         => $this->input->post('blog_slug'),
-                    'blog_description'  => $this->input->post('blog_description'),
-                    'img_path'          => $avtar['msg'],
-                    'created_by'        => $this->session->userdata['admin']['id'],
-                    'is_blocked'        => $this->input->post('is_blocked'),
-                    'created_at'        => date("Y-m-d H:i:s a"),
-                ];
-                $result=$this->Blogs_model->insert_record('blog',$insert_array);
-                if($result){
-                     $this->session->set_flashdata('message', ['message'=>'Blog successfully Inserted!','class'=>'success']);
-                }
-                else{
-                     $this->session->set_flashdata('message', ['message'=>'Error Into Insert Blog!','class'=>'danger']);
-                }       
+        $data['title'] = 'Admin add blog';
+        $data['heading'] = 'Add blog';
+        if ($this->input->post()) {
+            //--------------- For Multiple File Upload  -----------
+            $img_path='';
+            if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
+            {
+                $location='uploads/blogs/';
+                foreach($_FILES['img_path']['name'] as $key=>$data){
+                    $res=$this->filestorage->FileArrayInsert($location,'img_path','image','10485760',$key); // 10 MB
+                    if($res['status'] == '1'){
+                        if($key == 0){
+                            $img_path=$res['msg'];
+                        }else{
+                            $img_path=$img_path."|".$res['msg'];
+                        }
+                    }
+                }   
             }
+            //----------------------------------------
+            $insert_array = [
+                'blog_title'        => $this->input->post('blog_title'),
+                'blog_slug'         => $this->input->post('blog_slug'),
+                'blog_description'  => $this->input->post('blog_description'),
+                'img_path'          => $img_path,
+                'created_by'        => $this->session->userdata['admin']['id'],
+                'is_blocked'        => $this->input->post('is_blocked'),
+                'created_at'        => date("Y-m-d H:i:s a"),
+            ];
+            $result=$this->Blogs_model->insert_record('blog',$insert_array);
+            if($result){
+                 $this->session->set_flashdata('message', ['message'=>'Blog successfully Inserted!','class'=>'success']);
+            }
+            else{
+                 $this->session->set_flashdata('message', ['message'=>'Error Into Insert Blog!','class'=>'danger']);
+            }       
             redirect('admin/blogs');
         }
-        
         $data['subview'] = 'admin/blogs/manage';
         $this->load->view('admin/layouts/layout_main', $data);
     }

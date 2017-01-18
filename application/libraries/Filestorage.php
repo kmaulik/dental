@@ -178,11 +178,10 @@ class Filestorage {
 	* Param3 : Extension
 	* Param4 : Size Limit
 	* Param5 : Image Array Key
-	* Param6 : Old File Name
 	* Return : FileName
 	*/
    
-	function FileArrayInsert($location, $controlname, $type, $size , $key , $oldfile='')
+	function FileArrayInsert($location, $controlname, $type, $size , $key)
 	{
 		$type=strtolower($type);
 		$return =array();
@@ -199,10 +198,6 @@ class Filestorage {
 					{
 						$return['msg']= $this->FileArrayUpload($location, $controlname,$key);
 						$return['status']=1;
-						if(isset($oldfile) && $oldfile != NULL)
-						{
-							$this->DeleteImage($location,$oldfile);	
-						}
 					}
 					else
 					{
@@ -226,10 +221,6 @@ class Filestorage {
 					{
 						$return['msg']= $this->FileArrayUpload($location, $controlname,$key);
 						$return['status']=1;
-						if(isset($oldfile) && $oldfile != NULL)
-						{
-							$this->DeleteImage($location,$oldfile);	
-						}
 					}
 					else
 					{
@@ -251,12 +242,7 @@ class Filestorage {
 					if ($filesize <= $size) 
 					{
 						$return['msg']= $this->FileArrayUpload($location, $controlname,$key);
-						$return['status']=1;
-						if(isset($oldfile) && $oldfile != NULL)
-						{
-							$this->DeleteImage($location,$oldfile);	
-						}
-						
+						$return['status']=1;						
 					}
 					else
 					{
@@ -279,10 +265,6 @@ class Filestorage {
 					{
 						$return['msg']= $this->FileArrayUpload($location, $controlname,$key);
 						$return['status']=1;
-						if(isset($oldfile) && $oldfile != NULL)
-						{
-							$this->DeleteImage($location,$oldfile);	
-						}
 					}
 					else
 					{
@@ -305,11 +287,6 @@ class Filestorage {
 			}
 
 		}
-        else
-        {
-            $return['msg']=$oldfile;
-			$return['status']=1;	
-        }
 		return $return;
 	}
 	

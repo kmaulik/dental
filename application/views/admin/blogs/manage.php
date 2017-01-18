@@ -32,14 +32,14 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Blog Image:</label>
                             <div class="col-lg-9">
-                                <input type="file" name="img_path" class="file-styled" tabindex="4">
-                                <input type="hidden" value="<?= isset($record['img_path']) ? $record['img_path'] : '' ?>" name="Himg_path">
+                                <input type="file" id="img_path" name="img_path[]" multiple="multiple" class="file-styled">
+                                <input type="hidden" value="<?= isset($record['img_path']) ? $record['img_path'] : '' ?>" name="Himg_path" id="Himg_path">
+                                <span class="help-block">Please Upload Only Image File</span>
                             </div>
                         </div>    
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Status:</label>
                             <div class="col-lg-3">
-
                                 <label class="radio-inline">
                                     <input type="radio" class="styled" name="is_blocked" value="0" checked <?php
                                     if (isset($record['is_blocked']) && $record['is_blocked'] == '0') {
@@ -73,17 +73,30 @@
         </div>
     </div>
 </div>
+ <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/additional_methods.min.js"; ?>"></script>
+
 <script type="text/javascript">
     $(".styled, .multiselect-container input").uniform({
         radioClass: 'choice'
     });
 
-
+// For create a blog Slug based on blog title
 $("#blog_title").blur(function () {
     var Text = $(this).val();
     Text = Text.toLowerCase();
     Text = Text.replace(/[^a-zA-Z0-9]+/g, '-');
     $("#blog_slug").val(Text);
+});
+
+// For count file when select multiple image
+$('#img_path').change(function(){
+    var files = $(this)[0].files;
+    var file_text= files.length+" files selected";
+    $(".filename").addClass("customfilename");
+    $(".countfile").remove();
+    $('<span class="filename countfile"></span>').insertAfter('.filename');
+    $('.customfilename').hide();
+    $('.countfile').html(file_text);
 });
 
 //---------------------- Validation -------------------
@@ -122,7 +135,11 @@ $("#frmblog").validate({
     errorPlacement: function (error, element) {
         if (element[0]['id'] == "blog_description") {
             error.insertAfter(".note-editor");
-        } else {
+        } 
+        else if(element[0]['id'] == "img_path"){
+             error.insertAfter("#uniform-img_path");
+        }
+        else {
             error.insertAfter(element)
         }
     },
@@ -138,8 +155,22 @@ $("#frmblog").validate({
     }
 });
 
+    // Custom  rule add for multiple image uplaod ----------
+    $("input#img_path").each(function(){        
+        $(this).rules("add", {            
+            required:true,            
+            extension: "jpg|jpeg|png|gif",
+            messages: {
+                    required: "Please Select Image",            
+                    extension: "Please Select Only jpg, jpeg, png, gif file type"     
+                }       
+        });                      
+    });
 
-//$(element).closest('.form-group').removeClass('has-error');
+    //----- Remove required validation for edit time
+    if($("#Himg_path").val() != ''){
+        $("input#img_path").rules("remove", "required");
+    }
 
 </script>
 

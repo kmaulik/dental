@@ -47,14 +47,14 @@
 				<div class="col-md-6 col-sm-6">	
 					<div class="form-group">
 						<label>First Name</label>
-						<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
+						<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php if(set_value('fname') != '') { echo set_value('fname'); }else { echo $this->session->userdata['client']['fname']; } ?>" >
 					</div>
 					<?php echo form_error('fname','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
 				<div class="col-md-6 col-sm-6">	
 					<div class="form-group">
 						<label>Last Name</label>
-						<input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php echo set_value('lname'); ?>" >
+						<input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php if(set_value('lname') != '') { echo set_value('lname'); }else { echo $this->session->userdata['client']['lname']; } ?>" >
 					</div>
 					<?php echo form_error('lname','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>				
@@ -63,7 +63,7 @@
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Birth Date</label>	
-						<input type="text" name="birth_date" id="birth_date" onchange="fetch_definition_type()" class="form-control datepicker" placeholder="Birth Date" value="<?php echo set_value('birth_date'); ?>" >
+						<input type="text" name="birth_date" id="birth_date" onchange="fetch_definition_type()" class="form-control datepicker" placeholder="Birth Date" value="<?php if(set_value('birth_date') != '') { echo set_value('birth_date'); }else { echo $this->session->userdata['client']['birth_date']; } ?>" >
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>

@@ -28,6 +28,7 @@
 
     <!-- Theme JS files -->
     <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
+   
     <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/styling/uniform.min.js"; ?>"></script>
     <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/styling/switchery.min.js"; ?>"></script>
     <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/selects/bootstrap_multiselect.js"; ?>"></script>
