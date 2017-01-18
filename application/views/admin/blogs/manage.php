@@ -172,5 +172,6 @@ $("#frmblog").validate({
         $("input#img_path").rules("remove", "required");
     }
 
+
 </script>
 
