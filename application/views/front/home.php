@@ -41,7 +41,42 @@
 
 
 
+<!-- Overview -->
+<section>
+	<div class="container">
 
+		<div class="row">
+
+			<div class="col-lg-4 col-md-4 col-sm-12 ">
+				<h2>Health and Medical</h2>
+
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+
+				<a class="btn btn-danger btn-lg" href="#">VIEW OUR SERVICES</a>
+			</div>
+
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<h3 class="weight-300">Quick <span>Overview</span></h3>
+
+				<p>Lorem ipsum dolor sit amet, hinc dolores noluisse at vel, ex quod aperiri scaevola has, cum te sanctus denique. Eu liber docendi petentium has, labore.</p>
+				<p>Etiam falli mentitum id mel, ut mel sumo postulant referrentur. At has minim imperdiet, soluta offendit ocurreret sea an. </p>
+
+				<hr />
+
+				<ul class="list-unstyled list-icons">
+					<li><i class="fa fa-check"></i> Nobis nemore epicuri pro ea</li>
+					<li><i class="fa fa-check"></i> Qui dicunt singulis dissentias an</li>
+					<li><i class="fa fa-check"></i> Ea vis diceret constituam</li>
+					<li><i class="fa fa-check"></i> Mei no autem idque integre, sumo facilis</li>
+					<li><i class="fa fa-check"></i> Est quodsi labitur moderatius an</li>
+				</ul>
+
+			</div>
+		</div>
+
+	</div>
+</section>
+<!-- /Overview -->
 
 <!-- FEATURES -->
 <section id="features">
@@ -122,43 +157,6 @@
 	</div>
 </section>
 <!-- /FEATURES -->
-
-<!-- Overview -->
-<section>
-	<div class="container">
-
-		<div class="row">
-
-			<div class="col-lg-4 col-md-4 col-sm-12 ">
-				<h2>Health and Medical</h2>
-
-				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-
-				<a class="btn btn-danger btn-lg" href="#">VIEW OUR SERVICES</a>
-			</div>
-
-			<div class="col-lg-8 col-md-8 col-sm-12">
-				<h3 class="weight-300">Quick <span>Overview</span></h3>
-
-				<p>Lorem ipsum dolor sit amet, hinc dolores noluisse at vel, ex quod aperiri scaevola has, cum te sanctus denique. Eu liber docendi petentium has, labore.</p>
-				<p>Etiam falli mentitum id mel, ut mel sumo postulant referrentur. At has minim imperdiet, soluta offendit ocurreret sea an. </p>
-
-				<hr />
-
-				<ul class="list-unstyled list-icons">
-					<li><i class="fa fa-check"></i> Nobis nemore epicuri pro ea</li>
-					<li><i class="fa fa-check"></i> Qui dicunt singulis dissentias an</li>
-					<li><i class="fa fa-check"></i> Ea vis diceret constituam</li>
-					<li><i class="fa fa-check"></i> Mei no autem idque integre, sumo facilis</li>
-					<li><i class="fa fa-check"></i> Est quodsi labitur moderatius an</li>
-				</ul>
-
-			</div>
-		</div>
-
-	</div>
-</section>
-<!-- /Overview -->
 
 <!-- TESTIMONIALS -->
 <section id="testimonials" class="alternate">
