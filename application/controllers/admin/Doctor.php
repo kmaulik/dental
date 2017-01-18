@@ -55,18 +55,17 @@ class Doctor extends CI_Controller {
 
                 $email_config = mail_config();
                 $this->email->initialize($email_config);
-                $subject=config('site_name').' - Thank you for your registration';    
+                $subject=config('site_name').' - Thank you for your registration';
                 $this->email->from(config('contact_email'), config('sender_name'))
                             ->to($this->input->post('email_id'))
                             ->subject($subject)
                             ->message($html_content);
                 $this->email->send();
-                $this->session->set_flashdata('message', ['message'=>'Thank you for your registration, you will receive an activation link soon.',
-                										  'class'=>'success']); 
-                redirect('admin/patient');
+                $this->session->set_flashdata('message', ['message'=>'Thank you for your registration, you will receive an activation link soon.','class'=>'success']);
+                redirect('admin/doctor');
             }
 		}
-        $data['subview']='admin/users/registration_patient';
+        $data['subview']='admin/users/doctor_registration';
         $this->load->view('admin/layouts/layout_main',$data);
 	}
 
@@ -74,7 +73,7 @@ class Doctor extends CI_Controller {
         
         $id = decode($id);
         $data['country_list']=$this->Country_model->get_result('country');
-        $data['patient_data'] = $this->Users_model->get_data(['id'=>$id],true);        
+        $data['doctor_data'] = $this->Users_model->get_data(['id'=>$id],true);        
 
         if($_POST){
 
@@ -99,29 +98,29 @@ class Doctor extends CI_Controller {
             redirect('admin/patient');
         }
 
-        $data['subview']='admin/users/registration_patient_edit';
+        $data['subview']='admin/users/doctor_registration_edit';
         $this->load->view('admin/layouts/layout_main',$data);
     }
 
     public function block($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['is_blocked'=>'1']);
-        $this->session->set_flashdata('message', ['message'=>'Patient Successfully blocked.','class'=>'success']);
-        redirect('admin/patient');
+        $this->session->set_flashdata('message', ['message'=>'Doctor Successfully blocked.','class'=>'success']);
+        redirect('admin/doctor');
     }
 
     public function activate($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['is_blocked'=>'0']);
-        $this->session->set_flashdata('message', ['message'=>'Patient Successfully blocked.','class'=>'success']);
-        redirect('admin/patient');   
+        $this->session->set_flashdata('message', ['message'=>'Doctor Successfully activated.','class'=>'success']);
+        redirect('admin/doctor');   
     }
 
     public function delete($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['is_deleted'=>'1']);
-        $this->session->set_flashdata('message', ['message'=>'Patient Successfully deleted.','class'=>'success']);
-        redirect('admin/patient');
+        $this->session->set_flashdata('message', ['message'=>'Doctor Successfully deleted.','class'=>'success']);
+        redirect('admin/doctor');
     }
 
     /**

@@ -113,7 +113,7 @@ class Patient extends CI_Controller {
     public function activate($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['is_blocked'=>'0']);
-        $this->session->set_flashdata('message', ['message'=>'Patient Successfully blocked.','class'=>'success']);
+        $this->session->set_flashdata('message', ['message'=>'Patient Successfully Activated.','class'=>'success']);
         redirect('admin/patient');   
     }
 

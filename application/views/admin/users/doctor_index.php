@@ -4,14 +4,14 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Patient List</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Doctor List</h4>
         </div>
     </div>
 
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li class="active"><i class="icon-users4 position-left"></i> Patient</li>
+            <li class="active"><i class="icon-users4 position-left"></i> Doctor</li>
         </ul>
     </div>
 </div>
@@ -26,9 +26,9 @@
     <!-- content area -->    
     <div class="panel panel-flat">
         <div class="panel-heading text-right">
-            <a href="<?php echo site_url('admin/patient/add'); ?>" class="btn btn-success btn-labeled">
+            <a href="<?php echo site_url('admin/doctor/add'); ?>" class="btn btn-success btn-labeled">
                 <b><i class="icon-stats-growth"></i></b>
-                Add New Patient
+                Add New Doctor
             </a>
         </div>
         <table class="table datatable-basic">
@@ -95,13 +95,13 @@
                         var action = '';
                         var id= encodeURIComponent(btoa(full.id));
                         
-                        action += '<a href="<?php echo base_url(); ?>admin/patient/edit/' + id + '" class="btn border-primary text-primary-600 btn-flat btn-icon btn-rounded btn-sm" title="Edit"><i class="icon-pencil3"></i></a>';
+                        action += '<a href="<?php echo base_url(); ?>admin/doctor/edit/' + id + '" class="btn border-primary text-primary-600 btn-flat btn-icon btn-rounded btn-sm" title="Edit"><i class="icon-pencil3"></i></a>';
                         if (full.is_blocked == 0) {
-                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/patient/block/' + id + '" class="btn border-warning text-warning-600 btn-flat btn-icon btn-rounded"  title="Block"><i class="icon-user-block"></i></a>';
+                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/doctor/block/' + id + '" class="btn border-warning text-warning-600 btn-flat btn-icon btn-rounded"  title="Block"><i class="icon-user-block"></i></a>';
                         } else if (full.is_blocked == 1) {
-                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/patient/activate/' + id + '" class="btn border-success text-success-600 btn-flat btn-icon btn-rounded"  title="Unblock"><i class="icon-user-plus"></i></a>';
+                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/doctor/activate/' + id + '" class="btn border-success text-success-600 btn-flat btn-icon btn-rounded"  title="Unblock"><i class="icon-user-plus"></i></a>';
                         }
-                        action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/patient/delete/' + id + '" class="btn border-danger btn_delete text-danger-600 btn-flat btn-icon btn-rounded" title="Delete"><i class="icon-cross2"></i></a>';
+                        action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/doctor/delete/' + id + '" class="btn border-danger btn_delete text-danger-600 btn-flat btn-icon btn-rounded" title="Delete"><i class="icon-cross2"></i></a>';
                         return action;
                     }
                 }

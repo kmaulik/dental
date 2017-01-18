@@ -27,48 +27,6 @@
 -->
 <body class="smoothscroll enable-animation">
 
-    <!-- SLIDE TOP -->
-    <div id="slidetop">
-
-        <div class="container">
-
-            <div class="row">
-
-                <div class="col-md-4">
-                    <h6><i class="icon-heart"></i> WHY SMARTY?</h6>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa. </p>
-                </div>
-
-                <div class="col-md-4">
-                    <h6><i class="icon-attachment"></i> RECENTLY VISITED</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#"><i class="fa fa-angle-right"></i> Consectetur adipiscing elit amet</a></li>
-                        <li><a href="#"><i class="fa fa-angle-right"></i> This is a very long text, very very very very very very very very very very very very </a></li>
-                        <li><a href="#"><i class="fa fa-angle-right"></i> Lorem ipsum dolor sit amet</a></li>
-                        <li><a href="#"><i class="fa fa-angle-right"></i> Dolor sit amet,consectetur adipiscing elit amet</a></li>
-                        <li><a href="#"><i class="fa fa-angle-right"></i> Consectetur adipiscing elit amet,consectetur adipiscing elit</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4">
-                    <h6><i class="icon-envelope"></i> CONTACT INFO</h6>
-                    <ul class="list-unstyled">
-                        <li><b>Address:</b> PO Box 21132, Here Weare St, <br /> Melbourne, Vivas 2355 Australia</li>
-                        <li><b>Phone:</b> 1-800-565-2390</li>
-                        <li><b>Email:</b> <a href="mailto:support@yourname.com">support@yourname.com</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-        </div>
-
-        <a class="slidetop-toggle" href="#"><!-- toggle button --></a>
-
-    </div>
-    <!-- /SLIDE TOP -->
-
-
     <!-- wrapper -->
     <div id="wrapper">
 
@@ -76,12 +34,7 @@
         <div id="topBar">
             <div class="container">
 
-                <!-- right -->
-                <!-- <div class="pull-right margin-top-10 size-14">
-                    <b class="hidden-xs">Contact:</b> +1-800-654-3210
-                </div> -->
-
-
+                        
                 <!-- right -->
                 <ul class="top-links list-inline pull-right">
                     <?php if($this->session->userdata('client')) :?>
