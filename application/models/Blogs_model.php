@@ -93,7 +93,43 @@ class Blogs_model extends CI_Model {
         return $query->num_rows();
     }
 
+    /**
+     * @uses : this function is used to count rows of blogs based on datatable in blog list page
+     * @param : @table 
+     * @author : HPA
+     */
+    public function get_blogs_front_count($where) {
+        $this->db->where($where);
+        $res_data = $this->db->get('blog')->num_rows();
+        return $res_data;
+    }
 
+    public function get_front_result($table, $condition = null,$limit,$offset) {
+        $this->db->select('*');
+        if (!is_null($condition)) {
+            $this->db->where($condition);
+        }
+        $this->db->order_by('id','desc');
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get($table);
+        return $query->result_array();
+    }
+
+
+     /**
+     * @uses : this function is used to next and previous button in blog details
+     * @param : @table 
+     * @author : DHK
+     */
+    public function get_result_prev_next($table, $condition = null,$oredr='asc') {
+        $this->db->select('*');
+        if (!is_null($condition)) {
+            $this->db->where($condition);
+        }
+        $this->db->order_by('id',$oredr);
+        $query = $this->db->get($table);
+        return $query->row_array();
+    }
 
 }
 

@@ -85,6 +85,8 @@ class Blogs extends CI_Controller {
          
             //--------------- For Multiple File Upload  -----------
             $img_path='';
+            $success=0;
+            $unsuccess=0;
             if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
             {
                 $location='uploads/blogs/';
@@ -96,6 +98,10 @@ class Blogs extends CI_Controller {
                         }else{
                             $img_path=$img_path."|".$res['msg'];
                         }
+                        $success =$success+1;
+                    }
+                    else{
+                        $unsuccess= $unsuccess+1;
                     }
                 }
                 //--------- For Delete Old Image -------
@@ -122,7 +128,12 @@ class Blogs extends CI_Controller {
 
             $result=$this->Blogs_model->update_record('blog', $where, $update_array);
             if($result){
-                 $this->session->set_flashdata('message', ['message'=>'Blog successfully updated!','class'=>'success']);
+                 $msg='';
+                 if($success != 0 || $unsuccess != 0)
+                 {
+                    $msg= "<br>".$success." File Uploaded Successfully <br>".$unsuccess." File Not Upload";
+                 }   
+                 $this->session->set_flashdata('message', ['message'=>'Blog successfully updated!'.$msg,'class'=>'success']);
             }
             else{
   
@@ -145,6 +156,8 @@ class Blogs extends CI_Controller {
         if ($this->input->post()) {
             //--------------- For Multiple File Upload  -----------
             $img_path='';
+            $success="0";
+            $unsuccess="0";
             if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
             {
                 $location='uploads/blogs/';
@@ -156,6 +169,10 @@ class Blogs extends CI_Controller {
                         }else{
                             $img_path=$img_path."|".$res['msg'];
                         }
+                        $success = $success+1;
+                    }
+                    else{
+                        $unsuccess = $unsuccess+1;
                     }
                 }   
             }
@@ -171,7 +188,8 @@ class Blogs extends CI_Controller {
             ];
             $result=$this->Blogs_model->insert_record('blog',$insert_array);
             if($result){
-                 $this->session->set_flashdata('message', ['message'=>'Blog successfully Inserted!','class'=>'success']);
+                 $msg= "<br>".$success." File Uploaded Successfully <br>".$unsuccess." File Not Upload";
+                 $this->session->set_flashdata('message', ['message'=>'Blog successfully Inserted!'.$msg,'class'=>'success']);
             }
             else{
                  $this->session->set_flashdata('message', ['message'=>'Error Into Insert Blog!','class'=>'danger']);
