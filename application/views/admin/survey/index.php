@@ -4,7 +4,7 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Home</span> - Survey List</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Survey List</h4>
         </div>
     </div>
 
@@ -27,7 +27,7 @@
     <div class="panel panel-flat">
         <div class="panel-heading text-right">
             <a href="<?php echo site_url('admin/survey/add'); ?>" class="btn btn-success btn-labeled">
-                <b><i class="icon-stats-growth"></i></b>
+                <b><i class="icon-plus-circle2"></i></b>
                 Add New Survey
             </a>
         </div>

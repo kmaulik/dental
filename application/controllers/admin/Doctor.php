@@ -94,8 +94,8 @@ class Doctor extends CI_Controller {
             );
 
             $this->Users_model->update_user_data($id,$data);
-            $this->session->set_flashdata('message', ['message'=>'User successfully updated.','class'=>'success']);
-            redirect('admin/patient');
+            $this->session->set_flashdata('message', ['message'=>'Doctor successfully updated.','class'=>'success']);
+            redirect('admin/doctor');
         }
 
         $data['subview']='admin/users/doctor_registration_edit';

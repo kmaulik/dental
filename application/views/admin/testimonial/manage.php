@@ -2,8 +2,8 @@
 
 <div class="page-header page-header-default">
     <div class="page-header-content">
-        <div class="page-title">
-            <h4><i class="icon-user"></i> <span class="text-semibold"><?php echo $heading; ?></span></h4>
+        <div class="page-title">            
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - <?php echo $heading; ?></h4>
         </div>
     </div>
     <div class="breadcrumb-line">
