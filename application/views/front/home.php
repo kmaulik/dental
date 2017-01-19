@@ -1,34 +1,189 @@
- <!-- REVOLUTION SLIDER -->
+<style type="text/css">
+	.tparrows {
+		display: none !important;
+	}
+</style>
+<!-- REVOLUTION SLIDER -->
 <link href="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/css/extralayers.css" rel="stylesheet" type="text/css" />
 <link href="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/css/settings.css" rel="stylesheet" type="text/css" />
 
-<!-- HOME -->
-<section id="home" class="height-450" style="background:url('<?= DEFAULT_IMAGE_PATH ?>demo/wall2.jpg')">
-	<div class="display-table">
-		<div class="display-table-cell vertical-align-middle">
+<!-- REVOLUTION SLIDER -->
+<div class="slider fullwidthbanner-container roundedcorners">
+	<!--
+		Navigation Styles:
+		
+			data-navigationStyle="" theme default navigation
 			
-			<div class="container text-center">
-				
-				<h1 class="nomargin size-50 weight-300 wow fadeInUp" data-wow-delay="0.4s">Unlimited Easy Landing Pages</h1>
-				<p class="lead font-lato size-30 wow fadeInUp" data-wow-delay="0.7s">Building a Landing Page was never so Easy &amp; Interactive.</p>
-				
-				<div class="margin-top-30">
-					<a href="#" class="btn btn-3d btn-lg btn-teal"><i class="glyphicon glyphicon-th-large"></i>FREE TRIAL</a>
-					<span class="size-17 hidden-xs">&nbsp; OR &nbsp;</span>
-					<a href="#" class="btn btn-3d btn-lg btn-red"><i class="glyphicon glyphicon-user"></i>START FOR A SIBSCRIPTION</a>
+			data-navigationStyle="preview1"
+			data-navigationStyle="preview2"
+			data-navigationStyle="preview3"
+			data-navigationStyle="preview4"
+			
+		Bottom Shadows
+			data-shadow="1"
+			data-shadow="2"
+			data-shadow="3"
+			
+		Slider Height (do not use on fullscreen mode)
+			data-height="300"
+			data-height="350"
+			data-height="400"
+			data-height="450"
+			data-height="500"
+			data-height="550"
+			data-height="600"
+			data-height="650"
+			data-height="700"
+			data-height="750"
+			data-height="800"
+	-->
+	<div class="fullwidthbanner" data-height="600" data-shadow="0" data-navigationStyle="preview1">
+		<ul class="hide">
+
+			<!-- SLIDE  -->
+			<li data-transition="parallaxtobottom" data-slotamount="7" data-masterspeed="600"  data-saveperformance="off"  data-title="Architectural View">
+				<!-- MAIN IMAGE -->
+				<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/lightblue-min.jpg"  alt="cover image"  data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+
+				<div class="tp-caption white_big skewfromleft tp-resizeme"
+					data-x="500"
+					data-y="100" 
+					data-speed="400"
+					data-start="1500"
+					data-easing="Power3.easeInOut"
+					data-splitin="words"
+					data-splitout="none"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="600"
+					style="z-index: 2; color:#fff; font-size:65px; line-height:85px; font-weight:bold; letter-spacing:0; text-shadow:none;">
+						We Care For Your
 				</div>
 
-			</div>
+				<div class="tp-caption content_text_center skewfromleft tp-resizeme"
+					data-x="500"
+					data-y="195" 
+					data-speed="500"
+					data-start="2000"
+					data-easing="Power3.easeInOut"
+					data-splitin="none"
+					data-splitout="none"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="600"
 
-		</div>
+					style="z-index: 3; font-size:20px; color:#fff; font-weight:300; text-shadow:none;">
+						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, <br />
+						sed diam nonummy nibh euismod tincidunt.
+				</div>
+
+				<div class="tp-caption tp-fade"
+					data-x="left"
+					data-y="25" 
+					data-speed="300"
+					data-start="800"
+					data-easing="Power3.easeInOut"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="300"
+					style="z-index: 4;">
+						<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/thematics/medical/doctor-min.png" alt="">
+				</div>
+
+				<div class="tp-caption skewfromleft tp-resizeme  un-button-2-lg"
+					data-x="500"
+					data-y="300" 
+					data-speed="300"
+					data-start="2500"
+					data-easing="Power3.easeInOut"
+					data-splitin="none"
+					data-splitout="none"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="300"
+
+					style="z-index: 5; max-width: auto; max-height: auto; white-space: nowrap;">
+						<a class="btn btn-default btn-lg scrollTo" href="#appointment">MAKE AN APPOINTMENT &nbsp; <i class="fa fa-angle-right"></i></a>
+				</div>
+			</li>
+
+			<!-- SLIDE  -->
+			<li data-transition="parallaxtotop" data-slotamount="7" data-masterspeed="300"  data-saveperformance="off" data-title="Bright Future">
+				<!-- MAIN IMAGE -->
+				<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/thematics/medical/slider_2-min.jpg" alt="cover image"  data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+
+				<div class="overlay dark-1"><!-- dark overlay [0 to 9 opacity] --></div>
+
+				<div class="tp-caption font-roboto skewfromleft tp-resizeme"
+					data-x="50"
+					data-y="100" 
+					data-speed="500"
+					data-start="1500"
+					data-easing="Cubic.easeOut"
+					data-splitin="none"
+					data-splitout="none"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="500"
+					style="z-index: 2; color:#fff; font-size:65px; line-height:85px; font-weight:bold; letter-spacing:0; text-shadow:none;">
+						Creating a Bright Future <br />
+						Together
+				</div>
+
+				<div class="tp-caption skewfromrightshort tp-resizeme"
+					data-x="50"
+					data-y="300" 
+					data-speed="500"
+					data-start="1000"
+					data-easing="easeInCirc"
+					data-splitin="none"
+					data-splitout="none"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="500"
+					style="z-index: 3; font-size:20px; color:#fff; font-weight:300; text-shadow:none;">
+						If you dream of designing a new home that takes full advantage, <br />
+						our team is the best in this field.
+				</div>
+
+				<div class="tp-caption sfb tp-resizeme"
+					data-x="50"
+					data-y="410" 
+					data-speed="500"
+					data-start="1500"
+					data-easing="Power3.easeIn"
+					data-splitin="none"
+					data-splitout="none"
+					data-elementdelay="1"
+					data-endelementdelay="0.1"
+					data-endspeed="500"
+					style="z-index: 4; max-width: auto;">
+						<a class="btn btn-primary btn-lg" href="#">OUR SERVICES &nbsp; <i class="fa fa-angle-right"></i></a>
+				</div>
+
+				<div class="tp-caption sfb tp-resizeme"
+					data-x="250"
+					data-y="410" 
+					data-speed="500"
+					data-start="1500"
+					data-easing="Power3.easeInOut"
+					data-splitin="none"
+					data-splitout="none"
+					data-elementdelay="0.1"
+					data-endelementdelay="0.1"
+					data-endspeed="500"
+					style="z-index: 6; max-width: auto; max-height: auto; white-space: nowrap;">
+						<a class="btn btn-default btn-lg scrollTo" href="#appointment">MAKE AN APPOINTMENT &nbsp; <i class="fa fa-angle-right"></i></a>
+				</div>
+			</li>
+
+		</ul>
+
 	</div>
-</section>
-<!-- /HOME -->
-
-
+</div>
+<!-- /REVOLUTION SLIDER -->
 
 <hr class="nomargin" /><!-- 1px line separator -->
-
 
 <!-- BUTTON CALLOUT -->
 <a href="#" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
@@ -38,8 +193,6 @@
 	</span>
 </a>
 <!-- /BUTTON CALLOUT -->
-
-   
 
 <!-- Overview -->
 <section>
@@ -78,148 +231,97 @@
 </section>
 <!-- /Overview -->
 
-<!-- FEATURES -->
-<section id="features">
+<!-- Team -->
+<section>
 	<div class="container">
 
-		<header class="text-center margin-bottom-60">
-			<h2>Our Features</h2>
-			<p class="lead font-lato">Lorem ipsum dolor sit amet adipiscium elit</p>
-			<hr />
+		<header class="text-center margin-bottom-60 clearfix">
+			<h2 class="weight-300 nomargin-bottom">Meet Our Specialists</h2>
 		</header>
 
-		<!-- FEATURED BOXES 3 -->
 		<div class="row">
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-circle-compass"></i>
-					<h4>Pixel Perfect</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus.</p>
-				</div>
-			</div>
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-piechart"></i>
-					<h4>Graphs</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus.</p>
-				</div>
-			</div>
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-strategy"></i>
-					<h4>Startegy</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus.</p>
-				</div>
-			</div>
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-streetsign"></i>
-					<h4>SEO Optimized</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus. </p>
-				</div>
-			</div>
-		</div>
-		<!-- /FEATURED BOXES 3 -->
 
-		<!-- FEATURED BOXES 3 -->
-		<div class="row">
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-trophy"></i>
-					<h4>Winners</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus.</p>
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t1-min.jpg" alt="" />
+					<div class="caption">
+						<h4 class="nomargin">John Doe</h4>
+						<small class="margin-bottom-20 block">Web Developer</small>
+
+						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
+						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-gears"></i>
-					<h4>Responsive</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus.</p>
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t2-min.jpg" alt="" />
+					<div class="caption">
+						<h4 class="nomargin">Angelina Doe</h4>
+						<small class="margin-bottom-20 block">Architect</small>
+
+						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
+						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-tools"></i>
-					<h4>Costomizable</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus.</p>
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t3-min.jpg" alt="" />
+					<div class="caption">
+						<h4 class="nomargin">Mark Doe</h4>
+						<small class="margin-bottom-20 block">Web Designer</small>
+
+						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
+						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-3 col-xs-6">
-				<div class="text-center">
-					<i class="ico-light ico-lg ico-rounded ico-hover et-layers"></i>
-					<h4>Easy to Modify</h4>
-					<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus. </p>
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t4-min.jpg" alt="" />
+					<div class="caption">
+						<h4 class="nomargin">Jolie Doe</h4>
+						<small class="margin-bottom-20 block">Art Director</small>
+
+						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
+						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
+					</div>
 				</div>
 			</div>
+
 		</div>
-		<!-- /FEATURED BOXES 3 -->
+
 
 	</div>
 </section>
-<!-- /FEATURES -->
+<!-- /Team -->
 
-<!-- TESTIMONIALS -->
-<section id="testimonials" class="alternate">
-	<div class="container">
 
-		<header class="text-center margin-bottom-60">
-			<h2>Testimonials</h2>
-			<p class="lead font-lato">Lorem ipsum dolor sit amet adipiscium elit</p>
-			<hr />
-		</header>
+<?php if(!empty($all_testimonials)) {   ?>
+	<!-- Testimonials -->
+	<section class="padding-xxs dark">
+		<div class="container">
 
-		<!-- 
-			Note: remove class="rounded" from the img for squared image!
-		-->
-		<div class="row margin-bottom-60">
-			<div class="col-md-4">
-				<div class="testimonial testimonial-bordered padding-15">
-					<figure class="pull-left">
-						<img class="rounded" src="<?= DEFAULT_IMAGE_PATH ?>/demo/people/300x300/2-min.jpg" alt="" />
-					</figure>
-					<div class="testimonial-content">
-						<p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur ullam quibusdam cum libero!</p>
-						<cite>
-							Felicia Doe
-							<span>Company Ltd.</span>
-						</cite>
+			<div class="owl-carousel text-center owl-testimonial nomargin" data-plugin-options='{"singleItem": true, "autoPlay": 3500, "navigation": false, "pagination": true, "transitionStyle":"fade"}'>				
+				<?php foreach($all_testimonials as $testimonial) { ?>
+					<div class="testimonial">
+						<figure>
+							<img class="rounded" src="<?php echo base_url().'uploads/testimonial/'.$testimonial['img_path']; ?>" alt="" />
+						</figure>
+						<div class="testimonial-content nopadding">
+							<p class="lead"><?php echo $testimonial['description']; ?></p>
+							<cite>
+								<?php echo $testimonial['auther']; ?>
+								<span><?php echo $testimonial['designation']; ?></span>
+							</cite>
+						</div>
 					</div>
-				</div>
+				<?php } ?>				
 			</div>
-			<div class="col-md-4">
-				<div class="testimonial testimonial-bordered padding-15">
-					<figure class="pull-left">
-						<img class="rounded" src="<?= DEFAULT_IMAGE_PATH ?>/demo/people/300x300/1-min.jpg" alt="" />
-					</figure>
-					<div class="testimonial-content">
-						<p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur ullam quibusdam cum libero!</p>
-						<cite>
-							Joana Doe
-							<span>Company Ltd.</span>
-						</cite>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="testimonial testimonial-bordered padding-15">
-					<figure class="pull-left">
-						<img class="rounded" src="<?= DEFAULT_IMAGE_PATH ?>/demo/people/300x300/6-min.jpg" alt="" />
-					</figure>
-					<div class="testimonial-content">
-						<p>Incidunt deleniti blanditiis quas aperiam recusandae consequatur ullam quibusdam cum libero!</p>
-						<cite>
-							Melissa Doe
-							<span>Company Ltd.</span>
-						</cite>
-					</div>
-				</div>
-			</div>
+
 		</div>
+	</section>
+	<!-- /Testimonials -->
+<?php } ?>
 
-		 
-
-	</div>
-</section>
-<!-- /TESTIMONIALS -->
-
- 

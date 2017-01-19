@@ -28,6 +28,13 @@ class Testimonial_model extends CI_Model {
         return $res_data;
     }
 
+    public function fetch_testimonial() {
+        $this->db->select('*');
+        $this->db->where(['is_deleted !='=> 1,'is_blocked'=>'0']);        
+        $res_data = $this->db->get('testimonial')->result_array();
+        return $res_data;
+    }
+
     /**
      * @uses : this function is used to count rows of Testimonials based on datatable in Testimonial list page
      * @param : @table 

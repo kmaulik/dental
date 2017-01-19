@@ -1,0 +1,45 @@
+#frmregister{margin-bottom: 0px;}
+section.page-header h1{font-weight: bold;}
+#frmregister .form-group {
+    float: left;
+    margin-right: 20px;
+    width: 48%;
+}
+#frmregister .form-group.address-box {
+    clear: both;
+    float: none;
+    width: 98% !important;
+}
+#frmregister .form-group.address-box .form-control{height: 120px;}
+#frmregister .margin-top-30 {
+    clear: both;
+}
+#frmregister .register-btn{text-align: left !important;}
+.form-control::-moz-placeholder {
+    color: rgb(186, 186, 186) !important;
+    opacity: 1;
+}
+#frmregister .form-control {
+    border: 1px solid rgb(229, 229, 229) !important;
+	height: 50px;
+}
+.top-links  ul.dropdown-menu {
+    margin: 0 0 0 -1px;
+    min-width: 122px !important;
+}
+.top-links .dropdown-menu.pull-right > li {
+    border-bottom: 1px solid rgb(229, 229, 229) !important;
+}
+.top-links ul.dropdown-menu > li > a {
+    padding: 8px 12px !important;
+}
+#frmregister .select2-selection.select2-selection--single {
+    height: 50px;
+}
+.select2-selection__rendered{height: 50px !important; line-height: 46px !important;}
+#frmlogin {
+    margin: 0 auto;
+    width: 40%;
+}
+#frmlogin .form-control{height: 50px !important; border:1px solid rgb(229, 229, 229) !important;border-radius: 3px;}
+.sky-form .ico-append, .sky-form .ico-prepend{top:12px !important;}

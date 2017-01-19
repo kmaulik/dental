@@ -16,22 +16,9 @@
 <section>
 	<div class="container">
 		<div class="row">
-
-			<!-- LEFT TEXT -->
-			<div class="col-md-5 col-md-offset-1">
-
-				<h2 class="size-16">IMPORTANT INFORMATION</h2>
-				<p class="text-muted">Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa.</p>
-				<p class="text-muted">Sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa.</p>
-
-			</div>
-			<!-- /LEFT TEXT -->
-
-
 			<!-- LOGIN -->
-			<div class="col-md-4">
+			<div class="col-md-12">
 
-				<h2 class="size-16">LOGIN</h2>
 
 				<!-- login form -->
 				<form method="post" action="" id="frmlogin" class="sky-form">

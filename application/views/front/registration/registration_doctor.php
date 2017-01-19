@@ -16,24 +16,21 @@
 <section>
 	<div class="container">
 		<div class="row">
-			<!-- LEFT TEXT -->
-			<div class="col-md-5 col-md-offset-1">
-
-				<h2 class="size-16">IMPORTANT INFORMATION</h2>
-				<p class="text-muted">Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa.</p>
-				<p class="text-muted">Sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa.</p>
-
-			</div>
-			<!-- /LEFT TEXT -->
-
-
 			<!-- LOGIN -->
-			<div class="col-md-4">
-
-				<h2 class="size-16">Doctor Registration</h2>
+			<div class="col-md-12">
+				<?php 
+					$all_errors = validation_errors('<li>','</li>');
+					if($all_errors != '') { 
+				?>
+					<div class="alert alert-mini alert-danger">				
+						<ul>							
+							<?php echo $all_errors; ?>
+						</ul>
+					</div>
+				<?php } ?>
 
 				<!-- login form -->
-				<form method="post" action="" id="frmlogin" onsubmit="return zip_validate()">
+				<form method="post" action="" id="frmregister" onsubmit="return zip_validate()">
 
 					<input type="hidden" name="role_id" value="4">  <!-- 4 => Doctor Role -->
 					<input type="hidden" name="longitude" id="longitude">
@@ -43,41 +40,29 @@
 
 						<div class="form-group">
 							<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
-						</div>
-						<?php echo form_error('fname','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>						
 
 						<div class="form-group">
 							<input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php echo set_value('lname'); ?>" >
-						</div>
-						<?php echo form_error('lname','<div class="alert alert-mini alert-danger">','</div>'); ?>
-
+						</div>						
 
 						<!-- Email -->
 						<div class="form-group">
 							<input type="text" name="email_id" class="form-control" placeholder="Email" value="<?php echo set_value('email_id'); ?>" >
-						</div>
-						<?php echo form_error('email_id','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>						
 
 						<!-- Password -->
 						<div class="form-group">
 							<input type="password" name="password" class="form-control" placeholder="Password" value="<?php echo set_value('password'); ?>">
-						</div>
-						<?php echo form_error('password','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>						
 
 						<div class="form-group">
 							<input type="password" name="c_password" class="form-control" placeholder="Confirm Password" value="<?php echo set_value('c_password'); ?>">
-						</div>
-						<?php echo form_error('c_password','<div class="alert alert-mini alert-danger">','</div>'); ?>
-
-						<div class="form-group">
-							<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
-						</div>
-						<?php echo form_error('address','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>						
 
 						<div class="form-group">
 							<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo set_value('city'); ?>" >
-						</div>
-						<?php echo form_error('city','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>						
 
 						<div class="form-group">
 							<select name="country_id" class="form-control select2" id="country_id">
@@ -89,8 +74,7 @@
 					</div>
 					<script>
 					$("#country_id").val(<?php echo set_value('country_id'); ?>);
-					</script>
-					<?php echo form_error('country_id','<div class="alert alert-mini alert-danger">','</div>'); ?>
+					</script>					
 
 					<div class="form-group">
 						<input type="text" name="zipcode" id="zipcode" class="form-control" onblur="check_zipcode()" placeholder="Zip code" value="<?php echo set_value('zipcode'); ?>" >
@@ -105,24 +89,22 @@
 					</div>
 					<script>
 					$("#gender").val("<?php echo set_value('gender'); ?>");
-					</script>
-					<?php echo form_error('gender','<div class="alert alert-mini alert-danger">','</div>'); ?>
+					</script>					
 
 					<div class="form-group">
 						<input type="text" name="phone" class="form-control" placeholder="Phone" value="<?php echo set_value('phone'); ?>" >
-					</div>
-					<?php echo form_error('phone','<div class="alert alert-mini alert-danger">','</div>'); ?>
+					</div>					
 
 					<div class="form-group">
 						<input type="text" name="birth_date" placeholder="Birth Date" class="form-control datepicker" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>">
-					</div>
-					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
+					</div>					
+					<div class="form-group address-box">
+						<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
+					</div>						
 
 					<div class="margin-top-30">
 						<label class="checkbox nomargin"><input class="checked-agree" type="checkbox" name="agree"><i></i>I agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms of Service</a></label>
-					</div>					
-					<?php echo form_error('agree','<div class="alert alert-mini alert-danger">','</div>'); ?>
-
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12 col-sm-12 col-xs-12">
@@ -134,7 +116,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12 text-right">
+					<div class="col-md-12 col-sm-12 col-xs-12 text-right register-btn">
 						<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> REGISTER</button>
 					</div>
 				</div>

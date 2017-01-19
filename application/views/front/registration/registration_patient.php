@@ -16,24 +16,13 @@
 <section>
 	<div class="container">
 		<div class="row">
-			<!-- LEFT TEXT -->
-			<div class="col-md-5 col-md-offset-1">
-
-				<h2 class="size-16">IMPORTANT INFORMATION</h2>
-				<p class="text-muted">Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa.</p>
-				<p class="text-muted">Sodales sed, dignissim pretium nunc. Nam et lacus neque. Ut enim massa, sodales tempor convallis et, iaculis ac massa.</p>
-
-			</div>
-			<!-- /LEFT TEXT -->
+			 
 
 
 			<!-- LOGIN -->
-			<div class="col-md-4">
-
-				<h2 class="size-16">Patient Registration</h2>
-
+			<div class="col-md-12">
 				<!-- login form -->
-				<form method="post" action="" id="frmlogin" onsubmit="return zip_validate()">
+				<form method="post" action="" id="frmregister" onsubmit="return zip_validate()">
 
 					<input type="hidden" name="role_id" value="5">  <!-- 5 => Patient Role -->
 					<input type="hidden" name="longitude" id="longitude">
@@ -67,12 +56,7 @@
 						<div class="form-group">
 							<input type="password" name="c_password" class="form-control" placeholder="Confirm Password" value="<?php echo set_value('c_password'); ?>">
 						</div>
-						<?php echo form_error('c_password','<div class="alert alert-mini alert-danger">','</div>'); ?>
-
-						<div class="form-group">
-							<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
-						</div>
-						<?php echo form_error('address','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						<?php echo form_error('c_password','<div class="alert alert-mini alert-danger">','</div>'); ?>						
 
 						<div class="form-group">
 							<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo set_value('city'); ?>" >
@@ -119,10 +103,16 @@
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
+					<div class="form-group address-box ">
+						<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
+					</div>
+					<?php echo form_error('address','<div class="alert alert-mini alert-danger">','</div>'); ?>
+
 					<div class="margin-top-30">
 						<label class="checkbox nomargin"><input class="checked-agree" type="checkbox" name="agree"><i></i>I agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms of Service</a></label>
 					</div>					
 					<?php echo form_error('agree','<div class="alert alert-mini alert-danger">','</div>'); ?>
+
 
 				</div>
 				<div class="row">
@@ -135,7 +125,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12 text-right">
+					<div class="col-md-12 col-sm-12 col-xs-12 text-right register-btn">
 						<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> REGISTER</button>
 					</div>
 				</div>
