@@ -121,12 +121,12 @@ class Blogs_model extends CI_Model {
      * @param : @table 
      * @author : DHK
      */
-    public function get_result_prev_next($table, $condition = null,$oredr='asc') {
+    public function get_result_prev_next($table, $condition = null,$order='asc') {
         $this->db->select('*');
         if (!is_null($condition)) {
             $this->db->where($condition);
         }
-        $this->db->order_by('id',$oredr);
+        $this->db->order_by('id',$order);
         $query = $this->db->get($table);
         return $query->row_array();
     }

@@ -150,7 +150,7 @@
 
                     <!-- Logo -->
                     <a class="logo pull-left" href="<?php echo base_url(); ?>">
-                        <img src="<?= DEFAULT_IMAGE_PATH ?>logo_dark.png" alt="" />
+                        <img src="<?= DEFAULT_IMAGE_PATH ?>logo.png" alt="" />
                     </a>
 
                     <!-- 
@@ -176,14 +176,23 @@
                             <li class="dropdown active"><!-- HOME -->
                                 <a href="<?=base_url()?>">HOME</a>
                             </li>
-                            <li class="dropdown active"><!-- HOME -->
-                                <a href="<?=base_url('blog')?>">BLOG</a>
-                            </li>
+                           
                             <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
                                 <li class="dropdown"><!-- HOME -->
                                 <a href="<?=base_url('rfp')?>">RFP</a>
                             </li>
                             <?php endif;?>
+
+                            <li class="dropdown">
+                                <a href="<?=base_url('blog')?>">BLOG</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="<?=base_url('faq')?>">FAQ</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="<?=base_url('contact_us')?>">CONTACT US</a>
+                            </li>
+
                             <!-- <li class="dropdown">
                                 <a href="<?=base_url('login')?>">LOGIN</a>
                             </li>

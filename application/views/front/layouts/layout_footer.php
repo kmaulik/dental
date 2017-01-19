@@ -14,7 +14,7 @@
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur imperdiet hendrerit volutpat. Sed in nunc nec ligula consectetur mollis in vel justo. Vestibulum ante ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur imperdiet hendrerit volutpat.
                 </p>
-                <h2>(800) 123-4567</h2>
+                <h2><?=config('phone');?></h2>
             </div>
             <!-- /col #1 -->
 
@@ -52,7 +52,7 @@
                 <li>&bull;</li>
                 <li><a href="#">Privacy</a></li>
             </ul>
-            &copy; All Rights Reserved, Company LTD
+            <?=config('copy_right');?>
         </div>
     </div>
 

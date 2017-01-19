@@ -7,7 +7,7 @@
 </style>
 
 
-<section class="page-header">
+<section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Patient RFP</h1>
 		<!-- breadcrumbs -->

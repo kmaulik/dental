@@ -67,6 +67,19 @@ class Admin_contact_inquiry_model extends CI_Model {
         }
     }
 
+     /**
+     * @uses : This function is used to insert record
+     * @param : @table, @inquiry_array = array of insert  
+     * @author : HPA
+     */
+    public function insert_record($table, $inquiry_array) {
+        if ($this->db->insert($table, $inquiry_array)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
 }
 
 ?>
