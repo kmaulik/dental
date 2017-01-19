@@ -67,6 +67,11 @@ $route['admin/(:any)/(:any)'] = "admin/$1/$2";
 $route['admin/(:any)/(:any)/(:any)'] = "admin/$1/$2/$3";
 
 
+/*--- End Route For Front --- */
+$route['faq'] = 'page/index/faq';
+$route['contact_us'] = 'page/contact_us';
+/*--- End Route For Front --- */
+
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

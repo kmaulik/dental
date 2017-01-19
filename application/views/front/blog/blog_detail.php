@@ -1,4 +1,4 @@
-<section class="page-header dark page-header-xs">
+<section class="page-header page-header-xs">
 	<div class="container">
 		<h1>BLOG</h1>
 		<!-- breadcrumbs -->

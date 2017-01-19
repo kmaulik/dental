@@ -54,6 +54,19 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-lg-3 control-label">Phone:</label>
+                            <div class="col-lg-6">
+                                <input type="text" name="phone" id="phone" placeholder="Enter Contact No." class="form-control" value="<?php echo (isset($record['phone'])) ? $record['phone'] : set_value('phone'); ?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Address :</label>
+                            <div class="col-lg-6">
+                                <textarea name="contact_address" id="contact_address" placeholder="Enter Contact Address" class="form-control"><?php echo (isset($record['contact_address'])) ? $record['contact_address'] : set_value('contact_address'); ?></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">Sender Name:</label>
                             <div class="col-lg-6">
                                 <input type="text" name="sender_name" id="sender_name" placeholder="Enter Sender Name" class="form-control" value="<?php echo (isset($record['sender_name'])) ? $record['sender_name'] : set_value('sender_name'); ?>">
@@ -163,6 +176,12 @@ $("#frmsettings").validate({
         contact_email: {
             required: true,
         },
+        phone: {
+            required: true,
+        },
+        contact_address: {
+            required: true,
+        },
         sender_name: {
             required: true,
         },
@@ -198,6 +217,12 @@ $("#frmsettings").validate({
         },
         contact_email: {
             required: "Please provide Contact Email",
+        },
+        phone: {
+            required: "Please provide Contact Number",
+        },
+        contact_address: {
+            required: "Please provide Contact Address",
         },
         sender_name: {
             required: "Please provide Sender Name",

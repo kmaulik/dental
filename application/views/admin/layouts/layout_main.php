@@ -10,9 +10,8 @@
         <!-- Main navbar -->
         <div class="navbar navbar-inverse">
             <div class="navbar-header">
-                <h4>
-                    <!-- <a href="<?php echo base_url() . "admin/dashboard" ?>"> Dental Project</a> -->
-                </h4>
+                <a class="navbar-brand" href="<?=base_url('admin/dashboard')?>"><img src="<?=DEFAULT_ADMIN_IMAGE_PATH?>logo_admin.png" alt=""></a>
+
                 <ul class="nav navbar-nav visible-xs-block">
                     <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
                     <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>

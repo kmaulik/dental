@@ -1,15 +1,17 @@
 <head>
     <meta charset="utf-8" />
-    <title>Dental</title>
-    <meta name="keywords" content="Dental" />
-    <meta name="description" content="Dental Website" />
-    <meta name="Author" content="Dental" />
+    <title><?=isset($cms_data[0]['seo_title'])?$cms_data[0]['seo_title']:config('site_title')?></title>
+    <meta name="keywords" content="<?=isset($cms_data[0]['seo_keyword'])?$cms_data[0]['seo_keyword']:config('site_keywords')?>" />
+    <meta name="description" content="<?=isset($cms_data[0]['seo_description'])?$cms_data[0]['seo_description']:config('site_description')?>" />
+    <meta name="Author" content="ToothFairy" />
 
     <!-- mobile settings -->
     <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0" />
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
 
     <!-- WEB FONTS : use %7C instead of | (pipe) -->
+    <link rel="shortcut icon" type="image/ico" href="<?= DEFAULT_IMAGE_PATH ?>favicon.png"/>
+
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400%7CRaleway:300,400,500,600,700%7CLato:300,400,400italic,600,700" rel="stylesheet" type="text/css" />
 
     <!-- CORE CSS -->
