@@ -300,7 +300,7 @@
 						</a>
 
 						<ul class="dropdown-menu dropdown-menu-right">
-							<li><a href="#"><i class="icon-user-plus"></i> My profile</a></li>
+							<li><a href="#"><i class="icon-checkmark-circle"></i> My profile</a></li>
 							<li><a href="#"><i class="icon-coins"></i> My balance</a></li>
 							<li><a href="#"><span class="badge bg-blue pull-right">58</span> <i class="icon-comment-discussion"></i> Messages</a></li>
 							<li class="divider"></li>
@@ -942,7 +942,7 @@
 									</ul>
 								</li>
 								<li>
-									<a href="#"><i class="icon-user-plus"></i> <span>Login &amp; registration</span></a>
+									<a href="#"><i class="icon-checkmark-circle"></i> <span>Login &amp; registration</span></a>
 									<ul>
 										<li><a href="login_simple.html">Simple login</a></li>
 										<li><a href="login_advanced.html">More login info</a></li>

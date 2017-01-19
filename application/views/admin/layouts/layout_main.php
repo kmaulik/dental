@@ -58,7 +58,12 @@
                                 <ul class="navigation navigation-main navigation-accordion">
 
                                     <!-- Main -->                                    
-                                    <li class="<?php echo ($controller == 'dashboard') ? 'active' : ''; ?>"><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
+                                    <li class="<?php echo ($controller == 'dashboard') ? 'active' : ''; ?>">
+                                        <a href="<?php echo base_url() . "admin/dashboard" ?>">
+                                            <i class="icon-home4"></i> 
+                                            Dashboard
+                                        </a>
+                                    </li>
 
                                     <li class="<?php echo (in_array($controller,['doctor','patient','users'])) ? 'active' : ''; ?>">
                                         <a href="#" class="has-ul"><i class="icon-users4"></i> <span>Users</span></a>
@@ -75,10 +80,14 @@
                                                     Doctors
                                                 </a>
                                             </li>
+                                            <li class="<?php echo (in_array($controller,['users'])) ? 'active' : ''; ?>">
+                                                <a href="<?php echo base_url().'admin/users'; ?>">
+                                                    <i class="icon-arrow-right32"></i>
+                                                    Users
+                                                </a>
+                                            </li>
                                         </ul>
                                     </li>
-
-                                    
                                     
                                     <li class="<?php echo ($controller == 'survey') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/survey'; ?>">
@@ -108,7 +117,7 @@
                                     
                                     <li class="<?php echo ($controller == 'contact_inquiry') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/contact_inquiry'; ?>">
-                                            <i class="icon-bell-plus"></i>
+                                            <i class="icon-phone-plus2"></i>
                                             <span>Contact Inquiry</span>
                                         </a>
                                     </li>                         
@@ -143,9 +152,11 @@
                                             <span>Site Settings</span></a>
                                     </li>
 
-                                                                                                
                                     <li class="">
-                                        <a href="<?php echo base_url() . "admin/logout"; ?>"><i class="icon-switch2"></i> <span>Logout</span></a>
+                                        <a href="<?php echo base_url() . "admin/logout"; ?>">
+                                            <i class="icon-switch2"></i>
+                                            <span>Logout</span>
+                                        </a>
                                     </li>
                                 </ul>
                             </div>
