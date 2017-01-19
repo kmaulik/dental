@@ -1,6 +1,6 @@
 <section class="page-header page-header-xs">
 	<div class="container">
-		<h1>CONTACT</h1>
+		<h1>CONTACT US</h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="#">Home</a></li>
@@ -50,7 +50,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>E-mail Address *</label>
-									<input type="email" value="<?php echo set_value('email'); ?>" class="form-control" name="email">
+									<input type="text" value="<?php echo set_value('email'); ?>" class="form-control" name="email">
 								</div>
 								<?php echo form_error('email','<div class="alert alert-mini alert-danger">','</div>'); ?>
 							</div>

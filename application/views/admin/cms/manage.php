@@ -123,6 +123,11 @@ $("#title").blur(function () {
     $("#slug").val(Text);
 });
 
+//------------ For Readyonly Title When Update -------
+if($("#title").val() != ''){
+    $('#title').attr('readonly', true);
+}
+
 //---------------------- Validation -------------------
 $("#frmcms").validate({
     errorClass: 'validation-error-label',

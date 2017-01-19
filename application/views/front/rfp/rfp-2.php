@@ -51,21 +51,18 @@
 							<h3 class="rfp-title">Treatment Plan</h3>
 						</div>
 					</div>
+
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Treatment Category</label>
-								<select name="treatment_cat_id" class="form-control select2" id="treatment_cat_id">
-									<option value="">Select Treatment Category</option>
+								<select name="treatment_cat_id[]" class="form-control select2" data-placeholder="Select Treatment Category" multiple id="treatment_cat_id">
 									<?php foreach($treatment_category as $cat) :?>
-										<option value="<?=$cat['id']?>"><?=$cat['title']?></option>
+										<option value="<?=$cat['id']?>" <?php echo  set_select('treatment_cat_id[]', $cat['id']); ?>><?=$cat['title']?></option>
 									<?php endforeach;?>
 								</select>	
 							</div>
-							<?php echo form_error('treatment_cat_id','<div class="alert alert-mini alert-danger">','</div>'); ?>
-							<script>
-								$("#treatment_cat_id").val("<?=set_value('treatment_cat_id')?>");
-							</script>	
+							<?php echo form_error('treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>
 					</div>	
 					<div class="row">

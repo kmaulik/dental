@@ -63,7 +63,7 @@ class Rfp extends CI_Controller {
             else{
                 $this->form_validation->set_rules('other_description', 'Description', 'required');
             }
-            $this->form_validation->set_rules('treatment_cat_id', 'Treatment Category', 'required');
+            $this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
             
 
             if($this->form_validation->run() == FALSE){  
@@ -74,13 +74,18 @@ class Rfp extends CI_Controller {
             }
             else
             {
+                $treatment_cat_id='';
+                if($this->input->post('treatment_cat_id')){
+                    $treatment_cat_id=implode(",",$this->input->post('treatment_cat_id')); // Convert Array into string
+                } 
                 $teeth='';
                 if($this->input->post('teeth')){
                     $teeth=implode(",",$this->input->post('teeth')); // Convert Array into string
-                } 
-               
+                }   
+
                 $rfp_data=array();
                 $rfp_data=$this->session->userdata('rfp_data');
+                $rfp_data['treatment_cat_id']=$treatment_cat_id;
                 $rfp_data['teeth']=$teeth;
                 $rfp_data['other_description']=$this->input->post('other_description');
                 $rfp_data['patient_id'] =$this->session->userdata['client']['id'];

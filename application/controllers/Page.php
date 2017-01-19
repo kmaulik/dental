@@ -10,7 +10,7 @@ class Page extends CI_Controller {
 
     /*------------ For Cms Page Dynamic Content fetch from database @DHK */
     function index($slug=''){
-    	$data['cms_data']=$this->Cms_model->get_result('cms_page',['slug' => $slug]);
+    	$data['cms_data']=$this->Cms_model->get_result('cms_page',['slug' => $slug,'is_deleted' => '0', 'is_blocked' => '0']);
     	if(isset($data['cms_data'][0]) && $data['cms_data'][0] != ''){
     		$data['subview']="front/page/cms_page";
     	}
@@ -25,7 +25,7 @@ class Page extends CI_Controller {
     function contact_us(){
 
     	$this->form_validation->set_rules('name', 'Full Name', 'required');
-    	$this->form_validation->set_rules('email', 'Email', 'required');
+    	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
     	$this->form_validation->set_rules('subject', 'Subject', 'required');
     	$this->form_validation->set_rules('description', 'Message', 'required');
 
