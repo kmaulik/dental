@@ -216,13 +216,6 @@
 
 <?php $this->load->view('front/layouts/layout_footer'); ?>
 
-
-
-
-
-
-
-
 </div>
 <!-- /wrapper -->
 
@@ -248,6 +241,8 @@
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.tools.min.js"></script>
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.revolution.min.js"></script>
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>view/demo.revolution_slider.js"></script>
+
+ 
 
 </body>
 </html>

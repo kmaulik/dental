@@ -5,10 +5,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Registration extends CI_Controller {
 
     public function __construct() {
-        parent::__construct();   
-        if($this->session->userdata('client')) { redirect('dashboard');}          
+        parent::__construct();           
+        if($this->session->userdata('client')) { redirect('dashboard');}
+        $this->load->library('unirest');
         $this->load->model(array('Users_model','Country_model'));
     }
+
     /* Patient Registration @DHK */
     public function patient() {
 
@@ -31,6 +33,20 @@ class Registration extends CI_Controller {
             $data['subview']='front/registration/registration_patient';
             $this->load->view('front/layouts/layout_main',$data);        
         }else{
+
+            // v! Check for valid zip code
+            $zipcode = $this->input->post('zipcode');
+            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+            $res = $this->unirest->get($str);
+            $res_arr = json_decode($res->raw_body,true);
+
+            if($res_arr['status'] != 'OK'){
+                $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
+                redirect('registration/patient');   
+            }else{
+                $loc_arr = $res_arr['results'][0]['geometry']['location'];
+            }
+
             $rand=random_string('alnum',5);
             $data=array(
                 'role_id' => $this->input->post('role_id'),
@@ -45,8 +61,8 @@ class Registration extends CI_Controller {
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
                 'birth_date' => $this->input->post('birth_date'),
-                'longitude' => $this->input->post('longitude'),
-                'latitude' => $this->input->post('latitude'),
+                'longitude' => $loc_arr['lng'],
+                'latitude' => $loc_arr['lat'],
                 'activation_code'  => $rand,
                 'is_blocked' => '1', // 1 Means Aacount is Blocked  
                 );
@@ -79,11 +95,10 @@ class Registration extends CI_Controller {
                 redirect('registration/patient');
 
             } 
-        }
-        
+        }    
     }
-
-     /* Doctor Registration @DHK */
+    
+    /* Doctor Registration @DHK */
     public function doctor() {
 
         $this->form_validation->set_rules('fname', 'first name', 'required');  
@@ -100,11 +115,25 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('birth_date', 'birth date', 'required');
         $this->form_validation->set_rules('agree', 'terms and condition', 'required');
 
-        if($this->form_validation->run() == FALSE){            
+        if($this->form_validation->run() == FALSE){
             $data['country_list']=$this->Country_model->get_result('country');
             $data['subview']='front/registration/registration_doctor';
             $this->load->view('front/layouts/layout_main',$data);        
         }else{
+
+            // v! Check for valid zip code
+            $zipcode = $this->input->post('zipcode');
+            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+            $res = $this->unirest->get($str);
+            $res_arr = json_decode($res->raw_body,true);
+
+            if($res_arr['status'] != 'OK'){
+                $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
+                redirect('registration/doctor');   
+            }else{
+                $loc_arr = $res_arr['results'][0]['geometry']['location'];
+            }
+
             $rand=random_string('alnum',5);
             $data=array(
                 'role_id' => $this->input->post('role_id'),
@@ -119,11 +148,12 @@ class Registration extends CI_Controller {
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
                 'birth_date' => $this->input->post('birth_date'),
-                'longitude' => $this->input->post('longitude'),
-                'latitude' => $this->input->post('latitude'),
+                'longitude' => $loc_arr['lng'],
+                'latitude' => $loc_arr['lat'],
                 'activation_code'  => $rand,
                 'is_blocked' => '1', // 1 Means Aacount is Blocked  
                 );
+
             $res=$this->Users_model->insert_user_data($data);
             if($res){
 
@@ -151,18 +181,15 @@ class Registration extends CI_Controller {
             else{
                 $this->session->set_flashdata('error', 'Error Into Registration. Please Try Again !!'); 
                 redirect('registration/doctor');
-
             } 
-        }
-        
+        }        
     }
 
     /*  Check For User Account Verify or Not 
-    /*  Param 1 : Account Verification No. 
+        Param 1 : Account Verification No. 
         @DHK
     */
-    function verification($id='0')
-    {
+    public function verification($id='0'){
         if($this->Users_model->CheckActivationCode($id))
         {
             $this->db->set('activation_code','');
@@ -181,9 +208,7 @@ class Registration extends CI_Controller {
     }
 
     /*  Check For Forgot Password   @DHK*/
-
-    function forgotpassword()
-    {    
+    public function forgotpassword(){ 
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email');
        
         if($this->form_validation->run() == FALSE){            
@@ -224,13 +249,11 @@ class Registration extends CI_Controller {
         }    
     }
 
-     /*  Check For Reset Password  
-     /* Param 1 : Activation Code 
+    /*  Check For Reset Password  
+        Param 1 : Activation Code 
         @DHK  
-    */
-    
-    function resetpwd($id='0')
-    {
+    */    
+    public function resetpwd($id='0'){
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
         $this->form_validation->set_rules('c_password', 'confirm password', 'required|matches[password]');
 
@@ -254,10 +277,7 @@ class Registration extends CI_Controller {
             $this->db->update('users');
             $this->session->set_flashdata('success','Password Set Successfully, You can login with new password.');
             redirect('login');
-        }
-           
+        }           
     }
-
-     
 
 }

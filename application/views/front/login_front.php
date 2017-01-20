@@ -18,7 +18,18 @@
 		<div class="row">
 			<!-- LOGIN -->
 			<div class="col-md-12">
-
+				<!-- ALERT -->
+				<?php if($this->session->flashdata('success')) : ?>
+				<div class="alert alert-mini alert-success margin-bottom-30">
+					<?=$this->session->flashdata('success');?>
+				</div>
+				<?php endif; ?>
+				<?php if($this->session->flashdata('error')) : ?>
+				<div class="alert alert-mini alert-danger margin-bottom-30">
+					<?=$this->session->flashdata('error');?>
+				</div>
+				<?php endif; ?>
+				<!-- /ALERT -->
 
 				<!-- login form -->
 				<form method="post" action="" id="frmlogin" class="sky-form">
@@ -64,25 +75,11 @@
 						</div>
 
 					</div>
-
 				</form>
-				<!-- /login form -->
-
-				<!-- ALERT -->
-				<?php if($this->session->flashdata('success')) : ?>
-				<div class="alert alert-mini alert-success margin-bottom-30">
-					<?=$this->session->flashdata('success');?>
-				</div>
-				<?php endif; ?>
-				<?php if($this->session->flashdata('error')) : ?>
-				<div class="alert alert-mini alert-danger margin-bottom-30">
-					<?=$this->session->flashdata('error');?>
-				</div>
-				<?php endif; ?>
-				<!-- /ALERT -->
+				<!-- /login form -->				
+			</div>
+			<!-- /LOGIN -->
 		</div>
-		<!-- /LOGIN -->
 	</div>
-</div>
 </section>
 <!-- / --> 

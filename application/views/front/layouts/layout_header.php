@@ -29,6 +29,8 @@
     <link href="<?= DEFAULT_CSS_PATH ?>ac_style.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>jquery/jquery-2.1.4.min.js"></script>
+
+    <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>bootstrap.datepicker/js/bootstrap-datepicker.min.js"></script>
     
 
 </head>

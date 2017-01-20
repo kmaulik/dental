@@ -2546,8 +2546,45 @@
 			});
 		}
 
+		// v! New instance for datepicker for the disable future date by adding endDate: '+0d'
+		var _container_birth_date = jQuery('.birth_date');
+		
+		if(_container_birth_date.length > 0) {
+			loadScript(plugin_path + 'bootstrap.datepicker/js/bootstrap-datepicker.min.js', function() {
+		
+				if(jQuery().datepicker) {
 
+					_container_birth_date.each(function() {
+						var _t 		= jQuery(this),
+							_lang 	=	_t.attr('data-lang') || 'en';
 
+						if(_lang != 'en' && _lang != '') { // load language file
+							loadScript(plugin_path + 'bootstrap.datepicker/locales/bootstrap-datepicker.'+_lang+'.min.js');
+						}
+
+						jQuery(this).datepicker({
+							format:			_t.attr('data-format') 			|| 'yyyy-mm-dd', 
+							language: 		_lang,
+							rtl: 			_t.attr('data-RTL') 			== "true"  ? true  : false,
+							changeMonth: 	_t.attr('data-changeMonth') 	== "false" ? false : true,
+							todayBtn: 		_t.attr('data-todayBtn') 		== "false" ? false : "linked",							
+							autoclose: 		_t.attr('data-autoclose') 		== "false" ? false : true,
+							todayHighlight: _t.attr('data-todayHighlight') 	== "false" ? false : true,
+							endDate: '+0d',
+							onRender: function(date) {
+								// return date.valueOf() < nowDate.valueOf() ? 'disabled' : '';
+							}
+						}).on('changeDate', function(ev) {
+
+							// AJAX POST - OPTIONAL
+
+						}).data('datepicker'); 
+					});
+					
+				}
+
+			});
+		}
 
 		/** Range Picker
 			<input type="text" class="form-control rangepicker" value="2015-01-01 - 2016-12-31" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31">
@@ -2592,8 +2629,6 @@
 			});
 		}
 
-
-
 		/** Time Picker
 			<input type="text" class="form-control timepicker" value="11 : 55 : PM">
 		 ******************* **/
@@ -2610,8 +2645,6 @@
 
 			});
 		}
-
-
 
 		/** Color Picker
 		 ******************* **/
