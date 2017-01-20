@@ -20,6 +20,7 @@
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
+			<li><a href="<?=base_url('rfp');?>">RFP List</a></li>
 			<li class="active">Patient RFP</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
@@ -55,16 +56,19 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label>Treatment Category</label>
+								<label>Treatment Category </label>
 								<select name="treatment_cat_id[]" class="form-control select2" data-placeholder="Select Treatment Category" multiple id="treatment_cat_id">
+									<?php if(isset($record['treatment_cat_id'])) { $treat_arr=explode(",",$record['treatment_cat_id']); } ?>
 									<?php foreach($treatment_category as $cat) :?>
-										<option value="<?=$cat['id']?>" <?php echo  set_select('treatment_cat_id[]', $cat['id']); ?>><?=$cat['title']?></option>
+										<option value="<?=$cat['id']?>" <?php  if(isset($treat_arr)) { if(in_array($cat['id'],$treat_arr)) { echo "selected"; }} else { echo  set_select('treatment_cat_id[]', $cat['id']); } ?>><?=$cat['title']?></option>
 									<?php endforeach;?>
 								</select>	
 							</div>
+
 							<?php echo form_error('treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>
 					</div>	
+					<?php if(isset($record['teeth'])) { $teeth_arr=explode(",",$record['teeth']); } ?>
 					<div class="row">
 						<div class="col-md-12 col-sm-12" id="primary">
 							<div class="form-group">
@@ -91,7 +95,7 @@
 												<td></td>
 												<td></td>
 												<?php for($i=0,$k=65;$i<10;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k+$i);?>" name="teeth[]" <?=set_checkbox('teeth', chr($k+$i));?>><i></i><?=chr($k+$i);?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k+$i);?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array(chr($k+$i),$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth', chr($k+$i)); }?>><i></i><?=chr($k+$i);?></label> </td>
 												<?php endfor; ?>
 												<td></td>
 												<td></td>
@@ -102,7 +106,7 @@
 												<td></td>
 												<td></td>
 												<?php for($i=0,$k=84;$i<10;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k-$i);?>" name="teeth[]" <?=set_checkbox('teeth', chr($k-$i));?>><i></i><?=chr($k-$i);?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k-$i);?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array(chr($k-$i),$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth', chr($k-$i)); }?>><i></i><?=chr($k-$i);?></label> </td>
 												<?php endfor; ?>
 												<td></td>
 												<td></td>
@@ -136,12 +140,12 @@
 										<tbody>
 											<tr>
 												<?php for($i=1;$i<=16;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?=set_checkbox('teeth',$i);?>><i></i><?=$i?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array($i,$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth',$i); }?>><i></i><?=$i?></label> </td>
 												<?php endfor;?>
 											</tr>
 											<tr>
 												<?php for($i=32;$i>16;$i--) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?=set_checkbox('teeth',$i);?>><i></i> <?=$i?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array($i,$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth',$i); }?>><i></i> <?=$i?></label> </td>
 												<?php endfor;?>
 											</tr>
 										</tbody>	
@@ -171,8 +175,6 @@
 	</div>
 </section>
 <!-- / --> 
-
-
 <script>
 fetch_definition_data();
 

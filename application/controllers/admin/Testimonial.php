@@ -106,7 +106,6 @@ class Testimonial extends CI_Controller {
                 'img_path'          => $avtar['msg'],
                 'is_blocked'        => $this->input->post('is_blocked'),
             ];
-
             $result=$this->Testimonial_model->update_record('testimonial', $where, $update_array);
             if($result){
                  $this->session->set_flashdata('message', ['message'=>'Testimonial successfully updated!','class'=>'success']);
