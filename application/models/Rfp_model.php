@@ -6,18 +6,57 @@ class Rfp_model extends CI_Model {
         parent::__construct();
     }
 
+
+     /**
+     * @uses : this function is used to get result based on datatable in rfp list page
+     * @param : @table 
+     * @author : HPA
+     */
+    public function get_all_rfp() {        
+        
+        $this->db->select('id,title,dentition_type,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
+        $this->db->where('is_deleted !=', 1);
+        
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR dentition_type LIKE "%'.$keyword['value'].'%"', NULL);
+        }
+
+        $this->db->limit($this->input->get('length'), $this->input->get('start'));
+        $res_data = $this->db->get('rfp')->result_array();
+        return $res_data;
+    }
+
+    /**
+     * @uses : this function is used to count rows of rfps based on datatable in rfp list page
+     * @param : @table 
+     * @author : HPA
+     */
+    public function get_rfp_count() {
+        $this->db->where('is_deleted !=', 1);
+        $res_data = $this->db->get('rfp')->num_rows();
+        return $res_data;
+    }
+
+
      /**
      * @uses : This function is used get result from the table
      * @param : @table 
      * @author : HPA
      */
-    public function get_result($table, $condition = null) {
+    public function get_result($table, $condition = null,$single='') {
         $this->db->select('*');
         if (!is_null($condition)) {
             $this->db->where($condition);
         }
         $query = $this->db->get($table);
-        return $query->result_array();
+        if($single){
+            return $query->row_array();
+        }else{ 
+            return $query->result_array();
+        }
     }
 
 

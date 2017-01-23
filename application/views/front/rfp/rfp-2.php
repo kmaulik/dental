@@ -159,7 +159,7 @@
 						<div class="col-md-12 col-sm-12" id="other">
 							<div class="form-group">
 								<label>Other Description</label> 
-								<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo set_value('other_description'); ?></textarea>
+								<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
 							</div>
 							<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>

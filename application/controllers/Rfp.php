@@ -7,7 +7,7 @@ class Rfp extends CI_Controller {
 	{
 		parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
-		$this->load->model(['Treatment_category_model','Rfp_model']);
+		$this->load->model(['Treatment_category_model','Rfp_model']);		
 	}	
 
 	public function index(){
@@ -102,10 +102,8 @@ class Rfp extends CI_Controller {
 				if($this->input->post('teeth')){
 					$teeth=implode(",",$this->input->post('teeth')); // Convert Array into string
 				}   
-
 				$rfp_data=array();
 				$rfp_data=$this->session->userdata('rfp_data');
-				unset($rfp_data['H_img_path']);
 				$rfp_data['treatment_cat_id']=$treatment_cat_id;
 				$rfp_data['teeth']=$teeth;
 				$rfp_data['other_description']=$this->input->post('other_description');
@@ -128,9 +126,9 @@ class Rfp extends CI_Controller {
 
 	 /* ---------------- For Update a RFP --------------- */
 	public function edit($id='',$step='0'){
-		$rfp_data=$this->Rfp_model->get_result('rfp',['id' => decode($id)]);
+		$rfp_arr=$this->Rfp_model->get_result('rfp',['id' => decode($id)],'1');
 		
-		if($rfp_data)
+		if($rfp_arr)
 		{
 			if($step == 0) // For First Page Of RFP
 			{
@@ -149,11 +147,10 @@ class Rfp extends CI_Controller {
 			   
 			   
 				if($this->form_validation->run() == FALSE){    
-				   $data['record']=$rfp_data[0];          
+				   $data['record']=$rfp_arr;          
 				   $data['subview']="front/rfp/rfp-1";
 				   $this->load->view('front/layouts/layout_main',$data);
-				 }else{
-					
+				}else{
 				   //-------------- For Multiple File Upload  ----------
 				   $img_path='';
 				   if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
@@ -176,7 +173,9 @@ class Rfp extends CI_Controller {
 					redirect('rfp/edit/'.$id.'/1');
 				}
 			}
-			else{
+			else{				
+
+
 				//--------- For Check Step 1 is Success or not  ---------
 				if(!isset($this->session->userdata['rfp_data'])){
 					redirect('rfp/edit/'.$id);
@@ -189,17 +188,16 @@ class Rfp extends CI_Controller {
 					$this->form_validation->set_rules('other_description', 'Description', 'required');
 				}
 				$this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
+
 				
 
 				if($this->form_validation->run() == FALSE){  
-					$data['record']=$rfp_data[0];
+					$data['record']=$rfp_arr;
 					$where = 'is_deleted !=  1 and is_blocked != 1';
 					$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
 					$data['subview']="front/rfp/rfp-2";
 					$this->load->view('front/layouts/layout_main',$data);
-				}
-				else
-				{
+				}else{
 					$treatment_cat_id='';
 					if($this->input->post('treatment_cat_id')){
 						$treatment_cat_id=implode(",",$this->input->post('treatment_cat_id')); // Convert Array into string
@@ -207,18 +205,42 @@ class Rfp extends CI_Controller {
 					$teeth='';
 					if($this->input->post('teeth')){
 						$teeth=implode(",",$this->input->post('teeth')); // Convert Array into string
-					}   
-
-					$rfp_data=array();
-					$rfp_data=$this->session->userdata('rfp_data');
-					if($rfp_data['img_path'] == ''){
-						$rfp_data['img_path'] = $rfp_data['H_img_path'];
 					}
-					unset($rfp_data['H_img_path']);
+
+					// ------------------------------------------------------------------------
+					$final_str = '';										
+					$rfp_data_qry = $this->Rfp_model->get_result('rfp',['id'=>decode($id)],true);					
+					// ------------------------------------------------------------------------
+					$rfp_data=$this->session->userdata('rfp_data');
+					// Check new file select if not then assign old value
+					if($rfp_data['img_path'] == '') {
+						$rfp_data['img_path'] = $rfp_data_qry['img_path'];
+					}else{
+						
+						$old_arr = [];
+						$new_arr = [];
+
+						$new_str = $this->session->userdata('rfp_data')['img_path'];
+						$old_str = $rfp_data_qry['img_path'];
+
+						if($old_str != ''){ $old_arr = explode('|',$old_str); }
+						if($new_str != ''){ $new_arr = explode('|',$new_str); }
+
+						if(!empty($new_arr) || !empty($old_arr)){
+							$final_arr = array_merge($new_arr,$old_arr);
+							$final_str = implode('|',$final_arr);
+						}
+
+						$rfp_data['img_path'] = $final_str;						 
+					}									
+
 					$rfp_data['treatment_cat_id']=$treatment_cat_id;
 					$rfp_data['teeth']=$teeth;
 					$rfp_data['other_description']=$this->input->post('other_description');
+
+
 					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_data);
+
 					if($res){
 						$this->session->set_flashdata('success', 'RFP Updated Successfully');
 					}
@@ -255,4 +277,32 @@ class Rfp extends CI_Controller {
 		}
 		redirect('rfp');
 	}
+
+	public function delete_img_rfp(){
+		$img_name = $this->input->post('img_name');
+		$rfp_id = $this->input->post('rfp_id');
+
+		$res_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],'1');	
+		if(!empty($res_data)){
+			$rfp_img = $res_data['img_path'];
+			if($rfp_img != ''){
+				$all_img_arr =explode('|',$rfp_img);
+			}
+		}
+		$final_arr='';
+		if(!empty($all_img_arr)){
+			$location='uploads/rfp/';
+			// For Delete the file from folder 
+			$this->filestorage->DeleteImage($location,$img_name);
+			// For Make a new array with old and new image 
+			$final_arr = array_diff($all_img_arr, [$img_name]);
+		}
+		$final_str='';
+		if(!empty($final_arr)){
+			$final_str = implode('|',$final_arr);
+		}
+		$this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['img_path'=>$final_str]);
+		echo json_encode(['success'=>true]);
+	}
+
 }
