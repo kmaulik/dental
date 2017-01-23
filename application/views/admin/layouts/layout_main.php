@@ -2,10 +2,9 @@
     $image = DEFAULT_IMAGE_PATH . "user/user-img.jpg";      
     //icon-plus-circle2
 ?>
-
 <!DOCTYPE html>
 <html lang="en">        
-        <?php $this->load->view('admin/layouts/layout_header'); ?>
+    <?php $this->load->view('admin/layouts/layout_header'); ?>
     <body>
         <!-- Main navbar -->
         <div class="navbar navbar-inverse">
@@ -60,7 +59,7 @@
                                     <li class="<?php echo ($controller == 'dashboard') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . "admin/dashboard" ?>">
                                             <i class="icon-home4"></i> 
-                                            Dashboard
+                                            <span>Dashboard</span>
                                         </a>
                                     </li>
 

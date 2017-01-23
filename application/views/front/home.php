@@ -1,4 +1,5 @@
 <style type="text/css">
+	/* Hide the arrows for the revolution slider */
 	.tparrows {
 		display: none !important;
 	}
@@ -231,72 +232,242 @@
 </section>
 <!-- /Overview -->
 
-<!-- Team -->
+<!-- Parallax -->
+<section class="parallax parallax-1" style="background-image: url('<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/slider_2-min.jpg');">
+	<div class="overlay dark-5"><!-- dark overlay [1 to 9 opacity] --></div>
+
+	<div class="container">
+
+		<div class="text-center">
+			<h2 class="size-40 weight-300">Medical Services That You Can Trust</h2>
+			<a class="btn btn-danger btn-lg" href="#">MAKE AN APPOINTMENT</a>
+		</div>
+
+	</div>
+</section>
+<!-- /Parallax -->
+
+<!-- -->
 <section>
+	<div class="container">
+		<div class="row">
+		
+			<div class="col-md-4">
+				
+				<div class="heading-title heading-border-bottom heading-color">
+					<h3>GREAT SERVICE</h3>
+				</div>
+				
+				<p>
+					We provide a great service,changing
+					dressings. Finally, late in the afternoon,
+					I get a few moments to make
+					coffee, provide a great service to take
+					it over to the beside her bed. I am
+					thankful to be off my feet, glad to be
+					in her company once again.
+				</p>
+				
+				<a href="#">
+					Read
+					<!-- /word rotator -->
+					<span class="word-rotator" data-delay="2000">
+						<span class="items">
+							<span>more</span>
+							<span>now</span>
+						</span>
+					</span><!-- /word rotator -->
+					<i class="glyphicon glyphicon-menu-right size-12"></i>
+				</a>
+
+			</div>
+
+			<div class="col-md-4">
+				<div class="heading-title heading-border-bottom heading-color">
+					<h3>EASY TO USE</h3>
+				</div>
+				<p>					
+					Easy to use,changing dressings. Finally,
+					late in the afternoon, I get a few
+					moments to make coffee, to take it
+					over to the orange plastic chair beside
+					her bed, easy to use,changing. I am
+					thankful to be off my feet, glad to be
+					in her company once.
+				</p>
+
+				<a href="#">
+					Read
+					<!-- /word rotator -->
+					<span class="word-rotator" data-delay="2000">
+						<span class="items">
+							<span>more</span>
+							<span>now</span>
+						</span>
+					</span><!-- /word rotator -->
+					<i class="glyphicon glyphicon-menu-right size-12"></i>
+				</a>
+
+			</div>
+
+			<div class="col-md-4">
+				<div class="heading-title heading-border-bottom heading-color">
+					<h3>SAVE MONEY AND TIME</h3>
+				</div>
+				<p>
+					Reasonable Doctors make reasonable
+					offers,changing dressings. Finally, late
+					in the afternoon, I get a few moments
+					to make coffee, I get a few moments to
+					take it over to the orange plastic chair
+					beside her bed. I am thankful to be off
+					my feet.
+				</p>
+
+				<a href="#">
+					Read
+					<!-- /word rotator -->
+					<span class="word-rotator" data-delay="2000">
+						<span class="items">
+							<span>more</span>
+							<span>now</span>
+						</span>
+					</span><!-- /word rotator -->
+					<i class="glyphicon glyphicon-menu-right size-12"></i>
+				</a>
+
+			</div>
+
+		</div>
+		
+	</div>
+</section>
+<!-- / -->
+
+<!-- <div class="divider divider-border divider-right">
+	<i class="fa fa-star-o"></i>
+</div> -->
+
+ <!-- News -->
+<section id="news">
 	<div class="container">
 
 		<header class="text-center margin-bottom-60 clearfix">
-			<h2 class="weight-300 nomargin-bottom">Meet Our Specialists</h2>
+			<h2 class="weight-300 nomargin-bottom">THE PHYSICIANS</h2>
 		</header>
 
-		<div class="row">
+		<!-- 
+			controlls-over		= navigation buttons over the image 
+			buttons-autohide 	= navigation buttons visible on mouse hover only
+			
+			data-plugin-options:
+				"singleItem": true
+				"autoPlay": true (or ms. eg: 4000)
+				"navigation": true
+				"pagination": true
+				"items": "4"
 
-			<div class="col-sm-6 col-md-3">
-				<div class="thumbnail">
-					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t1-min.jpg" alt="" />
-					<div class="caption">
-						<h4 class="nomargin">John Doe</h4>
-						<small class="margin-bottom-20 block">Web Developer</small>
-
-						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
-						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
-					</div>
-				</div>
+			owl-carousel item paddings
+				.owl-padding-0
+				.owl-padding-3
+				.owl-padding-6
+				.owl-padding-10
+				.owl-padding-15
+				.owl-padding-20
+		-->
+		<div class="owl-carousel owl-padding-10 buttons-autohide controlls-over" data-plugin-options='{"singleItem": false, "items":"4", "autoPlay": 4000, "navigation": true, "pagination": false}'>
+			<div class="img-hover">
+				<a href="blog-single-default.html">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/451x300/24-min.jpg" alt="">
+				</a>
+				<h4 class="text-left margin-top-10">
+					<a href="blog-single-default.html">Gerhardt Richter</a>
+				</h4>
+				<h6 class="text-left">
+					Kentucky, Polaski County
+				</h6>
+				<p class="text-left">
+					Real people don‘t look like stock photo models. That‘s all, I am a painter, not a writer.
+				</p>
 			</div>
-			<div class="col-sm-6 col-md-3">
-				<div class="thumbnail">
-					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t2-min.jpg" alt="" />
-					<div class="caption">
-						<h4 class="nomargin">Angelina Doe</h4>
-						<small class="margin-bottom-20 block">Architect</small>
 
-						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
-						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
-					</div>
-				</div>
+			<div class="img-hover">
+				<a href="blog-single-default.html">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/451x300/24-min.jpg" alt="">
+				</a>
+				<h4 class="text-left margin-top-10">
+					<a href="blog-single-default.html">Simone de Beauvoir</a>
+				</h4>
+				<h6 class="text-left">
+					Kentucky, Polaski County
+				</h6>
+				<p class="text-left">
+					Finally, late in the afternoon, I get a few
+					moments to make coffee, to take it over
+					to the orange plastic chair beside her
+					bed. I am thankful to be off my feet, glad
+					to be in her company once again.
+				</p>
 			</div>
-			<div class="col-sm-6 col-md-3">
-				<div class="thumbnail">
-					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t3-min.jpg" alt="" />
-					<div class="caption">
-						<h4 class="nomargin">Mark Doe</h4>
-						<small class="margin-bottom-20 block">Web Designer</small>
 
-						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
-						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
-					</div>
-				</div>
+			<div class="img-hover">
+				<a href="blog-single-default.html">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/451x300/24-min.jpg" alt="">
+				</a>
+				<h4 class="text-left margin-top-10">
+					<a href="blog-single-default.html">Michelle Houllebeq</a>
+				</h4>
+				<h6 class="text-left">
+					Kentucky, Polaski County
+				</h6>
+				<p class="text-left">
+					I am a writer, i write a lot. Really long
+					quotes. It‘s the typesetters problem, not
+					mine. I am thankful to be off my feet,
+					glad to be in her company once again.inally,
+					late in the afternoon.
+				</p>
 			</div>
-			<div class="col-sm-6 col-md-3">
-				<div class="thumbnail">
-					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/t4-min.jpg" alt="" />
-					<div class="caption">
-						<h4 class="nomargin">Jolie Doe</h4>
-						<small class="margin-bottom-20 block">Art Director</small>
 
-						<p>Donec id elit non mi porta gravida at eget metus id dolor.</p>
-						<a href="#" class="btn btn-default btn-sm">READ MORE</a>
-					</div>
-				</div>
+			<div class="img-hover">
+				<a href="blog-single-default.html">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/451x300/24-min.jpg" alt="">
+				</a>
+				<h4 class="text-left margin-top-10">
+					<a href="blog-single-default.html">Jean Paul Satre</a>
+				</h4>
+				<h6 class="text-left">
+					Kentucky, Polaski County
+				</h6>
+				<p class="text-left">
+					Vampires can‘t be photographed. That‘s
+					not an exuse for my missing profile pic,
+					just a random scientific fact. Okay, I
+					invented that. But inventing is not the
+					same as lying!
+				</p>
+			</div>
+
+			<div class="img-hover">
+				<a href="blog-single-default.html">
+					<img class="img-responsive" src="<?= DEFAULT_IMAGE_PATH ?>demo/451x300/24-min.jpg" alt="">
+				</a>
+				<h4 class="text-left margin-top-10">
+					<a href="blog-single-default.html">Doctor Who</a>
+				</h4>
+				<h6 class="text-left">
+					Kentucky, Polaski County
+				</h6>
+				<p class="text-left">
+					Who knows, what will be here later.
+				</p>
 			</div>
 
 		</div>
 
-
 	</div>
 </section>
-<!-- /Team -->
-
+<!-- /News -->
 
 <?php if(!empty($all_testimonials)) {   ?>
 	<!-- Testimonials -->
@@ -325,3 +496,11 @@
 	<!-- /Testimonials -->
 <?php } ?>
 
+<!-- BUTTON CALLOUT -->
+<a href="#" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
+	<span class="font-lato size-30">
+		Do you have questions? 
+		<strong>Contact us &raquo;</strong>
+	</span>
+</a>
+<!-- /BUTTON CALLOUT -->

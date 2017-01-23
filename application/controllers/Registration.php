@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Registration extends CI_Controller {
 
     public function __construct() {
-        parent::__construct();           
+        parent::__construct();
         if($this->session->userdata('client')) { redirect('dashboard');}
         $this->load->library('unirest');
         $this->load->model(array('Users_model','Country_model'));
@@ -183,6 +183,11 @@ class Registration extends CI_Controller {
                 redirect('registration/doctor');
             } 
         }        
+    }
+
+    public function edit_profile(){
+
+
     }
 
     /*  Check For User Account Verify or Not 

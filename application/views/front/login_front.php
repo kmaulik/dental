@@ -58,20 +58,14 @@
 					</div>
 
 					<div class="row">
-
 						<div class="col-md-6 col-sm-6 col-xs-6">
-
 							<!-- Inform Tip -->                                        
 							<div class="form-tip pt-20">
 								<a class="no-text-decoration size-13 margin-top-10 block" href="<?=base_url('registration/forgotpassword')?>">Forgot Password?</a>
 							</div>
-
 						</div>
-
 						<div class="col-md-6 col-sm-6 col-xs-6 text-right">
-
-							<input type="submit" class="btn btn-primary" name="submit" value="OK, LOG IN">
-
+							<input type="submit" class="btn btn-primary" name="submit" value="LOG IN">
 						</div>
 
 					</div>
