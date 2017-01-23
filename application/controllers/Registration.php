@@ -244,7 +244,7 @@ class Registration extends CI_Controller {
                             ->subject($subject)
                             ->message($html_content);
                 $this->email->send();
-
+                //echo $html_content; die;            
                 $this->session->set_flashdata('success','Forgot password request sent successfully, You will receive the confirmation mail');
             }
             else{

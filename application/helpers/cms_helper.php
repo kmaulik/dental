@@ -170,6 +170,26 @@ function fetch_username($user_id)
     return $res['fname']." ".$res['lname'];
 }
 
+/* For Fetch Particular Data with field (DHK)
+/* Param 1 : Table Name
+/* Param 2 : Where Condition
+/* Param 3 : Field Name (Optional)
+*/
+function fetch_row_data($table,$where='',$field='')
+{
+    $CI =& get_instance();
+    $CI->db->where($where);
+    $query = $CI->db->get($table);
+    $res=$query->row_array();
+    if($field){
+        return $res[$field];
+    }else{
+        return $res;
+    }
+    
+}
+
+
 /* For Email Template (DHK)
 /* Param 1 :  $template_name => Field name 'slug_title'
 /* Param 2 :  $template_file => HTML Template File Name

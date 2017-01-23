@@ -93,6 +93,12 @@
                                             <span> Website Survey </span>
                                         </a>
                                     </li>
+                                    <li class="<?php echo ($controller == 'rfp') ? 'active' : ''; ?>">
+                                        <a href="<?php echo base_url() . 'admin/rfp'; ?>">
+                                            <i class="icon-clipboard3"></i>
+                                            <span>RFP</span>
+                                        </a>
+                                    </li>
                                     <li class="<?php echo ($controller == 'promotional_code') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/promotional_code'; ?>">
                                             <i class="icon-price-tag"></i>

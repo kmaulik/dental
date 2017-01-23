@@ -97,6 +97,7 @@
 		_toastr(false,false,false,false);
 		_charts();
 		_select2();
+		_select2_custom();
 		_form();
 		_pickers();
 		_editors();
@@ -2357,13 +2358,31 @@
  **************************************************************** **/
 	function _select2() {
 		var _container = jQuery('select.select2');
-		
 		if(_container.length > 0) {
 			
 			loadScript(plugin_path + 'select2/js/select2.full.min.js', function() {
 		
 				if(jQuery().select2) {
 					jQuery('select.select2').select2();
+				}
+
+			});
+		}
+
+	}
+
+
+
+/** Select2_custom
+ **************************************************************** **/
+	function _select2_custom() {
+		var _container = jQuery('select.select2_custom');
+		if(_container.length > 0) {
+			
+			loadScript(plugin_path + 'select2/js/select2.full.min.js', function() {
+		
+				if(jQuery().select2) {
+					jQuery('select.select2_custom').select2({ maximumSelectionLength: 5 });
 				}
 
 			});
