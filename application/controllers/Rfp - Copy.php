@@ -36,6 +36,7 @@ class Rfp extends CI_Controller {
 			$this->form_validation->set_rules('birth_date', 'birth date', 'required'); 
 			$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 			$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
+			$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
 			$this->form_validation->set_rules('allergies', 'allergies', 'required');
 			$this->form_validation->set_rules('medication_list', 'Medication List', 'required');
 			$this->form_validation->set_rules('heart_problem', 'Heart Problem', 'required');
@@ -47,6 +48,25 @@ class Rfp extends CI_Controller {
 			   $data['subview']="front/rfp/rfp-1";
 			   $this->load->view('front/layouts/layout_main',$data);
 			 }else{
+				
+			   //-------------- For Multiple File Upload  ----------
+			   $img_path='';
+			   if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
+			   {
+					$location='uploads/rfp/';
+					foreach($_FILES['img_path']['name'] as $key=>$data){
+						$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+						if($res != ''){
+							if($key == 0){
+								$img_path=$res;
+							}else{
+								$img_path=$img_path."|".$res;
+							}
+						}
+					}
+			   }
+			   //-----------------------
+				$_POST['img_path']=$img_path;
 				$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
 				redirect('rfp/add/1');
 			}
@@ -64,7 +84,7 @@ class Rfp extends CI_Controller {
 				$this->form_validation->set_rules('other_description', 'Description', 'required');
 			}
 			$this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
-			$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
+			
 
 			if($this->form_validation->run() == FALSE){  
 				$where = 'is_deleted !=  1 and is_blocked != 1';
@@ -81,33 +101,12 @@ class Rfp extends CI_Controller {
 				$teeth='';
 				if($this->input->post('teeth')){
 					$teeth=implode(",",$this->input->post('teeth')); // Convert Array into string
-				} 
-
-				//-------------- For Multiple File Upload  ----------
-			    $img_path='';
-			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
-			    {
-					$location='uploads/rfp/';
-					foreach($_FILES['img_path']['name'] as $key=>$data){
-						$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
-						if($res != ''){
-							if($key == 0){
-								$img_path=$res;
-							}else{
-								$img_path=$img_path."|".$res;
-							}
-						}
-					}
-			    }
-			    //-----------------------
-		
+				}   
 				$rfp_data=array();
 				$rfp_data=$this->session->userdata('rfp_data');
 				$rfp_data['treatment_cat_id']=$treatment_cat_id;
 				$rfp_data['teeth']=$teeth;
 				$rfp_data['other_description']=$this->input->post('other_description');
-				$rfp_data['message']=$this->input->post('message');
-				$rfp_data['img_path']=$img_path;
 				$rfp_data['patient_id'] =$this->session->userdata['client']['id'];
 				$rfp_data['created_at'] = date("Y-m-d H:i:s a");
 				$res=$this->Rfp_model->insert_record('rfp',$rfp_data);
@@ -139,6 +138,7 @@ class Rfp extends CI_Controller {
 				$this->form_validation->set_rules('birth_date', 'birth date', 'required'); 
 				$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 				$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
+				$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
 				$this->form_validation->set_rules('allergies', 'allergies', 'required');
 				$this->form_validation->set_rules('medication_list', 'Medication List', 'required');
 				$this->form_validation->set_rules('heart_problem', 'Heart Problem', 'required');
@@ -151,6 +151,24 @@ class Rfp extends CI_Controller {
 				   $data['subview']="front/rfp/rfp-1";
 				   $this->load->view('front/layouts/layout_main',$data);
 				}else{
+				   //-------------- For Multiple File Upload  ----------
+				   $img_path='';
+				   if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
+				   {
+						$location='uploads/rfp/';
+						foreach($_FILES['img_path']['name'] as $key=>$data){
+							$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+							if($res != ''){
+								if($key == 0){
+									$img_path=$res;
+								}else{
+									$img_path=$img_path."|".$res;
+								}
+							}
+						}
+				   }
+				   //-----------------------
+					$_POST['img_path']=$img_path;
 					$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
 					redirect('rfp/edit/'.$id.'/1');
 				}
@@ -170,7 +188,7 @@ class Rfp extends CI_Controller {
 					$this->form_validation->set_rules('other_description', 'Description', 'required');
 				}
 				$this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
-				$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
+
 				
 
 				if($this->form_validation->run() == FALSE){  
@@ -193,28 +211,7 @@ class Rfp extends CI_Controller {
 					$final_str = '';										
 					$rfp_data_qry = $this->Rfp_model->get_result('rfp',['id'=>decode($id)],true);					
 					// ------------------------------------------------------------------------
-
 					$rfp_data=$this->session->userdata('rfp_data');
-
-					//-------------- For Multiple File Upload  ----------
-				    $img_path='';
-				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
-				    {
-						$location='uploads/rfp/';
-						foreach($_FILES['img_path']['name'] as $key=>$data){
-							$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
-							if($res != ''){
-								if($key == 0){
-									$img_path=$res;
-								}else{
-									$img_path=$img_path."|".$res;
-								}
-							}
-						}
-				    }
-				    //-----------------------
-					$rfp_data['img_path']=$img_path;
-
 					// Check new file select if not then assign old value
 					if($rfp_data['img_path'] == '') {
 						$rfp_data['img_path'] = $rfp_data_qry['img_path'];
@@ -223,7 +220,7 @@ class Rfp extends CI_Controller {
 						$old_arr = [];
 						$new_arr = [];
 
-						$new_str = $rfp_data['img_path'];
+						$new_str = $this->session->userdata('rfp_data')['img_path'];
 						$old_str = $rfp_data_qry['img_path'];
 
 						if($old_str != ''){ $old_arr = explode('|',$old_str); }
@@ -240,7 +237,6 @@ class Rfp extends CI_Controller {
 					$rfp_data['treatment_cat_id']=$treatment_cat_id;
 					$rfp_data['teeth']=$teeth;
 					$rfp_data['other_description']=$this->input->post('other_description');
-					$rfp_data['message']=$this->input->post('message');
 
 
 					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_data);

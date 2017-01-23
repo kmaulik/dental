@@ -14,14 +14,14 @@ class Rfp_model extends CI_Model {
      */
     public function get_all_rfp() {        
         
-        $this->db->select('id,title,dentition_type,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
+        $this->db->select('id,title,CONCAT(fname," ",lname) as patient_name,dentition_type,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
         $this->db->where('is_deleted !=', 1);
         
         $keyword = $this->input->get('search');
         $keyword = str_replace('"', '', $keyword);
         
         if (!empty($keyword['value'])) {
-            $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR dentition_type LIKE "%'.$keyword['value'].'%"', NULL);
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR patient_name LIKE "%'.$keyword['value'].'%" OR dentition_type LIKE "%'.$keyword['value'].'%"', NULL);
         }
 
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
