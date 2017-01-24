@@ -486,7 +486,4 @@ class Filestorage {
 		$name    =   $data['Title'].".".$file_extension;
 		force_download($name, $path);  
 	}
-	
-	
-
 }

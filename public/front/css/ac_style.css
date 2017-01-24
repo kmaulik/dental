@@ -36,7 +36,8 @@ section.page-header h1{font-weight: bold;}
 #frmregister .select2-selection.select2-selection--single {
     height: 50px;
 }
-.select2-selection__rendered{height: 50px !important; line-height: 46px !important;}
+#frmlogin .select2-selection__rendered{height: 50px !important; line-height: 46px !important;}
+
 #frmlogin {
     margin: 0 auto;
     width: 40%;

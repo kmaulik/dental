@@ -44,7 +44,7 @@
 			<!-- SLIDE  -->
 			<li data-transition="parallaxtobottom" data-slotamount="7" data-masterspeed="600"  data-saveperformance="off"  data-title="Architectural View">
 				<!-- MAIN IMAGE -->
-				<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/lightblue-min.jpg"  alt="cover image"  data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+				<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/n_img_1.jpg"  alt="cover image"  data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
 
 				<div class="tp-caption white_big skewfromleft tp-resizeme"
 					data-x="500"
