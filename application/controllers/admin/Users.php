@@ -6,8 +6,7 @@ class Users extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(['admin/Admin_users_model', 'Users_model']);
-        $this->load->library(['encryption', 'upload']);
+        $this->load->model(['admin/Admin_users_model', 'Users_model','Country_model']);
     }
 
     /**
@@ -32,71 +31,149 @@ class Users extends CI_Controller {
 
     public function action($action, $user_id) {
 
-        $where = 'id = ' . $this->db->escape($user_id);
+        $where = 'id = ' . decode($this->db->escape($user_id));
         $check_user = $this->Admin_users_model->get_result('users', $where);
         if ($check_user) {
             if ($action == 'delete') {
                 $update_array = array(
                     'is_deleted' => 1
                 );
-                $this->session->set_flashdata('success', 'User successfully deleted!');
+               $this->session->set_flashdata('message', ['message'=> 'User successfully deleted!','class'=>'alert alert-success']);
             } elseif ($action == 'block') {
                 $update_array = array(
                     'is_blocked' => 1
                 );
-                $this->session->set_flashdata('success', 'User successfully blocked!');
-            } else {
+                $this->session->set_flashdata('message', ['message'=> 'User successfully blocked!','class'=>'alert alert-success']);
+               } else {
                 $update_array = array(
                     'is_blocked' => 0
                 );
-                $this->session->set_flashdata('success', 'User successfully unblocked!');
+                $this->session->set_flashdata('message', ['message'=> 'User successfully unblocked!','class'=>'alert alert-success']);
             }
             $this->Admin_users_model->update_record('users', $where, $update_array);
         } else {
-            $this->session->set_flashdata('error', 'Invalid request. Please try again!');
+            $this->session->set_flashdata('message', ['message'=> 'Invalid request. Please try again!','class'=>'alert alert-danger']);
         }
         redirect('admin/users');
     }
 
-    /**
-     * @uses : Load view of users list
-     * @author : HPA
-     * */
-    public function edit() {
-        $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id'], 'role_id' => 1], false, true);
-        if (empty($data['user_data'])) {
-            redirect('admin/login');
-        }        
-        $user_id = $this->uri->segment(4);
-        if (is_numeric($user_id)) {
-            $where = 'id = ' . $this->db->escape($user_id);
-            $check_user = $this->Admin_users_model->get_result('users', $where);
-            if ($check_user) {
-                $data['user_datas'] = $check_user[0];
-                $data['title'] = 'Admin edit user';
-                $data['heading'] = 'Edit user';                
-            } else {
-                show_404();
-            }
-        }
+    public function add() {
+        $data['heading'] = 'Add User';
+        $data['country_list']=$this->Country_model->get_result('country');
         if ($this->input->post()) {
-            $this->form_validation->set_rules('fname', 'first name', 'trim|required');
-            $this->form_validation->set_rules('lname', 'last name', 'trim|required');            
-            $this->form_validation->set_rules('email_id', 'email', 'trim|required');
 
-            if ($this->form_validation->run() == FALSE) {
-                $data['subview'] = 'admin/users/manage';
-                $this->load->view('admin/layouts/layout_main', $data);
-            } else {
-                $update_array = $this->input->post(null);
-                $this->Admin_users_model->update_record('users', $where, $update_array);
-                $this->session->set_flashdata('success', 'User successfully updated!');
+            $avtar['msg']='';
+            $path = "uploads/avatar/";
+            //2 MB File Size
+            $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152);
+            //----------------------------------------
+            if ($avtar['status'] == 0) {
+               $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
+           }
+           else{
+                $rand=random_string('alnum',5);
+                $password=random_string('alnum',6);
+                $ins_data=array(
+                    'role_id'   => 2, // 2 Means Subadmin Role 
+                    'fname' => $this->input->post('fname'),
+                    'lname' => $this->input->post('lname'),
+                    'email_id' => $this->input->post('email_id'),
+                    'address' => $this->input->post('address'),
+                    'city' => $this->input->post('city'),
+                    'country_id' => $this->input->post('country_id'),
+                    'zipcode' => $this->input->post('zipcode'),
+                    'gender' => $this->input->post('gender'),
+                    'phone' => $this->input->post('phone'),
+                    'avatar'  => $avtar['msg'],  
+                    'birth_date' => $this->input->post('birth_date'),
+                    'password'  => $this->encrypt->encode($password),
+                    'longitude' => $this->input->post('longitude'),
+                    'latitude' => $this->input->post('latitude'),
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'activation_code'  => $rand,
+                    'is_blocked' => 1, // 1 Means Aacount is Blocked
+                );
+
+                $res=$this->Users_model->insert_user_data($ins_data);
+                if($res){ 
+                    //------ For Email Template -----------
+                    /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
+                    $html_content=mailer('account_activation','AccountActivation'); 
+                    $username= $this->input->post('fname')." ".$this->input->post('lname');
+                    $html_content = str_replace("@USERNAME@",$username,$html_content);
+                    $html_content = str_replace("@ACTIVATIONLINK@",base_url('admin/admin/verification/'.$rand),$html_content);
+                    $html_content = str_replace("@EMAIL@",$this->input->post('email_id'),$html_content);
+                    $html_content = str_replace("@PASS@",$password,$html_content);
+                    //--------------------------------------
+
+                    $email_config = mail_config();
+                    $this->email->initialize($email_config);
+                    $subject=config('site_name').' - Admin Create a New User';    
+                    $this->email->from(config('contact_email'), config('sender_name'))
+                                ->to($this->input->post('email_id'))
+                                ->subject($subject)
+                                ->message($html_content);
+                    $this->email->send();
+                    $this->session->set_flashdata('message', ['message'=>'Sub Admin Created successfully.','class'=>'alert alert-success']);
+                }else{
+                    $this->session->set_flashdata('message', ['message'=>'Error Into Create Sub Admin','class'=>'alert alert-danger']);
+                }
                 redirect('admin/users');
-            }
-        }
+           }
+            
+        } 
         $data['subview'] = 'admin/users/manage';
-        $this->load->view('admin/layouts/layout_main', $data);
+        $this->load->view('admin/layouts/layout_main', $data);   
+    }    
+
+
+    /**
+     * @uses : Edit Users
+     * */
+    public function edit($id='') {
+        $user_id=decode($id);
+        $data['heading'] = 'Edit User';
+        $data['user_data'] = $this->Users_model->get_data(['id' => $user_id],true);
+        $data['country_list']=$this->Country_model->get_result('country');
+        if ($this->input->post()) {
+            $avtar['msg']='';
+            $path = "uploads/avatar/";
+            //2 MB File Size
+            $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152,$this->input->post('H_avatar'));
+            //----------------------------------------
+            if ($avtar['status'] == 0) {
+               $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
+           }
+           else{
+            
+                $upd_data=array(
+                    'fname' => $this->input->post('fname'),
+                    'lname' => $this->input->post('lname'),
+                    'email_id' => $this->input->post('email_id'),
+                    'address' => $this->input->post('address'),
+                    'city' => $this->input->post('city'),
+                    'country_id' => $this->input->post('country_id'),
+                    'zipcode' => $this->input->post('zipcode'),
+                    'gender' => $this->input->post('gender'),
+                    'phone' => $this->input->post('phone'),
+                    'avatar'  => $avtar['msg'],  
+                    'birth_date' => $this->input->post('birth_date'),
+                    'longitude' => $this->input->post('longitude'),
+                    'latitude' => $this->input->post('latitude'),
+                );
+
+                $res=$this->Users_model->update_user_data($user_id,$upd_data);
+                if($res){ 
+                    $this->session->set_flashdata('message', ['message'=>'Sub Admin Updated successfully.','class'=>'alert alert-success']);
+                }else{
+                    $this->session->set_flashdata('message', ['message'=>'Error Into Update Sub Admin','class'=>'alert alert-danger']);
+                }
+                redirect('admin/users');
+           }
+            
+        } 
+        $data['subview'] = 'admin/users/manage';
+        $this->load->view('admin/layouts/layout_main', $data);   
     }
 
     public function check_unique(){

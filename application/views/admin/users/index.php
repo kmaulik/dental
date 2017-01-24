@@ -5,14 +5,14 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - User List</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Sub Admin User List</h4>
         </div>
     </div>
 
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
-            <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li>Users</li>
+            <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
+            <li>Sub Admin</li>
         </ul>
     </div>
 </div>
@@ -21,33 +21,16 @@
 <!-- Content area -->
 <div class="content">
 
-    <?php
-        if ($this->session->flashdata('success')) {
-            ?>
-            <div class="alert alert-success">
-                <a class="close" data-dismiss="alert">X</a>
-                <strong><?= $this->session->flashdata('success') ?></strong>
-            </div>
-            <?php
-            $this->session->set_flashdata('success', false);
-        } else if ($this->session->flashdata('error')) {
-            ?>        
-            <div class="alert alert-danger">
-                <a class="close" data-dismiss="alert">X</a>
-                <strong><?= $this->session->flashdata('error') ?></strong>
-            </div>        
-            <?php
-            $this->session->set_flashdata('error', false);
-        } else {
-            echo validation_errors();
-        }
+     <?php
+        $message = $this->session->flashdata('message');
+        echo my_flash($message);
     ?>
 
     <!-- content area -->    
     <div class="panel panel-flat">
-        <!--<div class="panel-heading text-right">
+        <div class="panel-heading text-right">
             <a href="<?php echo site_url('admin/users/add'); ?>" class="btn btn-success btn-labeled"><b><i class="icon-checkmark-circle"></i></b> Add new user</a>
-        </div>-->
+        </div>
         <table class="table datatable-basic">
             <thead>
                 <tr>
@@ -109,13 +92,14 @@
                     width: 200,
                     render: function (data, type, full, meta) {
                         var action = '';
+                        var id= encodeURIComponent(btoa(full.id));
                         if (full.is_blocked == '0') {
-                            action += '<a href="<?php echo base_url(); ?>admin/users/edit/' + full.id + '" class="btn border-primary text-primary-600 btn-flat btn-icon btn-rounded btn-sm" title="Edit"><i class="icon-pencil3"></i></a>';
-                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/block/' + full.id + '" class="btn border-warning text-warning-600 btn-flat btn-icon btn-rounded"  title="Block"><i class="icon-blocked"></i></a>'
-                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/delete/' + full.id + '" class="btn border-danger text-danger-600 btn-flat btn-icon btn-rounded" title="Delete"><i class="icon-cross2"></i></a>'
+                            action += '<a href="<?php echo base_url(); ?>admin/users/edit/' + id + '" class="btn border-primary text-primary-600 btn-flat btn-icon btn-rounded btn-sm" title="Edit"><i class="icon-pencil3"></i></a>';
+                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/action/block/' + id + '" class="btn border-warning text-warning-600 btn-flat btn-icon btn-rounded"  title="Block"><i class="icon-blocked"></i></a>'
+                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/action/delete/' + id + '" class="btn border-danger text-danger-600 btn-flat btn-icon btn-rounded" title="Delete"><i class="icon-cross2"></i></a>'
                         } else if (full.is_blocked == 1) {
-                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/activate/' + full.id + '" class="btn border-success text-success-600 btn-flat btn-icon btn-rounded"  title="Unblock"><i class="icon-checkmark-circle"></i></a>'
-                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/delete/' + full.id + '" class="btn border-danger text-danger-600 btn-flat btn-icon btn-rounded" title="Delete"><i class="icon-cross2"></i></a>'
+                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/action/activate/' + id + '" class="btn border-success text-success-600 btn-flat btn-icon btn-rounded"  title="Unblock"><i class="icon-checkmark-circle"></i></a>'
+                            action += '&nbsp;&nbsp;<a href="<?php echo base_url(); ?>admin/users/action/delete/' + id + '" class="btn border-danger text-danger-600 btn-flat btn-icon btn-rounded" title="Delete"><i class="icon-cross2"></i></a>'
                         }
                         return action;
                     }

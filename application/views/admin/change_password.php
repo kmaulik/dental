@@ -11,26 +11,13 @@
         </ul>
     </div>
 </div>
-<?php
-if ($this->session->flashdata('success')) {
-    ?>    
-    <div class="alert alert-success">
-        <a class="close" data-dismiss="alert">X</a>
-        <strong><?= $this->session->flashdata('success') ?></strong>
-    </div>    
-    <?php
-    $this->session->set_flashdata('success', false);
-} else if ($this->session->flashdata('error')) {
-    ?>    
-    <div class="alert alert-danger">
-        <a class="close" data-dismiss="alert">X</a>
-        <strong><?= $this->session->flashdata('error') ?></strong>
-    </div>    
-    <?php
-    $this->session->set_flashdata('error', false);
-} 
-?>
+
 <div class="content">
+    <?php
+        $message = $this->session->flashdata('message');
+        echo my_flash($message);
+    ?>
+    <!-- content area -->
     <div class="row">
         <div class="col-md-12">
             <?php
@@ -66,4 +53,9 @@ if ($this->session->flashdata('success')) {
         </div>
     </div>
 </div>
+
+<script>
+// Auto hide Flash messages
+    //$('div.alert').delay(4000).slideUp(350);
+</script>
 

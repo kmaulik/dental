@@ -10,7 +10,8 @@ class Admin extends CI_Controller {
         $this->load->library(['encryption', 'upload']);        
     }
 
-    public function index() {
+    public function index() 
+    {
 
         $data['user_data'] = $this->session->userdata('admin');
         
@@ -25,7 +26,7 @@ class Admin extends CI_Controller {
             $password = $this->input->post('password');
 
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
-            $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email, 'role_id' => 1], false, true);                        
+            $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email], false, true,['1','2']);
             if (!empty($user_data)) {
 
                 $db_pass = $this->encrypt->decode($user_data['password']);
@@ -33,7 +34,7 @@ class Admin extends CI_Controller {
                 if ($db_pass == $password) {   
 
                     if($user_data['is_blocked'] == 1){
-                        $this->session->set_flashdata('error','Your Account is Deactivated, Please contact to admin');
+                        $this->session->set_flashdata('message', ['message'=>'Your Account is Deactivated, Please contact to admin','class'=>'alert alert-danger']);
                         redirect('admin/login');
                     }
                                      
@@ -57,6 +58,27 @@ class Admin extends CI_Controller {
         } else {
             $this->load->view('admin/login_admin');
         }
-    }    
+    }   
+
+    /*  Check For User Account Verify or Not 
+        Param 1 : Account Verification No. 
+        @DHK
+    */
+    public function verification($id='0'){
+        if($this->Users_model->CheckActivationCode($id))
+        {
+            $this->db->set('activation_code','');
+            $this->db->set('is_blocked',0); // 0 Means Account is Open For Login
+            $this->db->where('activation_code',$id);
+            $this->db->update('users');
+            $this->session->set_flashdata('message', ['message' => 'Your Email is verified successfully, Now you can login to your Account.', 'class' => 'alert alert-success']);
+        }
+        else
+        {
+            $this->session->set_flashdata('message', ['message' => 'Activation link is either invalid or expired.', 'class' => 'alert alert-danger']); 
+            
+         }   
+         redirect('admin/login');
+    } 
 
 }

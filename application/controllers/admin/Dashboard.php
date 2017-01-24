@@ -6,8 +6,7 @@ class Dashboard extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(['Users_model']);
-        $this->load->library(['encryption', 'upload']);        
+        $this->load->model(['Users_model','Country_model']);       
     }
 
     /**
@@ -15,7 +14,7 @@ class Dashboard extends CI_Controller {
      */
     public function index() {
         $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id'], 'role_id' => 1], false, true);        
+        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true,['1','2']);        
         if (empty($data['user_data'])) { redirect('admin/login'); }        
             
         $data['subview'] = 'admin/dashboard';
@@ -32,67 +31,57 @@ class Dashboard extends CI_Controller {
     }
 
     public function edit() {
+
         $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id'], 'role_id' => 1], false, true);
+        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true);
+        $data['country_list']=$this->Country_model->get_result('country');
         if (empty($data['user_data'])) {
             redirect('admin/login');
         }                
         $data['heading'] = 'Edit Profile';
-        $email = $session_data['email_id'];
-        $post_email = $this->input->post('email_id');
-        $email_unique_str = '';
-        if ($email != $post_email) {
-            $email_unique_str = '|is_unique[users.email_id]';
-        }
+      
+        if ($this->input->post()) {
 
-        $this->form_validation->set_rules('fname', 'First name', 'trim|required', array('required' => 'Please fill the field' . ' %s .'));
-        $this->form_validation->set_rules('lname', 'Last Name', 'trim|required', array('required' => 'Please fill the field' . ' %s .'));        
-        $this->form_validation->set_rules('email_id', 'Email', 'trim|required|valid_email' . $email_unique_str, array('required' => 'Please fill the field' . ' %s .', 'valid_email' => 'Please enter valid E-mail'));
-        $this->form_validation->set_rules('phone_no', 'Phone Number', 'numeric|regex_match[/^[0-9]{9}$/]', array('numeric' => 'Please enter number in phone number', 'regex_match' => 'Please enter 9 number in phone'));
-
-        if ($this->form_validation->run() == FALSE) {
-            $data['subview'] = 'admin/profile_edit';
-            $this->load->view('admin/layouts/layout_main', $data);
-        } else {            
-            $user_id = $session_data['id'];
-            $fname = $this->input->post('fname');
-            $lname = $this->input->post('lname');
-            $email_id = $this->input->post('email_id');            
-            $gender = $this->input->post('gender');
-            $birth_year = $this->input->post('birth_year');
-            $country_code = $this->input->post('country_code');
-            $phone_no = $this->input->post('phone_no');
-            $phone_privacy = (int) $this->input->post('phone_privacy');
-
-            $old_bio = trim($data['user_data']['bio']);
-            $user_bio = trim($this->input->post('user_bio'));
-
-            $old_phone = trim($data['user_data']['phone']);
-            $post_phone_no = $this->input->post('phone_no');
-
-            $ip = $this->input->ip_address();
-
-            //update_user_data
-            $upd_data = [
-                'fname' => $fname,
-                'lname' => $lname,                
-                'email_id' => $email_id,
-                'gender' => $gender,
-                'birth_year' => $birth_year,
-                'country' => $country_code,
-                'phone' => $phone_no,
-                'is_phone_privacy' => $phone_privacy,
-                'bio' => $user_bio,
-                'modified_date' => date('Y-m-d H:i:s')
-            ];
+            $avtar['msg']='';
+            $path = "uploads/avatar/";
+            //2 MB File Size
+            $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152,$this->input->post('H_avatar'));
+            //----------------------------------------
+            if ($avtar['status'] == 0) {
+               $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
+           }
+           else{
             
-            $this->Users_model->update_user_data($user_id, $upd_data);
+                $upd_data=array(
+                    'fname' => $this->input->post('fname'),
+                    'lname' => $this->input->post('lname'),
+                    'email_id' => $this->input->post('email_id'),
+                    'address' => $this->input->post('address'),
+                    'city' => $this->input->post('city'),
+                    'country_id' => $this->input->post('country_id'),
+                    'zipcode' => $this->input->post('zipcode'),
+                    'gender' => $this->input->post('gender'),
+                    'phone' => $this->input->post('phone'),
+                    'avatar'  => $avtar['msg'],  
+                    'birth_date' => $this->input->post('birth_date'),
+                    'longitude' => $this->input->post('longitude'),
+                    'latitude' => $this->input->post('latitude'),
+                );
 
-            $user_data = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true);
-            $this->session->set_userdata(['admin' => $user_data]);
-            $this->session->set_flashdata('success', 'Profile updated successfully.');
-            redirect('admin/edit_profile');
-        }
+                $user_id = $session_data['id']; 
+                $this->Users_model->update_user_data($user_id, $upd_data);
+
+                $user_data = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true);
+                $this->session->set_userdata(['admin' => $user_data]);
+                $this->session->set_flashdata('message', ['message'=>'Profile updated successfully.','class'=>'alert alert-success']);
+                redirect('admin/edit_profile');
+           }
+            
+        }  
+        $data['subview'] = 'admin/profile_edit';
+        $this->load->view('admin/layouts/layout_main', $data);      
+        
+
     }
 
     public function change_password() {
@@ -118,14 +107,14 @@ class Dashboard extends CI_Controller {
             $password = $this->input->post('pass');
 
             if ($password == $decode_pass) {
-                $this->session->set_flashdata('error', 'Please do not use existing password.');
+                $this->session->set_flashdata('message', ['message'=>'Please do not use existing password.','class'=>'alert alert-danger']);
                 redirect('admin/change_password');
             }
             $encode_pass = $this->encrypt->encode($password);
 
             $this->Users_model->update_user_data($user_id, ['password' => $encode_pass]);
             $this->session->set_flashdata('message', ['message'=>'Password has been set Successfully.','class'=>'alert alert-success']);
-            redirect('admin/dashboard');
+            redirect('admin/change_password');
         }
     }
 

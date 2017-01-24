@@ -1,6 +1,10 @@
-<?php    
-    $image = DEFAULT_IMAGE_PATH . "user/user-img.jpg";      
-    //icon-plus-circle2
+<?php   
+    if($this->session->userdata['admin']['avatar'] != ''){
+        $image = base_url('uploads/user_profile/'.$this->session->userdata['admin']['avatar']);  
+    } else{
+        $image = DEFAULT_IMAGE_PATH . "user/user-img.jpg";  
+    }
+        
 ?>
 <!DOCTYPE html>
 <html lang="en">        
@@ -127,7 +131,7 @@
                                     </li>                         
             
                                     <li class="<?php echo (in_array($controller,['testimonial','blogs','cms'])) ? 'active' : ''; ?>">
-                                        <a href="#" class="has-ul"><i class="icon-command"></i> <span>Fornt Side Setting</span></a>
+                                        <a href="#" class="has-ul"><i class="icon-command"></i> <span>Front Side Setting</span></a>
                                         <ul>
                                             <li class="<?php echo ($controller == 'testimonial') ? 'active' : ''; ?>">
                                                 <a href="<?php echo base_url() . 'admin/testimonial'; ?>">
