@@ -44,68 +44,8 @@
 			<!-- SLIDE  -->
 			<li data-transition="parallaxtobottom" data-slotamount="7" data-masterspeed="600"  data-saveperformance="off"  data-title="Architectural View">
 				<!-- MAIN IMAGE -->
-				<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/n_img_1.jpg"  alt="cover image"  data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+				<img src="<?= DEFAULT_IMAGE_PATH ?>demo/n_img_1.jpeg"  alt="cover image"  data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
 
-				<div class="tp-caption white_big skewfromleft tp-resizeme"
-					data-x="500"
-					data-y="100" 
-					data-speed="400"
-					data-start="1500"
-					data-easing="Power3.easeInOut"
-					data-splitin="words"
-					data-splitout="none"
-					data-elementdelay="0.1"
-					data-endelementdelay="0.1"
-					data-endspeed="600"
-					style="z-index: 2; color:#fff; font-size:65px; line-height:85px; font-weight:bold; letter-spacing:0; text-shadow:none;">
-						We Care For Your
-				</div>
-
-				<div class="tp-caption content_text_center skewfromleft tp-resizeme"
-					data-x="500"
-					data-y="195" 
-					data-speed="500"
-					data-start="2000"
-					data-easing="Power3.easeInOut"
-					data-splitin="none"
-					data-splitout="none"
-					data-elementdelay="0.1"
-					data-endelementdelay="0.1"
-					data-endspeed="600"
-
-					style="z-index: 3; font-size:20px; color:#fff; font-weight:300; text-shadow:none;">
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit, <br />
-						sed diam nonummy nibh euismod tincidunt.
-				</div>
-
-				<div class="tp-caption tp-fade"
-					data-x="left"
-					data-y="25" 
-					data-speed="300"
-					data-start="800"
-					data-easing="Power3.easeInOut"
-					data-elementdelay="0.1"
-					data-endelementdelay="0.1"
-					data-endspeed="300"
-					style="z-index: 4;">
-						<img src="<?= DEFAULT_IMAGE_PATH ?>/demo/thematics/medical/doctor-min.png" alt="">
-				</div>
-
-				<div class="tp-caption skewfromleft tp-resizeme  un-button-2-lg"
-					data-x="500"
-					data-y="300" 
-					data-speed="300"
-					data-start="2500"
-					data-easing="Power3.easeInOut"
-					data-splitin="none"
-					data-splitout="none"
-					data-elementdelay="0.1"
-					data-endelementdelay="0.1"
-					data-endspeed="300"
-
-					style="z-index: 5; max-width: auto; max-height: auto; white-space: nowrap;">
-						<a class="btn btn-default btn-lg scrollTo" href="#appointment">MAKE AN APPOINTMENT &nbsp; <i class="fa fa-angle-right"></i></a>
-				</div>
 			</li>
 
 			<!-- SLIDE  -->
@@ -195,6 +135,7 @@
 </a>
 <!-- /BUTTON CALLOUT -->
 
+
 <!-- Overview -->
 <section>
 	<div class="container">
@@ -233,7 +174,7 @@
 <!-- /Overview -->
 
 <!-- Parallax -->
-<section class="parallax parallax-1" style="background-image: url('<?= DEFAULT_IMAGE_PATH ?>demo/thematics/medical/slider_2-min.jpg');">
+<section class="parallax parallax-1" style="background-image: url('<?= DEFAULT_IMAGE_PATH ?>demo/n_img_2.jpg');">
 	<div class="overlay dark-5"><!-- dark overlay [1 to 9 opacity] --></div>
 
 	<div class="container">
