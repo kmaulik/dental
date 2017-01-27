@@ -140,7 +140,7 @@ span.time {
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
-									<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP" value="<?=isset($_GET['search']) ? $_GET['search'] :''?>">
+									<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP Title, Patient Name, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 									<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
 										<em>Search RFP From Here</em>
 									</span>
@@ -148,7 +148,7 @@ span.time {
 							</div>
 						</div>
 						<div class="col-sm-2 sorting">
-							<input type="hidden" name="sort" id="sort" value="<?=isset($_GET['sort'])?$_GET['sort']:'asc'?>">
+							<input type="hidden" name="sort" id="sort" value="<?=$this->input->get('sort')?$this->input->get('sort'):'asc'?>">
 							<span class="sort-asc-data"><i class="icon-sort-by-attributes">&nbsp;Asc</i></span> &nbsp;
 							<span class="sort-desc-data"><i class="icon-sort-by-attributes-alt">&nbsp; Desc</i></span>
 						</div>	

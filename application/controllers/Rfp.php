@@ -316,8 +316,9 @@ class Rfp extends CI_Controller {
 	*	Doctor Search RFP 
 	*/ 
 	public function search_rfp(){    
-		$search_data=isset($_GET['search']) ? $_GET['search'] :'';
-		$sort_data=isset($_GET['sort'])?$_GET['sort']:'asc';
+		//$search_data=isset($_GET['search']) ? $_GET['search'] :'';
+		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
+		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'asc';
 		$this->load->library('pagination');
 		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&sort='.$sort_data;
 		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data);
