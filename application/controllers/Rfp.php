@@ -16,7 +16,7 @@ class Rfp extends CI_Controller {
 		$where = ['is_deleted' => 0 , 'is_blocked' => 0, 'patient_id' => $this->session->userdata['client']['id']];
 		$config['base_url'] = base_url().'rfp/index';
 		$config['total_rows'] = $this->Rfp_model->get_rfp_front_count('rfp',$where);
-		$config['per_page'] = 5;
+		$config['per_page'] = 1;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
@@ -316,7 +316,16 @@ class Rfp extends CI_Controller {
 	*	Doctor Search RFP 
 	*/ 
 	public function search_rfp(){    
-		$data['rfp_data']=$this->Rfp_model->search_rfp_result(); 
+		$search_data=isset($_GET['search']) ? $_GET['search'] :'';
+		$sort_data=isset($_GET['sort'])?$_GET['sort']:'asc';
+		$this->load->library('pagination');
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&sort='.$sort_data;
+		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data);
+		$config['per_page'] = 2;
+		$offset = $this->input->get('per_page');
+		$config = array_merge($config,pagination_front_config());       
+		$this->pagination->initialize($config);
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$sort_data);
 		$data['subview']="front/rfp/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
 

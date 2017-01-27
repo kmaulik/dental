@@ -124,13 +124,30 @@ class Rfp_model extends CI_Model {
     }
 
     /* --------------- For Doctor Search RFP --------- */
-    public function search_rfp_result(){
+     public function search_rfp_count($search_data) {
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
-        $this->db->order_by('rfp.id','desc');
+        if ($search_data != '') {
+            $this->db->where('title LIKE "%' . $search_data . '%" OR CONCAT(rfp.fname," ", rfp.lname) LIKE "%'.$search_data.'%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+        }
+        $res_data = $this->db->get()->num_rows();
+        return $res_data;
+    }
+
+    public function search_rfp_result($limit,$offset,$search_data,$sort_data){
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
+        $this->db->from('rfp');
+        $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
+        if ($search_data != '') {
+            $this->db->where('title LIKE "%' . $search_data . '%" OR CONCAT(rfp.fname," ", rfp.lname) LIKE "%'.$search_data.'%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+        }
+        $this->db->order_by('rfp.id',$sort_data);
+        $this->db->limit($limit,$offset);
         $query = $this->db->get();
         return $query->result_array();
     }
