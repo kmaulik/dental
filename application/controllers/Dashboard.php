@@ -8,6 +8,7 @@ class Dashboard extends CI_Controller {
         parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
         $this->load->model(['Users_model','Country_model']);
+        $this->load->library('unirest');
     }	
 
     public function index() {
@@ -18,11 +19,11 @@ class Dashboard extends CI_Controller {
 
     public function edit_profile(){
     	
+        $loc_arr = array();
         $user_data = $this->session->userdata('client');
-    	$user_id = $user_data['id'];
+        $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         $data['country_list']=$this->Country_model->get_result('country');
-        // pr($data,2);
         $decode_pass = $this->encrypt->decode($data['db_data']['password']);
         // pr($data['db_data'],1);
 
@@ -61,7 +62,27 @@ class Dashboard extends CI_Controller {
             $this->load->view('front/layouts/layout_main',$data);
         }else{
             
-            if($tab == 'info'){                
+            if($tab == 'info'){ 
+
+                $loc_arr['lat'] = $data['db_data']['latitude'];
+                $loc_arr['lng'] = $data['db_data']['longitude'];
+
+                $zipcode = $this->input->post('zipcode');
+
+                if($zipcode != $data['db_data']['zipcode']){
+
+                    $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+                    $res = $this->unirest->get($str);
+                    $res_arr = json_decode($res->raw_body,true);
+
+                    if($res_arr['status'] != 'OK'){
+                        $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
+                        redirect('dashboard/edit_profile');
+                    }else{
+                        $loc_arr = $res_arr['results'][0]['geometry']['location'];
+                    }                    
+                }                
+
                 $fname = $this->input->post('fname');
                 $lname = $this->input->post('lname');                
                 $city = $this->input->post('city');
@@ -72,6 +93,23 @@ class Dashboard extends CI_Controller {
                 $birth_date = $this->input->post('birth_date');
                 $address = $this->input->post('address');                
 
+                $upd_data = array(
+                                    'fname'=>$fname,
+                                    'lname'=>$lname,
+                                    'address'=>$address,
+                                    'city'=>$city,
+                                    'country_id'=>$country_id,
+                                    'zipcode'=>$zipcode,
+                                    'gender'=>$gender,
+                                    'phone'=>$phone,
+                                    'latitude' => $loc_arr['lat'],
+                                    'longitude' => $loc_arr['lng'],
+                                    'birth_date'=>$birth_date
+                                );
+
+                $this->Users_model->update_user_data($user_id,$upd_data);
+                $this->session->set_flashdata('success','Profile has been successfully updated.');
+                redirect('dashboard/edit_profile');
             }
 
             if($tab == 'password'){

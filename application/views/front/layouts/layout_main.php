@@ -26,7 +26,6 @@
     data-background="<?= DEFAULT_IMAGE_PATH ?>boxed_background/1.jpg"
 -->
 <body class="smoothscroll enable-animation">
-
     <!-- wrapper -->
     <div id="wrapper">
 
@@ -49,7 +48,7 @@
                             <?php endif; ?>
 
                             <?php if($this->session->userdata['client']['role_id'] == 5) :?> <!-- For Patient Profile-->
-                            <li><a tabindex="-1" href="<?=base_url('patient')?>"><i class="fa fa-user"></i> PROFILE</a></li>
+                            <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>
                             <?php endif; ?>
                             <li class="divider"></li>
                             <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
