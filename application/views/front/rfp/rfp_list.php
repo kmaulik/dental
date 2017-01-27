@@ -1,3 +1,5 @@
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
+
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>RFP List</h1>
@@ -42,7 +44,7 @@
 						<th>First Name</th>
 						<th>Last Name</th>
 						<th>Dentition Type</th>
-						<th>Action</th>
+						<th style="width:235px;">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -55,10 +57,14 @@
 						<td><?=$record['lname']?></td>
 						<td><?=$record['dentition_type']?></td>
 						<td>
+							<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info">
+								<i class="fa fa-eye"></i><span>View</span>
+							</a>
 							<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-green">
 								<i class="fa fa-edit"></i><span>Edit</span>
 							</a>
-							<a href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete">
+							<!--  -->
+							<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" >
 								<i class="fa fa-trash"></i><span>Delete</span>
 							</a>
 						</td>
@@ -79,12 +85,17 @@
 </section>	
 
 <script>
-$(document).on( "click",".btn_delete", function(e) {    
-    if(confirm('Are you sure ?')) 
-    {
-        return true;
-    } else{
-    	return false;
-    }    
+//$(document).on( "click",".btn_delete", function(e) {  
+
+
+$(".btn_delete").click(function(){		
+	var href = $(this).data('href');
+	bootbox.confirm('Are you sure to delete this rfp?' ,function(res){ 	 		
+	    if(res) {
+	        window.location.href = href;
+	    }
+	});
 });
+
+
 </script>		

@@ -63,7 +63,7 @@ class Users extends CI_Controller {
         if ($this->input->post()) {
 
             $avtar['msg']='';
-            $path = "uploads/avatar/";
+            $path = "uploads/avatars/";
             //2 MB File Size
             $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152);
             //----------------------------------------
@@ -137,7 +137,7 @@ class Users extends CI_Controller {
         $data['country_list']=$this->Country_model->get_result('country');
         if ($this->input->post()) {
             $avtar['msg']='';
-            $path = "uploads/avatar/";
+            $path = "uploads/avatars/";
             //2 MB File Size
             $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152,$this->input->post('H_avatar'));
             //----------------------------------------

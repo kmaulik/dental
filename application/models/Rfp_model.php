@@ -87,6 +87,19 @@ class Rfp_model extends CI_Model {
         }
     }
 
+    /**
+     * @uses : This function is used to Delete record
+     * @param : @table, @record_id
+     * @author : DHK
+     */
+    public function delete_record($table, $condition) {
+        $this->db->where($condition);
+        if ($this->db->delete($table)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     /**
      * @uses : this function is used to count rows of rfp based on  rfp list page
@@ -107,6 +120,18 @@ class Rfp_model extends CI_Model {
         $this->db->order_by('id','desc');
         $this->db->limit($limit,$offset);
         $query = $this->db->get($table);
+        return $query->result_array();
+    }
+
+    /* --------------- For Doctor Search RFP --------- */
+    public function search_rfp_result(){
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
+        $this->db->from('rfp');
+        $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
+        $this->db->order_by('rfp.id','desc');
+        $query = $this->db->get();
         return $query->result_array();
     }
 
