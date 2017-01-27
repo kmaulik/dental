@@ -316,17 +316,20 @@ class Rfp extends CI_Controller {
 	*	Doctor Search RFP 
 	*/ 
 	public function search_rfp(){    
-		//$search_data=isset($_GET['search']) ? $_GET['search'] :'';
+		
+		//------- Filter RFP ----
 		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
-		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'asc';
+		$date_data= $this->input->get('date') ? $this->input->get('date') :'';
+		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
+		//------- /Filter RFP ----
 		$this->load->library('pagination');
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&sort='.$sort_data;
-		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data);
-		$config['per_page'] = 2;
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.'&sort='.$sort_data;
+		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data);
+		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
-		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$sort_data);
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
 		$data['subview']="front/rfp/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
 

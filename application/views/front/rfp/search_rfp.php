@@ -44,21 +44,6 @@ span.time {
     text-align: right;
     font-size: 13px;
 }
-.sorting .sort-asc-data,.sorting .sort-desc-data{
-	padding: 10px;
-}
-.sorting .sort-asc-data:hover,.sorting .sort-desc-data:hover{
-	cursor: pointer;
-	color:#000;
-	background-color: rgba(0,0,0,0.05);
-	border-radius: 5px;
-}
-.sorting .sort-asc-data.active,.sorting .sort-desc-data.active{
-	cursor: pointer;
-	color:#1980B6;
-	background-color: rgba(0,0,0,0.05);
-	border-radius: 5px;
-}
 @media (max-width:479px){
 .rfp-right {
     display: block;
@@ -136,7 +121,8 @@ span.time {
 			<div class="col-sm-12">
 				<form action="" method="GET" id="search_rfp">
 					<div class="row">
-						<div class="col-sm-10">
+						<div class="col-lg-5 col-md-12">
+							<label>Filter Data</label>
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
@@ -147,10 +133,21 @@ span.time {
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2 sorting">
-							<input type="hidden" name="sort" id="sort" value="<?=$this->input->get('sort')?$this->input->get('sort'):'asc'?>">
-							<span class="sort-asc-data"><i class="icon-sort-by-attributes">&nbsp;Asc</i></span> &nbsp;
-							<span class="sort-desc-data"><i class="icon-sort-by-attributes-alt">&nbsp; Desc</i></span>
+						<div class="col-lg-3 col-md-5">
+							<label>Filter Date Wise</label>
+							<input type="text" name="date" class="form-control rangepicker" value="<?=$this->input->get('date') ? $this->input->get('date') :''?>" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31">
+						</div>
+						<div class="col-lg-2 col-md-3 sorting">
+							<label>Sort</label>
+							<select name="sort" class="form-control" id="sort">
+								<option value="desc">Latest RFP</option>
+								<option value="asc">Oldest RFP</option>
+							</select>
+						</div>	
+						<div class="col-lg-2 col-md-4">
+							<label>&nbsp;</label>
+							<input type="submit" name="btn_search" class="btn btn-info" value="Search">
+							<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
 						</div>	
 					</div>	
 				</form>
@@ -195,39 +192,13 @@ span.time {
 </section>
 
 <script>
-//--------------- For Filter RFP Data (Search)--------------
-// $('#search_rfp_text').keyup(function (e) {
-// 	var rex = new RegExp($(this).val(), 'i');
-// 	$('.search_rfp .list-group-item').hide();
-// 	$('.search_rfp .list-group-item').filter(function () {
-// 		return rex.test($(this).text());
-// 	}).show();
-// });
-
-$('#search').keyup(function (e) {
-	if(e.which == 13) {
-       $("#search_rfp").submit();
-    }
-});	
-//--------------- /End Filter RFP Data --------------
-
-if($("#sort").val() == 'desc'){
-	$(".sort-desc-data").addClass('active');
-}else{
-	$(".sort-asc-data").addClass('active');
-}
-//--------------- Sorting Data ---------
-$(".sort-asc-data").click(function(){
-	$("#sort").val('asc');
-	$("#search_rfp").submit();
-});
-
-$(".sort-desc-data").click(function(){
+$("#sort").val("<?=$this->input->get('sort')?$this->input->get('sort'):'desc'?>");
+$("#reset").click(function(){
+	$('input[name=search]').val('');
+	$('input[name=date]').val('');
 	$("#sort").val('desc');
 	$("#search_rfp").submit();
 });
-//-------------- / End Sorting Data ----
-
 
 //----------------- For Add To favorite & Remove Favorite RFP ------------------
 $(".favorite").on( "click", function() {	
