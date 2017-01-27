@@ -121,7 +121,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <img id="img-preview" src="<?php if(isset($user_data['avatar']) && $user_data['avatar'] != '') {
-                                    echo base_url('uploads/user_profile/'.$user_data['avatar']);
+                                    echo base_url('uploads/avatars/'.$user_data['avatar']);
                                 } else { echo DEFAULT_IMAGE_PATH.'user/user-img.jpg'; } ?>" style="height:100px;width:100px;"/>
                             </div>    
                         </div>

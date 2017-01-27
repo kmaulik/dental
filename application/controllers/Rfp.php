@@ -282,6 +282,7 @@ class Rfp extends CI_Controller {
 		redirect('rfp');
 	}
 
+	/* --------------- For Delete RFP Attachment ------------- */
 	public function delete_img_rfp(){
 		$img_name = $this->input->post('img_name');
 		$rfp_id = $this->input->post('rfp_id');
@@ -309,4 +310,60 @@ class Rfp extends CI_Controller {
 		echo json_encode(['success'=>true]);
 	}
 
+
+
+	/* 
+	*	Doctor Search RFP 
+	*/ 
+	public function search_rfp(){    
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result(); 
+		$data['subview']="front/rfp/search_rfp";
+		$this->load->view('front/layouts/layout_main',$data);
+
+	}
+
+	 /*
+     *  view RFP data 
+     */
+    public function view_rfp($rfp_id){
+        $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
+        if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
+        {
+        	 $data['subview']="front/rfp/view_rfp_doctor";
+        }
+       elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
+       {
+       		$data['subview']="front/rfp/view_rfp_patient";
+       }
+		$this->load->view('front/layouts/layout_main',$data);
+    }
+
+    /*
+    *	Add to Favorite RFP
+    */
+    public function add_favorite_rfp(){
+    	$rfp_favorite_data=[
+    		'rfp_id' => decode($this->input->post('rfp_id')),
+    		'doctor_id' => $this->session->userdata('client')['id'],
+    		'created_at' => date("Y-m-d H:i:s")	
+    	];
+    	$res=$this->Rfp_model->insert_record('rfp_favorite',$rfp_favorite_data);
+    	if($res){
+    		return true;
+    	}else{
+    		return false;
+    	}
+    }
+
+    /*
+    *	Remove From Favorite RFP
+    */
+    public function remove_favorite_rfp(){
+    	$res=$this->Rfp_model->delete_record('rfp_favorite',['rfp_id' => decode($this->input->post('rfp_id'))]);
+    	if($res){
+    		return true;
+    	}else{
+    		return false;
+    	}
+    }
 }
