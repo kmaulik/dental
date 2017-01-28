@@ -105,7 +105,7 @@ class Treatment_category extends CI_Controller {
      * Load view for Add Treatment Category 
      * */
 
-     public function add() {
+    public function add() {
 
          $data['title'] = 'Admin Add Treatment Category';
          $data['heading'] = 'Add Treatment Category';
@@ -143,27 +143,31 @@ class Treatment_category extends CI_Controller {
     }
 
     public function read_excel(){
-        
-        ob_clean();
 
-        $file = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/sample.xlsx';
-        // die();
+        ob_clean();
+        $file = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/sample.xlsx';    
         //read file from path
         $objPHPExcel = PHPExcel_IOFactory::load($file);
         //get only the Cell Collection
         $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
-        //extract to a PHP readable array format
+        //extract to a PHP readable array format        
 
-        // pr($cell_collection,1);
+        foreach ($cell_collection as $cell) {                
 
-        foreach ($cell_collection as $cell) {
+
             $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
             $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
             $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
-            //header will/should be in row 1 only. of course this can be modified to suit your need.
-            if ($row == 1) {
+            
+            // echo "<pre>";
+            //     print_r($cell);
+            // echo "</pre>";
+            // die();
+
+            //header will/should be in row 1 only. of course this can be modified to suit your need.            
+            if ($row == 1 && !empty($data_value)) {
                 $header[$row][$column] = $data_value;
-            } else {
+            } else if(!empty($data_value)) {
                 $arr_data[$row][$column] = $data_value;
             }
         }

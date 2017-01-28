@@ -32,55 +32,32 @@
         <!-- Top Bar -->
         <div id="topBar">
             <div class="container">
-
+   
                         
                 <!-- right -->
                 <ul class="top-links list-inline pull-right">
                     <?php if($this->session->userdata('client')) :?>
-                    <li class="text-welcome hidden-xs">Welcome <strong><?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?></strong></li>
-                    <li>
-                        <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
-                            
-                            <?php if($this->session->userdata['client']['role_id'] == 4) :?>  <!-- For Doctor Profile--> 
-                            <li><a tabindex="-1" href="<?=base_url('doctor')?>"><i class="fa fa-user"></i> PROFILE</a></li>
-                            <?php endif; ?>
-
-                            <?php if($this->session->userdata['client']['role_id'] == 5) :?> <!-- For Patient Profile-->
-                            <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>
-                            <?php endif; ?>
-                            <li class="divider"></li>
-                            <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
-                        </ul>
-                    </li>
-                <?php else :?>
-                <li class="hidden-xs"><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
-                <li>
-                    <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> REGISTRATION</a>
-                    <ul class="dropdown-menu pull-right">
-                        <li><a tabindex="-1" href="<?=base_url('registration/patient')?>"><i class="fa fa-user"></i> PATIENT</a></li>
-                        <li><a tabindex="-1" href="<?=base_url('registration/doctor')?>"><i class="fa fa-user-md"></i> DOCTOR</a></li>
-                    </ul>
-                </li>
-            <?php endif;?>
-        </ul>
-
-        <!-- left -->
-               <!--  <ul class="top-links list-inline">
-                    <li>
-                        <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><img class="flag-lang" src="<?= DEFAULT_IMAGE_PATH ?>flags/us.png" width="16" height="11" alt="lang" /> ENGLISH</a>
-                        <ul class="dropdown-langs dropdown-menu pull-right">
-                            <li><a tabindex="-1" href="#"><img class="flag-lang" src="<?= DEFAULT_IMAGE_PATH ?>flags/us.png" width="16" height="11" alt="lang" /> ENGLISH</a></li>
-                            <li class="divider"></li>
-                            <li><a tabindex="-1" href="#"><img class="flag-lang" src="<?= DEFAULT_IMAGE_PATH ?>flags/de.png" width="16" height="11" alt="lang" /> GERMAN</a></li>
-                            <li><a tabindex="-1" href="#"><img class="flag-lang" src="<?= DEFAULT_IMAGE_PATH ?>flags/ru.png" width="16" height="11" alt="lang" /> RUSSIAN</a></li>
-                            <li><a tabindex="-1" href="#"><img class="flag-lang" src="<?= DEFAULT_IMAGE_PATH ?>flags/it.png" width="16" height="11" alt="lang" /> ITALIAN</a></li>
-                        </ul>
-
-                    </li>
-                </ul> -->
-
+                        <li class="text-welcome hidden-xs">Welcome <strong><?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?></strong></li>
+                        <li>
+                            <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
+                                <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>                                
+                                <li class="divider"></li>
+                                <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
+                            </ul>
+                        </li>
+                    <?php else :?>
+                        <li class="hidden-xs"><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
+                        <li>
+                            <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> REGISTRATION</a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a tabindex="-1" href="<?=base_url('registration/patient')?>"><i class="fa fa-user"></i> PATIENT</a></li>
+                                <li><a tabindex="-1" href="<?=base_url('registration/doctor')?>"><i class="fa fa-user-md"></i> DOCTOR</a></li>
+                            </ul>
+                        </li>
+                    <?php endif;?>
+                </ul>       
             </div>
         </div>
         <!-- /Top Bar -->
@@ -161,17 +138,17 @@
                     <div class="navbar-collapse pull-right nav-main-collapse collapse">
                         <nav class="nav-main">
 
-                        <!--
-                            NOTE
-                            
-                            For a regular link, remove "dropdown" class from LI tag and "dropdown-toggle" class from the href.
-                            Direct Link Example: 
+                            <!--
+                                NOTE
+                                
+                                For a regular link, remove "dropdown" class from LI tag and "dropdown-toggle" class from the href.
+                                Direct Link Example: 
 
-                            <li>
-                                <a href="#">HOME</a>
-                            </li>
-                        -->
-                        <ul id="topMain" class="nav nav-pills nav-main">
+                                <li>
+                                    <a href="#">HOME</a>
+                                </li>
+                            -->
+                            <ul id="topMain" class="nav nav-pills nav-main">
                             <li class="dropdown active"><!-- HOME -->
                                 <a href="<?=base_url()?>">HOME</a>
                             </li>
@@ -208,33 +185,26 @@
                                     <li><a href="<?=base_url('registration/doctor')?>">DOCTOR</a></li>
                                 </ul>    
                             </li> -->
-                        </ul>
-                </nav>
-            </div>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <!-- /Top Nav -->
 
         </div>
-    </header>
-    <!-- /Top Nav -->
-
-</div>
-<?php $this->load->view($subview); ?>
-
-<?php $this->load->view('front/layouts/layout_footer'); ?>
-
-</div>
-<!-- /wrapper -->
-
-
-<!-- SCROLL TO TOP -->
-<a href="#" id="toTop"></a>
-
-
-<!-- PRELOADER -->
-<div id="preloader">
-    <div class="inner">
-        <span class="loader"></span>
+        <?php $this->load->view($subview); ?>        
+        <?php $this->load->view('front/layouts/layout_footer'); ?>
     </div>
-</div><!-- /PRELOADER -->
+    <!-- /wrapper -->
+    <!-- SCROLL TO TOP -->
+    <a href="#" id="toTop"></a>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="inner">
+            <span class="loader"></span>
+        </div>
+    </div><!-- /PRELOADER -->
 
 
 <!-- JAVASCRIPT FILES -->
@@ -246,8 +216,6 @@
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.tools.min.js"></script>
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.revolution.min.js"></script>
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>view/demo.revolution_slider.js"></script>
-
- 
 
 </body>
 </html>

@@ -1,10 +1,9 @@
 <?php   
     if($this->session->userdata['admin']['avatar'] != ''){
-        $image = base_url('uploads/user_profile/'.$this->session->userdata['admin']['avatar']);  
+        $image = base_url('uploads/avatars/'.$this->session->userdata['admin']['avatar']);  
     } else{
         $image = DEFAULT_IMAGE_PATH . "user/user-img.jpg";  
-    }
-        
+    }      
 ?>
 <!DOCTYPE html>
 <html lang="en">        

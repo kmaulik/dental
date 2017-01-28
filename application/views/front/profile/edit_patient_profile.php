@@ -21,8 +21,8 @@
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb breadcrumb-inverse">
 			<li><a href="#">Home</a></li>
-			<li><a href="#">Pages</a></li>
-			<li class="active">Felicia Doe</li>
+			<li><a href="#">Edit Profile</a></li>
+			<li class="active"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></li>
 		</ol><!-- /breadcrumbs -->
 
 	</div>
@@ -54,14 +54,14 @@
 				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>
 				<li class="<?php if($tab == 'privacy'){ echo 'active'; }?>"><a href="#privacy" data-toggle="tab">Privacy</a></li>
 			</ul>
-
+			
 			<div class="tab-content margin-top-20">				
 
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade <?php if($tab == 'info'){ echo 'in active'; }?>" id="info">
 					<?php 
 						$all_errors = validation_errors('<li>','</li>');
-						if($all_errors != '') { 
+						if($all_errors != '' && $tab == 'info') { 
 					?>
 						<div class="alert alert-mini alert-danger">				
 							<ul>							
@@ -304,7 +304,8 @@
 				<?php if($db_data['avatar'] == '') { ?>
 					<img src="<?php echo base_url(); ?>uploads/default/no_image_found.jpg" alt="" />
 				<?php }else{ ?>
-					<img src="<?php echo base_url(); ?>uploads/avatars/<?= $db_data['avatar'] ?>" alt="" />
+					<img src="<?php echo base_url(); ?>uploads/avatars/<?= $db_data['avatar'] ?>" alt="" 
+						 onerror="this.src='<?php echo base_url().'uploads/default/no_image_found.jpg'; ?>'" />
 				<?php } ?>
 
 				<h2 class="size-18 margin-top-10 margin-bottom-0"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></h2>
