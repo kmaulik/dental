@@ -1,0 +1,58 @@
+.message-board .bg-success{
+    background-color: #8CC152;
+    padding: 15px;
+}
+.message-board .btn-toolbar{
+    padding: 15px;
+}
+
+.list-group-item .avatar {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+}
+.message-board span.name {
+    width: 100px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    margin: 0 10px;
+}
+.message-board span.subject {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0 10px;
+}
+.message-board span.attachment {
+    float: right;
+    position: absolute;
+    right: 85px;
+    top: 20px;
+    text-align: right;
+}
+.message-board span.time {
+    float: right;
+    width: 80px;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    text-align: right;
+    font-size: 13px;
+}
+.message-board .checkbox{
+    margin :0 15px 18px 0;
+}
+.message-board .select-all{
+    margin: 0px 16px;
+}
+.message-board .message-part{
+    padding-top: 15px;
+    background-color: rgba(238, 238, 238, 0.5);
+}
+.message-board .btn-success{
+    background-color: #8CC152;
+    border: none;
+}

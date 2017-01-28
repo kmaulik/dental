@@ -162,4 +162,26 @@ class Rfp_model extends CI_Model {
         return $query->result_array();
     }
 
+
+    /* --------------- For Patient List RFP Bid --------- */
+    public function get_rfp_bid_data($rfp_id){
+
+        $this->db->select('rfp.id,rfp.title,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.created_at,u.fname,u.lname,u.avatar,count(rr.doctor_id) as total_review,avg(rr.rating) as rating');
+        $this->db->from('rfp');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
+        $this->db->join('users u','rb.doctor_id = u.id');
+        $this->db->join('rfp_rating rr','u.id=rr.doctor_id','left');
+        $this->db->where('rb.rfp_id',$rfp_id);
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
+        $this->db->where('rb.is_deleted','0');
+        $this->db->where('rr.is_deleted','0');
+        $this->db->where('rr.is_blocked','0');
+        $this->db->group_by('rr.doctor_id');
+        $query = $this->db->get();
+        return $query->result_array();
+
+    }
+ 
+
 }    

@@ -22,7 +22,7 @@ class Rfp extends CI_Controller {
 		$this->pagination->initialize($config);
 		$data['rfp_list']=$this->Rfp_model->get_rfp_front_result('rfp',$where,$config['per_page'],$offset); 
 
-		$data['subview']="front/rfp/rfp_list";
+		$data['subview']="front/rfp/patient/rfp_list";
 		$this->load->view('front/layouts/layout_main',$data);
 	}
 
@@ -44,7 +44,7 @@ class Rfp extends CI_Controller {
 		   
 		   
 			if($this->form_validation->run() == FALSE){             
-			   $data['subview']="front/rfp/rfp-1";
+			   $data['subview']="front/rfp/patient/rfp-1";
 			   $this->load->view('front/layouts/layout_main',$data);
 			 }else{
 				$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
@@ -69,7 +69,7 @@ class Rfp extends CI_Controller {
 			if($this->form_validation->run() == FALSE){  
 				$where = 'is_deleted !=  1 and is_blocked != 1';
 				$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
-				$data['subview']="front/rfp/rfp-2";
+				$data['subview']="front/rfp/patient/rfp-2";
 				$this->load->view('front/layouts/layout_main',$data);
 			}
 			else
@@ -148,7 +148,7 @@ class Rfp extends CI_Controller {
 			   
 				if($this->form_validation->run() == FALSE){    
 				   $data['record']=$rfp_arr;          
-				   $data['subview']="front/rfp/rfp-1";
+				   $data['subview']="front/rfp/patient/rfp-1";
 				   $this->load->view('front/layouts/layout_main',$data);
 				}else{
 					$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
@@ -177,7 +177,7 @@ class Rfp extends CI_Controller {
 					$data['record']=$rfp_arr;
 					$where = 'is_deleted !=  1 and is_blocked != 1';
 					$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
-					$data['subview']="front/rfp/rfp-2";
+					$data['subview']="front/rfp/patient/rfp-2";
 					$this->load->view('front/layouts/layout_main',$data);
 				}else{
 					$treatment_cat_id='';
@@ -311,6 +311,16 @@ class Rfp extends CI_Controller {
 	}
 
 
+	/* 
+	*	View RFP Bid (Proposal) particular rfp wise
+	*/
+	public function view_rfp_bid($rfp_id){
+
+		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
+		//pr($data['rfp_bid_list'],1);
+		$data['subview']="front/rfp/patient/rfp_bid";
+		$this->load->view('front/layouts/layout_main',$data);
+	}
 
 	/* 
 	*	Doctor Search RFP 
@@ -330,7 +340,7 @@ class Rfp extends CI_Controller {
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
 		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
-		$data['subview']="front/rfp/search_rfp";
+		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
 
 	}
@@ -342,11 +352,13 @@ class Rfp extends CI_Controller {
         $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
         {
-        	 $data['subview']="front/rfp/view_rfp_doctor";
+        	 $where=['rfp_id' => decode($rfp_id),'doctor_id' => $this->session->userdata('client')['id'],'is_deleted' => '0'];
+        	 $data['rfp_bid']=$this->Rfp_model->get_result('rfp_bid',$where,1);
+        	 $data['subview']="front/rfp/doctor/view_rfp_doctor";
         }
        elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
        {
-       		$data['subview']="front/rfp/view_rfp_patient";
+       		$data['subview']="front/rfp/patient/view_rfp_patient";
        }
 		$this->load->view('front/layouts/layout_main',$data);
     }
@@ -378,5 +390,46 @@ class Rfp extends CI_Controller {
     	}else{
     		return false;
     	}
+    }
+
+    /*
+    * Manage Bid 
+    */
+    public function manage_bid(){
+    	if($this->input->post('rfp_bid_id') == '') // null means place a new bid
+    	{
+    		$data=array(
+	    		'rfp_id' => $this->input->post('rfp_id'),
+	    		'doctor_id' => $this->session->userdata['client']['id'],
+	    		'amount' => $this->input->post('amount'),
+	    		'description' => $this->input->post('description'),
+	    		'created_at' => date("Y-m-d H:i:s"),
+	    	);
+
+	    	$res=$this->Rfp_model->insert_record('rfp_bid',$data);
+	    	if($res){
+	    		$this->session->set_flashdata('success', 'Bid Placed Successfully!');
+	    	}
+	    	else{
+	    		$this->session->set_flashdata('error', 'Error Into Place Bid, Please try again!');
+	    	}
+    	}else{
+    		$data=array(
+	    		'rfp_id' => $this->input->post('rfp_id'),
+	    		'doctor_id' => $this->session->userdata['client']['id'],
+	    		'amount' => $this->input->post('amount'),
+	    		'description' => $this->input->post('description'),
+	    	);
+    		$where=['id' => $this->input->post('rfp_bid_id')];
+	    	$res=$this->Rfp_model->update_record('rfp_bid',$where,$data);
+	    	if($res){
+	    		$this->session->set_flashdata('success', 'Bid Updated Successfully!');
+	    	}
+	    	else{
+	    		$this->session->set_flashdata('error', 'Error Into Update Bid, Please try again!');
+	    	}
+    	}	
+	    	
+    	redirect('rfp/view_rfp/'.encode($this->input->post('rfp_id')));
     }
 }
