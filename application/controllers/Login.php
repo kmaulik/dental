@@ -36,7 +36,7 @@ class Login extends CI_Controller {
 
                 if ($db_pass == $password) {
                     if($user_data['is_verified'] == 1){
-                        $msg="Thank you for visiting us; in order to use your account, please, check your emails for our Welcome message AND click on the activation link to use your account with us. If you haven’t received the email, please, find in our <a href='".base_url('faq')."'>FAQ </a> (Account Activation) for help.";
+                        $msg="Thank you for visiting us. In order to use your account, please check your emails for our Welcome message and click on the activation link to use your account with us. If you haven’t received the email, please, find in our <a href='".base_url('faq')."'>FAQ </a> (Account Activation) for help.";
                         $this->session->set_flashdata('error',$msg);
                         redirect('login');
                     }

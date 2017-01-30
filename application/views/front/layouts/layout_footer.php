@@ -7,42 +7,40 @@
             <div class="col-md-4 col-sm-4">
 
                 <!-- Footer Logo -->
-                <img class="footer-logo" src="<?= DEFAULT_IMAGE_PATH ?>/logo-footer.png" alt="" />
+                <a href="<?=base_url('')?>"><img class="footer-logo" src="<?= DEFAULT_IMAGE_PATH ?>/logo-footer.png" alt="" /></a>
 
                 <p>
                     Incredibly beautiful responsive Bootstrap Template for Corporate and Creative Professionals.
                 </p>
 
-                <h2>(800) 123-4567</h2>
+                <h2><?=config('phone');?></h2>
 
                 <!-- Social Icons -->
                 <div class="clearfix">
-
-                    <a href="#" class="social-icon social-icon-sm social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
-                        <i class="icon-facebook"></i>
-                        <i class="icon-facebook"></i>
-                    </a>
-
-                    <a href="#" class="social-icon social-icon-sm social-icon-border social-twitter pull-left" data-toggle="tooltip" data-placement="top" title="Twitter">
+                    <?php if(config('facebook_link') != '') :?>
+                        <a href="<?=config('facebook_link');?>" class="social-icon social-icon-sm social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
+                            <i class="icon-facebook"></i>
+                            <i class="icon-facebook"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if(config('twitter_link') != '') :?>
+                    <a href="<?=config('twitter_link');?>" class="social-icon social-icon-sm social-icon-border social-twitter pull-left" data-toggle="tooltip" data-placement="top" title="Twitter">
                         <i class="icon-twitter"></i>
                         <i class="icon-twitter"></i>
                     </a>
-
-                    <a href="#" class="social-icon social-icon-sm social-icon-border social-gplus pull-left" data-toggle="tooltip" data-placement="top" title="Google plus">
+                    <?php endif; ?>
+                    <?php if(config('gplus_link') != '') :?>
+                    <a href="<?=config('gplus_link');?>" class="social-icon social-icon-sm social-icon-border social-gplus pull-left" data-toggle="tooltip" data-placement="top" title="Google plus">
                         <i class="icon-gplus"></i>
                         <i class="icon-gplus"></i>
                     </a>
-
-                    <a href="#" class="social-icon social-icon-sm social-icon-border social-linkedin pull-left" data-toggle="tooltip" data-placement="top" title="Linkedin">
-                        <i class="icon-linkedin"></i>
-                        <i class="icon-linkedin"></i>
+                    <?php endif; ?>
+                    <?php if(config('youtube_link') != '') :?>
+                    <a href="<?=config('youtube_link');?>" class="social-icon social-icon-sm social-icon-border social-youtube pull-left" data-toggle="tooltip" data-placement="top" title="YouTube">
+                        <i class="icon-youtube"></i>
+                        <i class="icon-youtube"></i>
                     </a>
-
-                    <a href="#" class="social-icon social-icon-sm social-icon-border social-rss pull-left" data-toggle="tooltip" data-placement="top" title="Rss">
-                        <i class="icon-rss"></i>
-                        <i class="icon-rss"></i>
-                    </a>
-
+                    <?php endif; ?>
                 </div>
                 <!-- /Social Icons -->
 
@@ -85,7 +83,7 @@
                             <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Services</a></li>
                             <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Careers</a></li>
                             <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Gallery</a></li>
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> FAQ</a></li>
+                            <li><a class="block" href="<?=base_url('faq')?>"><i class="fa fa-angle-right"></i> FAQ</a></li>
                         </ul>
                     </div>
 

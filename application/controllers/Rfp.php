@@ -156,8 +156,6 @@ class Rfp extends CI_Controller {
 				}
 			}
 			else{				
-
-
 				//--------- For Check Step 1 is Success or not  ---------
 				if(!isset($this->session->userdata['rfp_data'])){
 					redirect('rfp/edit/'.$id);

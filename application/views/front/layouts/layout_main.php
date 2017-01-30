@@ -149,29 +149,29 @@
                                 </li>
                             -->
                             <ul id="topMain" class="nav nav-pills nav-main">
-                            <li class="dropdown active"><!-- HOME -->
-                                <a href="<?=base_url()?>">HOME</a>
+                            <li class="dropdown <?php if($this->uri->segment(1)=='') echo 'active'?>"><!-- HOME -->
+                                <a href="<?=base_url()?>">HOME </a>
                             </li>
                            
                              <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 4) :?>
-                                <li class="dropdown"><!-- HOME -->
-                                <a href="<?=base_url('rfp/search_rfp')?>">RFP</a>
-                            </li>
+                                <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
+                                    <a href="<?=base_url('rfp/search_rfp')?>">RFP</a>
+                                </li>
                             <?php endif;?>
 
                             <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
-                                <li class="dropdown"><!-- HOME -->
-                                <a href="<?=base_url('rfp')?>">RFP</a>
-                            </li>
+                                <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
+                                    <a href="<?=base_url('rfp')?>">RFP</a>
+                                 </li>
                             <?php endif;?>
 
-                            <li class="dropdown">
+                            <li class="dropdown <?php if($this->uri->segment(1)=='blog') echo 'active'; ?>">
                                 <a href="<?=base_url('blog')?>">BLOG</a>
                             </li>
-                            <li class="dropdown">
+                            <li class="dropdown <?php if($this->uri->segment(1)=='faq') echo 'active'; ?>">
                                 <a href="<?=base_url('faq')?>">FAQ</a>
                             </li>
-                            <li class="dropdown">
+                            <li class="dropdown <?php if($this->uri->segment(1)=='contact_us') echo 'active'; ?>">
                                 <a href="<?=base_url('contact_us')?>">CONTACT US</a>
                             </li>
 
