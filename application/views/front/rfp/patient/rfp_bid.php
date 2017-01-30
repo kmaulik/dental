@@ -30,6 +30,9 @@
 .rating-img{
 	height: 20px;
 }
+.store-list .msg-btn{
+	margin: 5px 0px;
+}
 </style>
 
 <section class="page-header page-header-xs">
@@ -67,8 +70,10 @@
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
 									  <a href="#fakelink"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
-									  <a href="#" class="rfp-mail"><i class="fa fa-envelope" title="Send Mail"></i></a> 
-									  <span class="label label-success pull-right rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
+									  <div class="pull-right msg-btn">
+									  <a class="label label-info rfp-price send_msg" data-id="<?=$key?>" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i> Send Mail</a> 
+									  <span class="label label-success rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
+									  </div>	
 									</h4>
 									<ul class="list-inline">
 										<li>
@@ -116,4 +121,54 @@
 			</div>
 		</div>
 	</div>
-</section>			
+</section>	
+
+<!-- ==================== Modal Popup For Place a Bid ========================= -->
+<div class="modal fade send_message" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Send Message</h4>
+			</div>
+			<form action="<?=base_url('rfp/send_massage')?>" method="POST" id="frmbid">
+				<input type="hidden" name="rfp_id" id="rfp_id">
+				<input type="hidden" name="to_id" id="to_id">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<label>Message</label>
+							<div class="form-group">
+								<textarea name="message" id="message" class="form-control" rows="5"></textarea>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+							<div class="form-group">
+								<input type="button" name="submit" class="btn btn-info" value="Submit">
+								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+							</div>	
+						</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Place a Bid ========================= -->		
+
+
+<script>
+$(".send_msg").click(function(){
+	var key= $(this).attr('data-id');
+	console.log(key);
+	//$("#rfp_id").val(bid_data[key][id]);
+});
+
+</script>
