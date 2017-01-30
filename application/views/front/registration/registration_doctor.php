@@ -114,7 +114,7 @@
 														
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right register-btn">
-							<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> REGISTER</button>
+							<button type="submit" class="btn btn_custom"><i class="fa fa-check"></i> REGISTER</button>
 						</div>
 					</div>
 				</form>
