@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(0);
+// error_reporting(0);
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Treatment_category extends CI_Controller {
@@ -9,6 +9,7 @@ class Treatment_category extends CI_Controller {
         parent::__construct();
         $this->load->model(['Treatment_category_model']);
         $this->load->library('excel');
+        $this->load->helper('download');
     }
 
     /**
@@ -46,14 +47,10 @@ class Treatment_category extends CI_Controller {
                     );
                 $this->session->set_flashdata('message',['message'=>'Treatment Category successfully deleted!','class'=>'success']);
             } elseif ($action == 'block') {
-                $update_array = array(
-                    'is_blocked' => 1
-                    );
+                $update_array = array('is_blocked' => 1 );
                 $this->session->set_flashdata('message',['message'=>'Treatment Category successfully blocked!','class'=>'success']);
             } else {
-                $update_array = array(
-                    'is_blocked' => 0
-                    );
+                $update_array = array('is_blocked' => 0 );
                 $this->session->set_flashdata('message',['message'=>'Treatment Category successfully unblocked!','class'=>'success']);
             }
             $this->Treatment_category_model->update_record('treatment_category', $where, $update_array);
@@ -107,9 +104,9 @@ class Treatment_category extends CI_Controller {
 
     public function add() {
 
-         $data['title'] = 'Admin Add Treatment Category';
-         $data['heading'] = 'Add Treatment Category';
-         if ($this->input->post()) {
+        $data['title'] = 'Admin Add Treatment Category';
+        $data['heading'] = 'Add Treatment Category';
+        if ($this->input->post()) {
 
             $insert_array = [
             'title'          => $this->input->post('title'),
@@ -142,10 +139,48 @@ class Treatment_category extends CI_Controller {
         }
     }
 
-    public function read_excel(){
+    public function import(){
 
-        ob_clean();
-        $file = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/sample.xlsx';    
+        if($_POST){
+
+            $config['upload_path'] = './uploads/doc_category/';
+            $config['allowed_types'] = 'csv|xls|xlsx';
+            $config['max_size']  = '10000000000';
+            $config['encrypt_name'] = TRUE;
+            $this->load->library('upload', $config);
+            
+            if ( ! $this->upload->do_upload('import_csv')){
+                $error = array('error' => $this->upload->display_errors());
+                pr($error);
+                die();
+            } else {
+                $data = array('upload_data' => $this->upload->data());
+                $res = $this->read_excel($data['upload_data']['full_path']);
+                $all_categories = $res['values'];
+
+                if(!empty($all_categories)){
+                    foreach($all_categories as $category){
+                        $insert_array = [
+                            'title'          => $this->input->post('title'),
+                            'created_at'     => date("Y-m-d H:i:s a"),
+                            'is_blocked'      => '0',
+                        ];
+
+                        $result=$this->Treatment_category_model->insert_record('treatment_category',$insert_array);
+                    }   
+                }
+                
+            }
+        }        
+
+        $data['heading'] = 'Import Category';
+        $data['subview'] = 'admin/treatment_category/import';
+        $this->load->view('admin/layouts/layout_main', $data);
+    }
+
+    public function read_excel($file){
+
+        ob_clean();        
         //read file from path
         $objPHPExcel = PHPExcel_IOFactory::load($file);
         //get only the Cell Collection
@@ -158,11 +193,6 @@ class Treatment_category extends CI_Controller {
             $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
             $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
             $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
-            
-            // echo "<pre>";
-            //     print_r($cell);
-            // echo "</pre>";
-            // die();
 
             //header will/should be in row 1 only. of course this can be modified to suit your need.            
             if ($row == 1 && !empty($data_value)) {
@@ -175,8 +205,14 @@ class Treatment_category extends CI_Controller {
         $data['header'] = $header;
         $data['values'] = $arr_data;
 
-        // pr($data['header'],1);
-        pr($data['values'],1);
+        return $data;
+    }
+
+    public function download_sample(){        
+        $path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/sample.xlsx';        
+        $data = file_get_contents($path); // Read the file's contents        
+        $name = 'sample.xlsx';
+        force_download($name, $data); 
     }
 
     public function create_excel(){

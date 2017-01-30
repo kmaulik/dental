@@ -27,7 +27,15 @@
     
         <div class="panel panel-flat">
             <div class="panel-heading text-right">
-                <a href="<?php echo site_url('admin/treatment_category/add'); ?>" class="btn btn-success btn-labeled"><b><i class=" icon-plus-circle2"></i></b> Add New Treatment Category</a>
+                <a href="<?php echo site_url('admin/treatment_category/import'); ?>" class="btn btn-success btn-labeled">
+                    <b><i class="icon-box-add"></i></b>
+                    Import CSV
+                </a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="<?php echo site_url('admin/treatment_category/add'); ?>" class="btn btn-success btn-labeled">
+                    <b><i class=" icon-plus-circle2"></i></b>
+                    Add New Treatment Category
+                </a>
             </div>
             <table class="table datatable-basic">
                 <thead>
@@ -100,7 +108,7 @@
         });
     });
 
-$(document).on( "click",".btn_delete", function(e) {    
+    $(document).on( "click",".btn_delete", function(e) {    
         e.preventDefault();
         var lHref = $(this).attr('href');
         bootbox.confirm('Are you sure ?',function(res){
