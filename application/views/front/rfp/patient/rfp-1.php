@@ -61,7 +61,8 @@
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Birth Date</label>	
-						<input type="text" name="birth_date" id="birth_date" onchange="fetch_definition_type()" class="form-control datepicker" placeholder="Birth Date" value="<?php if(isset($record['birth_date'])) { echo $record['birth_date']; } else { if(set_value('birth_date') != '') { echo set_value('birth_date'); }else { echo $this->session->userdata['client']['birth_date']; }} ?>" >
+						<input type="text" name="birth_date" id="birth_date" onchange="fetch_definition_type()" class="form-control datepicker" placeholder="YYYY-MM-DD" value="<?php if(isset($record['birth_date'])) { echo $record['birth_date']; } else { if(set_value('birth_date') != '') { echo set_value('birth_date'); }else { echo $this->session->userdata['client']['birth_date']; }} ?>" readonly>
+						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>

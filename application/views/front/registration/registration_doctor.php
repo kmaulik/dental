@@ -92,7 +92,8 @@
 					</div>					
 
 					<div class="form-group">
-						<input type="text" id="birth_date" name="birth_date" placeholder="Birth Date" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>">
+						<input type="text" id="birth_date" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>" readonly>
+						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 					</div>					
 					<div class="form-group address-box">
 						<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>

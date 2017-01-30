@@ -64,7 +64,7 @@ class Registration extends CI_Controller {
                 'longitude' => $loc_arr['lng'],
                 'latitude' => $loc_arr['lat'],
                 'activation_code'  => $rand,
-                'is_blocked' => '1', // 1 Means Aacount is Blocked  
+                'is_verified' => '1', // 1 Means Account is Not Verified 
                 );
             $res=$this->Users_model->insert_user_data($data);
             if($res){
@@ -151,7 +151,7 @@ class Registration extends CI_Controller {
                 'longitude' => $loc_arr['lng'],
                 'latitude' => $loc_arr['lat'],
                 'activation_code'  => $rand,
-                'is_blocked' => '1', // 1 Means Aacount is Blocked  
+                'is_verified' => '1', // 1 Means Account is Not Verified 
                 );
 
             $res=$this->Users_model->insert_user_data($data);
@@ -198,7 +198,7 @@ class Registration extends CI_Controller {
         if($this->Users_model->CheckActivationCode($id))
         {
             $this->db->set('activation_code','');
-            $this->db->set('is_blocked',0); // 0 Means Account is Open For Login
+            $this->db->set('is_verified',0); // 0 Means Account is Verified & Now Open For Login
             $this->db->where('activation_code',$id);
             $this->db->update('users');
             $this->session->set_flashdata('success',

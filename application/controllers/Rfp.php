@@ -16,7 +16,7 @@ class Rfp extends CI_Controller {
 		$where = ['is_deleted' => 0 , 'is_blocked' => 0, 'patient_id' => $this->session->userdata['client']['id']];
 		$config['base_url'] = base_url().'rfp/index';
 		$config['total_rows'] = $this->Rfp_model->get_rfp_front_count('rfp',$where);
-		$config['per_page'] = 1;
+		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
@@ -180,6 +180,7 @@ class Rfp extends CI_Controller {
 					$data['subview']="front/rfp/patient/rfp-2";
 					$this->load->view('front/layouts/layout_main',$data);
 				}else{
+					//pr($_FILES,1);
 					$treatment_cat_id='';
 					if($this->input->post('treatment_cat_id')){
 						$treatment_cat_id=implode(",",$this->input->post('treatment_cat_id')); // Convert Array into string

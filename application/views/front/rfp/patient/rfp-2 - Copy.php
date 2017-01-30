@@ -225,16 +225,13 @@
 						<div class="col-md-12 col-sm-12">
 							<div class="form-group">
 								<label>Attachment</label>
-								<div class="multiple-file">
-									<div class="fancy-file-upload">
-										<i class="fa fa-upload"></i>
-										<input type="file" class="img_path_id" class="form-control" name="img_path[]"/>							
-										<input type="text" id="img_path_txt" class="form-control img_path_txt" placeholder="no file selected" readonly="" />
-										<span class="button">Choose File</span>
-									</div>
+								<div class="fancy-file-upload">
+									<i class="fa fa-upload"></i>
+									<input type="file" id="img_path_id" class="form-control" multiple="multiple" name="img_path[]"/>							
+									<input type="text" id="img_path_txt" class="form-control" placeholder="no file selected" readonly="" />
+									<span class="button">Choose File</span>
 								</div>
 								<small class="text-muted block">Max Allow File : 5 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
-								<a class="add-more btn btn-info"><i class="fa fa-plus"></i> Add More</a>
 							</div>
 						</div>
 					</div>		
@@ -251,11 +248,6 @@
 </section>
 <!-- / --> 
 <script>
-
-$(".add-more").click(function(){
-	$($(".multiple-file").html()).insertAfter( ".multiple-file" );
-});
-
 fetch_definition_data();
 
 function fetch_definition_data(){
@@ -291,10 +283,10 @@ function fetch_definition_data(){
 
 
 //---------------- For Change Image Upload  --------------
-	$('.img_path_id').change(function(){
+	$('#img_path_id').change(function(){
 		var files = $(this)[0].files;
 		var file_text= files.length+" files selected";
-		$(".img_path_txt").val(file_text);
+		$('#img_path_txt').val(file_text);
 		check_file_limit();
 	});
 
@@ -302,7 +294,7 @@ function fetch_definition_data(){
 	function check_file_limit(){
 
 		$(".valid-file").remove();
-		var files = $(".img_path_id")[0].files;
+		var files = $("#img_path_id")[0].files;
 		var valid_extension = 0, b = 0;
 		for (var i=0, F=files, L=files.length; i<L; i++) {
 			b += files[i].size/1024/1024;
@@ -329,17 +321,17 @@ function fetch_definition_data(){
 		//console.log(total_size);
 		if(total_file > 5) // For Max. 5 File upload at a time
 		{
-			$(".img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Please Choose Max. 5 File</div>');
+			$("#img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Please Choose Max. 5 File</div>');
 			return false;
 		}
 		else if(total_size > 10) // For Max 10 Mb File Size Upload
 		{
-			$(".img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Please Choose Max. 10 MB File</div>');
+			$("#img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Please Choose Max. 10 MB File</div>');
 			return false;
 		}
 		else if(valid_extension == 1) // For check Valid Extension or Not
 		{
-			$(".img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Only Allowed '+arrayExtensions.join(', ')+' Extension</div>');
+			$("#img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Only Allowed '+arrayExtensions.join(', ')+' Extension</div>');
 			return false;
 		}
 		else{
@@ -352,8 +344,8 @@ function fetch_definition_data(){
 		var ext = file.split(".");
 		ext = ext[ext.length-1].toLowerCase();      
 		if (arrayExtensions.lastIndexOf(ext) == -1) {
-			$(".img_path_id").val("");
-			$(".img_path_txt").val("");
+			$("#img_path_id").val("");
+			$("#img_path_txt").val("");
 			return false;
 		}else{
 			return true;
@@ -381,4 +373,5 @@ function fetch_definition_data(){
 
 	}
 </script>
+
 

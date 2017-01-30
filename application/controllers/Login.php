@@ -35,8 +35,14 @@ class Login extends CI_Controller {
                 $db_pass = $this->encrypt->decode($user_data['password']);
 
                 if ($db_pass == $password) {
+                    if($user_data['is_verified'] == 1){
+                        $msg="Thank you for visiting us; in order to use your account, please, check your emails for our Welcome message AND click on the activation link to use your account with us. If you haven’t received the email, please, find in our <a href='".base_url('faq')."'>FAQ </a> (Account Activation) for help.";
+                        $this->session->set_flashdata('error',$msg);
+                        redirect('login');
+                    }
                     if($user_data['is_blocked'] == 1){
-                        $this->session->set_flashdata('error','Your Account is Deactivated, Please contact to admin');
+                        $msg="Unfortunately your account cannot be used. Kindly <a href='".base_url('contact_us')."'>contact us </a>, so we can activate your account again";
+                        $this->session->set_flashdata('error',$msg);
                         redirect('login');
                     }
                     $user_login = $this->session->userdata('client');

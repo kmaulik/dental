@@ -97,7 +97,7 @@
 								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star10.png';?>" class="rating-img">
 								            <?php endif;?>
 										</li>
-										<li>(<?=$bid_list['total_review']?>)</li>
+										<li>(<?=$bid_list['total_review']?$bid_list['total_review']:'0'?>)</li>
 										<li><span class="label label-info rating"><?=$rate?> / 5.0</span></li>
 										<li> | </li>
 										<li><i class="fa fa-clock-o"></i> <?=time_ago($bid_list['created_at'])?> </li>

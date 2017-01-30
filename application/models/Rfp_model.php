@@ -166,22 +166,20 @@ class Rfp_model extends CI_Model {
     /* --------------- For Patient List RFP Bid --------- */
     public function get_rfp_bid_data($rfp_id){
 
-        $this->db->select('rfp.id,rfp.title,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.created_at,u.fname,u.lname,u.avatar,count(rr.doctor_id) as total_review,avg(rr.rating) as rating');
+        $where=[
+            'rb.rfp_id' => $rfp_id,
+            'rfp.is_deleted' => 0,
+            'rfp.is_blocked' => 0,
+            'rb.is_deleted' => 0,
+        ];
+        $this->db->select('rfp.id,rfp.title,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.created_at,u.fname,u.lname,u.avatar,rr.avg as rating,rr.count1 as total_review');
         $this->db->from('rfp');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         $this->db->join('users u','rb.doctor_id = u.id');
-        $this->db->join('rfp_rating rr','u.id=rr.doctor_id','left');
-        $this->db->where('rb.rfp_id',$rfp_id);
-        $this->db->where('rfp.is_deleted','0');
-        $this->db->where('rfp.is_blocked','0');
-        $this->db->where('rb.is_deleted','0');
-        $this->db->where('rr.is_deleted','0');
-        $this->db->where('rr.is_blocked','0');
-        $this->db->group_by('rr.doctor_id');
+        $this->db->join('(SELECT avg(rating) AS avg, count(rating) AS count1,doctor_id FROM rfp_rating where is_deleted=0 and is_blocked=0 GROUP BY doctor_id) rr','rr.doctor_id = rb.doctor_id','LEFT');
+        $this->db->where($where);
         $query = $this->db->get();
         return $query->result_array();
-
     }
- 
 
 }    
