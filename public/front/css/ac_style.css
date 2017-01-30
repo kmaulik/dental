@@ -47,7 +47,7 @@ section.page-header h1{font-weight: bold;}
 
 
 .padding-xxs.dark {
-    background: url(http://localhost/dental/public/front/images/demo/n_image_testi.png);
+    background: url(../images/demo/n_image_testi.png);
     background-position: center center;
     background-size: cover;
     background-attachment: fixed;
