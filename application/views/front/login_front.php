@@ -65,7 +65,7 @@
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-6 col-xs-6 text-right">
-							<input type="submit" class="btn btn-primary" name="submit" value="LOG IN">
+							<input type="submit" class="btn btn_custom" name="submit" value="LOG IN">
 						</div>
 
 					</div>

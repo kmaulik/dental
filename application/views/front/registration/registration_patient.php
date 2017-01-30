@@ -15,19 +15,18 @@
 <!-- -->
 <section>
 	<div class="container">
-		<div class="row">
-			
+		<div class="row">			
 			<!-- LOGIN -->
 			<div class="col-md-12">
-
+				
 				<!-- ALERT -->
-					<?php if($this->session->flashdata('error')) : ?>
+				<?php if($this->session->flashdata('error')) : ?>
 					<div class="alert alert-mini alert-danger margin-bottom-30">
 						<?=$this->session->flashdata('error');?>
 					</div>
 				<?php endif; ?>
 				<!-- /ALERT -->
-								
+
 				<?php 
 					$all_errors = validation_errors('<li>','</li>');
 					if($all_errors != '') { 
@@ -47,7 +46,6 @@
 					<input type="hidden" name="latitude" id="latitude">
 					<?php //echo validation_errors('<div class="alert alert-danger">', '</div>'); ?>
 					<div class="clearfix">
-
 						<div class="form-group">
 							<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
 						</div>						
@@ -75,66 +73,77 @@
 						</div>						
 
 						<div class="form-group">
-							<select name="country_id" class="form-control select2" id="country_id">
+							<select name="country_id" class="form-control select2" id="country_id" readonly>
 								<option value="" selected disabled>Select Country</option>
 								<?php foreach($country_list as $country) : ?>
-								<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
-									<?=$country['name']?>
-								</option>
-							<?php endforeach; ?>
-						</select>	
-					</div>					 				
+									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
+										<?=$country['name']?>
+									</option>
+								<?php endforeach; ?>
+							</select>	
+						</div>
 
-					<div class="form-group">
-						<input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="Zip code" value="<?php echo set_value('zipcode'); ?>" >
-					</div>					
+						<div class="form-group">
+							<select name="state_id" class="form-control select2" id="state_id">								
+								<?php foreach($state_list as $state) : ?>
+									<option value="<?=$state['id']?>" <?php echo  set_select('state_id', $state['id']); ?> >
+										<?=$state['name']?>
+									</option>
+								<?php endforeach; ?>
+							</select>	
+						</div>
 
-					<div class="form-group">
-						<select name="gender" class="form-control" id="gender">							
-							<option value="male" <?php echo  set_select('gender', 'male', TRUE); ?> >Male</option>
-							<option value="female" <?php echo  set_select('gender', 'female'); ?>>Female</option>							
-						</select>		
-					</div>
-								
-					<div class="form-group">
-						<input type="text" name="phone" class="form-control" placeholder="Phone" value="<?php echo set_value('phone'); ?>" >
-					</div>					
+						<div class="form-group">
+							<input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="Zip code"
+							       value="<?php echo set_value('zipcode'); ?>">
+						</div>					
 
-					<div class="form-group">
-						<input type="text" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>" readonly>
-						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
-					</div>					
+						<div class="form-group">
+							<select name="gender" class="form-control" id="gender">							
+								<option value="male" <?php echo  set_select('gender', 'male', TRUE); ?> >Male</option>
+								<option value="female" <?php echo  set_select('gender', 'female'); ?>>Female</option>							
+							</select>		
+						</div>
+									
+						<div class="form-group">
+							<input type="text" name="phone" class="form-control" placeholder="Phone" value="<?php echo set_value('phone'); ?>" >
+						</div>					
 
-					<div class="form-group address-box ">
-						<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
-					</div>					
+						<div class="form-group">
+							<input type="text" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>" readonly>
+							<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
+						</div>					
 
-					<div class="margin-top-30">
-						<label class="checkbox nomargin"><input class="checked-agree" type="checkbox" name="agree"><i></i>I agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms of Service</a></label>
-					</div>
+						<div class="form-group address-box ">
+							<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
+						</div>					
 
-				</div>
-				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12">
-						<!-- Inform Tip -->                                        
-						<div class="form-tip margin-top-10">
-							Already have an account? <a href="<?=base_url('login')?>"><strong>Back to login!</strong></a>
+						<div class="margin-top-30">
+							<label class="checkbox nomargin"><input class="checked-agree" type="checkbox" name="agree"><i></i>I agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms of Service</a></label>
 						</div>
 					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12 text-right register-btn">
-						<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> REGISTER</button>
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<!-- Inform Tip -->                                        
+							<div class="form-tip margin-top-10">
+								Already have an account? <a href="<?=base_url('login')?>"><strong>Back to login!</strong></a>
+							</div>
+						</div>
 					</div>
-				</div>
-			</form>
-			<!-- /login form -->
-
-			
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12 text-right register-btn">
+							<button type="submit" class="btn btn_custom"><i class="fa fa-check"></i> REGISTER</button>
+						</div>
+					</div>
+				</form>
+			<!-- /login form -->			
+			</div>
+			<!-- /LOGIN -->
+		</div>
 	</div>
-	<!-- /LOGIN -->
-</div>
-</div>
 </section>
-<!-- / --> 
+<!-- / -->
+
+<script type="text/javascript">
+	$('#country_id').val('231');
+</script> 
