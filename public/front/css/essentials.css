@@ -3631,7 +3631,7 @@ body:not(.device-touch) .btn.btn-reveal span {
 		left: -26px;
 		width: 26px;
 		height: 34px;
-		line-height: 28px;
+		/*line-height: 28px;*/
 		font-size:14px;
 	}
 	/* large */

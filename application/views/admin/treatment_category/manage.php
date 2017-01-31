@@ -26,6 +26,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-lg-3 control-label">Category Code:</label>
+                            <div class="col-lg-9">
+                                <input type="text" name="code" id="code" placeholder="Enter Category code" class="form-control" value="<?php echo (isset($record['code'])) ? $record['code'] : set_value('code'); ?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">Status:</label>
                             <div class="col-lg-3">
                                 <label class="radio-inline">

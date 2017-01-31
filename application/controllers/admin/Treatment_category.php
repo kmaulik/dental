@@ -81,6 +81,7 @@ class Treatment_category extends CI_Controller {
 
              $update_array = [
                 'title'          => $this->input->post('title'),
+                'code'          => $this->input->post('code'),
                 'is_blocked'      => $this->input->post('is_blocked'),
             ];
 
@@ -110,6 +111,7 @@ class Treatment_category extends CI_Controller {
 
             $insert_array = [
             'title'          => $this->input->post('title'),
+            'code'          => $this->input->post('code'),
             'created_at'     => date("Y-m-d H:i:s a"),
             'is_blocked'      => $this->input->post('is_blocked'),
             ];
@@ -150,26 +152,34 @@ class Treatment_category extends CI_Controller {
             $this->load->library('upload', $config);
             
             if ( ! $this->upload->do_upload('import_csv')){
-                $error = array('error' => $this->upload->display_errors());
-                pr($error);
-                die();
+                $error = array('error' => $this->upload->display_errors());                
             } else {
                 $data = array('upload_data' => $this->upload->data());
                 $res = $this->read_excel($data['upload_data']['full_path']);
                 $all_categories = $res['values'];
+                // pr($all_categories,1);
+
+                $all_ins = [];
 
                 if(!empty($all_categories)){
                     foreach($all_categories as $category){
                         $insert_array = [
-                            'title'          => $this->input->post('title'),
+                            'code'=>$category['A'],
+                            'title'=> $category['B'],
                             'created_at'     => date("Y-m-d H:i:s a"),
                             'is_blocked'      => '0',
                         ];
-
-                        $result=$this->Treatment_category_model->insert_record('treatment_category',$insert_array);
+                        array_push($all_ins,$insert_array);                        
                     }   
+
+                    if(!empty($all_ins)){
+                        $this->db->insert_batch('treatment_category', $all_ins);
+                    }
+                    
                 }
-                
+
+                $this->session->set_flashdata('message',['message'=>'All category imported successfully','class'=>'success']);
+                redirect('admin/treatment_category/import');
             }
         }        
 
@@ -208,7 +218,7 @@ class Treatment_category extends CI_Controller {
         return $data;
     }
 
-    public function download_sample(){        
+    public function download_sample(){
         $path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/sample.xlsx';        
         $data = file_get_contents($path); // Read the file's contents        
         $name = 'sample.xlsx';

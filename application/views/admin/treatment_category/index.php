@@ -41,8 +41,8 @@
                 <thead>
                     <tr>
                         <th>Category ID.</th>
-                        <th>Category Title</th>                    
-                        <th>Created Date</th>                        
+                        <th>Category Title</th>
+                        <th>Code</th>                                            
                         <th width="100px">Action</th>
                     </tr>
                 </thead>
@@ -76,7 +76,7 @@
                 },
                 {
                     sortable: false,
-                    data: "created_date",
+                    data: "code",
                     visible: true
                 },
                 {

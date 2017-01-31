@@ -14,6 +14,11 @@
     </div>
 </div>
 <div class="content">
+    <?php
+        $message = $this->session->flashdata('message');
+        echo my_flash($message);
+    ?>
+
     <div class="row">
         <div class="col-md-12">
             <form class="form-horizontal form-validate" action="" id="frm_treat_cat" method="POST" enctype="multipart/form-data">                

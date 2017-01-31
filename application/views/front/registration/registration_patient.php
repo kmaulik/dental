@@ -73,7 +73,7 @@
 						</div>						
 
 						<div class="form-group">
-							<select name="country_id" class="form-control select2" id="country_id" readonly>
+							<select name="country_id" class="form-control select2_disable" id="country_id" readonly data-id="select2_disable">
 								<option value="" selected disabled>Select Country</option>
 								<?php foreach($country_list as $country) : ?>
 									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
@@ -84,7 +84,7 @@
 						</div>
 
 						<div class="form-group">
-							<select name="state_id" class="form-control select2" id="state_id">								
+							<select name="state_id" class="form-control select2" id="state_id" data-id="select2">
 								<?php foreach($state_list as $state) : ?>
 									<option value="<?=$state['id']?>" <?php echo  set_select('state_id', $state['id']); ?> >
 										<?=$state['name']?>
@@ -99,7 +99,7 @@
 						</div>					
 
 						<div class="form-group">
-							<select name="gender" class="form-control" id="gender">							
+							<select name="gender" class="form-control" id="gender">
 								<option value="male" <?php echo  set_select('gender', 'male', TRUE); ?> >Male</option>
 								<option value="female" <?php echo  set_select('gender', 'female'); ?>>Female</option>							
 							</select>		

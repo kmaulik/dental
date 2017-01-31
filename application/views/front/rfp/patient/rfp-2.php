@@ -56,7 +56,7 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>Treatment Category </label>
-								<select name="treatment_cat_id[]" class="form-control select2_custom" data-placeholder="Select Treatment Category" multiple id="treatment_cat_id">
+								<select name="treatment_cat_id[]" class="form-control select2" data-placeholder="Select Treatment Category" multiple id="treatment_cat_id">
 									<?php if(isset($record['treatment_cat_id'])) { $treat_arr=explode(",",$record['treatment_cat_id']); } ?>
 									<?php foreach($treatment_category as $cat) :?>
 										<option value="<?=$cat['id']?>" <?php  if(isset($treat_arr)) { if(in_array($cat['id'],$treat_arr)) { echo "selected"; }} else { echo  set_select('treatment_cat_id[]', $cat['id']); } ?>><?=$cat['title']?></option>
