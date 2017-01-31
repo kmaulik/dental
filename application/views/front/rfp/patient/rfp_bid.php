@@ -51,6 +51,20 @@
 <section>
 	<div class="container">
 		<div class="row">
+			<!-- ALERT -->
+			<?php if($this->session->flashdata('success')) : ?>
+				<div class="alert alert-success margin-bottom-30">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?=$this->session->flashdata('success');?>
+				</div>
+			<?php endif; ?>
+			<?php if($this->session->flashdata('error')) : ?>
+				<div class="alert alert-danger margin-bottom-30">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?=$this->session->flashdata('error');?>
+				</div>
+			<?php endif; ?>
+			<!-- /ALERT -->				
 			<div class="col-sm-12 rfp-title">
 				<h3><?=isset($rfp_bid_list[0]['title'])?$rfp_bid_list[0]['title']:''?></h3>
 			</div>
@@ -71,7 +85,7 @@
 									<h4 class="media-heading">
 									  <a href="#fakelink"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 									  <div class="pull-right msg-btn">
-									  <a class="label label-info rfp-price send_msg" data-id="<?=$key?>" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i> Send Mail</a> 
+									  <a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i> Send Mail</a> 
 									  <span class="label label-success rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
 									  </div>	
 									</h4>
@@ -133,8 +147,9 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myLargeModalLabel">Send Message</h4>
 			</div>
-			<form action="<?=base_url('rfp/send_massage')?>" method="POST" id="frmbid">
+			<form action="<?=base_url('rfp/send_message')?>" method="POST" id="frmmsg">
 				<input type="hidden" name="rfp_id" id="rfp_id">
+				<input type="hidden" name="rfp_bid_id" id="rfp_bid_id">
 				<input type="hidden" name="to_id" id="to_id">
 				<!-- body modal -->
 				<div class="modal-body">
@@ -142,7 +157,7 @@
 						<div class="col-sm-12">
 							<label>Message</label>
 							<div class="form-group">
-								<textarea name="message" id="message" class="form-control" rows="5"></textarea>
+								<textarea name="message" id="message" class="form-control" rows="5" required></textarea>
 							</div>	
 						</div>		
 					</div>	
@@ -151,7 +166,7 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 							<div class="form-group">
-								<input type="button" name="submit" class="btn btn-info" value="Submit">
+								<input type="submit" name="submit" class="btn btn-info" value="Submit">
 								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 							</div>	
 						</div>	
@@ -165,10 +180,11 @@
 
 
 <script>
-$(".send_msg").click(function(){
-	var key= $(this).attr('data-id');
-	console.log(key);
-	//$("#rfp_id").val(bid_data[key][id]);
-});
+function send_msg(key){
+	var rfp_data = <?php echo json_encode($rfp_bid_list); ?>;
+	$("#rfp_id").val(rfp_data[key]['id']);
+	$("#rfp_bid_id").val(rfp_data[key]['rfp_bid_id']);
+	$("#to_id").val(rfp_data[key]['doctor_id']);
+}
 
 </script>

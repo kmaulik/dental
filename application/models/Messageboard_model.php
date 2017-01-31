@@ -55,22 +55,22 @@ class Messageboard_model extends CI_Model {
      * @param : @table 
      * @author : DHK
      */
-    public function get_message_count($table,$where) {
-        $this->db->where($where);
-        $res_data = $this->db->get($table)->num_rows();
-        return $res_data;
-    }
+    // public function get_message_count($table,$where) {
+    //     $this->db->where($where);
+    //     $res_data = $this->db->get($table)->num_rows();
+    //     return $res_data;
+    // }
 
-    public function get_message_result($table, $condition = null,$limit,$offset) {
-        $this->db->select('*');
-        if (!is_null($condition)) {
-            $this->db->where($condition);
-        }
-        $this->db->order_by('id','desc');
-        $this->db->limit($limit,$offset);
-        $query = $this->db->get($table);
-        return $query->result_array();
-    }
+    // public function get_message_result($table, $condition = null,$limit,$offset) {
+    //     $this->db->select('*');
+    //     if (!is_null($condition)) {
+    //         $this->db->where($condition);
+    //     }
+    //     $this->db->order_by('id','desc');
+    //     $this->db->limit($limit,$offset);
+    //     $query = $this->db->get($table);
+    //     return $query->result_array();
+    // }
 
 }
 
