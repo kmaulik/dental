@@ -21,10 +21,9 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('lname', 'last name', 'required');      
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
-        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');
-        $this->form_validation->set_rules('city', 'city', 'required');
+        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');        
         $this->form_validation->set_rules('country_id', 'country', 'required');        
-        $this->form_validation->set_rules('phone', 'phone', 'min_length[6]|max_length[15]');        
+        $this->form_validation->set_rules('phone', 'phone', 'min_length[6]|max_length[15]');
         $this->form_validation->set_rules('agree', 'terms and condition', 'required');
                 
         if($this->form_validation->run() == FALSE){
@@ -56,7 +55,7 @@ class Registration extends CI_Controller {
                 'password' => $this->encrypt->encode($this->input->post('password')),
                 'address' => $this->input->post('address'),
                 'city' => $this->input->post('city'),
-                'country_id' => $this->input->post('country_id'),
+                'country_id' => '231',
                 'zipcode' => $this->input->post('zipcode'),
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
@@ -104,18 +103,14 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('lname', 'last name', 'required');      
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
-        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');
-        $this->form_validation->set_rules('address', 'address', 'required');
-        $this->form_validation->set_rules('city', 'city', 'required');
-        $this->form_validation->set_rules('country_id', 'country', 'required');
-        $this->form_validation->set_rules('zipcode', 'zipcode', 'required');
-        $this->form_validation->set_rules('gender', 'gender', 'required');
-        $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
-        $this->form_validation->set_rules('birth_date', 'birth date', 'required');
+        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');        
+        $this->form_validation->set_rules('country_id', 'country', 'required');        
+        $this->form_validation->set_rules('phone', 'phone', 'min_length[6]|max_length[15]');
         $this->form_validation->set_rules('agree', 'terms and condition', 'required');
 
         if($this->form_validation->run() == FALSE){
             $data['country_list']=$this->Country_model->get_result('country');
+            $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
             $data['subview']='front/registration/registration_doctor';
             $this->load->view('front/layouts/layout_main',$data);        
         }else{
@@ -125,11 +120,13 @@ class Registration extends CI_Controller {
             $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
             $res = $this->unirest->get($str);
             $res_arr = json_decode($res->raw_body,true);
+            $loc_arr['lat'] = null;
+            $loc_arr['lng'] = null;
 
-            if($res_arr['status'] != 'OK'){
+            if($res_arr['status'] != 'OK' && !empty($zipcode)){
                 $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
-                redirect('registration/doctor');   
-            }else{
+                redirect('registration/patient');   
+            }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {
                 $loc_arr = $res_arr['results'][0]['geometry']['location'];
             }
 
@@ -142,7 +139,7 @@ class Registration extends CI_Controller {
                 'password' => $this->encrypt->encode($this->input->post('password')),
                 'address' => $this->input->post('address'),
                 'city' => $this->input->post('city'),
-                'country_id' => $this->input->post('country_id'),
+                'country_id' => '231',
                 'zipcode' => $this->input->post('zipcode'),
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
