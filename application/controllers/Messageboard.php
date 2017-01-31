@@ -12,6 +12,10 @@ class Messageboard extends CI_Controller {
 	{
 		
 		$data['messages']=$this->Messageboard_model->get_rfp_message();
+		//---------- For Search Data --------------
+		$data['search_msg']=$this->input->post('search_msg');
+		//---------- /For Search Data --------------
+		
 		// $this->load->library('pagination');
 		// $where=['rfp_id' => $this->session->userdata['client']['id'],'is_deleted' => '0'];
 		// $config['base_url'] = base_url().'messageboard/index';

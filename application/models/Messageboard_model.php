@@ -103,6 +103,9 @@ class Messageboard_model extends CI_Model {
             $this->db->where('rfp.patient_id',$this->session->userdata('client')['id']);
         }
         $this->db->where($where);
+        if ($this->input->post('search_msg') != '') {
+            $this->db->where('rfp.title LIKE "%' . $this->input->post('search_msg') . '%"', NULL);
+        }
         $data=$this->db->get()->result_array();
         return $data;
 
