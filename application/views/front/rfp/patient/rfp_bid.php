@@ -149,6 +149,7 @@
 			</div>
 			<form action="<?=base_url('rfp/send_message')?>" method="POST" id="frmmsg">
 				<input type="hidden" name="rfp_id" id="rfp_id">
+				<input type="hidden" name="rfp_title" id="rfp_title">
 				<input type="hidden" name="rfp_bid_id" id="rfp_bid_id">
 				<input type="hidden" name="to_id" id="to_id">
 				<!-- body modal -->
@@ -183,6 +184,7 @@
 function send_msg(key){
 	var rfp_data = <?php echo json_encode($rfp_bid_list); ?>;
 	$("#rfp_id").val(rfp_data[key]['id']);
+	$("#rfp_title").val(rfp_data[key]['title']);
 	$("#rfp_bid_id").val(rfp_data[key]['rfp_bid_id']);
 	$("#to_id").val(rfp_data[key]['doctor_id']);
 }

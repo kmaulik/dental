@@ -6,8 +6,7 @@
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('')?>">Home</a></li>
-			<li><a href="<?=base_url('messageboard')?>">Messageboard</a></li>
-			<li class="active">Inbox</li>
+			<li class="active">Messageboard</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
 </section>
@@ -50,23 +49,26 @@
     					<label class="checkbox"><input type="checkbox" id="ckbCheckAll" value="1"><i></i> Select All</label>	
     				</div> -->	
 	            	<div class="list-group success square no-side-border">
-						<?php for($i=0;$i<5;$i++) :?>
-							<a href="#" class="list-group-item">
-							<div class="message-left">
-								<!-- <label class="checkbox"><input type="checkbox" class="checkboxes" name="Id_List[]" id="Id_List[]"><i></i></label> -->
-								<img src="<?=DEFAULT_IMAGE_PATH."user/user-img.jpg";?>" class="avatar img-circle" alt="Avatar">
-								<span class="name">Dhaval Patel</span>
-								<span class="subject">
-									<span class="badge badge-aqua"><strong>5</strong></span> &nbsp;
-									<span class="hidden-xs">RFP : RFP Title Here</span>
-								</span>
-							</div>	
-							<div class="message-right hidden-xs">
-								<span class="attachment"><i class="fa fa-paperclip"></i></span>
-								<span class="time">2017-01-12</span>
-							</div>
+						<?php foreach($messages as $record) :?>
+							<a href="<?=base_url('messageboard/message/'.encode($record['rfp_id']).'/'.encode($record['user_id']))?>" class="list-group-item">
+								<div class="message-left">
+									<!-- <label class="checkbox"><input type="checkbox" class="checkboxes" name="Id_List[]" id="Id_List[]"><i></i></label> -->
+									<img src="<?php if($record['user_avatar'] != '') 
+			                    		{ echo base_url('uploads/avatars/'.$record['user_avatar']); } 
+			                    	else 
+			                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
+									<span class="name"><?=$record['fname']." ".$record['lname']?></span>
+									<span class="subject">
+										<span class="badge badge-aqua"><strong>5-</strong></span> &nbsp;
+										<span class="hidden-xs">RFP : <?=$record['rfp_title']?></span>
+									</span>
+								</div>	
+								<div class="message-right hidden-xs">
+									<!-- <span class="attachment"><i class="fa fa-paperclip"></i></span> -->
+									<span class="time"><?=date("Y-m-d",strtotime($record['bid_date']))?></span>
+								</div>
 							</a>
-						<?php endfor; ?>	
+						<?php endforeach; ?>	
 					</div>
 				</form>  
 				<!-- ========= /Message List ========= -->

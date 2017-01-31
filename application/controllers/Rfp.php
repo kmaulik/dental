@@ -321,6 +321,50 @@ class Rfp extends CI_Controller {
 		$this->load->view('front/layouts/layout_main',$data);
 	}
 
+	/*------------------ For Send Message To Bidder ------------ */
+    function send_message(){
+    	$data=array(
+    		'rfp_id' => $this->input->post('rfp_id'),
+    		'from_id' => $this->session->userdata('client')['id'],
+    		'to_id' => $this->input->post('to_id'),
+    		'message' => $this->input->post('message'),
+    		'created_at'	=> date("Y-m-d H:i:s")
+    	);
+    	$this->Messageboard_model->insert_record('messages',$data);
+    	$where=['id' => $this->input->post('rfp_bid_id')];
+    	$up_data=['is_chat_started' => '1'];
+	    $res=$this->Rfp_model->update_record('rfp_bid',$where,$up_data);
+	    if($res)
+	    {
+	    	$where=['id' => $this->input->post('to_id')];
+	    	$user_data=$this->Rfp_model->get_result('users',$where,'1');
+
+	    	//------------ Send Mail Config-----------------
+	    	$html_content=mailer('contact_inquiry','AccountActivation'); 
+	        $username= $user_data['fname']." ".$user_data['lname'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$this->input->post('message'),$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $from_name =$this->session->userdata('client')['fname']." ".$this->session->userdata('client')['lname'];
+	        $subject=config('site_name').' - Message For '.$this->input->post('rfp_title').' RFP From '.$from_name;    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($user_data['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send(); 
+	        //------------ End Send Mail Config-----------------        
+	    	$this->session->set_flashdata('success', 'Message Send Successfully');
+	    }
+	    else
+	    {
+	    	$this->session->set_flashdata('error', 'Error Into Send Message');
+	    }
+	    redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
+    }
+
+
 	/* 
 	*	Doctor Search RFP 
 	*/ 
@@ -430,49 +474,6 @@ class Rfp extends CI_Controller {
     	}	
 	    	
     	redirect('rfp/view_rfp/'.encode($this->input->post('rfp_id')));
-    }
-
-    /*------------------ For Send Message To Bidder ------------ */
-    function send_message(){
-    	$data=array(
-    		'rfp_id' => $this->input->post('rfp_id'),
-    		'from_id' => $this->session->userdata('client')['id'],
-    		'to_id' => $this->input->post('to_id'),
-    		'message' => $this->input->post('message'),
-    		'created_at'	=> date("Y-m-d H:i:s")
-    	);
-    	$this->Messageboard_model->insert_record('msg_inbox',$data);
-    	$this->Messageboard_model->insert_record('msg_sentbox',$data);
-    	$where=['id' => $this->input->post('rfp_bid_id')];
-    	$up_data=['is_chat_started' => '1'];
-	    $res=$this->Rfp_model->update_record('rfp_bid',$where,$up_data);
-	    if($res)
-	    {
-	    	$where=['id' => $this->input->post('to_id')];
-	    	$user_data=$this->Users_model->get_result('users',$where,'1');
-
-	    	//------------ Send Mail Config-----------------
-	    	$html_content=mailer('contact_inquiry','AccountActivation'); 
-	        $username= $user_data['fname']." ".$user_data['lname'];
-	        $html_content = str_replace("@USERNAME@",$username,$html_content);
-	        $html_content = str_replace("@MESSAGE@",$this->input->post('message'),$html_content);
-	       
-	        $email_config = mail_config();
-	        $this->email->initialize($email_config);
-	        $subject=config('site_name').' - Message For ';    
-	        $this->email->from(config('contact_email'), config('sender_name'))
-	                    ->to($this->input->post('email'))
-	                    ->subject($subject)
-	                    ->message($html_content);
-	        $this->email->send();    
-	        //------------ End Send Mail Config-----------------        
-	    	$this->session->set_flashdata('success', 'Message Send Successfully');
-	    }
-	    else
-	    {
-	    	$this->session->set_flashdata('error', 'Error Into Send Message');
-	    }
-	    redirect('rfp/view_rfp/'.encode($this->input->post('rfp_id')));
     }
 
 }
