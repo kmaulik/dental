@@ -67,10 +67,32 @@ class Login extends CI_Controller {
         
     }
 
-    function logout(){
-            $this->session->unset_userdata('client');
-            $this->session->set_flashdata('success','Logout Successfull');
-            redirect('login');
+    public function logout(){
+        $this->session->unset_userdata('client');
+        $this->session->set_flashdata('success','Logout Successfull');
+        redirect('login');
     }    
 
+    public function set_password($rand_no){
+        
+        $this->session->unset_userdata('client');
+        
+        $res = $this->Users_model->get_data(['activation_code'=>$rand_no],true);        
+
+        if(empty($res)) { show_404(); }
+        // pr($res,1);
+        $this->form_validation->set_rules('password', 'Password', 'required');
+        $this->form_validation->set_rules('re_password', 'Re-type Password', 'required|matches[password]');
+
+        if($this->form_validation->run() == FALSE){
+            $data['subview']='front/set_password';
+            $this->load->view('front/layouts/layout_main',$data);
+        }else{
+            $password = $this->input->post('password');
+            $encode_password = $this->encrypt->encode($password);
+            $this->Users_model->update_user_data($res['id'],['password'=>$encode_password,'is_blocked'=>'0','activation_code'=>'']);
+            $this->session->set_flashdata('success', 'Password has been successfully sent.Try email and password to login.');
+            redirect('login');
+        }
+    }
 }

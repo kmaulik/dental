@@ -43,21 +43,7 @@
                                 <input type="email" name="email_id" id="email_id" class="form-control" placeholder="Email" >
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">Password:</label>
-                            <div class="col-lg-3">
-                                <input type="password" name="password" id="password" minlength="5"  class="form-control" placeholder="Password">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-lg-3 control-label">Repeat Password:</label>
-                            <div class="col-lg-3">
-                                <input type="password" name="re_password" class="form-control" placeholder="Password">
-                            </div>
-                        </div>
-
+                       
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
@@ -217,9 +203,7 @@
                     type:"POST",
                     data:{email_id:function () {return $("#email_id").val();}}
                 }
-            },
-            password:{required: true,maxlength: 12 },
-            re_password:{equalTo:"#password"},
+            },            
             address:{required: true },
             city:{required: true },
             country_id:{required: true },

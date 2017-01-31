@@ -48,7 +48,7 @@ class Patient extends CI_Controller {
                 $html_content=mailer('account_activation','AccountActivation'); 
                 $username= $this->input->post('fname')." ".$this->input->post('lname');
                 $html_content = str_replace("@USERNAME@",$username,$html_content);
-                $html_content = str_replace("@ACTIVATIONLINK@",base_url('registration/verification/'.$rand),$html_content);
+                $html_content = str_replace("@ACTIVATIONLINK@",base_url('login/set_password/'.$rand),$html_content);
                 $html_content = str_replace("@EMAIL@",$this->input->post('email_id'),$html_content);
                 $html_content = str_replace("@PASS@",$this->input->post('password'),$html_content);
                 //--------------------------------------
