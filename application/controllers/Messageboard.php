@@ -29,8 +29,45 @@ class Messageboard extends CI_Controller {
 	}
 
 	public function message($rfp_id,$user_id){
+		
 		$data['message_data']=$this->Messageboard_model->fetch_messages(decode($rfp_id),decode($user_id));
-		// pr($data['message_data'],1);
+		if($this->input->post('submit'))
+		{
+			$data=array(
+			    		'rfp_id' => decode($rfp_id),
+			    		'from_id' => $this->session->userdata('client')['id'],
+			    		'to_id' => decode($user_id),
+			    		'message' => $this->input->post('message'),
+			    		'created_at'	=> date("Y-m-d H:i:s")
+			    	);
+    		$data=$this->Messageboard_model->insert_record('messages',$data);
+    		if($data)
+    		{
+		    	$user_data=$this->Messageboard_model->get_result('users',['id' => decode($user_id)],'1');
+		    	$rfp_data=$this->Messageboard_model->get_result('rfp',['id' => decode($rfp_id)],'1');
+		    	//------------ Send Mail Config-----------------
+		    	$html_content=mailer('contact_inquiry','AccountActivation'); 
+		        $username= $user_data['fname']." ".$user_data['lname'];
+		        $html_content = str_replace("@USERNAME@",$username,$html_content);
+		        $html_content = str_replace("@MESSAGE@",$this->input->post('message'),$html_content);
+		       
+		        $email_config = mail_config();
+		        $this->email->initialize($email_config);
+		        $from_name =$this->session->userdata('client')['fname']." ".$this->session->userdata('client')['lname'];
+		        $subject=config('site_name').' - Message For '.$rfp_data['title'].' RFP From '.$from_name;    
+		        $this->email->from(config('contact_email'), config('sender_name'))
+		                    ->to($user_data['email_id'])
+		                    ->subject($subject)
+		                    ->message($html_content);
+		        $this->email->send();
+		        //------------ End Send Mail Config----------------- 
+		        $this->session->set_flashdata('success', 'Message Send Successfully'); 
+		    }
+		    else{
+		    	$this->session->set_flashdata('error', 'Error Into Send Message'); 
+		    }   
+		    redirect('messageboard/message/'.$rfp_id.'/'.$user_id);       
+		}
 		$data['subview']="front/messageboard/message";
 		$this->load->view('front/layouts/layout_main',$data);
 	}

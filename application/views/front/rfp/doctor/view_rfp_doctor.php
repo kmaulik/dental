@@ -51,9 +51,6 @@ label, .title {
     width: 100%;
     height: 250px;
 }
-.validation-error-label{
-	color: red;
-}
 </style>
 
 <section class="page-header page-header-xs">

@@ -59,7 +59,7 @@
 								<select name="treatment_cat_id[]" class="form-control select2" data-placeholder="Select Treatment Category" multiple id="treatment_cat_id">
 									<?php if(isset($record['treatment_cat_id'])) { $treat_arr=explode(",",$record['treatment_cat_id']); } ?>
 									<?php foreach($treatment_category as $cat) :?>
-										<option value="<?=$cat['id']?>" <?php  if(isset($treat_arr)) { if(in_array($cat['id'],$treat_arr)) { echo "selected"; }} else { echo  set_select('treatment_cat_id[]', $cat['id']); } ?>><?=$cat['title']?></option>
+										<option value="<?=$cat['id']?>" <?php  if(isset($treat_arr)) { if(in_array($cat['id'],$treat_arr)) { echo "selected"; }} else { echo  set_select('treatment_cat_id[]', $cat['id']); } ?>><?=$cat['title']." (".$cat['code'].")"?></option>
 									<?php endforeach;?>
 								</select>	
 							</div>

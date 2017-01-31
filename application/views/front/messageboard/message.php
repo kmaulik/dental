@@ -13,6 +13,18 @@
 
 <section>
 	<div class="container">
+		<!-- ALERT -->
+		<?php if($this->session->flashdata('success')) : ?>
+			<div class="alert alert-mini alert-success margin-bottom-30">
+				<?=$this->session->flashdata('success');?>
+			</div>
+		<?php endif; ?>
+		<?php if($this->session->flashdata('error')) : ?>
+			<div class="alert alert-mini alert-danger margin-bottom-30">
+				<?=$this->session->flashdata('error');?>
+			</div>
+			<?php endif; ?>
+		<!-- /ALERT -->
 		<div class="row">
 			<div class="col-sm-12">
 				<div id="comments">
@@ -33,7 +45,7 @@
 									</span>
 									<div class="media-body">
 										<!-- <a href="#commentForm" class="scrollTo comment-reply">reply</a> -->
-										<h4 class="media-heading bold">John Doe</h4>
+										<h4 class="media-heading bold"><?=$message['user_name']?></h4>
 										<small class="block"><?=$message['created_at']?></small>
 										<span class="message"><?=$message['message']?></span>
 									</div>
@@ -63,13 +75,44 @@
 			</div>		
 		</div>	
 
+		<!-- ================== Send Message Text Area =============== -->
 		<div class="row">
-			<div class="col-sm-10">
-				<textarea class="form-control" name="message" rows="5"></textarea>
-			</div>	
-			<div class="col-sm-2">
-				<input type="submit" name="submit" value="Send" class="btn btn-info">
-			</div>	
+			<div class="send_message_area">
+				<form action="" method="POST" id="send_text_msg">	
+					<div class="col-sm-10">
+						<textarea class="form-control" name="message" rows="5" placeholder="Enter Message Here"></textarea>
+					</div>	
+					<div class="col-sm-2">
+						<input type="submit" name="submit" value="Send" class="btn btn-info">
+					</div>
+				</form>	
+			</div>		
 		</div>	
+		<!-- ================== /Send Message Text Area =============== -->
+
 	</div>
 </section>		
+
+<script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
+<script>
+$("#send_text_msg").validate({
+    errorClass: 'validation-error-label',
+    successClass: 'validation-valid-label',
+    highlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    unhighlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    rules: {
+        message: {
+            required: true,
+        }
+    },
+    messages: {
+        message: {
+            required: "Please provide a Message"
+        }
+    }
+});
+</script>

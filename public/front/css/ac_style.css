@@ -103,3 +103,6 @@ section.page-header .breadcrumb a:hover {
     height: auto;
     margin-top: 9px;
 }
+.validation-error-label{
+    color: red;
+}

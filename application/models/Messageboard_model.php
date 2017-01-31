@@ -12,13 +12,17 @@ class Messageboard_model extends CI_Model {
      * @param : @table 
      * @author : HPA
      */
-    public function get_result($table, $condition = null) {
+    public function get_result($table, $condition = null,$single='') {
         $this->db->select('*');
         if (!is_null($condition)) {
             $this->db->where($condition);
         }
         $query = $this->db->get($table);
-        return $query->result_array();
+         if($single){
+            return $query->row_array();
+        }else{ 
+            return $query->result_array();
+        }
     }
 
     /**
