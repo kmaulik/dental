@@ -42,15 +42,29 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Full Name *</label>
-									<input type="text" value="<?php echo set_value('name'); ?>" class="form-control" name="name">
+									<?php
+										if(!empty($client_data)){
+											$full_name = $client_data['fname'].' '.$client_data['lname'];
+										}else{
+											$full_name = set_value('name');
+										}
+									?>
+									<input type="text" value="<?php echo $full_name; ?>" class="form-control" name="name">
 								</div>
 								<?php echo form_error('name','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
+									<?php
+										if(!empty($client_data)){
+											$email = $client_data['email_id'];
+										}else{
+											$email = set_value('email');
+										}
+									?>
 									<label>E-mail Address *</label>
-									<input type="text" value="<?php echo set_value('email'); ?>" class="form-control" name="email">
+									<input type="text" value="<?php echo $email; ?>" class="form-control" name="email">
 								</div>
 								<?php echo form_error('email','<div class="alert alert-mini alert-danger">','</div>'); ?>
 							</div>

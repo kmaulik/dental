@@ -17,15 +17,13 @@ class Dashboard extends CI_Controller {
         $this->load->view('front/layouts/layout_main',$data);
     }
 
-    public function edit_profile(){
-    	
+    public function edit_profile(){    	
         $loc_arr = array();
         $user_data = $this->session->userdata('client');
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         $data['country_list']=$this->Country_model->get_result('country');
         $decode_pass = $this->encrypt->decode($data['db_data']['password']);
-        // pr($data['db_data'],1);
 
         $data['tab'] = 'info';
         
@@ -108,8 +106,18 @@ class Dashboard extends CI_Controller {
                                 );
 
                 $this->Users_model->update_user_data($user_id,$upd_data);
+
+                $u_data = $this->Users_model->get_data(['id'=>$user_id],true);
+                $this->session->set_userdata('client',$u_data);
                 $this->session->set_flashdata('success','Profile has been successfully updated.');
-                redirect('dashboard/edit_profile');
+
+                $redirect_profile = $this->session->userdata('redirect_profile');
+                if($redirect_profile != ''){
+                    $this->session->unset_userdata('redirect_profile');
+                    redirect('rfp/add');
+                }else{
+                    redirect('dashboard/edit_profile');
+                }
             }
 
             if($tab == 'password'){
@@ -144,6 +152,5 @@ class Dashboard extends CI_Controller {
         $this->session->set_flashdata('success','Avatar has been successfully removed.');
         redirect('dashboard/edit_profile');
     }
-
 
 }

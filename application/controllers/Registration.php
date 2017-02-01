@@ -11,9 +11,7 @@ class Registration extends CI_Controller {
         $this->load->model(array('Users_model','Country_model'));
     }
 
-    /* Patient Registration @DHK */
-    public function patient() {
-
+    public function user(){
         $data['country_list']=$this->Country_model->get_result('country');
         $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
 
@@ -21,37 +19,45 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('lname', 'last name', 'required');      
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
-        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');        
-        $this->form_validation->set_rules('country_id', 'country', 'required');        
+        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');                
+        $this->form_validation->set_rules('birth_date', 'Birth Date', 'callback_validate_birthdate',
+                                            ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+        $this->form_validation->set_rules('gender', 'Gender', 'trim|required');
         $this->form_validation->set_rules('phone', 'phone', 'min_length[6]|max_length[15]');
         $this->form_validation->set_rules('agree', 'terms and condition', 'required');
                 
         if($this->form_validation->run() == FALSE){
-            $data['subview']='front/registration/registration_patient';
+            $data['subview']='front/registration/registration_user';
             $this->load->view('front/layouts/layout_main',$data);        
         }else{
 
             // v! Check for valid zip code
             $zipcode = $this->input->post('zipcode');
-            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
-            $res = $this->unirest->get($str);
-            $res_arr = json_decode($res->raw_body,true);
             $loc_arr['lat'] = null;
             $loc_arr['lng'] = null;
+            
+            if($zipcode != ''){
+                $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+                $res = $this->unirest->get($str);
+                $res_arr = json_decode($res->raw_body,true);
 
-            if($res_arr['status'] != 'OK' && !empty($zipcode)){
-                $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
-                redirect('registration/patient');   
-            }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {
-                $loc_arr = $res_arr['results'][0]['geometry']['location'];
+                if($res_arr['status'] != 'OK' && !empty($zipcode)){
+                    $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
+                    redirect('registration/patient');   
+                }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {
+                    $loc_arr = $res_arr['results'][0]['geometry']['location'];
+                }
+
             }
+
 
             $rand=random_string('alnum',5);
             $data=array(
-                'role_id' => $this->input->post('role_id'),
+                'role_id' => $this->input->post('role'),
                 'fname' => $this->input->post('fname'),
                 'lname' => $this->input->post('lname'),
                 'email_id' => $this->input->post('email_id'),
+                'street'=>$this->input->post('street'),
                 'password' => $this->encrypt->encode($this->input->post('password')),
                 'address' => $this->input->post('address'),
                 'city' => $this->input->post('city'),
@@ -65,9 +71,8 @@ class Registration extends CI_Controller {
                 'activation_code'  => $rand,
                 'is_verified' => '1', // 1 Means Account is Not Verified 
                 );
-            $res=$this->Users_model->insert_user_data($data);
+            $res=$this->Users_model->insert_user_data($data);            
             if($res){
-
                 //------ For Email Template -----------
                 /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
                 $html_content=mailer('account_activation','AccountActivation'); 
@@ -88,99 +93,13 @@ class Registration extends CI_Controller {
                 $this->email->send();
                 $this->session->set_flashdata('success', 'Thank you for your registration, you will receive an activation link soon.'); 
                 redirect('login');   
-            } 
-            else{
+            } else {
                 $this->session->set_flashdata('error', 'Error Into Registration. Please Try Again !!'); 
-                redirect('registration/patient');
+                redirect('registration/user');
             } 
-        }    
+        } 
     }
     
-    /* Doctor Registration @DHK */
-    public function doctor() {
-
-        $this->form_validation->set_rules('fname', 'first name', 'required');  
-        $this->form_validation->set_rules('lname', 'last name', 'required');      
-        $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
-        $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
-        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');        
-        $this->form_validation->set_rules('country_id', 'country', 'required');        
-        $this->form_validation->set_rules('phone', 'phone', 'min_length[6]|max_length[15]');
-        $this->form_validation->set_rules('agree', 'terms and condition', 'required');
-
-        if($this->form_validation->run() == FALSE){
-            $data['country_list']=$this->Country_model->get_result('country');
-            $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
-            $data['subview']='front/registration/registration_doctor';
-            $this->load->view('front/layouts/layout_main',$data);        
-        }else{
-
-            // v! Check for valid zip code
-            $zipcode = $this->input->post('zipcode');
-            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
-            $res = $this->unirest->get($str);
-            $res_arr = json_decode($res->raw_body,true);
-            $loc_arr['lat'] = null;
-            $loc_arr['lng'] = null;
-
-            if($res_arr['status'] != 'OK' && !empty($zipcode)){
-                $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
-                redirect('registration/patient');   
-            }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {
-                $loc_arr = $res_arr['results'][0]['geometry']['location'];
-            }
-
-            $rand=random_string('alnum',5);
-            $data=array(
-                'role_id' => $this->input->post('role_id'),
-                'fname' => $this->input->post('fname'),
-                'lname' => $this->input->post('lname'),
-                'email_id' => $this->input->post('email_id'),
-                'password' => $this->encrypt->encode($this->input->post('password')),
-                'address' => $this->input->post('address'),
-                'city' => $this->input->post('city'),
-                'country_id' => '231',
-                'zipcode' => $this->input->post('zipcode'),
-                'gender' => $this->input->post('gender'),
-                'phone' => $this->input->post('phone'),
-                'birth_date' => $this->input->post('birth_date'),
-                'longitude' => $loc_arr['lng'],
-                'latitude' => $loc_arr['lat'],
-                'activation_code'  => $rand,
-                'is_verified' => '1', // 1 Means Account is Not Verified 
-                );
-
-            $res=$this->Users_model->insert_user_data($data);
-            if($res){
-
-                //------ For Email Template -----------
-                /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
-                $html_content=mailer('account_activation','AccountActivation'); 
-                $username= $this->input->post('fname')." ".$this->input->post('lname');
-                $html_content = str_replace("@USERNAME@",$username,$html_content);
-                $html_content = str_replace("@ACTIVATIONLINK@",base_url('registration/verification/'.$rand),$html_content);
-                $html_content = str_replace("@EMAIL@",$this->input->post('email_id'),$html_content);
-                $html_content = str_replace("@PASS@",$this->input->post('password'),$html_content);
-                //--------------------------------------
-
-                $email_config = mail_config();
-                $this->email->initialize($email_config);
-                $subject=config('site_name').' - Thank you for your registration';    
-                $this->email->from(config('contact_email'), config('sender_name'))
-                            ->to($this->input->post('email_id'))
-                            ->subject($subject)
-                            ->message($html_content);
-                $this->email->send();
-                $this->session->set_flashdata('success', 'Thank you for your registration, you will receive an activation link soon.'); 
-                redirect('login');   
-            } 
-            else{
-                $this->session->set_flashdata('error', 'Error Into Registration. Please Try Again !!'); 
-                redirect('registration/doctor');
-            } 
-        }        
-    }    
-
     /*  Check For User Account Verify or Not 
         Param 1 : Account Verification No. 
         @DHK
@@ -276,5 +195,17 @@ class Registration extends CI_Controller {
         }           
     }
 
+    // v! Custom Form validation
+    function validate_birthdate($str){
+        $field_value = $str; //this is redundant, but it's to show you how
+        if($field_value != ''){
+            $arr_date = explode('-',$field_value);
+            if(count($arr_date) == 3 && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }        
+    }
    
 }

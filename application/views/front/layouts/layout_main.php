@@ -51,11 +51,10 @@
                     <?php else :?>
                         <li class="hidden-xs"><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
                         <li>
-                            <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> REGISTRATION</a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a tabindex="-1" href="<?=base_url('registration/patient')?>"><i class="fa fa-user"></i> PATIENT</a></li>
-                                <li><a tabindex="-1" href="<?=base_url('registration/doctor')?>"><i class="fa fa-user-md"></i> DOCTOR</a></li>
-                            </ul>
+                            <a class="dropdown-toggle no-text-underline" href="<?=base_url('registration/user')?>">
+                                <i class="fa fa-user hidden-xs"></i>
+                                REGISTRATION
+                            </a>
                         </li>
                     <?php endif;?>
                 </ul>       

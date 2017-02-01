@@ -3,8 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Rfp extends CI_Controller {
 
-	function __construct()
-	{
+	public function __construct(){
 		parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model']);		
@@ -120,12 +119,11 @@ class Rfp extends CI_Controller {
 				$this->session->unset_userdata('rfp_data');
 				redirect('rfp');
 			}
-		}    
-		 
+		}    	 
 	}
 
 
-	 /* ---------------- For Update a RFP --------------- */
+	/* ---------------- For Update a RFP --------------- */
 	public function edit($id='',$step='0'){
 		$rfp_arr=$this->Rfp_model->get_result('rfp',['id' => decode($id)],'1');
 		
@@ -256,13 +254,12 @@ class Rfp extends CI_Controller {
 			}  
 		}else{
 			show_404();
-		}  
-		 
+		}   
 	}
 
-	 /**
+	/**
 	 * Function is used to perform action (Delete)
-	 */
+	*/
 	public function action($action, $record_id) {
 
 		$where = 'id = ' . decode($this->db->escape($record_id));
@@ -309,10 +306,8 @@ class Rfp extends CI_Controller {
 		echo json_encode(['success'=>true]);
 	}
 
-
-	/* 
-	*	View RFP Bid (Proposal) particular rfp wise
-	*/
+	
+	// dhK View RFP Bid (Proposal) particular rfp wise	
 	public function view_rfp_bid($rfp_id){
 
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
@@ -322,7 +317,7 @@ class Rfp extends CI_Controller {
 	}
 
 	/*------------------ For Send Message To Bidder ------------ */
-    function send_message(){
+    public function send_message(){
     	$data=array(
     		'rfp_id' => $this->input->post('rfp_id'),
     		'from_id' => $this->session->userdata('client')['id'],
@@ -364,7 +359,6 @@ class Rfp extends CI_Controller {
 	    redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
     }
 
-
 	/* 
 	*	Doctor Search RFP 
 	*/ 
@@ -388,9 +382,9 @@ class Rfp extends CI_Controller {
 
 	}
 
-	 /*
+	/*
      *  view RFP data 
-     */
+    */
     public function view_rfp($rfp_id){
         $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
@@ -474,6 +468,11 @@ class Rfp extends CI_Controller {
     	}	
 	    	
     	redirect('rfp/view_rfp/'.encode($this->input->post('rfp_id')));
+    }
+
+    public function redirect_profile(){
+    	$this->session->set_userdata('redirect_profile','YES');
+    	redirect('dashboard/edit_profile');
     }
 
 }

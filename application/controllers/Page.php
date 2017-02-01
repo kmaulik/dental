@@ -23,6 +23,7 @@ class Page extends CI_Controller {
 
     /* ----  For Contact Us Page Inquiry  ------- @DHK */ 
     function contact_us(){
+        $data['client_data'] = $this->session->userdata('client');
 
     	$this->form_validation->set_rules('name', 'Full Name', 'required');
     	$this->form_validation->set_rules('email', 'Email', 'required|valid_email');

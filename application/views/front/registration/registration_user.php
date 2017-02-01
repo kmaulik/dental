@@ -1,12 +1,12 @@
 <section class="page-header page-header-xs">
 	<div class="container">
 
-		<h1>Patient Registration</h1>
+		<h1>User Registration</h1>
 
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url();?>">Home</a></li>
-			<li class="active">Patient Registration</li>
+			<li class="active">User Registration</li>
 		</ol><!-- /breadcrumbs -->
 
 	</div>
@@ -39,12 +39,7 @@
 				<?php } ?>
 
 				<!-- login form -->
-				<form method="post" action="" id="frmregister" >
-
-					<input type="hidden" name="role_id" value="5">  <!-- 5 => Patient Role -->
-					<input type="hidden" name="longitude" id="longitude">
-					<input type="hidden" name="latitude" id="latitude">
-					<?php //echo validation_errors('<div class="alert alert-danger">', '</div>'); ?>
+				<form method="post" action="" id="frmregister" >					
 					<div class="clearfix">
 						<div class="form-group">
 							<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
@@ -57,7 +52,14 @@
 						<!-- Email -->
 						<div class="form-group">
 							<input type="text" name="email_id" class="form-control" placeholder="Email" value="<?php echo set_value('email_id'); ?>" >
-						</div>						
+						</div>
+
+						<div class="form-group">
+							<select name="role" class="form-control" id="role">								
+								<option value="5" <?php echo  set_select('role', '5',true); ?> >Patient</option>
+								<option value="4" <?php echo  set_select('role', '4'); ?>>Doctor</option>							
+							</select>		
+						</div>
 
 						<!-- Password -->
 						<div class="form-group">
@@ -66,11 +68,7 @@
 
 						<div class="form-group">
 							<input type="password" name="c_password" class="form-control" placeholder="Confirm Password" value="<?php echo set_value('c_password'); ?>">
-						</div>						
-
-						<div class="form-group">
-							<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo set_value('city'); ?>" >
-						</div>						
+						</div>												
 
 						<div class="form-group">
 							<select name="country_id" class="form-control select2_disable" id="country_id" readonly data-id="select2_disable">
@@ -94,13 +92,23 @@
 						</div>
 
 						<div class="form-group">
+							<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo set_value('city'); ?>" >
+						</div>
+
+						<!-- Street Name -->
+						<div class="form-group">
+							<input type="text" name="street" class="form-control" placeholder="Street name" value="<?php echo set_value('street'); ?>" >
+						</div>			
+
+						<div class="form-group">
 							<input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="Zip code"
 							       value="<?php echo set_value('zipcode'); ?>">
 						</div>					
 
 						<div class="form-group">
 							<select name="gender" class="form-control" id="gender">
-								<option value="male" <?php echo  set_select('gender', 'male', TRUE); ?> >Male</option>
+								<option selected disabled >Select Gender</option>
+								<option value="male" <?php echo  set_select('gender', 'male'); ?> >Male</option>
 								<option value="female" <?php echo  set_select('gender', 'female'); ?>>Female</option>							
 							</select>		
 						</div>
@@ -110,7 +118,7 @@
 						</div>					
 
 						<div class="form-group">
-							<input type="text" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>" readonly>
+							<input type="text" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>">
 							<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 						</div>					
 

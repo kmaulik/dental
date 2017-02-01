@@ -30,7 +30,7 @@
 			<?php if(!isset($record)) :?>
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
-						<a href="<?=base_url('dashboard/edit_profile')?>" class="btn btn-info">Data correct? Would like to modify?</a>
+						<a href="<?=base_url('rfp/redirect_profile')?>" class="btn btn-info">Data correct? Would like to modify?</a>
 						<a href="#" class="btn btn-info new_person">Is this request for a different person? Add this person details.</a>
 					</div>
 				</div>
