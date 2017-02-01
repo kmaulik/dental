@@ -51,7 +51,7 @@ padding: 20px;
   margin-bottom: 20px !important;
 }
 .wrapper_inner_box{
-	  height: 760px;
+  max-height: 760px;
   overflow: auto;
 }
 .text_right {
