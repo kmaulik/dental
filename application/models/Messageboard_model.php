@@ -76,22 +76,11 @@ class Messageboard_model extends CI_Model {
     //     return $query->result_array();
     // }
 
-
     /**
-    *   Fetch RFP message List
+    *   Fetch RFP message Count
     */
-    public function get_rfp_message(){
+    public function get_rfp_message_count($where,$search_data){
 
-        $where = [
-                    'u.is_deleted' => 0,
-                    'u.is_blocked' => 0,
-                    'rfp.is_deleted' => 0,
-                    'rfp.is_blocked' => 0,
-                    'rb.is_deleted' => 0,
-                    'rb.is_chat_started' => 1
-                ];
-
-        $this->db->select('u.id as user_id,u.avatar as user_avatar,u.fname,u.lname,rfp.id as rfp_id,rfp.title as rfp_title,rb.created_at as bid_date');
         $this->db->from('rfp');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         if($this->session->userdata('client')['role_id'] == '4'){
@@ -102,7 +91,38 @@ class Messageboard_model extends CI_Model {
             $this->db->join('users u','rb.doctor_id = u.id');
             $this->db->where('rfp.patient_id',$this->session->userdata('client')['id']);
         }
+         if ($search_data != '') {
+            $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR CONCAT(u.fname," ", u.lname) LIKE "%'.$search_data.'%"', NULL);
+        }
         $this->db->where($where);
+        $data=$this->db->get()->num_rows();
+        return $data;
+
+    }
+
+
+    /**
+    *   Fetch RFP message List
+    */
+    public function get_rfp_message($where,$limit,$offset,$search_data){
+
+        $this->db->select('u.id as user_id,u.avatar as user_avatar,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,rb.created_at as bid_date');
+        $this->db->from('rfp');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
+        if($this->session->userdata('client')['role_id'] == '4'){
+            $this->db->join('users u','rfp.patient_id = u.id');
+            $this->db->where('rb.doctor_id',$this->session->userdata('client')['id']);
+        }
+        else if($this->session->userdata('client')['role_id'] == '5'){
+            $this->db->join('users u','rb.doctor_id = u.id');
+            $this->db->where('rfp.patient_id',$this->session->userdata('client')['id']);
+        }
+        if ($search_data != '') {
+            $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR CONCAT(u.fname," ", u.lname) LIKE "%'.$search_data.'%"', NULL);
+        }
+        $this->db->where($where);
+        $this->db->order_by('rb.created_at','desc');
+        $this->db->limit($limit,$offset);
         $data=$this->db->get()->result_array();
         return $data;
 
@@ -114,10 +134,11 @@ class Messageboard_model extends CI_Model {
     public function fetch_messages($rfp_id,$user_id){
         
         $where = '((m.from_id='.$user_id.' and m.to_id='.$this->session->userdata('client')['id'].' and m.is_deleted_to = 0) or (m.to_id ='.$user_id.' and m.from_id='.$this->session->userdata('client')['id'].' and m.is_deleted_from = 0))';
-        $this->db->select('m.*,u.id as user_id,CONCAT(u.fname," ",u.lname) as user_name,u.avatar as user_avatar');
-        $this->db->from('messages m');
-        $this->db->join('users u','m.from_id = u.id');
-        $this->db->where('rfp_id',$rfp_id);
+        $this->db->select('rfp.title as rfp_title,m.*,u.id as user_id,CONCAT(u.fname," ",u.lname) as user_name,u.avatar as user_avatar');
+        $this->db->from('rfp');
+        $this->db->join('messages m','rfp.id = m.rfp_id','left');
+        $this->db->join('users u','m.from_id = u.id','left');
+        $this->db->where('rfp.id',$rfp_id);
         $this->db->where($where);
         $this->db->order_by('id','asc');
         $data=$this->db->get()->result_array();

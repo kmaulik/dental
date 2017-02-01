@@ -83,11 +83,14 @@
 								<div class="media-body">
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
-									  <a href="#fakelink"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
-									  <div class="pull-right msg-btn">
-									  <a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i> Send Mail</a> 
-									  <span class="label label-success rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
-									  </div>	
+										<a href="#fakelink"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
+										<div class="pull-right msg-btn">
+											<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" data-toggle="tooltip" data-placement="top" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
+											<?php if($bid_list['is_chat_started'] == 1) :?>
+												<a href="<?=base_url('messageboard/message/'.encode($bid_list['id']).'/'.encode($bid_list['doctor_id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" title="View Mail"><i class="fa fa-eye"></i></a> 	
+											<?php endif; ?>
+											<span class="label label-success rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
+										</div>	
 									</h4>
 									<ul class="list-inline">
 										<li>

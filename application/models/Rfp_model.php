@@ -128,8 +128,6 @@ class Rfp_model extends CI_Model {
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
-        $this->db->where('rfp.is_deleted','0');
-        $this->db->where('rfp.is_blocked','0');
         if ($search_data != '') {
             $this->db->where('title LIKE "%' . $search_data . '%" OR CONCAT(rfp.fname," ", rfp.lname) LIKE "%'.$search_data.'%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
@@ -138,6 +136,8 @@ class Rfp_model extends CI_Model {
             $this->db->where('rfp.created_at >=', $date[0]);
             $this->db->where('rfp.created_at <=', $date[2]);
         }
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
         $res_data = $this->db->get()->num_rows();
         return $res_data;
     }
@@ -146,8 +146,6 @@ class Rfp_model extends CI_Model {
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
-        $this->db->where('rfp.is_deleted','0');
-        $this->db->where('rfp.is_blocked','0');
         if ($search_data != '') {
             $this->db->where('title LIKE "%' . $search_data . '%" OR CONCAT(rfp.fname," ", rfp.lname) LIKE "%'.$search_data.'%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
@@ -156,6 +154,8 @@ class Rfp_model extends CI_Model {
             $this->db->where('rfp.created_at >=', $date[0]);
             $this->db->where('rfp.created_at <=', $date[2]);
         }
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
         $this->db->order_by('rfp.id',$sort_data);
         $this->db->limit($limit,$offset);
         $query = $this->db->get();
@@ -172,7 +172,7 @@ class Rfp_model extends CI_Model {
             'rfp.is_blocked' => 0,
             'rb.is_deleted' => 0,
         ];
-        $this->db->select('rfp.id,rfp.title,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.created_at,u.fname,u.lname,u.avatar,rr.avg as rating,rr.count1 as total_review');
+        $this->db->select('rfp.id,rfp.title,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.is_chat_started,rb.created_at,u.fname,u.lname,u.avatar,rr.avg as rating,rr.count1 as total_review');
         $this->db->from('rfp');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         $this->db->join('users u','rb.doctor_id = u.id');

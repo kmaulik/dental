@@ -305,9 +305,10 @@ class Rfp extends CI_Controller {
 		$this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['img_path'=>$final_str]);
 		echo json_encode(['success'=>true]);
 	}
-
 	
-	// dhK View RFP Bid (Proposal) particular rfp wise	
+	/* 
+	*	View RFP Bid (Proposal) particular rfp wise (Patient Side)
+	*/
 	public function view_rfp_bid($rfp_id){
 
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	

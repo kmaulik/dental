@@ -106,3 +106,29 @@ section.page-header .breadcrumb a:hover {
 .validation-error-label{
     color: red;
 }
+
+
+
+
+/*************** media start here 	*************/
+@media (min-width:481px) and (max-width:767px){
+#header #topNav a.logo {
+  height: 40px !important;
+  line-height: normal !important;
+  margin-top: 10px;
+}
+#header #topNav a.logo > img {
+  max-height: 100% !important;
+}
+}
+
+@media (min-width:320px) and (max-width:480px){
+#header #topNav a.logo {
+  height: 34px !important;
+  line-height: normal !important;
+  margin-top: 15px;
+}
+#header #topNav a.logo > img {
+  max-height: 100% !important;
+}
+}
