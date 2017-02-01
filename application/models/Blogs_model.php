@@ -24,7 +24,7 @@ class Blogs_model extends CI_Model {
         }
 
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
-        $res_data = $this->db->get('blog,(SELECT @a:= 0) AS a')->result_array();
+        $res_data = $this->db->get('blog')->result_array();
         return $res_data;
     }
 

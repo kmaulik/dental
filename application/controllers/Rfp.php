@@ -311,7 +311,7 @@ class Rfp extends CI_Controller {
 
 
 	/* 
-	*	View RFP Bid (Proposal) particular rfp wise
+	*	View RFP Bid (Proposal) particular rfp wise (Patient Side)
 	*/
 	public function view_rfp_bid($rfp_id){
 
