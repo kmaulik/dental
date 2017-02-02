@@ -61,6 +61,7 @@ class Registration extends CI_Controller {
                 'password' => $this->encrypt->encode($this->input->post('password')),
                 'address' => $this->input->post('address'),
                 'city' => $this->input->post('city'),
+                'state_id' => $this->input->post('state_id'),
                 'country_id' => '231',
                 'zipcode' => $this->input->post('zipcode'),
                 'gender' => $this->input->post('gender'),
@@ -80,7 +81,7 @@ class Registration extends CI_Controller {
                 $html_content = str_replace("@USERNAME@",$username,$html_content);
                 $html_content = str_replace("@ACTIVATIONLINK@",base_url('registration/verification/'.$rand),$html_content);
                 $html_content = str_replace("@EMAIL@",$this->input->post('email_id'),$html_content);
-                $html_content = str_replace("@PASS@",$this->input->post('password'),$html_content);
+                //$html_content = str_replace("@PASS@",$this->input->post('password'),$html_content);
                 //--------------------------------------
 
                 $email_config = mail_config();
@@ -130,7 +131,7 @@ class Registration extends CI_Controller {
             $data['subview']='front/security/forgot_password';
             $this->load->view('front/layouts/layout_main',$data);        
         }else{
-            $user_data=$this->Users_model->check_if_user_exist(['email_id' => $this->input->post('email_id')], false, true);
+            $user_data=$this->Users_model->check_if_user_exist(['email_id' => $this->input->post('email_id')], false, true,['4','5']);
             if($user_data){
 
                 $rand=random_string('alnum',5);

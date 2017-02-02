@@ -54,6 +54,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* Routes For the Admin Start */
 $route['admin'] = "admin/admin/index";
 $route['admin/login'] = "admin/admin/index";
+$route['admin/forgotpassword'] = "admin/admin/forgotpassword";
+$route['admin/set_password/(:any)'] = "admin/admin/set_password/$1";
 
 $route['admin/dashboard'] = "admin/dashboard";
 $route['admin/logout'] = "admin/dashboard/log_out";

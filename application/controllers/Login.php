@@ -29,9 +29,9 @@ class Login extends CI_Controller {
             $email = $this->input->post('email_id');
             $password = $this->input->post('password');
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
-            $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email], false, true); 
+            $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email], false, true,['4','5']); 
 
-            if (!empty($user_data) && ($user_data['role_id'] != '1' && $user_data['role_id'] != '2')) {
+            if (!empty($user_data)) {
                 $db_pass = $this->encrypt->decode($user_data['password']);
 
                 if ($db_pass == $password) {
@@ -90,8 +90,8 @@ class Login extends CI_Controller {
         }else{
             $password = $this->input->post('password');
             $encode_password = $this->encrypt->encode($password);
-            $this->Users_model->update_user_data($res['id'],['password'=>$encode_password,'is_blocked'=>'0','activation_code'=>'']);
-            $this->session->set_flashdata('success', 'Password has been successfully sent.Try email and password to login.');
+            $this->Users_model->update_user_data($res['id'],['password'=>$encode_password,'is_verified'=>'0','activation_code'=>'']);
+            $this->session->set_flashdata('success', 'Password has been successfully set.Try email and password to login.');
             redirect('login');
         }
     }

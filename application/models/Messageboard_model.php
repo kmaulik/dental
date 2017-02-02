@@ -52,29 +52,6 @@ class Messageboard_model extends CI_Model {
         }
     }
 
-    
-
-    /**
-     * @uses : this function is used to count rows of message list
-     * @param : @table 
-     * @author : DHK
-     */
-    // public function get_message_count($table,$where) {
-    //     $this->db->where($where);
-    //     $res_data = $this->db->get($table)->num_rows();
-    //     return $res_data;
-    // }
-
-    // public function get_message_result($table, $condition = null,$limit,$offset) {
-    //     $this->db->select('*');
-    //     if (!is_null($condition)) {
-    //         $this->db->where($condition);
-    //     }
-    //     $this->db->order_by('id','desc');
-    //     $this->db->limit($limit,$offset);
-    //     $query = $this->db->get($table);
-    //     return $query->result_array();
-    // }
 
     /**
     *   Fetch RFP message Count
@@ -91,6 +68,7 @@ class Messageboard_model extends CI_Model {
             $this->db->join('users u','rb.doctor_id = u.id');
             $this->db->where('rfp.patient_id',$this->session->userdata('client')['id']);
         }
+        $this->db->join('(select count(id) as unread_msg,from_id,rfp_id from messages where status=0 and to_id = '.$this->session->userdata('client')['id'].' and is_deleted_to=0 group by(from_id)) msg','rfp.id = msg.rfp_id and u.id=msg.from_id','LEFT');
          if ($search_data != '') {
             $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR CONCAT(u.fname," ", u.lname) LIKE "%'.$search_data.'%"', NULL);
         }
@@ -106,7 +84,9 @@ class Messageboard_model extends CI_Model {
     */
     public function get_rfp_message($where,$limit,$offset,$search_data){
 
-        $this->db->select('u.id as user_id,u.avatar as user_avatar,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,rb.created_at as bid_date');
+        //$this->db->select('u.id as user_id,u.avatar as user_avatar,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,rb.created_at as bid_date');
+        $this->db->select('u.id as user_id,u.avatar as user_avatar,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,rb.created_at as bid_date,msg.unread_msg');
+       
         $this->db->from('rfp');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         if($this->session->userdata('client')['role_id'] == '4'){
@@ -117,11 +97,17 @@ class Messageboard_model extends CI_Model {
             $this->db->join('users u','rb.doctor_id = u.id');
             $this->db->where('rfp.patient_id',$this->session->userdata('client')['id']);
         }
+        //-- For Count Unread Message
+        $this->db->join('(select count(id) as unread_msg,from_id,rfp_id from messages where status=0 and to_id = '.$this->session->userdata('client')['id'].' and is_deleted_to=0 group by(from_id)) msg','rfp.id = msg.rfp_id and u.id=msg.from_id','LEFT');
+        //-- For Fetch Latest Message 
+        $this->db->join('(select max(created_at) as latest_msg,from_id,rfp_id from messages where to_id = '.$this->session->userdata('client')['id'].' and is_deleted_to=0 group by(from_id)) msg_latest','rfp.id = msg_latest.rfp_id and u.id=msg_latest.from_id','LEFT');
+        
         if ($search_data != '') {
             $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR CONCAT(u.fname," ", u.lname) LIKE "%'.$search_data.'%"', NULL);
         }
         $this->db->where($where);
-        $this->db->order_by('rb.created_at','desc');
+        //$this->db->order_by('rb.created_at','desc');
+        $this->db->order_by('msg_latest.latest_msg','desc');    
         $this->db->limit($limit,$offset);
         $data=$this->db->get()->result_array();
         return $data;
@@ -140,7 +126,7 @@ class Messageboard_model extends CI_Model {
         $this->db->join('users u','m.from_id = u.id','left');
         $this->db->where('rfp.id',$rfp_id);
         $this->db->where($where);
-        $this->db->order_by('id','asc');
+        $this->db->order_by('m.id','asc');
         $data=$this->db->get()->result_array();
         return $data;
     }

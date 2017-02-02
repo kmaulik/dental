@@ -31,13 +31,22 @@ class Messageboard extends CI_Controller {
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
 		$data['messages']=$this->Messageboard_model->get_rfp_message($where,$config['per_page'],$offset,$search_data);
-
+		//pr($data['messages'],1);
 		$data['subview']="front/messageboard/message_list";
 		$this->load->view('front/layouts/layout_main',$data);
 	}
 
 	public function message($rfp_id,$user_id){
 		
+		//------------ For Update status Unread to read -------------
+		$condition=[
+					'rfp_id' => decode($rfp_id),
+					'from_id' => decode($user_id),
+					'to_id' => $this->session->userdata('client')['id']
+				];
+		$this->Messageboard_model->update_record('messages',$condition,['status' => '1']);
+		//------------ End Update status Unread to read -------------
+
 		$data['message_data']=$this->Messageboard_model->fetch_messages(decode($rfp_id),decode($user_id));
 		//pr($data['message_data'],1);
 		if($this->input->post('submit'))

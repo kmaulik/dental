@@ -13,20 +13,20 @@ class Admin_users_model extends CI_Model {
      */
     public function get_all_users() {
         
-        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
-
-        $this->db->where('role_id', 2);
+        $this->db->select('u.id,u.id AS test_id,r.role_name,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
+        $this->db->join('role r','u.role_id = r.id');
+        $this->db->where_in('role_id', [2,3]);
         $this->db->where('is_deleted !=', 1);
 
         $keyword = $this->input->get('search');
         $keyword = str_replace('"', '', $keyword);
         
         if (!empty($keyword['value'])) {
-            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%"', NULL);
+            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%" OR role_name LIKE "%' . $keyword['value'] . '%"', NULL);
         }
         
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
-        $res_data = $this->db->get('users,(SELECT @a:= 0) AS a')->result_array();
+        $res_data = $this->db->get('users u')->result_array();
         return $res_data;
     }
 
@@ -36,7 +36,7 @@ class Admin_users_model extends CI_Model {
      * @author : HPA
      */
     public function get_users_count() {
-        $this->db->where('role_id', 2);
+        $this->db->where_in('role_id', [2,3]);
         $this->db->where('is_deleted !=', 1);
         $res_data = $this->db->get('users')->num_rows();
         return $res_data;
@@ -68,11 +68,6 @@ class Admin_users_model extends CI_Model {
         } else {
             return 0;
         }
-    }
-
-    public function delete_verification_request($where) {
-        $this->db->where($where);
-        $this->db->delete('verification');
     }
 
 }

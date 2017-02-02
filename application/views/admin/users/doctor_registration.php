@@ -70,6 +70,18 @@
                             </div>
                         </div>
 
+                         <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Zipcode:</label>
                             <div class="col-lg-3">

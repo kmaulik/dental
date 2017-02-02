@@ -14,7 +14,7 @@
 
                     <!-- Content area -->
                     <div class="content pb-20">    
-                        <?php
+                         <?php
                         $message = $this->session->flashdata('message');
                         if (!empty($message) && isset($message)) {
                             ($message['class'] != '') ? $message['class'] : '';
@@ -26,30 +26,24 @@
                             <div class="panel panel-body login-form">
                                 <div class="text-center">
                                     <div class="icon-object border-slate-300 text-slate-300"><i class="icon-reading"></i></div>
-                                    <h5 class="content-group">Login to your account <small class="display-block">Your credentials</small></h5>
+                                    <h5 class="content-group">Forgot Password<small class="display-block">Your credentials</small></h5>
                                 </div>
 
                                 <div class="form-group has-feedback has-feedback-left">
-                                    <input type="text" class="form-control" placeholder="Username" name="username" required="required">
-                                    <div class="form-control-feedback">
-                                        <i class="icon-user text-muted"></i>
-                                    </div>
-                                </div>
-
-                                <div class="form-group has-feedback has-feedback-left">
-                                    <input type="password" class="form-control" placeholder="Password" name="password" required="required">
+                                    <input type="text" name="email_id" class="form-control" placeholder="Email Id">
                                     <div class="form-control-feedback">
                                         <i class="icon-lock2 text-muted"></i>
                                     </div>
                                 </div>
+                                <?php echo form_error('email_id','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn bg-blue btn-block">Login <i class="icon-arrow-right14 position-right"></i></button>
+                                    <button type="submit" class="btn bg-blue btn-block">Submit <i class="icon-arrow-right14 position-right"></i></button>
                                 </div>
 
-                                <div class="form-group">
-                                    <a href="<?=base_url('admin/forgotpassword')?>">Forgot Password ?</a>
-                                </a>    
+                                 <div class="form-group">
+                                    Already have an account?  <a href="<?=base_url('admin/login')?>"><strong> Back to login! </strong></a>
+                                 </div>   
                             </div>
                         </form>
                         <!-- /form with validation -->

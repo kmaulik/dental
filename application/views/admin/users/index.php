@@ -5,14 +5,14 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Sub Admin User List</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Sub User List</h4>
         </div>
     </div>
 
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
-            <li>Sub Admin</li>
+            <li>Sub User</li>
         </ul>
     </div>
 </div>
@@ -35,6 +35,7 @@
             <thead>
                 <tr>
                     <th>User ID.</th>
+                    <th>User Role</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>                        
@@ -62,6 +63,11 @@
             columns: [
                 {
                     data: "test_id",
+                    visible: true
+                },
+                 {
+                    sortable: false,
+                    data: "role_name",
                     visible: true
                 },
                 {

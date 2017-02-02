@@ -20,7 +20,7 @@
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li><a href="<?php echo site_url('admin/users'); ?>"> Sub Admin</a></li>
+            <li><a href="<?php echo site_url('admin/users'); ?>"> Sub User</a></li>
             <li class="active"><?php echo $heading; ?></li>
         </ul>
     </div>
@@ -32,6 +32,16 @@
             <form class="form-horizontal form-validate" id="frmsubadmin" method="POST" enctype="multipart/form-data" onsubmit="return zip_validate()">
                 <div class="panel panel-flat">
                     <div class="panel-body">
+                         <div class="form-group">
+                            <label class="col-lg-3 control-label">User Role List:</label>
+                            <div class="col-lg-3">
+                                <select name="role_id" class="form-control" id="role_id">
+                                    <option value="">Select User Role</option>
+                                    <option value="2">Sub Admin</option>
+                                    <option value="3">Agent</option>
+                                </select>    
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-lg-3 control-label">First Name:</label>
                             <div class="col-lg-3">
@@ -141,6 +151,8 @@
 
 <script type="text/javascript">
 
+    $("#role_id").val("<?php echo isset($user_data['role_id'])?$user_data['role_id']:''; ?>");
+
     function readURL(input) {
       if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -233,6 +245,7 @@
         },
         ignore:[],
         rules: {
+            role_id: {required: true },
             fname: {required: true },
             lname: {required: true },
             email_id:{
@@ -251,6 +264,7 @@
             birth_date:{required: true}
         },        
         messages: {
+            role_id: {required: 'Please Select a User Role' },
             fname: {required: 'Please provide a First Name' },
             lname: {required: 'Please provide a Last Name' },
             email_id: {

@@ -15,6 +15,7 @@ class Doctor extends CI_Controller {
 
 	public function add(){
 		$data['country_list']=$this->Country_model->get_result('country');
+        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
 
 		if($_POST){
 			$rand=random_string('alnum',5);
@@ -24,10 +25,11 @@ class Doctor extends CI_Controller {
                 'fname' => $this->input->post('fname'),
                 'lname' => $this->input->post('lname'),
                 'email_id' => $this->input->post('email_id'),
-                'password' => $this->encrypt->encode($this->input->post('password')),
                 'address' => $this->input->post('address'),
+                'street'=>$this->input->post('street'),
                 'city' => $this->input->post('city'),
-                'country_id' => $this->input->post('country_id'),
+                'state_id' => $this->input->post('state_id'),
+                'country_id' => '231',
                 'zipcode' => $this->input->post('zipcode'),
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
@@ -35,7 +37,7 @@ class Doctor extends CI_Controller {
                 'longitude' => $this->input->post('longitude'),
                 'latitude' => $this->input->post('latitude'),
                 'activation_code'  => $rand,
-                'is_blocked' => '1', // 1 Means Aacount is Blocked
+                'is_verified' => '1', // 1 Means Account is not Verified
                 'created_at'=>date('Y-m-d H:i:s')
                 );
             
@@ -50,7 +52,7 @@ class Doctor extends CI_Controller {
                 $html_content = str_replace("@USERNAME@",$username,$html_content);
                 $html_content = str_replace("@ACTIVATIONLINK@",base_url('login/set_password/'.$rand),$html_content);
                 $html_content = str_replace("@EMAIL@",$this->input->post('email_id'),$html_content);
-                $html_content = str_replace("@PASS@",$this->input->post('password'),$html_content);
+                //$html_content = str_replace("@PASS@",$this->input->post('password'),$html_content);
                 //--------------------------------------
 
                 $email_config = mail_config();
@@ -73,25 +75,29 @@ class Doctor extends CI_Controller {
         
         $id = decode($id);
         $data['country_list']=$this->Country_model->get_result('country');
+        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
         $data['doctor_data'] = $this->Users_model->get_data(['id'=>$id],true);        
 
         if($_POST){
 
-            $data=array(                
+             $data=array(    
+
                 'fname' => $this->input->post('fname'),
                 'lname' => $this->input->post('lname'),
-                'email_id' => $this->input->post('email_id'),                
+                'email_id' => $this->input->post('email_id'),
                 'address' => $this->input->post('address'),
+                'street'=>$this->input->post('street'),
                 'city' => $this->input->post('city'),
-                'country_id' => $this->input->post('country_id'),
+                'state_id' => $this->input->post('state_id'),
+                'country_id' => '231',
                 'zipcode' => $this->input->post('zipcode'),
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
                 'birth_date' => $this->input->post('birth_date'),
                 'longitude' => $this->input->post('longitude'),
-                'latitude' => $this->input->post('latitude'),                
-                'updated_at'=>date('Y-m-d H:i:s')
+                'latitude' => $this->input->post('latitude'),
             );
+
 
             $this->Users_model->update_user_data($id,$data);
             $this->session->set_flashdata('message', ['message'=>'Doctor successfully updated.','class'=>'success']);

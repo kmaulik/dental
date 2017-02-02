@@ -65,7 +65,9 @@
 				                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
 										<span class="name"><?=$record['user_name']?></span>
 										<span class="subject">
-											<span class="badge badge-aqua"><strong>5-</strong></span> &nbsp;
+											<?php if($record['unread_msg'] != '' || $record['unread_msg'] != 0) : ?>
+												<span class="badge badge-aqua"><strong><?=$record['unread_msg']?></strong></span> &nbsp;
+											<?php endif; ?>
 											<span class="hidden-xs">RFP : <?=$record['rfp_title']?></span>
 										</span>
 									</div>	

@@ -60,6 +60,7 @@ class Users extends CI_Controller {
     public function add() {
         $data['heading'] = 'Add User';
         $data['country_list']=$this->Country_model->get_result('country');
+        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
         if ($this->input->post()) {
 
             $avtar['msg']='';
@@ -72,27 +73,29 @@ class Users extends CI_Controller {
            }
            else{
                 $rand=random_string('alnum',5);
-                $password=random_string('alnum',6);
+                //$password=random_string('alnum',6);
                 $ins_data=array(
-                    'role_id'   => 2, // 2 Means Subadmin Role 
+                    'role_id' => $this->input->post('role_id'), // 2 Means Subadmin Role & 3 Means Agent 
                     'fname' => $this->input->post('fname'),
                     'lname' => $this->input->post('lname'),
                     'email_id' => $this->input->post('email_id'),
                     'address' => $this->input->post('address'),
+                    'street'=>$this->input->post('street'),
                     'city' => $this->input->post('city'),
-                    'country_id' => $this->input->post('country_id'),
+                    'state_id' => $this->input->post('state_id'),
+                    'country_id' => '231',
                     'zipcode' => $this->input->post('zipcode'),
                     'gender' => $this->input->post('gender'),
                     'phone' => $this->input->post('phone'),
-                    'avatar'  => $avtar['msg'],  
+                    'avatar'  => $avtar['msg'], 
                     'birth_date' => $this->input->post('birth_date'),
-                    'password'  => $this->encrypt->encode($password),
                     'longitude' => $this->input->post('longitude'),
                     'latitude' => $this->input->post('latitude'),
-                    'created_at' => date("Y-m-d H:i:s"),
                     'activation_code'  => $rand,
-                    'is_blocked' => 1, // 1 Means Aacount is Blocked
-                );
+                    'is_verified' => '1', // 1 Means Account is not Verified
+                    'created_at'=>date('Y-m-d H:i:s')
+                    );
+
 
                 $res=$this->Users_model->insert_user_data($ins_data);
                 if($res){ 
@@ -101,9 +104,9 @@ class Users extends CI_Controller {
                     $html_content=mailer('account_activation','AccountActivation'); 
                     $username= $this->input->post('fname')." ".$this->input->post('lname');
                     $html_content = str_replace("@USERNAME@",$username,$html_content);
-                    $html_content = str_replace("@ACTIVATIONLINK@",base_url('admin/admin/verification/'.$rand),$html_content);
+                    $html_content = str_replace("@ACTIVATIONLINK@",base_url('admin/set_password/'.$rand),$html_content);
                     $html_content = str_replace("@EMAIL@",$this->input->post('email_id'),$html_content);
-                    $html_content = str_replace("@PASS@",$password,$html_content);
+                    //$html_content = str_replace("@PASS@",$password,$html_content);
                     //--------------------------------------
 
                     $email_config = mail_config();
@@ -135,6 +138,7 @@ class Users extends CI_Controller {
         $data['heading'] = 'Edit User';
         $data['user_data'] = $this->Users_model->get_data(['id' => $user_id],true);
         $data['country_list']=$this->Country_model->get_result('country');
+        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
         if ($this->input->post()) {
             $avtar['msg']='';
             $path = "uploads/avatars/";
@@ -145,22 +149,23 @@ class Users extends CI_Controller {
                $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
            }
            else{
-            
-                $upd_data=array(
-                    'fname' => $this->input->post('fname'),
-                    'lname' => $this->input->post('lname'),
-                    'email_id' => $this->input->post('email_id'),
-                    'address' => $this->input->post('address'),
-                    'city' => $this->input->post('city'),
-                    'country_id' => $this->input->post('country_id'),
-                    'zipcode' => $this->input->post('zipcode'),
-                    'gender' => $this->input->post('gender'),
-                    'phone' => $this->input->post('phone'),
-                    'avatar'  => $avtar['msg'],  
-                    'birth_date' => $this->input->post('birth_date'),
-                    'longitude' => $this->input->post('longitude'),
-                    'latitude' => $this->input->post('latitude'),
-                );
+                 $upd_data=array(    
+                            'role_id'   => $this->input->post('role_id'), // 2 Means Subadmin Role & 3 Means Agent     
+                            'fname' => $this->input->post('fname'),
+                            'lname' => $this->input->post('lname'),
+                            'email_id' => $this->input->post('email_id'),
+                            'address' => $this->input->post('address'),
+                            'street'=>$this->input->post('street'),
+                            'city' => $this->input->post('city'),
+                            'state_id' => $this->input->post('state_id'),
+                            'country_id' => '231',
+                            'zipcode' => $this->input->post('zipcode'),
+                            'gender' => $this->input->post('gender'),
+                            'phone' => $this->input->post('phone'),
+                            'birth_date' => $this->input->post('birth_date'),
+                            'longitude' => $this->input->post('longitude'),
+                            'latitude' => $this->input->post('latitude'),
+                        );
 
                 $res=$this->Users_model->update_user_data($user_id,$upd_data);
                 if($res){ 

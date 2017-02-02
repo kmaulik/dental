@@ -14,7 +14,7 @@ class Dashboard extends CI_Controller {
      */
     public function index() {
         $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true,['1','2']);        
+        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true,['1','2','3']);        
         if (empty($data['user_data'])) { redirect('admin/login'); }        
             
         $data['subview'] = 'admin/dashboard';
@@ -33,7 +33,7 @@ class Dashboard extends CI_Controller {
     public function edit() {
 
         $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true);
+        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true,['1','2','3']);
         $data['country_list']=$this->Country_model->get_result('country');
         if (empty($data['user_data'])) {
             redirect('admin/login');
@@ -71,7 +71,7 @@ class Dashboard extends CI_Controller {
                 $user_id = $session_data['id']; 
                 $this->Users_model->update_user_data($user_id, $upd_data);
 
-                $user_data = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true);
+                $user_data = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true,['1','2','3']);
                 $this->session->set_userdata(['admin' => $user_data]);
                 $this->session->set_flashdata('message', ['message'=>'Profile updated successfully.','class'=>'alert alert-success']);
                 redirect('admin/edit_profile');
@@ -86,7 +86,7 @@ class Dashboard extends CI_Controller {
 
     public function change_password() {
         $session_data = $this->session->userdata('admin');
-        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id'], 'role_id' => 1], false, true);
+        $data['user_data'] = $this->Users_model->check_if_user_exist(['id' => $session_data['id']], false, true,['1','2','3']);
         if (empty($data['user_data'])) {
             redirect('admin/login');
         }        

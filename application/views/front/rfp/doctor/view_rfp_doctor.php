@@ -86,11 +86,18 @@ label, .title {
 
 			<div class="col-md-12">
 				<div class="pull-right">
+					<!-- ====== For Check Bid Already Placed Or Not  ====== -->
 					<?php if(isset($rfp_bid) && $rfp_bid != '') :?>
+						<!-- ====== For Check chat is started or not ====== -->
+						<?php if($rfp_bid['is_chat_started'] == '1') : ?>
+							<a href="<?=base_url('messageboard/message/'.encode($record['id']).'/'.encode($record['patient_id']))?>" class="btn btn-info"><i class="fa fa-envelope"></i> Message</a>
+						<?php endif; ?>
+						<!-- ====== End Check chat is started or not ====== -->
 						<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="update_bid"><i class="fa fa-edit"></i> Update Bid</a>
 					<?php else : ?>
 						<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="place_bid"><i class="fa fa-plus"></i> Place Bid</a>
 					<?php endif; ?>
+					<!-- ====== End Check Bid Already Placed Or Not  ====== -->
 					<a href="<?=base_url('rfp/search_rfp')?>" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back To RFP List</a>
 				</div>
 			</div>	
