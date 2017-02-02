@@ -1,9 +1,9 @@
 <style>
-.rfp-title{
-	border-bottom: 2px solid gray;
-	margin-bottom: 0px;
-	margin-top: 10px;
-}
+	.rfp-title{
+		border-bottom: 2px solid gray;
+		margin-bottom: 0px;
+		margin-top: 10px;
+	}
 </style>
 
 <section class="page-header page-header-xs">
@@ -61,7 +61,10 @@
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Birth Date</label>	
-						<input type="text" name="birth_date" id="birth_date" onchange="fetch_definition_type()" class="form-control datepicker" placeholder="YYYY-MM-DD" value="<?php if(isset($record['birth_date'])) { echo $record['birth_date']; } else { if(set_value('birth_date') != '') { echo set_value('birth_date'); }else { echo $this->session->userdata['client']['birth_date']; }} ?>" readonly>
+						<input type="text" name="birth_date" id="birth_date" onchange="fetch_definition_type()" class="form-control datepicker" 
+							  placeholder="YYYY-MM-DD" value="<?php if(isset($record['birth_date'])) { echo $record['birth_date']; } else { 
+							  	if(set_value('birth_date') != '') { echo set_value('birth_date'); }
+							  	else { echo $this->session->userdata['client']['birth_date']; }} ?>" >
 						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>

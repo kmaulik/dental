@@ -196,7 +196,7 @@ class Registration extends CI_Controller {
     }
 
     // v! Custom Form validation
-    function validate_birthdate($str){
+    public function validate_birthdate($str){
         $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
@@ -207,5 +207,5 @@ class Registration extends CI_Controller {
             }
         }        
     }
-   
+       
 }

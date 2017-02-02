@@ -118,7 +118,7 @@
 
 						<div class="form-group">
 							<label class="control-label">Birth Date</label>
-							<input type="text" placeholder="YYYY-MM-DD" name="birth_date" class="form-control birth_date" value="<?php echo $db_data['birth_date']; ?>" readonly>
+							<input type="text" placeholder="YYYY-MM-DD" name="birth_date" class="form-control birth_date" value="<?php echo $db_data['birth_date']; ?>">
 							<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 						</div>
 

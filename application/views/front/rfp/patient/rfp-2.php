@@ -1,16 +1,16 @@
 <style>
-.table th{
-	text-align: center;
-	color: #000;
-}
-.table .checkbox{
-	margin-right: 0px;
-}
-.rfp-title{
-	border-bottom: 2px solid gray;
-	margin-bottom: 0px;
-	margin-top: 10px;
-}
+	.table th{
+		text-align: center;
+		color: #000;
+	}
+	.table .checkbox{
+		margin-right: 0px;
+	}
+	.rfp-title{
+		border-bottom: 2px solid gray;
+		margin-bottom: 0px;
+		margin-top: 10px;
+	}
 </style>
   <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 
@@ -225,19 +225,24 @@
 						<div class="col-md-12 col-sm-12">
 							<div class="form-group">
 								<label>Attachment</label>
-								<div class="fancy-file-upload">
-									<i class="fa fa-upload"></i>
-									<input type="file" id="img_path_id" class="form-control" multiple="multiple" name="img_path[]"/>							
-									<input type="text" id="img_path_txt" class="form-control" placeholder="no file selected" readonly="" />
-									<span class="button">Choose File</span>
+								<div class="all_file_uploads">									
+									<div class="fancy-file-upload">
+										<i class="fa fa-upload"></i>
+										<input type="file" id="img_path_id_1" data-id="1" class="img_upload form-control" name="img_path[]"/>
+										<input type="text" id="img_path_txt_1" class="form-control" placeholder="no file selected" readonly="" />
+										<span class="button">Choose File</span>
+									</div>
 								</div>
 								<small class="text-muted block">Max Allow File : 5 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
+								<a class="btn btn-primary" onclick="add_more_img()">Add</a>
+								<a class="btn btn-danger" style="display:none" id="remove_btn" onclick="remove_img()">Remove</a>
 							</div>
 						</div>
 					</div>		
 
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
+							<input type="hidden" id="total_img" value="1">
 							<button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
 						</div>
 					</div>
@@ -247,42 +252,42 @@
 	</div>
 </section>
 <!-- / --> 
-<script>
-fetch_definition_data();
+<script type="text/javascript">
 
-function fetch_definition_data(){
+	var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
 
-	$("#primary").hide();
-	$("#permenant").hide();
-	$("#other").hide();
+	fetch_definition_data();
+	function fetch_definition_data(){
 
-	if($("#dentition_type").val() == 'primary'){
-		$("#permenant input[type='checkbox']").attr('checked', false);
-		$("input[name='other_description']").val('');
-		$("#primary").show();
-	}
-	else if($("#dentition_type").val() == 'permenant'){
-		$("#primary input[type='checkbox']").attr('checked', false);
-		$("input[name='other_description']").val('');
-		$("#permenant").show();
-	}
-	else if($("#dentition_type").val() == 'other'){
-		$("#permenant input[type='checkbox']").attr('checked', false);
-		$("#primary input[type='checkbox']").attr('checked', false);
-		$("#other").show();
-	}
-	else{
-		$("#permenant input[type='checkbox']").attr('checked', false);
-		$("#primary input[type='checkbox']").attr('checked', false);
-		$("input[name='other_description']").val('');
 		$("#primary").hide();
 		$("#permenant").hide();
 		$("#other").hide();
+
+		if($("#dentition_type").val() == 'primary'){
+			$("#permenant input[type='checkbox']").attr('checked', false);
+			$("input[name='other_description']").val('');
+			$("#primary").show();
+		}
+		else if($("#dentition_type").val() == 'permenant'){
+			$("#primary input[type='checkbox']").attr('checked', false);
+			$("input[name='other_description']").val('');
+			$("#permenant").show();
+		}
+		else if($("#dentition_type").val() == 'other'){
+			$("#permenant input[type='checkbox']").attr('checked', false);
+			$("#primary input[type='checkbox']").attr('checked', false);
+			$("#other").show();
+		} else {
+			$("#permenant input[type='checkbox']").attr('checked', false);
+			$("#primary input[type='checkbox']").attr('checked', false);
+			$("input[name='other_description']").val('');
+			$("#primary").hide();
+			$("#permenant").hide();
+			$("#other").hide();
+		}
 	}
-}
 
-
-//---------------- For Change Image Upload  --------------
+	//---------------- For Change Image Upload  --------------
 	$('#img_path_id').change(function(){
 		var files = $(this)[0].files;
 		var file_text= files.length+" files selected";
@@ -291,6 +296,7 @@ function fetch_definition_data(){
 	});
 
 	//---------------- For Check File Limit,size & Extension For Image Upload  --------------
+	//b += files[i].size/1024/1024;
 	function check_file_limit(){
 
 		$(".valid-file").remove();
@@ -299,7 +305,6 @@ function fetch_definition_data(){
 		for (var i=0, F=files, L=files.length; i<L; i++) {
 			b += files[i].size/1024/1024;
 			//---- For Check Extension ----
-			var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
 			var valid_ext=validate(files[i].name,arrayExtensions);
 			if(!valid_ext){
 				valid_extension=1;
@@ -309,13 +314,14 @@ function fetch_definition_data(){
 		//------- Fetch Uploaded(old) File Size -------
 		var total_old_size = 0;
 		$('.rpf_attachment a').each(function(i, obj) {
-		     var file_size = obj.getAttribute('data-size');
-		     if(file_size){
-		     	total_old_size = total_old_size + (file_size/1024/1024);  // Convert Size (byte to MB)
-		     }
-			    
+		    var file_size = obj.getAttribute('data-size');
+		    if(file_size){
+		    	total_old_size = total_old_size + (file_size/1024/1024);  // Convert Size (byte to MB)
+		    }			   
 		});
+		
 		//-------------
+
 		var total_file=(files.length + $(".rpf_attachment").length); // For Total File With (Old & New)
 		var total_size = (total_old_size + b); // For Total File Size With (Old & New)
 		//console.log(total_size);
@@ -333,8 +339,7 @@ function fetch_definition_data(){
 		{
 			$("#img_path_id").parent().after('<div class="alert alert-mini alert-danger valid-file">Only Allowed '+arrayExtensions.join(', ')+' Extension</div>');
 			return false;
-		}
-		else{
+		} else {
 			return true;
 		}
 	}
@@ -343,9 +348,7 @@ function fetch_definition_data(){
 	function validate(file,arrayExtensions) {
 		var ext = file.split(".");
 		ext = ext[ext.length-1].toLowerCase();      
-		if (arrayExtensions.lastIndexOf(ext) == -1) {
-			$("#img_path_id").val("");
-			$("#img_path_txt").val("");
+		if (arrayExtensions.lastIndexOf(ext) == -1) {			
 			return false;
 		}else{
 			return true;
@@ -370,8 +373,52 @@ function fetch_definition_data(){
 				});
 			}
 		});
-
 	}
+
+	//-------------------------------------------------------------------------------------------------------------------------
+
+	function add_more_img(){
+		var total_img_upload = $('.fancy-file-upload').length;		
+
+		if(total_img_upload <5){
+			
+
+			var fancy_html = '';
+			fancy_html += '<div class="fancy-file-upload">';
+			fancy_html += '<i class="fa fa-upload"></i>';
+			fancy_html += '<input type="file" id="img_path_id_'+(total_img_upload+1)+'"  data-id="'+(total_img_upload+1)+'" class="form-control img_upload" name="img_path[]"/>';
+			fancy_html += '<input type="text" id="img_path_txt_'+(total_img_upload+1)+'" class="form-control" placeholder="no file selected" readonly="" />';
+			fancy_html += '<span class="button">Choose File</span>';
+			fancy_html += '</div>';
+
+			$('.all_file_uploads').append(fancy_html);
+
+			if($('.fancy-file-upload').length > 1){
+				$('#remove_btn').show();
+			}else{
+				$('#remove_btn').hide();
+			}			
+		}else{
+			bootbox.alert('Can not enter more than 5 images.');
+		}	
+	}
+
+	function remove_img(){
+		$('.fancy-file-upload').last().remove();
+		if($('.fancy-file-upload').length > 1){
+			$('#remove_btn').show();
+		}else{
+			$('#remove_btn').hide();
+		}
+	}
+
+	$(document).on('change','.img_upload',function(){		
+		var d_id = $(this).attr('data-id');
+		var files = $(this)[0].files;
+		var file_text= files.length+" files selected";
+		$('#img_path_txt_'+d_id).val(file_text);
+	});
+
 </script>
 
 
