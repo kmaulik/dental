@@ -39,7 +39,8 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('country_id', 'country', 'required');
                 $this->form_validation->set_rules('zipcode', 'zipcode', 'required');                
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
-                $this->form_validation->set_rules('birth_date', 'birth date', 'required');                
+                $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
+                                                 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
             }
 
             if($tab == 'avatar'){
@@ -151,6 +152,19 @@ class Dashboard extends CI_Controller {
         $this->Users_model->update_user_data($id,['avatar'=>'']);
         $this->session->set_flashdata('success','Avatar has been successfully removed.');
         redirect('dashboard/edit_profile');
+    }
+
+    // v! Custom Form validation
+    public function validate_birthdate($str){
+        $field_value = $str; //this is redundant, but it's to show you how
+        if($field_value != ''){
+            $arr_date = explode('-',$field_value);
+            if(count($arr_date) == 3 && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }        
     }
 
 }

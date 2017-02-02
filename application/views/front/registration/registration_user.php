@@ -120,15 +120,12 @@
 						<div class="form-group">
 							<input type="text" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>">
 							<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
-						</div>					
-
-						<div class="form-group address-box ">
-							<textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo set_value('address'); ?></textarea>
-						</div>					
+						</div>
 
 						<div class="margin-top-30">
 							<label class="checkbox nomargin"><input class="checked-agree" type="checkbox" name="agree"><i></i>I agree to the <a href="#" data-toggle="modal" data-target="#termsModal">Terms of Service</a></label>
 						</div>
+						
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">

@@ -27,12 +27,14 @@ class Rfp extends CI_Controller {
 
 	/* ---------------- For Create a RFP --------------- */
 	public function add($step='0'){
+
 		if($step == 0) // For First Page Of RFP
 		{
 			$this->session->unset_userdata('rfp_data');
 			$this->form_validation->set_rules('fname', 'first name', 'required');  
 			$this->form_validation->set_rules('lname', 'last name', 'required'); 
-			$this->form_validation->set_rules('birth_date', 'birth date', 'required'); 
+			$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
+											 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
 			$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 			$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 			$this->form_validation->set_rules('allergies', 'allergies', 'required');
@@ -42,26 +44,25 @@ class Rfp extends CI_Controller {
 			$this->form_validation->set_rules('surgery', 'Surgery', 'required');
 		   
 		   
-			if($this->form_validation->run() == FALSE){             
+			if($this->form_validation->run() == FALSE){
 			   $data['subview']="front/rfp/patient/rfp-1";
 			   $this->load->view('front/layouts/layout_main',$data);
-			 }else{
+			}else{
 				$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
 				redirect('rfp/add/1');
 			}
-		}
-		else{
+		} else {
 			//--------- For Check Step 1 is Success or not  ---------
 			if(!isset($this->session->userdata['rfp_data'])){
 				redirect('rfp/add');
 			}
-			if($this->session->userdata['rfp_data']['dentition_type'] != 'other') // If Type other than skip this validation 
-			{
+			// If Type other than skip this validation 
+			if($this->session->userdata['rfp_data']['dentition_type'] != 'other') {
 				$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
-			} 
-			else{
+			} else {
 				$this->form_validation->set_rules('other_description', 'Description', 'required');
 			}
+
 			$this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
 			$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
 
@@ -70,9 +71,7 @@ class Rfp extends CI_Controller {
 				$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
 				$data['subview']="front/rfp/patient/rfp-2";
 				$this->load->view('front/layouts/layout_main',$data);
-			}
-			else
-			{
+			} else {
 				$treatment_cat_id='';
 				if($this->input->post('treatment_cat_id')){
 					$treatment_cat_id=implode(",",$this->input->post('treatment_cat_id')); // Convert Array into string
@@ -84,11 +83,25 @@ class Rfp extends CI_Controller {
 
 				//-------------- For Multiple File Upload  ----------
 			    $img_path='';
-			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
-			    {
-					$location='uploads/rfp/';
+			    
+			    $all_extensions = [];
+			    $all_size = [];
+			    $all_file_names = [];
+
+			    $error_cnt = 0;
+			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
+					$location='uploads/rfp/';					
 					foreach($_FILES['img_path']['name'] as $key=>$data){
+
 						$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+						
+						$size = $_FILES['img_path']['size'][$key];
+						$ext = pathinfo($data, PATHINFO_EXTENSION);
+
+						array_push($all_extensions, $ext);
+						array_push($all_size, $size);
+						array_push($all_file_names, $res);
+
 						if($res != ''){
 							if($key == 0){
 								$img_path=$res;
@@ -96,8 +109,40 @@ class Rfp extends CI_Controller {
 								$img_path=$img_path."|".$res;
 							}
 						}
+					} // END of foreach Loop
+
+					$total_size = byteFormat(array_sum($all_size),'MB');
+
+					// v! Check if size is larger than 10 MB
+					if($total_size > 10){						
+						foreach($all_file_names as $fname){
+							$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;							
+							unlink($path);							
+						}
+						$error_cnt++;
+					} // END of If condition
+
+					// v! check if file extension is correct
+					$allowed_ext = ['jpg','jpeg','png','pdf'];
+					$all_extensions = array_unique($all_extensions);
+
+					foreach($all_extensions as $ext){
+						$ext = strtolower($ext);
+						if(in_array($ext,$allowed_ext) == false){
+							foreach($all_file_names as $fname){
+								$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
+								unlink($path);
+							}
+							$error_cnt++;
+						}
+					} // END of Foreach Loop
+
+					if($error_cnt != 0){
+						$this->session->set_flashdata('error', 'Error in file uploads. Please check total file size or file extensions.');
+						redirect('rfp/add/1');
 					}
-			    }
+
+			    }				    
 			    //-----------------------
 		
 				$rfp_data=array();
@@ -110,12 +155,12 @@ class Rfp extends CI_Controller {
 				$rfp_data['patient_id'] =$this->session->userdata['client']['id'];
 				$rfp_data['created_at'] = date("Y-m-d H:i:s a");
 				$res=$this->Rfp_model->insert_record('rfp',$rfp_data);
+				
 				if($res){
 					$this->session->set_flashdata('success', 'RFP Created Successfully');
-				}
-				else{
+				} else {
 					$this->session->set_flashdata('error', 'Error Into Create RFP');
-				}
+				}				
 				$this->session->unset_userdata('rfp_data');
 				redirect('rfp');
 			}
@@ -134,7 +179,8 @@ class Rfp extends CI_Controller {
 				$this->session->unset_userdata('rfp_data');
 				$this->form_validation->set_rules('fname', 'first name', 'required');  
 				$this->form_validation->set_rules('lname', 'last name', 'required'); 
-				$this->form_validation->set_rules('birth_date', 'birth date', 'required'); 
+				$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
+												 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
 				$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 				$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 				$this->form_validation->set_rules('allergies', 'allergies', 'required');
@@ -474,6 +520,19 @@ class Rfp extends CI_Controller {
     public function redirect_profile(){
     	$this->session->set_userdata('redirect_profile','YES');
     	redirect('dashboard/edit_profile');
+    }
+
+    // v! Custom Form validation
+    public function validate_birthdate($str){
+        $field_value = $str; //this is redundant, but it's to show you how
+        if($field_value != ''){
+            $arr_date = explode('-',$field_value);
+            if(count($arr_date) == 3 && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }        
     }
 
 }
