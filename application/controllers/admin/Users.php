@@ -129,7 +129,6 @@ class Users extends CI_Controller {
         $this->load->view('admin/layouts/layout_main', $data);   
     }    
 
-
     /**
      * @uses : Edit Users
      * */

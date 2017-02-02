@@ -42,12 +42,12 @@
                             <div class="col-lg-3">
                                 <input type="email" name="email_id" id="email_id" class="form-control" placeholder="Email" value="<?php echo $doctor_data['email_id']; ?>" >
                             </div>
-                        </div>                     
+                        </div>
 
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">Address:</label>
-                            <div class="col-lg-3">
-                                <textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo $doctor_data['address']; ?></textarea>
+                            <label class="col-lg-3 control-label">Street:</label>
+                            <div class="col-lg-3">   
+                                <input type="text" name="street" class="form-control" placeholder="Street name" value="<?php echo $doctor_data['street']; ?>">
                             </div>
                         </div>
 
@@ -61,10 +61,22 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Country:</label>
                             <div class="col-lg-3">
-                                <select name="country_id" class="form-control select2" id="country_id">
+                                <select name="country_id" class="form-control select2" id="country_id" disabled>
                                         <option value="" selected disabled>Select Country</option>
                                         <?php foreach($country_list as $country) : ?>
                                         <option value="<?=$country['id']?>"><?=$country['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
                                     <?php endforeach; ?>
                                 </select>   
                             </div>
@@ -120,8 +132,10 @@
 
 
 <script type="text/javascript">
-    
-    
+
+    $("#country_id").val('231');
+    $("#state_id").val('<?php echo $doctor_data["state_id"]; ?>');
+
     $(function() {
         // v! Simple Select and Live search select box
         
@@ -207,6 +221,8 @@
             },            
             address:{required: true },
             city:{required: true },
+            street:{required: true },
+            state_id:{required: true },
             country_id:{required: true },
             zipcode:{required: true },
             phone:{required: true,maxlength: 15 },
