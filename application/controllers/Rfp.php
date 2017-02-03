@@ -511,7 +511,6 @@ class Rfp extends CI_Controller {
 		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
-
 	}
 
 	/*

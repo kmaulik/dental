@@ -232,6 +232,7 @@
             street:{required: true },
             city:{required: true },
             country_id:{required: true },
+            street:{required: true },
             state_id:{required: true },
             zipcode:{required: true },
             phone:{required: true,maxlength: 15 },

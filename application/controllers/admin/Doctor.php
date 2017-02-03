@@ -15,17 +15,16 @@ class Doctor extends CI_Controller {
 
 	public function add(){
 		$data['country_list']=$this->Country_model->get_result('country');
-        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
-
-		if($_POST){
+        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);        
+		
+        if($_POST){
 			$rand=random_string('alnum',5);
 
             $data=array(
                 'role_id' => $this->input->post('role_id'),
                 'fname' => $this->input->post('fname'),
                 'lname' => $this->input->post('lname'),
-                'email_id' => $this->input->post('email_id'),
-                'address' => $this->input->post('address'),
+                'email_id' => $this->input->post('email_id'),                
                 'street'=>$this->input->post('street'),
                 'city' => $this->input->post('city'),
                 'state_id' => $this->input->post('state_id'),
@@ -77,15 +76,13 @@ class Doctor extends CI_Controller {
         $data['country_list']=$this->Country_model->get_result('country');
         $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
         $data['doctor_data'] = $this->Users_model->get_data(['id'=>$id],true);        
-
+        // pr($data['doctor_data'],1);
         if($_POST){
 
-             $data=array(    
-
+            $data=array(    
                 'fname' => $this->input->post('fname'),
-                'lname' => $this->input->post('lname'),
-                'email_id' => $this->input->post('email_id'),
-                'address' => $this->input->post('address'),
+                'lname' => $this->input->post('lname'),                
+                'email_id' => $this->input->post('email_id'),                
                 'street'=>$this->input->post('street'),
                 'city' => $this->input->post('city'),
                 'state_id' => $this->input->post('state_id'),
@@ -97,9 +94,8 @@ class Doctor extends CI_Controller {
                 'longitude' => $this->input->post('longitude'),
                 'latitude' => $this->input->post('latitude'),
             );
-
-
             $this->Users_model->update_user_data($id,$data);
+                        
             $this->session->set_flashdata('message', ['message'=>'Doctor successfully updated.','class'=>'success']);
             redirect('admin/doctor');
         }

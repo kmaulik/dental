@@ -43,10 +43,17 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="address" class="form-control" placeholder="Your Address"></textarea>
+                            </div>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Street:</label>
+                            <div class="col-lg-3">   
+                                <input type="text" name="street" class="form-control" placeholder="Street name">
                             </div>
                         </div>
 
@@ -88,6 +95,18 @@
                             </div>
                         </div>
 
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Zipcode:</label>
@@ -143,21 +162,16 @@
     $("#country_id").val('231');
     $(function() {
         // v! Simple Select and Live search select box
-        
         $('.select2').select2();
-
         // Fixed width. Single select
         $('.select').select2({
             minimumResultsForSearch: Infinity,
             width: 250
         });
-
         $("#anytime-date").AnyTime_picker({
             format: "%Y-%m-%d",
             firstDOW: 1
         });
-
-
     });
 
     function check_zipcode(){    
@@ -179,7 +193,7 @@
                }
             }); 
         }
-     }
+    }
 
     function zip_validate(){
         var longitude = $('#longitude').val();
@@ -194,6 +208,7 @@
     // fname ,lname
     // city country_id zipcode gender
     //---------------------- Validation -------------------
+    
     $("#frmpatient").validate({
         errorClass: 'validation-error-label',
         successClass: 'validation-valid-label',
@@ -209,8 +224,8 @@
                 error.insertAfter(element.next('span'));  // select2
             } 
             else if (element[0]['id'] == "state_id") {
-                error.insertAfter(element.next('span'));  // select2
-            }
+                    error.insertAfter(element.next('span'));  // select2
+                }
             else {
                 error.insertAfter(element)
             }

@@ -44,14 +44,14 @@
                             </div>
                         </div>
                        
-                        <div class="form-group">
+                    <!--     <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="address" class="form-control" placeholder="Your Address"></textarea>
                             </div>
-                        </div>
+                        </div> -->
 
-                         <div class="form-group">
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">Street:</label>
                             <div class="col-lg-3">   
                                 <input type="text" name="street" class="form-control" placeholder="Street name">
@@ -77,7 +77,7 @@
                             </div>
                         </div>
 
-                         <div class="form-group">
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">State:</label>
                             <div class="col-lg-3">
                                 <select name="state_id" class="form-control select2" id="state_id">
@@ -141,6 +141,7 @@
 <script type="text/javascript">
     
     $("#country_id").val('231');
+
     $(function() {
         // v! Simple Select and Live search select box
         
