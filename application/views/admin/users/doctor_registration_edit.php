@@ -52,6 +52,14 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-lg-3 control-label">Street:</label>
+                            <div class="col-lg-3">   
+                                <input type="text" name="street" class="form-control" value="<?php echo $doctor_data['street']; ?>" placeholder="Street name">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">City:</label>
                             <div class="col-lg-3">
                                 <input type="text" name="city" class="form-control" placeholder="City" value="<?php echo $doctor_data['city']; ?>" >
@@ -69,6 +77,19 @@
                                 </select>   
                             </div>
                         </div>
+
+                         <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
+
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Zipcode:</label>
@@ -121,7 +142,7 @@
 
 <script type="text/javascript">
     
-    
+
     $(function() {
         // v! Simple Select and Live search select box
         
@@ -206,8 +227,10 @@
                 }
             },            
             address:{required: true },
+            street:{required: true },
             city:{required: true },
             country_id:{required: true },
+            state_id:{required: true },
             zipcode:{required: true },
             phone:{required: true,maxlength: 15 },
             birth_date:{required: true}
@@ -220,6 +243,7 @@
     });
     
     $("#country_id").val("<?php echo $doctor_data['country_id']; ?>");
+    $("#state_id").val("<?php echo $doctor_data['state_id']; ?>");   
     $("#gender").val("<?php echo $doctor_data['gender']; ?>");
 
 </script>

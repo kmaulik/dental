@@ -82,13 +82,14 @@ class Rfp extends CI_Controller {
 				} 
 
 				//-------------- For Multiple File Upload  ----------
-			    $img_path='';
+			    
 			    
 			    $all_extensions = [];
 			    $all_size = [];
 			    $all_file_names = [];
 
 			    $error_cnt = 0;
+			    $img_path='';
 			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
 					$location='uploads/rfp/';					
 					foreach($_FILES['img_path']['name'] as $key=>$data){
@@ -103,7 +104,7 @@ class Rfp extends CI_Controller {
 						array_push($all_file_names, $res);
 
 						if($res != ''){
-							if($key == 0){
+							if($img_path == ''){
 								$img_path=$res;
 							}else{
 								$img_path=$img_path."|".$res;
@@ -117,7 +118,9 @@ class Rfp extends CI_Controller {
 					if($total_size > 10){						
 						foreach($all_file_names as $fname){
 							$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;							
-							unlink($path);							
+							if(file_exists($path)){
+								unlink($path);
+							}									
 						}
 						$error_cnt++;
 					} // END of If condition
@@ -131,7 +134,9 @@ class Rfp extends CI_Controller {
 						if(in_array($ext,$allowed_ext) == false){
 							foreach($all_file_names as $fname){
 								$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
-								unlink($path);
+								if(file_exists($path)){
+									unlink($path);
+								}		
 							}
 							$error_cnt++;
 						}
@@ -192,7 +197,7 @@ class Rfp extends CI_Controller {
 			   
 				if($this->form_validation->run() == FALSE){    
 				   $data['record']=$rfp_arr;          
-				   $data['subview']="front/rfp/patient/rfp-1";
+				   $data['subview']="front/rfp/patient/edit_rfp-1";
 				   $this->load->view('front/layouts/layout_main',$data);
 				}else{
 					$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
@@ -219,7 +224,7 @@ class Rfp extends CI_Controller {
 					$data['record']=$rfp_arr;
 					$where = 'is_deleted !=  1 and is_blocked != 1';
 					$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
-					$data['subview']="front/rfp/patient/rfp-2";
+					$data['subview']="front/rfp/patient/edit_rfp-2";
 					$this->load->view('front/layouts/layout_main',$data);
 				}else{
 					//pr($_FILES,1);
@@ -236,26 +241,106 @@ class Rfp extends CI_Controller {
 					$final_str = '';										
 					$rfp_data_qry = $this->Rfp_model->get_result('rfp',['id'=>decode($id)],true);					
 					// ------------------------------------------------------------------------
+					
+				   //-------------- For Multiple File Upload  ----------
+				    
+				    
+				    
+				    $all_extensions = [];
+				    $all_size = [];
+				    $all_file_names = [];
 
-					$rfp_data=$this->session->userdata('rfp_data');
-
-					//-------------- For Multiple File Upload  ----------
+				    $error_cnt = 0;
+				    $total_file = explode("|",$rfp_data_qry['img_path']);
 				    $img_path='';
-				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
-				    {
-						$location='uploads/rfp/';
+				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
+				    	//----- Check For Max 5 file upload ----
+				    	if(count($total_file) >= 5){
+				    		$this->session->set_flashdata('error', 'Allowed Only 5 Attachments');
+							redirect('rfp/edit/'.$id.'/1');
+						}
+						//--------------
+						$location='uploads/rfp/';					
 						foreach($_FILES['img_path']['name'] as $key=>$data){
+
 							$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+							
+							$size = $_FILES['img_path']['size'][$key];
+							$ext = pathinfo($data, PATHINFO_EXTENSION);
+
+							array_push($all_extensions, $ext);
+							array_push($all_size, $size);
+							array_push($all_file_names, $res);
+
 							if($res != ''){
-								if($key == 0){
+								if($img_path == ''){
 									$img_path=$res;
 								}else{
 									$img_path=$img_path."|".$res;
 								}
 							}
+						} // END of foreach Loop
+
+						$total_new_size = byteFormat(array_sum($all_size),'MB');
+
+						//----- Fetch Old File Size ----
+						$total_old_size=0;
+						if($rfp_data_qry['img_path'] != ''){
+							$old_img=explode("|",$rfp_data_qry['img_path']);
+							foreach($old_img as $img){
+								$file_name = FCPATH.'uploads/rfp/'.$img;
+								if(file_exists($file_name)) {
+								    $total_old_size= $total_old_size + filesize($file_name);	
+								}
+							}
+							$total_old_size= byteFormat($total_old_size,'MB');
 						}
-				    }
+						
+						$total_size=$total_old_size+$total_new_size;
+						//----- Fetch Old File Size ----
+
+						
+
+
+						// v! Check if size is larger than 10 MB
+						if($total_size > 10){						
+							foreach($all_file_names as $fname){
+								$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
+								if(file_exists($path)){
+									unlink($path);
+								}															
+							}
+							$error_cnt++;
+						} // END of If condition
+
+						
+						// v! check if file extension is correct
+						$allowed_ext = ['jpg','jpeg','png','pdf'];
+						$all_extensions = array_unique($all_extensions);
+
+						foreach($all_extensions as $ext){
+							$ext = strtolower($ext);
+							if(in_array($ext,$allowed_ext) == false){
+								foreach($all_file_names as $fname){
+									$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
+									if(file_exists($path)){
+										unlink($path);
+									}		
+								}
+								$error_cnt++;
+							}
+						} // END of Foreach Loop
+						
+						if($error_cnt != 0){
+							$this->session->set_flashdata('error', 'Error in file uploads. Please check total file size or file extensions.');
+							redirect('rfp/edit/'.$id.'/1');
+						}
+
+				    }				    
+				   
 				    //-----------------------
+				    $rfp_data=$this->session->userdata('rfp_data');
+
 					$rfp_data['img_path']=$img_path;
 
 					// Check new file select if not then assign old value

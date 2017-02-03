@@ -63,7 +63,7 @@ class Patient extends CI_Controller {
                             ->subject($subject)
                             ->message($html_content);
                 $this->email->send();
-                $this->session->set_flashdata('message', ['message'=>'Thank you for your registration, you will receive an activation link soon.',
+                $this->session->set_flashdata('message', ['message'=>'Patient Inserted Succesfully.',
                 										  'class'=>'success']); 
                 redirect('admin/patient');
             }
@@ -100,7 +100,7 @@ class Patient extends CI_Controller {
             );
 
             $this->Users_model->update_user_data($id,$data);
-            $this->session->set_flashdata('message', ['message'=>'User successfully updated.','class'=>'success']);
+            $this->session->set_flashdata('message', ['message'=>'Patient successfully updated.','class'=>'success']);
             redirect('admin/patient');
         }
 

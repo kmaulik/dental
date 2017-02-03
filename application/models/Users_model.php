@@ -54,9 +54,7 @@ class Users_model extends CI_Model {
         } else {
             $this->db->where(['id' => $id]);
         }
-        $this->db->update('users', $data);
-        $last_id = $this->db->affected_rows();
-        return $last_id;
+        return $this->db->update('users', $data);
     }
  
     /*  Check For User Account Verify or Not */

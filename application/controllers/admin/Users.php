@@ -117,9 +117,9 @@ class Users extends CI_Controller {
                                 ->subject($subject)
                                 ->message($html_content);
                     $this->email->send();
-                    $this->session->set_flashdata('message', ['message'=>'Sub Admin Created successfully.','class'=>'alert alert-success']);
+                    $this->session->set_flashdata('message', ['message'=>'User Created successfully.','class'=>'alert alert-success']);
                 }else{
-                    $this->session->set_flashdata('message', ['message'=>'Error Into Create Sub Admin','class'=>'alert alert-danger']);
+                    $this->session->set_flashdata('message', ['message'=>'Error Into Create User','class'=>'alert alert-danger']);
                 }
                 redirect('admin/users');
            }
@@ -139,42 +139,50 @@ class Users extends CI_Controller {
         $data['user_data'] = $this->Users_model->get_data(['id' => $user_id],true);
         $data['country_list']=$this->Country_model->get_result('country');
         $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
+
         if ($this->input->post()) {
             $avtar['msg']='';
-            $path = "uploads/avatars/";
-            //2 MB File Size
-            $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152,$this->input->post('H_avatar'));
-            //----------------------------------------
-            if ($avtar['status'] == 0) {
-               $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
-           }
-           else{
-                 $upd_data=array(    
-                            'role_id'   => $this->input->post('role_id'), // 2 Means Subadmin Role & 3 Means Agent     
-                            'fname' => $this->input->post('fname'),
-                            'lname' => $this->input->post('lname'),
-                            'email_id' => $this->input->post('email_id'),
-                            'address' => $this->input->post('address'),
-                            'street'=>$this->input->post('street'),
-                            'city' => $this->input->post('city'),
-                            'state_id' => $this->input->post('state_id'),
-                            'country_id' => '231',
-                            'zipcode' => $this->input->post('zipcode'),
-                            'gender' => $this->input->post('gender'),
-                            'phone' => $this->input->post('phone'),
-                            'birth_date' => $this->input->post('birth_date'),
-                            'longitude' => $this->input->post('longitude'),
-                            'latitude' => $this->input->post('latitude'),
-                        );
+             if(isset($_FILES['avatar']['name']) && $_FILES['avatar']['name'] != NULL) 
+             {
+                 $path = "uploads/avatars/";
+                //2 MB File Size
+                $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152,$this->input->post('H_avatar'));
+                if ($avtar['status'] == 0) {
+                   $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
+                   redirect('admin/users');
+               }
+             }
+             else{
+                $avtar['msg'] = $this->input->post('H_avatar');
+             }
+           
 
-                $res=$this->Users_model->update_user_data($user_id,$upd_data);
-                if($res){ 
-                    $this->session->set_flashdata('message', ['message'=>'Sub Admin Updated successfully.','class'=>'alert alert-success']);
-                }else{
-                    $this->session->set_flashdata('message', ['message'=>'Error Into Update Sub Admin','class'=>'alert alert-danger']);
-                }
-                redirect('admin/users');
-           }
+             $upd_data=array(    
+                        'role_id'   => $this->input->post('role_id'), // 2 Means Subadmin Role & 3 Means Agent     
+                        'fname' => $this->input->post('fname'),
+                        'lname' => $this->input->post('lname'),
+                        'email_id' => $this->input->post('email_id'),
+                        'address' => $this->input->post('address'),
+                        'street'=>$this->input->post('street'),
+                        'city' => $this->input->post('city'),
+                        'state_id' => $this->input->post('state_id'),
+                        'country_id' => '231',
+                        'zipcode' => $this->input->post('zipcode'),
+                        'gender' => $this->input->post('gender'),
+                        'phone' => $this->input->post('phone'),
+                        'avatar'  => $avtar['msg'],
+                        'birth_date' => $this->input->post('birth_date'),
+                        'longitude' => $this->input->post('longitude'),
+                        'latitude' => $this->input->post('latitude'),
+                    );
+
+            $res=$this->Users_model->update_user_data($user_id,$upd_data);
+            if($res){ 
+                $this->session->set_flashdata('message', ['message'=>'User Updated successfully.','class'=>'alert alert-success']);
+            }else{
+                $this->session->set_flashdata('message', ['message'=>'Error Into Update User','class'=>'alert alert-danger']);
+            }
+            redirect('admin/users');
             
         } 
         $data['subview'] = 'admin/users/manage';

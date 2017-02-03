@@ -44,7 +44,7 @@
 			<!-- /ALERT -->			
 	
 			<div class="col-md-12">
-				<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
+				<form method="post" action="" id="frmrfp" enctype="multipart/form-data" onsubmit="return check_file_limit()">
 					<input type="hidden" id="dentition_type" value="<?=$this->session->userdata['rfp_data']['dentition_type'];?>">
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
@@ -52,7 +52,22 @@
 						</div>
 					</div>
 
-					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>Treatment Category </label>
+								<select name="treatment_cat_id[]" class="form-control select2" data-placeholder="Select Treatment Category" multiple id="treatment_cat_id">
+									<?php if(isset($record['treatment_cat_id'])) { $treat_arr=explode(",",$record['treatment_cat_id']); } ?>
+									<?php foreach($treatment_category as $cat) :?>
+										<option value="<?=$cat['id']?>" <?php  if(isset($treat_arr)) { if(in_array($cat['id'],$treat_arr)) { echo "selected"; }} else { echo  set_select('treatment_cat_id[]', $cat['id']); } ?>><?=$cat['title']." (".$cat['code'].")"?></option>
+									<?php endforeach;?>
+								</select>	
+							</div>
+
+							<?php echo form_error('treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>
+					</div>	
+					<?php if(isset($record['teeth'])) { $teeth_arr=explode(",",$record['teeth']); } ?>
 					<div class="row">
 						<div class="col-md-12 col-sm-12" id="primary">
 							<div class="form-group">
@@ -79,7 +94,7 @@
 												<td></td>
 												<td></td>
 												<?php for($i=0,$k=65;$i<10;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k+$i);?>" name="teeth[]" <?php echo set_checkbox('teeth', chr($k+$i)); ?>><i></i><?=chr($k+$i);?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k+$i);?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array(chr($k+$i),$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth', chr($k+$i)); }?>><i></i><?=chr($k+$i);?></label> </td>
 												<?php endfor; ?>
 												<td></td>
 												<td></td>
@@ -90,7 +105,7 @@
 												<td></td>
 												<td></td>
 												<?php for($i=0,$k=84;$i<10;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k-$i);?>" name="teeth[]" <?php echo set_checkbox('teeth', chr($k-$i));?>><i></i><?=chr($k-$i);?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k-$i);?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array(chr($k-$i),$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth', chr($k-$i)); }?>><i></i><?=chr($k-$i);?></label> </td>
 												<?php endfor; ?>
 												<td></td>
 												<td></td>
@@ -124,12 +139,12 @@
 										<tbody>
 											<tr>
 												<?php for($i=1;$i<=16;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php echo set_checkbox('teeth',$i); ?>><i></i><?=$i?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array($i,$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth',$i); }?>><i></i><?=$i?></label> </td>
 												<?php endfor;?>
 											</tr>
 											<tr>
 												<?php for($i=32;$i>16;$i--) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php echo set_checkbox('teeth',$i); ?>><i></i> <?=$i?></label> </td>
+												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php if(isset($teeth_arr)) { if(in_array($i,$teeth_arr)) { echo "checked"; }} else { echo set_checkbox('teeth',$i); }?>><i></i> <?=$i?></label> </td>
 												<?php endfor;?>
 											</tr>
 										</tbody>	
@@ -139,31 +154,11 @@
 							<?php echo form_error('teeth[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>
 					</div>	
-
-					<div class="list_treatment_category">
-					</div>	
-
-					<div class="treatment_category" style="display:none;">
-						<div class="row treatment_cat">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label>Treatment Category </label>
-									<select class="form-control select2 treatment_cat_id" name="treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
-										<?php foreach($treatment_category as $cat) :?>
-											<option value="<?=$cat['id']?>" <?=set_select('treatment_cat_id[]', $cat['id']);?>><?=$cat['title']." (".$cat['code'].")"?></option>
-										<?php endforeach;?>
-									</select>	
-								</div>
-								<?php echo form_error('treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-							</div>
-						</div>	
-					</div>	
-
 					<div class="row">	
 						<div class="col-md-12 col-sm-12" id="other">
 							<div class="form-group">
 								<label>Other Description</label> 
-								<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo set_value('other_description'); ?></textarea>
+								<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
 							</div>
 							<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>
@@ -178,7 +173,7 @@
 						<div class="col-md-12 col-sm-12">
 							<label>Additional Comments</label> 
 							<div class="fancy-form">
-								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Enter Additional Comments"><?php echo set_value('message'); ?></textarea>
+								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Enter Additional Comments"><?php echo (isset($record['message'])? $record['message'] : set_value('message')); ?></textarea>
 								<i class="fa fa-comments"><!-- icon --></i>
 								<span class="fancy-hint size-11 text-muted">
 									<strong>Hint:</strong> 500 characters allowed!
@@ -191,6 +186,40 @@
 						</div>	
 					</div>	
 
+					<?php if(isset($record['img_path']) && $record['img_path'] != '') :?>
+						<div class="row">
+							<div class="col-md-12 col-sm-12">
+								<?php 
+									
+									$all_images_str = $record['img_path'];
+									if($all_images_str != ''){
+										$all_images = explode('|',$all_images_str);
+									}						
+									if(!empty($all_images)){
+										foreach($all_images as $key=>$img){
+									?>
+									<span class="rpf_attachment">
+										<?php $ext=explode(".",$img); 
+										if(isset($ext) && $ext[1] == 'pdf') { ?>
+											<img src="<?php echo DEFAULT_IMAGE_PATH.'document-file.jpg'?>" width="100px" height="50px">
+									    <?php } else { ?>
+											<img src="<?php echo base_url().'uploads/rfp/'.$img;?>" width="100px" height="50px">
+										<?php } ?>
+										<?php $file_name = 'uploads/rfp/'.$img;
+											if(file_exists($file_name)) {
+											    $file_size= filesize($file_name);	
+											}else{
+												$file_size= 0;	
+											}
+										?>
+										<a onclick="delete_img(this)" data-size="<?php echo $file_size;?>" data-img="<?php echo $img; ?>" data-rfpid="<?php echo $record['id']; ?>">
+											<i class="fa fa-close text-danger"></i>
+										</a>
+									</span>
+								<?php } } ?>
+							</div>
+						</div>
+					<?php endif; ?>
 
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
@@ -257,13 +286,35 @@
 			$("#other").hide();
 		}
 	}
-	
-	//-------------------------------------------------------------------------------------------------------------------------
 
+
+	function delete_img(obj){
+		var img_name = $(obj).attr('data-img');
+		var rfp_id = $(obj).attr('data-rfpid');
+		bootbox.confirm('Delete this image?' ,function(res){
+			if(res){
+				$.ajax({
+					url:'<?php echo base_url()."rfp/delete_img_rfp"; ?>',
+					method:'POST',
+					data:{img_name:img_name,rfp_id:rfp_id},
+					dataType:'JSON',
+					success:function(res){
+						if(res['success'] == true){
+							$(obj).parent().remove();
+						}
+					}
+				});
+			}
+		});
+	}
+
+	//-------------------------------------------------------------------------------------------------------------------------
 	function add_more_img(){
 		var total_img_upload = $('.fancy-file-upload').length;		
+		var olg_img = $('.rpf_attachment a').length;
 
-		if(total_img_upload <5){
+		var total_img= olg_img + total_img_upload ;
+		if(total_img <5){
 			
 
 			var fancy_html = '';
@@ -282,7 +333,7 @@
 				$('#remove_btn').hide();
 			}			
 		}else{
-			bootbox.alert('Can not enter more than 5 images.');
+			bootbox.alert('Can not enter more than 5 attachment.');
 		}	
 	}
 
@@ -300,16 +351,6 @@
 		var files = $(this)[0].files;
 		var file_text= files.length+" files selected";
 		$('#img_path_txt_'+d_id).val(file_text);
-	});
-
-
-	//----------- For Display Treatment Category ----------
-	$("input[type=checkbox]").click(function(e){
-		var teeth_val = $(this).val();
-		var str = $(".treatment_category").html();
-		treat_cat1 = str.replace("treatment_cat","treatment_cat_"+teeth_val);
-		treat_cat = str.replace("treatment_cat_id[]", "treatment_cat_id_"+teeth_val+"[]");
-		$(".list_treatment_category").append(treat_cat);
 	});
 
 </script>

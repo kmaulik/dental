@@ -63,7 +63,7 @@ class Doctor extends CI_Controller {
                             ->subject($subject)
                             ->message($html_content);
                 $this->email->send();
-                $this->session->set_flashdata('message', ['message'=>'Thank you for your registration, you will receive an activation link soon.','class'=>'success']);
+                $this->session->set_flashdata('message', ['message'=>'Doctor Inserted Succesfully.','class'=>'success']);
                 redirect('admin/doctor');
             }
 		}

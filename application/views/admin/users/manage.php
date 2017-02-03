@@ -70,6 +70,13 @@
                             </div>
                         </div>
 
+                         <div class="form-group">
+                            <label class="col-lg-3 control-label">Street:</label>
+                            <div class="col-lg-3">   
+                                <input type="text" name="street" class="form-control" placeholder="Street name" value="<?php echo isset($user_data['street'])?$user_data['street']:''; ?>">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-lg-3 control-label">City:</label>
                             <div class="col-lg-3">
@@ -80,10 +87,22 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Country:</label>
                             <div class="col-lg-3">
-                                <select name="country_id" class="form-control select2" id="country_id">
+                                <select name="country_id" class="form-control select2" id="country_id" disabled>
                                         <option value="" selected disabled>Select Country</option>
                                         <?php foreach($country_list as $country) : ?>
                                         <option value="<?=$country['id']?>"><?=$country['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
                                     <?php endforeach; ?>
                                 </select>   
                             </div>
@@ -150,8 +169,6 @@
 
 
 <script type="text/javascript">
-
-    $("#role_id").val("<?php echo isset($user_data['role_id'])?$user_data['role_id']:''; ?>");
 
     function readURL(input) {
       if (input.files && input.files[0]) {
@@ -239,7 +256,11 @@
         errorPlacement: function (error, element) {
             if (element[0]['id'] == "country_id") {
                 error.insertAfter(element.next('span'));  // select2
-            } else {
+            } 
+            else if (element[0]['id'] == "state_id") {
+                error.insertAfter(element.next('span'));  // select2
+            }
+            else {
                 error.insertAfter(element)
             }
         },
@@ -257,8 +278,10 @@
                 }
             },            
             address:{required: true },
+            street:{required: true },
             city:{required: true },
             country_id:{required: true },
+            state_id:{required: true },
             zipcode:{required: true },
             phone:{required: true,maxlength: 15 },
             birth_date:{required: true}
@@ -272,15 +295,19 @@
                 remote:"Email already exists. Please enter other email address"
             }, 
             address:{required: 'Please provide a Address' },
+            street:{required: 'Please provide a Street' },
             city:{required: 'Please Provide a City' },
             country_id:{required: 'Please Select Country' },
+            state_id:{required: 'Please Select State' },
             zipcode:{required: 'Please Provide a Zipcode' }, 
             phone:{required: 'Please Provide a Phone' }, 
             birth_date:{required: 'Please Provide a Birthdate' },           
         }
     });
     
-    $("#country_id").val("<?php echo isset($user_data['country_id'])?$user_data['country_id']:''; ?>");
+    $("#role_id").val("<?php echo isset($user_data['role_id'])?$user_data['role_id']:''; ?>");
+    $("#country_id").val("<?php echo isset($user_data['country_id'])?$user_data['country_id']:'231'; ?>");
+    $("#state_id").val("<?php echo isset($user_data['state_id'])?$user_data['state_id']:''; ?>");
     $("#gender").val("<?php echo isset($user_data['gender'])?$user_data['gender']:'male'; ?>");
 
 </script>

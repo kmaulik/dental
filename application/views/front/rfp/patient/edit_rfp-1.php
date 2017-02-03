@@ -45,14 +45,14 @@
 				<div class="col-md-6 col-sm-6">	
 					<div class="form-group">
 						<label>First Name</label>
-						<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php if(set_value('fname') != '') { echo set_value('fname'); }else { echo $this->session->userdata['client']['fname']; } ?>" >
+						<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php if(isset($record['fname'])) { echo $record['fname']; } else { if(set_value('fname') != '') { echo set_value('fname'); }else { echo $this->session->userdata['client']['fname']; }} ?>" >
 					</div>
 					<?php echo form_error('fname','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
 				<div class="col-md-6 col-sm-6">	
 					<div class="form-group">
 						<label>Last Name</label>
-						<input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php if(set_value('lname') != '') { echo set_value('lname'); }else { echo $this->session->userdata['client']['lname']; } ?>" >
+						<input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php if(isset($record['lname'])) { echo $record['lname']; } else { if(set_value('lname') != '') { echo set_value('lname'); }else { echo $this->session->userdata['client']['lname']; }} ?>" >
 					</div>
 					<?php echo form_error('lname','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>				
@@ -62,8 +62,9 @@
 					<div class="form-group">
 						<label>Birth Date</label>	
 						<input type="text" name="birth_date" id="birth_date" class="form-control datepicker" 
-							  placeholder="YYYY-MM-DD" value="<?php if(set_value('birth_date') != '') { echo set_value('birth_date'); }
-							  	else { echo $this->session->userdata['client']['birth_date']; } ?>" >
+							  placeholder="YYYY-MM-DD" value="<?php if(isset($record['birth_date'])) { echo $record['birth_date']; } else { 
+							  	if(set_value('birth_date') != '') { echo set_value('birth_date'); }
+							  	else { echo $this->session->userdata['client']['birth_date']; }} ?>" >
 						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
@@ -71,7 +72,7 @@
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>RFP Title</label>
-						<input type="text" name="title" class="form-control" placeholder="RFP Title" value="<?=set_value('title');?>" >
+						<input type="text" name="title" class="form-control" placeholder="RFP Title" value="<?php echo (isset($record['title'])? $record['title'] : set_value('title')); ?>" >
 					</div>
 					<?php echo form_error('title','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
@@ -84,7 +85,7 @@
 							<option value=""> Select Dentition Type</option>
 							<option value="primary">Primary</option>
 							<option value="permenant">Permenant</option>
-							<option value="other">Other</option>
+							<option value="other">Other</option>	
 						</select>
 					</div>
 					<?php echo form_error('dentition_type','<div class="alert alert-mini alert-danger">','</div>'); ?>	
@@ -100,7 +101,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Known Allergies</label> 
-						<textarea name="allergies" class="form-control" placeholder="Enter Allergies"><?=set_value('allergies');?></textarea>
+						<textarea name="allergies" class="form-control" placeholder="Enter Allergies"><?php echo (isset($record['allergies'])? $record['allergies'] : set_value('allergies')); ?></textarea>
 					</div>
 					<?php echo form_error('allergies','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -110,7 +111,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Full Medication List</label> 
-						<textarea name="medication_list" class="form-control" placeholder="Enter Medication List"><?=set_value('medication_list');?></textarea>
+						<textarea name="medication_list" class="form-control" placeholder="Enter Medication List"><?php echo (isset($record['medication_list'])? $record['medication_list'] : set_value('medication_list')); ?></textarea>
 					</div>
 					<?php echo form_error('medication_list','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
@@ -121,7 +122,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Any heart problems including blood pressure ?</label> 
-						<textarea name="heart_problem" class="form-control" placeholder="Enter Heart Problem"><?=set_value('heart_problem');?></textarea>
+						<textarea name="heart_problem" class="form-control" placeholder="Enter Heart Problem"><?php echo (isset($record['heart_problem'])? $record['heart_problem'] : set_value('heart_problem')); ?></textarea>
 					</div>
 					<?php echo form_error('heart_problem','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -132,7 +133,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Any history of chemo/radiation ?</label> 
-						<textarea name="chemo_radiation" class="form-control" placeholder="Enter Chemo/Radiation"><?=set_value('chemo_radiation');?></textarea>
+						<textarea name="chemo_radiation" class="form-control" placeholder="Enter Chemo/Radiation"><?php echo (isset($record['chemo_radiation'])? $record['chemo_radiation'] : set_value('chemo_radiation')); ?></textarea>
 					</div>
 					<?php echo form_error('chemo_radiation','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -142,7 +143,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Surgery occurred during the last two years.</label> 
-						<textarea name="surgery" class="form-control" placeholder="please describe in Brief type of surgery and date"><?=set_value('surgery'); ?></textarea>
+						<textarea name="surgery" class="form-control" placeholder="please describe in Brief type of surgery and date"><?php echo (isset($record['surgery'])? $record['surgery'] : set_value('surgery')); ?></textarea>
 					</div>
 					<?php echo form_error('surgery','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -163,7 +164,7 @@
 
 <script>
 
-	$("#dentition_type").val("<?=set_value('dentition_type');?>");
+	$("#dentition_type").val("<?php echo (isset($record['dentition_type'])? $record['dentition_type'] : set_value('dentition_type')); ?>");
 		
 	$(".new_person").click(function(){
 		$("input[name=fname]").val('');

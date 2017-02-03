@@ -5,7 +5,7 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-user"></i> <span class="text-semibold"></span></h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Patient</h4>
         </div>
     </div>
     <div class="breadcrumb-line">
@@ -52,6 +52,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-lg-3 control-label">Street:</label>
+                            <div class="col-lg-3">   
+                                <input type="text" name="street" class="form-control" value="<?php echo $patient_data['street']; ?>" placeholder="Street name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">City:</label>
                             <div class="col-lg-3">
                                 <input type="text" name="city" class="form-control" placeholder="City" value="<?php echo $patient_data['city']; ?>" >
@@ -61,10 +68,22 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Country:</label>
                             <div class="col-lg-3">
-                                <select name="country_id" class="form-control select2" id="country_id">
+                                <select name="country_id" class="form-control select2" id="country_id" disabled>
                                         <option value="" selected disabled>Select Country</option>
                                         <?php foreach($country_list as $country) : ?>
                                         <option value="<?=$country['id']?>"><?=$country['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
                                     <?php endforeach; ?>
                                 </select>   
                             </div>
@@ -189,7 +208,11 @@
         errorPlacement: function (error, element) {
             if (element[0]['id'] == "country_id") {
                 error.insertAfter(element.next('span'));  // select2
-            } else {
+            } 
+            else if (element[0]['id'] == "state_id") {
+                error.insertAfter(element.next('span'));  // select2
+            }
+            else {
                 error.insertAfter(element)
             }
         },
@@ -206,8 +229,10 @@
                 }
             },            
             address:{required: true },
+            street:{required: true },
             city:{required: true },
             country_id:{required: true },
+            state_id:{required: true },
             zipcode:{required: true },
             phone:{required: true,maxlength: 15 },
             birth_date:{required: true}
@@ -220,6 +245,7 @@
     });
     
     $("#country_id").val("<?php echo $patient_data['country_id']; ?>");
+    $("#state_id").val("<?php echo $patient_data['state_id']; ?>");   
     $("#gender").val("<?php echo $patient_data['gender']; ?>");
 
 </script>

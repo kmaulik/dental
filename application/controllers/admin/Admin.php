@@ -20,46 +20,54 @@ class Admin extends CI_Controller {
             redirect('admin/dashboard');
         }
 
-        if ($this->input->post()) {
+        if ($this->input->post()) 
+        {
 
             $email = $this->input->post('username');
             $password = $this->input->post('password');
 
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
             $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email], false, true,['1','2','3']);
-            if (!empty($user_data)) {
+            if (!empty($user_data)) 
+            {
 
                 $db_pass = $this->encrypt->decode($user_data['password']);
-
-                if ($db_pass == $password) {   
-                     if($user_data['is_verified'] == 1){
-                        $msg="Thank you for visiting us. In order to use your account, please check your emails for our Welcome message and click on the activation link to use your account with us. If you haven’t received the email, please, find in our <a href='".base_url('faq')."'>FAQ </a> (Account Activation) for help.";
-                        $this->session->set_flashdata('error',$msg);
-                        redirect('admin/login');
-                    }
-                    if($user_data['is_blocked'] == 1){
-                        $this->session->set_flashdata('message', ['message'=>'Your Account is Deactivated, Please contact to admin','class'=>'alert alert-danger']);
-                        redirect('admin/login');
-                    }
-                                     
-                    $user_login = $this->session->userdata('admin');
-                    if(!empty($user_login)){
-                        $this->session->set_flashdata('message', ['message'=>'Can not allow login because of user login.Try another browser.','class'=>'alert alert-danger']);
-                        redirect('admin/login');
-                    }
-                    $this->session->set_userdata(['admin' => $user_data]); // Start Loggedin User Session
-                    $this->session->set_flashdata('message', ['message' => 'Login Successfull', 'class' => 'alert alert-success']);
-                    $this->Users_model->update_user_data($user_data['id'], ['last_login' => date('Y-m-d H:i:s')]); // update last login time
-                    redirect('admin/dashboard');
-                } else {
-                    $this->session->set_flashdata('message', ['message' => 'Password is incorrect.', 'class' => 'alert alert-danger']);
+                if($user_data['is_verified'] == 1) 
+                {
+                    $this->session->set_flashdata('message', ['message'=>"Thank you for visiting us. In order to use your account, please check your emails for our Welcome message and click on the activation link to use your account with us. If you haven’t received the email, please, find in our <a href='".base_url('faq')."'>FAQ </a> (Account Activation) for help.",'class'=>'alert alert-danger']);
                     redirect('admin/login');
-                } // End of else for if($db_pass == $password) condition
-            } else {
+                }
+                else
+                {
+                    if ($db_pass == $password) {   
+                        if($user_data['is_blocked'] == 1){
+                            $this->session->set_flashdata('message', ['message'=>'Your Account is Deactivated, Please contact to admin','class'=>'alert alert-danger']);
+                            redirect('admin/login');
+                        }
+                                         
+                        $user_login = $this->session->userdata('admin');
+                        if(!empty($user_login)){
+                            $this->session->set_flashdata('message', ['message'=>'Can not allow login because of user login.Try another browser.','class'=>'alert alert-danger']);
+                            redirect('admin/login');
+                        }
+                        $this->session->set_userdata(['admin' => $user_data]); // Start Loggedin User Session
+                        $this->session->set_flashdata('message', ['message' => 'Login Successfull', 'class' => 'alert alert-success']);
+                        $this->Users_model->update_user_data($user_data['id'], ['last_login' => date('Y-m-d H:i:s')]); // update last login time
+                        redirect('admin/dashboard');
+                    } else {
+                        $this->session->set_flashdata('message', ['message' => 'Password is incorrect.', 'class' => 'alert alert-danger']);
+                        redirect('admin/login');
+                    } // End of else for if($db_pass == $password) condition
+                }  
+            }     
+            else 
+            {
                 $this->session->set_flashdata('message', ['message' => 'Username and password incorrect.', 'class' => 'alert alert-danger']);
                 redirect('admin/login');
             }
-        } else {
+        } 
+        else 
+        {
             $this->load->view('admin/login_admin');
         }
     }   
