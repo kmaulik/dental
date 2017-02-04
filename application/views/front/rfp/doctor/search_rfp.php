@@ -135,7 +135,7 @@ span.time {
 						</div>
 						<div class="col-lg-3 col-md-5">
 							<label>Filter Date Wise</label>
-							<input type="text" name="date" class="form-control rangepicker" value="<?=$this->input->get('date') ? $this->input->get('date') :''?>" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31">
+							<input type="text" name="date" class="form-control rangepicker" value="<?=$this->input->get('date') ? $this->input->get('date') :''?>" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31" readonly>
 						</div>
 						<div class="col-lg-2 col-md-3 sorting">
 							<label>Sort</label>

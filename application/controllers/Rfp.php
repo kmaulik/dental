@@ -6,7 +6,7 @@ class Rfp extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
-		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model']);		
+		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model']);		
 	}	
 
 	public function index(){
@@ -458,6 +458,18 @@ class Rfp extends CI_Controller {
     		'created_at'	=> date("Y-m-d H:i:s")
     	);
     	$this->Messageboard_model->insert_record('messages',$data);
+    	// ------------------------------------------------------------------------
+    	// v! insert data notifications table
+		$noti_data = [
+						'from_id'=>$this->session->userdata('client')['id'],
+						'to_id'=>$this->input->post('to_id'),
+						'rfp_id' => $this->input->post('rfp_id'),
+						'noti_type'=>'message',
+						'noti_url'=>'messageboard'								
+					];
+												
+		$this->Notification_model->insert_notification($noti_data);
+    	// ------------------------------------------------------------------------
     	$where=['id' => $this->input->post('rfp_bid_id')];
     	$up_data=['is_chat_started' => '1'];
 	    $res=$this->Rfp_model->update_record('rfp_bid',$where,$up_data);
@@ -575,6 +587,21 @@ class Rfp extends CI_Controller {
 	    	);
 
 	    	$res=$this->Rfp_model->insert_record('rfp_bid',$data);
+
+	    	// ------------------------------------------------------------------------
+	    	// v! insert data notifications table
+	    	$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true);
+			$noti_data = [
+							'from_id'=>$this->session->userdata('client')['id'],
+							'to_id'=>$rfp_data['patient_id'],
+							'rfp_id' => $this->input->post('rfp_id'),
+							'noti_type'=>'doc_bid',
+							'noti_url'=>'bid'
+						];
+													
+			$this->Notification_model->insert_notification($noti_data);
+	    	// ------------------------------------------------------------------------
+
 	    	if($res){
 	    		$this->session->set_flashdata('success', 'Bid Placed Successfully!');
 	    	}

@@ -173,6 +173,11 @@
                             </li>
                             <li class="dropdown <?php if($this->uri->segment(1)=='contact_us') echo 'active'; ?>">
                                 <a href="<?=base_url('contact_us')?>">CONTACT US</a>
+                            </li>                            
+                            <li class="notification_side">
+                                <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
+                                    <span>NOTIFICATION</span>
+                                </a>
                             </li>
 
                             <!-- <li class="dropdown">
@@ -205,7 +210,184 @@
             <span class="loader"></span>
         </div>
     </div><!-- /PRELOADER -->
+    
+    <!-- 
+            SIDE PANEL 
+            
+                sidepanel-dark          = dark color
+                sidepanel-light         = light color (white)
+                sidepanel-theme-color       = theme color
+                
+                sidepanel-inverse       = By default, sidepanel is placed on right (left for RTL)
+                                If you add "sidepanel-inverse", will be placed on left side (right on RTL).
+        -->
+    <div id="sidepanel" class="sidepanel-light">
+        <a id="sidepanel_close" href="#"><!-- close -->
+            <i class="glyphicon glyphicon-remove"></i>
+        </a>
 
+        <div class="sidepanel-content custom_notification_data">
+            <h2 class="sidepanel-title">Notification</h2>
+
+            <div class="custom_notification">
+                <ul class="scrollbar-inner" style="height: 500px;">
+                   
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
+                            <p class="notifly_msg">Near :0.00Miles </p> 
+                            <p class="notifly_ago">2 weeks ago</p>                   
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            
+
+        </div>
+    </div>
+    <!-- /SIDE PANEL -->
 
 <!-- JAVASCRIPT FILES -->
 <script type="text/javascript">var plugin_path = '<?= DEFAULT_PLUGINS_PATH ?>';</script> 

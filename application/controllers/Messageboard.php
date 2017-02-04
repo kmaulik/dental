@@ -3,13 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Messageboard extends CI_Controller {
 
-	 public function __construct() {
-        parent::__construct(); 
-        if(!isset($this->session->userdata['client']))redirect('login');            
-        $this->load->model(array('Messageboard_model'));
+	public function __construct() {
+        parent::__construct();
+        if(!isset($this->session->userdata['client']))redirect('login');
+        $this->load->model(array('Messageboard_model','Notification_model'));
     }
-	public function index()
-	{
+
+	public function index(){
+
 		$where = [
                     'u.is_deleted' => 0,
                     'u.is_blocked' => 0,
@@ -49,8 +50,7 @@ class Messageboard extends CI_Controller {
 
 		$data['message_data']=$this->Messageboard_model->fetch_messages(decode($rfp_id),decode($user_id));
 		//pr($data['message_data'],1);
-		if($this->input->post('submit'))
-		{
+		if($this->input->post('submit')){			
 			$data=array(
 			    		'rfp_id' => decode($rfp_id),
 			    		'from_id' => $this->session->userdata('client')['id'],
@@ -58,9 +58,22 @@ class Messageboard extends CI_Controller {
 			    		'message' => $this->input->post('message'),
 			    		'created_at'	=> date("Y-m-d H:i:s")
 			    	);
+    		
     		$data=$this->Messageboard_model->insert_record('messages',$data);
-    		if($data)
-    		{
+
+    		if($data){
+
+    			// v! insert data notifications table
+				$noti_data = [
+								'from_id'=>$this->session->userdata('client')['id'],
+								'to_id'=>decode($user_id),
+								'rfp_id' => decode($rfp_id),
+								'noti_type'=>'message',
+								'noti_url'=>'messageboard'								
+							];
+														
+				$this->Notification_model->insert_notification($noti_data);				
+
 		    	$user_data=$this->Messageboard_model->get_result('users',['id' => decode($user_id)],'1');
 		    	$rfp_data=$this->Messageboard_model->get_result('rfp',['id' => decode($rfp_id)],'1');
 		    	//------------ Send Mail Config-----------------
@@ -80,8 +93,8 @@ class Messageboard extends CI_Controller {
 		        $this->email->send();
 		        //------------ End Send Mail Config----------------- 
 		        $this->session->set_flashdata('success', 'Message Send Successfully'); 
-		    }
-		    else{
+		    
+		    }else{		    	
 		    	$this->session->set_flashdata('error', 'Error Into Send Message'); 
 		    }   
 		    redirect('messageboard/message/'.$rfp_id.'/'.$user_id);       

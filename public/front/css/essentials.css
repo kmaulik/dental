@@ -3630,7 +3630,7 @@ body:not(.device-touch) .btn.btn-reveal span {
 	.btn.btn-reveal.btn-sm i {
 		left: -26px;
 		width: 26px;
-		height: 34px;
+		height: 36px;
 		/*line-height: 28px;*/
 		font-size:14px;
 	}

@@ -106,9 +106,108 @@ section.page-header .breadcrumb a:hover {
 .validation-error-label{
     color: red;
 }
+#topMain.nav-pills > li.notification_side {
+  margin-top: 27px;
+}
+#topMain.nav-pills > li.notification_side > a {
+  background: rgb(49, 176, 213) none repeat scroll 0 0;
+  color: rgb(255, 255, 255);
+  height: auto;
+  line-height: normal;  
+}
+#topMain.nav-pills > li.notification_side > a span {
+  font-family: Open Sans;
+  margin-left: 10px;
+}
+#sidepanel .sidepanel-content.custom_notification_data {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.custom_notification > ul {
+  list-style: outside none none;
+  margin: 0;
+  padding: 0;
+}
+.custom_notification > ul li {
+  border-bottom: 1px solid rgb(204, 204, 204);
+}
+.notifly_head {
+  color: #31b0d5;
+  line-height: 19px;
+  margin-bottom: 10px;
+}
+.notifly_msg {
+  color: rgb(51, 51, 51);
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 7px;
+}
+.notifly_ago {
+  color: rgb(151, 151, 151);
+  font-size: 13px;
+  margin-bottom: 0;
+}
+.custom_notification_data .custom_notification > ul {
+  border: medium none !important;
+  list-style: outside none none;
+  margin: 0;
+  padding: 0;
+}
+#sidepanel > a.sidepanel_close {
+  background: rgb(49, 176, 213) none repeat scroll 0 0 !important;
+  color: rgb(255, 255, 255) !important;
+}      
+#sidepanel .sidepanel-content.custom_notification_data h2 {
+  margin-bottom: 30px;
+  margin-left: 20px;
+  margin-top: 11px;
+  position: relative;
+}
+#sidepanel .sidepanel-content.custom_notification_data {
+  margin: 0;
+} 
+.custom_notification > ul li {
+  background: #f8f8f8;
+  border-bottom: 1px solid rgb(204, 204, 204);
+  padding: 8px 12px;
+}
+#header.fixed #topNav #topMain > li.notification_side > a {
+  height: auto;
+  line-height: normal;
+}
+#header.fixed #topNav #topMain > li.notification_side {
+  margin-top: 10px;
+}
+.custom_notification {
+  display: block;
+  overflow: auto;
+}
+.custom_notification ul {
+  height: 720px !important;
+}
+.custom_notification ul li {
+  background: #f4f4f4 none repeat scroll 0 0;
+  border-bottom: 1px solid #cccccc;
+  line-height: 100%;
+  padding: 0 20px 15px;
+}
+.scrollbar-inner > .scroll-element .scroll-bar {
+  background-color: #31b0d5 !important;
+}
+.scrollbar-inner > .scroll-element .scroll-bar, .scrollbar-inner > .scroll-element .scroll-element_track {
+  opacity: 1 !important;
+}
 
-
-
+#sidepanel > a {
+  position: absolute;
+  z-index: 999;
+}
+#sidepanel > a {
+  background: #31b0d5 none repeat scroll 0 0 !important;
+  color: #ffffff !important;
+  position: absolute;
+  z-index: 999;
+}
 
 /*************** media start here 	*************/
 @media (min-width:481px) and (max-width:767px){

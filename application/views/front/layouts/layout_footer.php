@@ -119,3 +119,12 @@
     </div>
 
 </footer>
+
+
+<link href="<?= DEFAULT_CSS_PATH ?>custom_scrollbar.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo base_url().'public/front/js/scrollbar.min.js'; ?>"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+            jQuery('.scrollbar-inner').scrollbar();
+        });
+</script>
