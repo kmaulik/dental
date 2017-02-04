@@ -48,8 +48,32 @@ class Rfp extends CI_Controller {
 			   $data['subview']="front/rfp/patient/rfp-1";
 			   $this->load->view('front/layouts/layout_main',$data);
 			}else{
-				$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
-				redirect('rfp/add/1');
+				$rfp_step_1= array(
+						'fname' 			=> $this->input->post('fname'),
+						'lname' 			=> $this->input->post('lname'),
+						'birth_date'		=> $this->input->post('birth_date'),
+						'title' 			=> $this->input->post('title'),
+						'dentition_type' 	=> $this->input->post('dentition_type'),
+						'allergies' 		=> $this->input->post('allergies'),
+						'medication_list' 	=> $this->input->post('medication_list'),
+						'heart_problem' 	=> $this->input->post('heart_problem'),
+						'chemo_radiation' 	=> $this->input->post('chemo_radiation'),
+						'surgery' 			=> $this->input->post('surgery'),
+						'patient_id' 		=> $this->session->userdata['client']['id'],
+						'created_at' 		=> date("Y-m-d H:i:s a"),
+					);
+					$res=$this->Rfp_model->insert_record('rfp',$rfp_step_1);
+					if($res){
+						$rfp_data=array(
+							'rfp_last_id' => $res,
+							'dentition_type' => $this->input->post('dentition_type'),
+							);
+						$this->session->set_userdata('rfp_data',$rfp_data); // Store Last Insert Id & Dentition Type into Session
+						redirect('rfp/add/1');
+					}else{
+						redirect('rfp/add');
+					}
+					
 			}
 		} else {
 			//--------- For Check Step 1 is Success or not  ---------
@@ -62,8 +86,8 @@ class Rfp extends CI_Controller {
 			} else {
 				$this->form_validation->set_rules('other_description', 'Description', 'required');
 			}
-
-			$this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
+				
+			
 			$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
 
 			if($this->form_validation->run() == FALSE){  
@@ -72,14 +96,21 @@ class Rfp extends CI_Controller {
 				$data['subview']="front/rfp/patient/rfp-2";
 				$this->load->view('front/layouts/layout_main',$data);
 			} else {
-				$treatment_cat_id='';
-				if($this->input->post('treatment_cat_id')){
-					$treatment_cat_id=implode(",",$this->input->post('treatment_cat_id')); // Convert Array into string
-				} 
-				$teeth='';
+				
+				/*------------ For teeth and Treatment category data -------- */
+				
+				$teeth=[];
+				$teeth_data='';
 				if($this->input->post('teeth')){
-					$teeth=implode(",",$this->input->post('teeth')); // Convert Array into string
+					foreach($this->input->post('teeth') as $key=>$val){
+						foreach($this->input->post('treatment_cat_id_'.$val) as $k=>$v){
+							$teeth[$val]['cat_id'][$k]=$v;
+						}
+						$teeth[$val]['cat_text']=$this->input->post('treat_cat_text_'.$val);	
+					}
+					$teeth_data=json_encode($teeth);
 				} 
+				/*------------ For teeth and Treatment category data -------- */ 
 
 				//-------------- For Multiple File Upload  ----------
 			    
@@ -150,16 +181,14 @@ class Rfp extends CI_Controller {
 			    }				    
 			    //-----------------------
 		
-				$rfp_data=array();
-				$rfp_data=$this->session->userdata('rfp_data');
-				$rfp_data['treatment_cat_id']=$treatment_cat_id;
-				$rfp_data['teeth']=$teeth;
-				$rfp_data['other_description']=$this->input->post('other_description');
-				$rfp_data['message']=$this->input->post('message');
-				$rfp_data['img_path']=$img_path;
-				$rfp_data['patient_id'] =$this->session->userdata['client']['id'];
-				$rfp_data['created_at'] = date("Y-m-d H:i:s a");
-				$res=$this->Rfp_model->insert_record('rfp',$rfp_data);
+				$rfp_step_2=array(
+					'teeth_data' => $teeth_data,
+					'other_description' => $this->input->post('other_description'),
+					'message' => $this->input->post('message'),
+					'img_path' => $img_path,
+					);
+				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
+				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_2);
 				
 				if($res){
 					$this->session->set_flashdata('success', 'RFP Created Successfully');
@@ -200,8 +229,31 @@ class Rfp extends CI_Controller {
 				   $data['subview']="front/rfp/patient/edit_rfp-1";
 				   $this->load->view('front/layouts/layout_main',$data);
 				}else{
-					$this->session->set_userdata('rfp_data',$_POST); // Store Page 1 Data into Session
-					redirect('rfp/edit/'.$id.'/1');
+
+					$rfp_step_1= array(
+						'fname' 			=> $this->input->post('fname'),
+						'lname' 			=> $this->input->post('lname'),
+						'birth_date'		=> $this->input->post('birth_date'),
+						'title' 			=> $this->input->post('title'),
+						'dentition_type' 	=> $this->input->post('dentition_type'),
+						'allergies' 		=> $this->input->post('allergies'),
+						'medication_list' 	=> $this->input->post('medication_list'),
+						'heart_problem' 	=> $this->input->post('heart_problem'),
+						'chemo_radiation' 	=> $this->input->post('chemo_radiation'),
+						'surgery' 			=> $this->input->post('surgery'),
+					);
+					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_step_1);
+
+					if($res){
+						$rfp_data=array(
+							'rfp_last_id' => decode($id),
+							'dentition_type' => $this->input->post('dentition_type'),
+							);
+						$this->session->set_userdata('rfp_data',$rfp_data); // Store Last Updated Id & Dentition Type into Session
+						redirect('rfp/edit/'.$id.'/1');
+					}else{
+						redirect('rfp/edit/'.$id);					
+					}
 				}
 			}
 			else{				
@@ -216,7 +268,6 @@ class Rfp extends CI_Controller {
 				else{
 					$this->form_validation->set_rules('other_description', 'Description', 'required');
 				}
-				$this->form_validation->set_rules('treatment_cat_id[]', 'Treatment Category', 'required');
 				$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
 				
 
@@ -228,14 +279,19 @@ class Rfp extends CI_Controller {
 					$this->load->view('front/layouts/layout_main',$data);
 				}else{
 					//pr($_FILES,1);
-					$treatment_cat_id='';
-					if($this->input->post('treatment_cat_id')){
-						$treatment_cat_id=implode(",",$this->input->post('treatment_cat_id')); // Convert Array into string
-					} 
-					$teeth='';
+					/*------------ For teeth and Treatment category data -------- */ 
+					$teeth=[];
+					$teeth_data='';
 					if($this->input->post('teeth')){
-						$teeth=implode(",",$this->input->post('teeth')); // Convert Array into string
-					}
+						foreach($this->input->post('teeth') as $key=>$val){
+							foreach($this->input->post('treatment_cat_id_'.$val) as $k=>$v){
+								$teeth[$val]['cat_id'][$k]=$v;
+							}
+							$teeth[$val]['cat_text']=$this->input->post('treat_cat_text_'.$val);	
+						}
+						$teeth_data=json_encode($teeth);
+					} 
+					/*------------ For teeth and Treatment category data -------- */ 
 
 					// ------------------------------------------------------------------------
 					$final_str = '';										
@@ -339,9 +395,7 @@ class Rfp extends CI_Controller {
 				    }				    
 				   
 				    //-----------------------
-				    $rfp_data=$this->session->userdata('rfp_data');
-
-					$rfp_data['img_path']=$img_path;
+				   $rfp_data['img_path']=$img_path;
 
 					// Check new file select if not then assign old value
 					if($rfp_data['img_path'] == '') {
@@ -364,9 +418,7 @@ class Rfp extends CI_Controller {
 
 						$rfp_data['img_path'] = $final_str;						 
 					}									
-
-					$rfp_data['treatment_cat_id']=$treatment_cat_id;
-					$rfp_data['teeth']=$teeth;
+					$rfp_data['teeth_data']=$teeth_data;
 					$rfp_data['other_description']=$this->input->post('other_description');
 					$rfp_data['message']=$this->input->post('message');
 
