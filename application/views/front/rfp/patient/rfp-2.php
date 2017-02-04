@@ -11,8 +11,11 @@
 		margin-bottom: 0px;
 		margin-top: 10px;
 	}
+	.check_label{
+		float: right;
+	}
 </style>
-  <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 
 <section class="page-header page-header-xs">
 	<div class="container">
@@ -79,7 +82,7 @@
 												<td></td>
 												<td></td>
 												<?php for($i=0,$k=65;$i<10;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k+$i);?>" name="teeth[]" <?php echo set_checkbox('teeth', chr($k+$i)); ?>><i></i><?=chr($k+$i);?></label> </td>
+												<td><label class="checkbox"><input class="toggle_cat" type="checkbox" value="<?=chr($k+$i);?>" name="teeth[]" <?php echo set_checkbox('teeth', chr($k+$i)); ?>><i></i><?=chr($k+$i);?></label> </td>
 												<?php endfor; ?>
 												<td></td>
 												<td></td>
@@ -90,7 +93,7 @@
 												<td></td>
 												<td></td>
 												<?php for($i=0,$k=84;$i<10;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=chr($k-$i);?>" name="teeth[]" <?php echo set_checkbox('teeth', chr($k-$i));?>><i></i><?=chr($k-$i);?></label> </td>
+												<td><label class="checkbox"><input class="toggle_cat" type="checkbox" value="<?=chr($k-$i);?>" name="teeth[]" <?php echo set_checkbox('teeth', chr($k-$i));?>><i></i><?=chr($k-$i);?></label> </td>
 												<?php endfor; ?>
 												<td></td>
 												<td></td>
@@ -124,12 +127,12 @@
 										<tbody>
 											<tr>
 												<?php for($i=1;$i<=16;$i++) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php echo set_checkbox('teeth',$i); ?>><i></i><?=$i?></label> </td>
+												<td><label class="checkbox"><input class="toggle_cat" type="checkbox" value="<?=$i?>" name="teeth[]" <?php echo set_checkbox('teeth',$i); ?>><i></i><?=$i?></label> </td>
 												<?php endfor;?>
 											</tr>
 											<tr>
 												<?php for($i=32;$i>16;$i--) : ?>
-												<td><label class="checkbox"><input type="checkbox" value="<?=$i?>" name="teeth[]" <?php echo set_checkbox('teeth',$i); ?>><i></i> <?=$i?></label> </td>
+												<td><label class="checkbox"><input class="toggle_cat" type="checkbox" value="<?=$i?>" name="teeth[]" <?php echo set_checkbox('teeth',$i); ?>><i></i> <?=$i?></label> </td>
 												<?php endfor;?>
 											</tr>
 										</tbody>	
@@ -143,21 +146,36 @@
 					<div class="list_treatment_category">
 					</div>	
 
+					<!-- ========== Use For Dynamic Select2 (Default Not Display)============ -->
 					<div class="treatment_category" style="display:none;">
-						<div class="row treatment_cat">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label>Treatment Category </label>
-									<select class="form-control select2 treatment_cat_id" name="treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
-										<?php foreach($treatment_category as $cat) :?>
-											<option value="<?=$cat['id']?>" <?=set_select('treatment_cat_id[]', $cat['id']);?>><?=$cat['title']." (".$cat['code'].")"?></option>
-										<?php endforeach;?>
-									</select>	
+						<div class="treatment_cat">	
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label><span class="cat_label"></span>
+										<span class="check_label">	
+										<input type="checkbox" class="toggle_text" name="chk_box_name" id="chk_box_id">	
+									Not finding your category? (Tick here and manually enter)</span></label>
+										<select id="treatment_id" class="form-control" name="treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
+											<?php foreach($treatment_category as $cat) :?>
+												<option value="<?=$cat['id']?>" <?=set_select('treatment_cat_id[]', $cat['id']);?>><?=$cat['title']." (".$cat['code'].")"?></option>
+											<?php endforeach;?>
+										</select>	
+									</div>
+									<?php echo form_error('treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 								</div>
-								<?php echo form_error('treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-							</div>
-						</div>	
+							</div>	
+							<div class="row treat_text_area">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
+										<input type="text" name="treat_cat_text" class="form-control">
+									</div>
+								</div>
+							</div>			
+						</div>
 					</div>	
+					<!-- ========== End For Dynamic Select2 ============ -->
 
 					<div class="row">	
 						<div class="col-md-12 col-sm-12" id="other">
@@ -222,9 +240,12 @@
 		</div>
 	</div>
 </section>
+
+
+
 <!-- / --> 
 <script type="text/javascript">
-
+	
 	var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
 
 	fetch_definition_data();
@@ -252,9 +273,6 @@
 			$("#permenant input[type='checkbox']").attr('checked', false);
 			$("#primary input[type='checkbox']").attr('checked', false);
 			$("input[name='other_description']").val('');
-			$("#primary").hide();
-			$("#permenant").hide();
-			$("#other").hide();
 		}
 	}
 	
@@ -304,13 +322,52 @@
 
 
 	//----------- For Display Treatment Category ----------
-	$("input[type=checkbox]").click(function(e){
+	$(".toggle_cat").click(function(e){
 		var teeth_val = $(this).val();
-		var str = $(".treatment_category").html();
-		treat_cat1 = str.replace("treatment_cat","treatment_cat_"+teeth_val);
-		treat_cat = str.replace("treatment_cat_id[]", "treatment_cat_id_"+teeth_val+"[]");
-		$(".list_treatment_category").append(treat_cat);
+		if($(this). prop("checked") == true) {
+			var str = $(".treatment_category").html();
+			str = str.replace('<span class="cat_label"></span>','<span class="cat_label"> Treatment Category For Teeth '+teeth_val+'</span>');
+			str = str.replace("treatment_cat","treatment_cat_"+teeth_val);
+			str = str.replace("treatment_id","treatment_id_"+teeth_val);
+			str = str.replace("treatment_cat_id[]", "treatment_cat_id_"+teeth_val+"[]");
+
+			//---------- For Text Box -------
+			str = str.replace("treat_text_area","treat_text_area_"+teeth_val);
+			str = str.replace("chk_box_id","chk_box_id_"+teeth_val);
+			str = str.replace("treat_cat_text","treat_cat_text_"+teeth_val);
+			//--------------
+			$(".list_treatment_category").append(str);
+			
+			//---------- Assign Value to Check Box & Hide Text Box -------
+			$("#chk_box_id_"+teeth_val).val(teeth_val);
+			$(".treat_text_area_"+teeth_val).hide();
+			//--------------
+
+			loadScript(plugin_path + 'select2/js/select2.full.min.js', function() {			
+				jQuery("#treatment_id_"+teeth_val).select2({ maximumSelectionLength: 5 });
+			});
+
+		}else{
+			$("#treatment_id_"+teeth_val).select2("val", "");
+			$(".treatment_cat_"+teeth_val).remove();
+		}
+		
 	});
+
+
+	//------ For Text Box Hide And Show -------
+		
+	$(".list_treatment_category").on('click', '.toggle_text', function() {
+	   	var cat_chk_val = $(this).val();
+		if($(this). prop("checked") == true) {
+			$(".treat_text_area_"+cat_chk_val).show();
+		}
+		else{
+			$(".treat_text_area_"+cat_chk_val).hide();
+			$("input[name=treat_cat_text_"+cat_chk_val+"]").val('');
+		}	
+	});	
+
 
 </script>
 

@@ -67,7 +67,7 @@ class Rfp_model extends CI_Model {
      */
     public function insert_record($table, $data_array) {
         if ($this->db->insert($table, $data_array)) {
-            return 1;
+            return $this->db->insert_id();
         } else {
             return 0;
         }
