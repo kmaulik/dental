@@ -35,7 +35,8 @@
                     <th>RFP ID.</th>
                     <th>RFP Title</th>
                     <th>Patient Name</th>
-                    <th>Dentition Type</th>                     
+                    <th>Dentition Type</th>
+                    <th>Status</th>                     
                     <th>Created Date</th>                        
                     <th width="100px">Action</th>
                 </tr>
@@ -77,6 +78,28 @@ $(function () {
             sortable: false,
             data: "dentition_type",
             visible: true
+        },
+        {
+            data: "is_blocked",
+            visible: true,
+            searchable: false,
+            sortable: false,
+            width: 200,
+            render: function (data, type, full, meta) {
+                var status = '';
+                if (full.status == 0) {
+                    status += '<span class="label label-default">Draft</span>';
+                   } else if (full.status == 1) {
+                    status += '<span class="label label-primary">Pending</span>';
+                   } else if (full.status == 2) {
+                    status += '<span class="label label-danger">Invalid</span>';
+                   } else if (full.status == 3) {
+                    status += '<span class="label label-info">Open</span>';
+                   } else if (full.status == 4) {
+                    status += '<span class="label label-success">Close</span>';
+                   }
+                return status;
+            }
         },
         {
             sortable: false,

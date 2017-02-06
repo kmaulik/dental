@@ -234,6 +234,68 @@ section.page-header .breadcrumb a:hover {
   top: -6px;
 }
 
+
+/**************** RFP View Style ****************/
+.view-rfp .rfp-main-title{
+  text-align: center;
+}
+.view-rfp .rfp-title{
+  border-bottom: 2px solid gray;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+.view-rfp .teeth th{
+  text-align: center;
+  color: #000;
+  font-size: 15px;
+}
+.view-rfp .teeth td{
+  padding: 10px !important;
+}
+.view-rfp .table .checkbox {
+    margin-right: 0px;
+}
+.view-rfp h4.rfp-title {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+.view-rfp .rfp-basic,.view-rfp .rfp-history,.view-rfp .rfp-treatment,.view-rfp .rfp-additional {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.view-rfp .rfp-history .col-sm-12, .view-rfp .rfp-additional .col-sm-12 {
+    margin-bottom: 20px;
+    line-height: 16px;
+}
+.view-rfp label, .view-rfp .title {
+    font-size: 15px;
+    font-weight: 600;
+}
+.view-rfp .rfp-additional a img {
+    border: 2px solid #ccc;
+    padding: 2px;
+}
+.view-rfp .rfp-additional a {
+    margin-right: 10px;
+}
+.view-rfp .col_custom label {
+    display: block;
+    margin-bottom: 10px;
+}
+.view-rfp .owl-wrapper .owl-item .item-box .img-responsive {
+    width: 100%;
+    height: 250px;
+}
+.view-rfp .manual_category{
+  padding-left: 40px;
+}
+/**************** End RFP View Style ****************/
+
+
+
+
 /*************** media start here 	*************/
 @media (min-width:481px) and (max-width:767px){
 #header #topNav a.logo {

@@ -14,7 +14,7 @@ class Rfp_model extends CI_Model {
      */
     public function get_all_rfp() {        
         
-        $this->db->select('id,title,CONCAT(fname," ",lname) as patient_name,dentition_type,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
+        $this->db->select('id,title,CONCAT(fname," ",lname) as patient_name,dentition_type,status,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
         $this->db->where('is_deleted !=', 1);
         
         $keyword = $this->input->get('search');
@@ -136,6 +136,7 @@ class Rfp_model extends CI_Model {
             $this->db->where('rfp.created_at >=', $date[0]);
             $this->db->where('rfp.created_at <=', $date[2]);
         }
+        $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
         $res_data = $this->db->get()->num_rows();
@@ -154,7 +155,7 @@ class Rfp_model extends CI_Model {
             $this->db->where('rfp.created_at >=', $date[0]);
             $this->db->where('rfp.created_at <=', $date[2]);
         }
-        $this->db->where('rfp.status','3');
+        $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
         $this->db->order_by('rfp.id',$sort_data);

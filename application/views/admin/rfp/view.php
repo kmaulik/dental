@@ -48,6 +48,9 @@ label {
     float: left;
     margin-right: 10px;
 }
+.manual_category{
+	padding-left: 40px;
+}
 </style>
 
 <div class="page-header page-header-default">
@@ -90,6 +93,20 @@ label {
 						<div class="col-sm-6">
 							<label>Dentition Type : </label> <?=$record['dentition_type']?>
 						</div>
+						<div class="col-sm-6">
+							<label>RFP Status : </label> 
+							<?php if($record['status'] == 0) :?>
+								<span class="label label-default">Draft</span>
+							<?php elseif($record['status'] == 1) : ?>
+								<span class="label label-primary">Pending</span>
+							<?php elseif($record['status'] == 2) : ?>
+								<span class="label label-danger">Invalid</span>
+							<?php elseif($record['status'] == 3) : ?>
+								<span class="label label-info">Open</span>
+							<?php elseif($record['status'] == 4) : ?>
+								<span class="label label-success">Close</span>			
+							<?php endif; ?>
+						</div>
 					</div>	
 					<!--  /Basic Details  -->
 
@@ -117,18 +134,9 @@ label {
 					<!--  Treatment Plan  -->
 					<div class="rfp-treatment">
 						<h4 class="rfp-title">Treatment Plan</h4>
-						<div class="col-sm-12">
-							<label>Treatment Category : </label> 
-							<ul>
-								<?php $treat_cat=explode(",",$record['treatment_cat_id']);
-								foreach($treat_cat as $category) :?>
-									<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?></li>
-								<?php endforeach; ?>
-							</ul>
-						</div>
-
+						
 						<?php 
-						$teeth_arr=explode(",",$record['teeth']);
+						if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); }
 						if($record['dentition_type'] == 'primary') :?>
 							<div class="col-sm-12">
 								<div class="table-responsive">	
@@ -157,7 +165,7 @@ label {
 													<td>
 														<div class="checkbox">
 															<label>
-																<input type="checkbox" disabled value="<?=chr($k+$i);?>" name="teeth[]" class="styled" <?php if(in_array(chr($k+$i),$teeth_arr)) { echo "checked"; }?>><?=chr($k+$i);?>
+																<input type="checkbox" disabled value="<?=chr($k+$i);?>" name="teeth[]" class="styled" <?php if(in_array(chr($k+$i),$teeth_arr1)) { echo "checked"; }?>><?=chr($k+$i);?>
 															</label>
 														</div>
 													</td>	
@@ -174,7 +182,7 @@ label {
 													<td>
 														<div class="checkbox">
 															<label>
-																<input type="checkbox" disabled value="<?=chr($k-$i);?>" name="teeth[]" class="styled" <?php if(in_array(chr($k-$i),$teeth_arr)) { echo "checked"; }?>><?=chr($k-$i);?>
+																<input type="checkbox" disabled value="<?=chr($k-$i);?>" name="teeth[]" class="styled" <?php if(in_array(chr($k-$i),$teeth_arr1)) { echo "checked"; }?>><?=chr($k-$i);?>
 															</label>
 														</div>
 													</td>
@@ -212,7 +220,7 @@ label {
 													<td>
 														<div class="checkbox">
 															<label>
-																<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="styled" <?php if(in_array($i,$teeth_arr)) { echo "checked"; }?>><?=$i?>
+																<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="styled" <?php if(in_array($i,$teeth_arr1)) { echo "checked"; }?>><?=$i?>
 															</label>
 														</div>
 													</td>
@@ -223,7 +231,7 @@ label {
 													<td>
 														<div class="checkbox">
 															<label>
-																<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="styled" <?php if(in_array($i,$teeth_arr)) { echo "checked"; }?>><?=$i?>
+																<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="styled" <?php if(in_array($i,$teeth_arr1)) { echo "checked"; }?>><?=$i?>
 															</label>
 														</div>
 													</td>
@@ -238,6 +246,34 @@ label {
 								<label>Other Description : </label> <?=$record['other_description'] ?> 	
 							</div>
 						<?php endif;?>
+
+						<?php if(!empty($teeth_arr)) : ?>
+							<?php foreach($teeth_arr as $key=>$val) :?>
+								<!-- ===== For Tratment Category === -->
+								<div class="col-sm-12">
+									<label>Treatment Category For Teeth : <?=$key?></label> 
+									<ul>
+										<?php if(isset($val->cat_id)) :?>
+											<?php foreach($val->cat_id as $category) :?>
+												<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?></li>
+											<?php endforeach; ?>
+										<?php else : ?>
+											<li> N/A</li>	
+										<?php endif; ?>	
+									</ul>
+								</div>
+								<!-- ===== End Tratment Category === -->
+								<!-- ===== For Check Manual Category Exist or not === -->
+								<?php if($val->cat_text != '') :?>
+								<div class="col-sm-12 manual_category">
+									<label>Manual Category For Teeth : <?=$key?></label> 
+										<?= $val->cat_text;?>
+								</div>	
+								<?php endif; ?>
+								<!-- ===== End Check Manual Category Exist or not === -->
+							<?php endforeach; ?>
+						<?php endif; ?>
+
 					</div>	
 					<!--  /Treatment Plan  -->
 
@@ -288,7 +324,33 @@ label {
 							<a href="" class="btn btn-danger"> Dis-Approve</a>
 						</div>
 					</div>	
+<<<<<<< HEAD
 					<!-- /Additional Section  -->					
+=======
+					<!-- /Additional Section  -->	
+
+					<!--  Financial Information  -->
+					<div class="rfp-history">
+						<h4 class="rfp-title">Financial Information</h4>
+						<div class="col-sm-12">
+							<label>Insurance Provider : </label> 
+							<?php if($record['insurance_provider'] != '') 
+							{	echo $record['insurance_provider'];	} 
+							else
+							{	echo "N/A";	}	
+							?>
+						</div>
+						<div class="col-sm-12">
+							<label>Treatment Plan Total : <?php if($record['treatment_plan_total'] != '') 
+							{	echo "$ ".$record['treatment_plan_total'];	} 
+							else
+							{	echo "N/A";	}	
+							?></label> 
+						</div>
+					</div>	
+					<!--  /Financial Information  -->
+					
+>>>>>>> db146b2c4389cd9b5a79f4c7c9748888b6cc0d31
 				</div>
 			</div>
 		</div>
