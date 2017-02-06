@@ -8,9 +8,12 @@ class Notification_model extends CI_Model {
 		$rfp_id = $data['rfp_id'];
 		$from_id = $data['from_id'];
 		$to_id = $data['to_id'];
+		$noti_type = $data['noti_type'];
 
-		$noti_data = $this->db->get_where('notifications',['rfp_id'=>$rfp_id,'from_id'=>$from_id,'to_id'=>$to_id])->row_array();
+		$noti_data = $this->db->get_where('notifications',['rfp_id'=>$rfp_id,'from_id'=>$from_id,'to_id'=>$to_id,'noti_type'=>$noti_type])
+							  ->row_array();
 		if(!empty($noti_data)){			
+			$last_id = $noti_data['id'];
 			if($noti_data['is_read'] == 1){
 				$this->db->update('notifications',['is_read'=>'0'],['id'=>$noti_data['id']]);
 			}
@@ -18,10 +21,8 @@ class Notification_model extends CI_Model {
 			$this->db->insert('notifications',$data);
 			$last_id = $this->db->insert_id();
 		}
-
 		return $last_id;
 	}
-	
 
 }
 

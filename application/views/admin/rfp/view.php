@@ -1,5 +1,4 @@
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/media/fancybox.min.js"></script>
-
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>pages/gallery.js"></script>
 
 <style>
@@ -278,10 +277,18 @@ label {
 								N/A	
 							<?php endif;?>
 						</div>
-
 					</div>	
-					<!-- /Additional Section  -->	
-					
+					<!-- /Additional Section  -->
+
+					<!--  Additional Section -->
+					<div class="rfp-additional">
+						<h4 class="rfp-title">Your Action</h4>
+						<div class="col-sm-12">
+							<a href="" class="btn btn-success"> Approve</a>
+							<a href="" class="btn btn-danger"> Dis-Approve</a>
+						</div>
+					</div>	
+					<!-- /Additional Section  -->					
 				</div>
 			</div>
 		</div>

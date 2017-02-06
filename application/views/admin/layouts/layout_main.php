@@ -1,6 +1,7 @@
-<?php   
+<?php
+    $role_id = $this->session->userdata['admin']['role_id'];
     if($this->session->userdata['admin']['avatar'] != ''){
-        $image = base_url('uploads/avatars/'.$this->session->userdata['admin']['avatar']);  
+        $image = (string)base_url('uploads/avatars/'.$this->session->userdata['admin']['avatar']);  
     } else{
         $image = DEFAULT_IMAGE_PATH . "user/user-img.jpg";  
     }      
@@ -66,98 +67,126 @@
                                         </a>
                                     </li>
 
-                                    <li class="<?php echo (in_array($controller,['doctor','patient','users'])) ? 'active' : ''; ?>">
-                                        <a href="#" class="has-ul"><i class="icon-users4"></i> <span>Users</span></a>
-                                        <ul style="">
-                                            <li class="<?php echo (in_array($controller,['patient'])) ? 'active' : ''; ?>">
-                                                <a href="<?php echo base_url().'admin/patient'; ?>">
-                                                    <i class="icon-arrow-right32"></i>
-                                                    Patients
-                                                </a>
-                                            </li>
-                                            <li class="<?php echo (in_array($controller,['doctor'])) ? 'active' : ''; ?>">
-                                                <a href="<?php echo base_url().'admin/doctor'; ?>">
-                                                    <i class="icon-arrow-right32"></i>
-                                                    Doctors
-                                                </a>
-                                            </li>
-                                            <li class="<?php echo (in_array($controller,['users'])) ? 'active' : ''; ?>">
-                                                <a href="<?php echo base_url().'admin/users'; ?>">
-                                                    <i class="icon-arrow-right32"></i>
-                                                    Users
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    <!-- USERS Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo (in_array($controller,['doctor','patient','users'])) ? 'active' : ''; ?>">
+                                            <a href="#" class="has-ul"><i class="icon-users4"></i> <span>Users</span></a>
+                                            <ul style="">
+                                                <li class="<?php echo (in_array($controller,['patient'])) ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url().'admin/patient'; ?>">
+                                                        <i class="icon-arrow-right32"></i>
+                                                        Patients
+                                                    </a>
+                                                </li>
+                                                <li class="<?php echo (in_array($controller,['doctor'])) ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url().'admin/doctor'; ?>">
+                                                        <i class="icon-arrow-right32"></i>
+                                                        Doctors
+                                                    </a>
+                                                </li>
+                                                <li class="<?php echo (in_array($controller,['users'])) ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url().'admin/users'; ?>">
+                                                        <i class="icon-arrow-right32"></i>
+                                                        Users
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
                                     
-                                    <li class="<?php echo ($controller == 'survey') ? 'active' : ''; ?>">
-                                        <a href="<?php echo base_url() . 'admin/survey'; ?>">
-                                            <i class="icon-stats-growth"></i>
-                                            <span> Website Survey </span>
-                                        </a>
-                                    </li>
+                                    <!-- Website Survey Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'survey') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/survey'; ?>">
+                                                <i class="icon-stats-growth"></i>
+                                                <span> Website Survey </span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                    
+
                                     <li class="<?php echo ($controller == 'rfp') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/rfp'; ?>">
                                             <i class="icon-clipboard3"></i>
                                             <span>RFP</span>
                                         </a>
                                     </li>
-                                    <li class="<?php echo ($controller == 'promotional_code') ? 'active' : ''; ?>">
-                                        <a href="<?php echo base_url() . 'admin/promotional_code'; ?>">
-                                            <i class="icon-price-tag"></i>
-                                            <span>Promotional Code</span>
-                                        </a>
-                                    </li>
-                                    <li class="<?php echo ($controller == 'treatment_category') ? 'active' : ''; ?>">
-                                        <a href="<?php echo base_url() . 'admin/treatment_category'; ?>">
-                                            <i class="icon-aid-kit"></i>
-                                            <span>Treatment Category</span>
-                                        </a>
-                                    </li>   
                                     
-                                    <li class="<?php echo ($controller == 'email_template') ? 'active' : ''; ?>">
-                                        <a href="<?php echo base_url() . 'admin/email_template'; ?>">
-                                            <i class="icon-envelop"></i>
-                                            <span>Email Template</span>
-                                        </a>
-                                    </li>
+                                    <!-- Promotional Module -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'promotional_code') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/promotional_code'; ?>">
+                                                <i class="icon-price-tag"></i>
+                                                <span>Promotional Code</span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
                                     
-                                    <li class="<?php echo ($controller == 'contact_inquiry') ? 'active' : ''; ?>">
-                                        <a href="<?php echo base_url() . 'admin/contact_inquiry'; ?>">
-                                            <i class="icon-phone-plus2"></i>
-                                            <span>Contact Inquiry</span>
-                                        </a>
-                                    </li>                         
-            
-                                    <li class="<?php echo (in_array($controller,['testimonial','blogs','cms'])) ? 'active' : ''; ?>">
-                                        <a href="#" class="has-ul"><i class="icon-command"></i> <span>Front Side Setting</span></a>
-                                        <ul>
-                                            <li class="<?php echo ($controller == 'testimonial') ? 'active' : ''; ?>">
-                                                <a href="<?php echo base_url() . 'admin/testimonial'; ?>">
-                                                    <i class="icon-vcard"></i>
-                                                    <span>Testimonial</span>
-                                                </a>
-                                            </li>                                            
-                                            <li class="<?php echo ($controller == 'blogs') ? 'active' : ''; ?>">
-                                                <a href="<?php echo base_url() . 'admin/blogs'; ?>">
-                                                    <i class="icon-blogger"></i>
-                                                    <span>Blogs</span>
-                                                </a>
-                                            </li>  
-                                            <li class="<?php echo ($controller == 'cms') ? 'active' : ''; ?>">
-                                                <a href="<?php echo base_url() . 'admin/cms'; ?>">
-                                                    <i class="icon-stack3"></i>
-                                                    <span>Cms Page</span>
-                                                </a>
-                                            </li>                                              
-                                        </ul>
-                                    </li>
-
-                                    <li class="<?php echo ($controller == 'settings') ? 'active' : ''; ?>">
-                                        <a href="<?php echo base_url() . 'admin/settings'; ?>">
-                                            <i class="icon-gear"></i>
-                                            <span>Site Settings</span></a>
-                                    </li>
+                                    <!-- Treatment Category Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'treatment_category') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/treatment_category'; ?>">
+                                                <i class="icon-aid-kit"></i>
+                                                <span>Treatment Category</span>
+                                            </a>
+                                        </li> 
+                                    <?php } ?>  
+                                    
+                                    <!-- Email Template Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'email_template') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/email_template'; ?>">
+                                                <i class="icon-envelop"></i>
+                                                <span>Email Template</span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                    
+                                    <!-- Contact Inquiry Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'contact_inquiry') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/contact_inquiry'; ?>">
+                                                <i class="icon-phone-plus2"></i>
+                                                <span>Contact Inquiry</span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                    
+                                    <!-- Front Side Setting Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo (in_array($controller,['testimonial','blogs','cms'])) ? 'active' : ''; ?>">
+                                            <a href="#" class="has-ul"><i class="icon-command"></i> <span>Front Side Setting</span></a>
+                                            <ul>
+                                                <li class="<?php echo ($controller == 'testimonial') ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url() . 'admin/testimonial'; ?>">
+                                                        <i class="icon-vcard"></i>
+                                                        <span>Testimonial</span>
+                                                    </a>
+                                                </li>                                            
+                                                <li class="<?php echo ($controller == 'blogs') ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url() . 'admin/blogs'; ?>">
+                                                        <i class="icon-blogger"></i>
+                                                        <span>Blogs</span>
+                                                    </a>
+                                                </li>  
+                                                <li class="<?php echo ($controller == 'cms') ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url() . 'admin/cms'; ?>">
+                                                        <i class="icon-stack3"></i>
+                                                        <span>Cms Page</span>
+                                                    </a>
+                                                </li>                                              
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    
+                                    <!-- Site Setting Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'settings') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/settings'; ?>">
+                                                <i class="icon-gear"></i>
+                                                <span>Site Settings</span></a>
+                                        </li>
+                                    <?php } ?>
 
                                     <li class="">
                                         <a href="<?php echo base_url() . "admin/logout"; ?>">

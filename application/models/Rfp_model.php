@@ -154,6 +154,7 @@ class Rfp_model extends CI_Model {
             $this->db->where('rfp.created_at >=', $date[0]);
             $this->db->where('rfp.created_at <=', $date[2]);
         }
+        $this->db->where('rfp.status','3');
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
         $this->db->order_by('rfp.id',$sort_data);

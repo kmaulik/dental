@@ -6,6 +6,7 @@ class Rfp extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        error_reporting(0);
         $this->load->model(['Rfp_model']);
     }
 
@@ -71,6 +72,10 @@ class Rfp extends CI_Controller {
             $this->session->set_flashdata('message', ['message'=>'Invalid request. Please try again!','class'=>'danger']);
         }
         redirect(site_url('admin/rfp'));
+    }
+
+    public function admin_action_rfp(){
+
     }
 
 }

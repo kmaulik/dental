@@ -100,8 +100,8 @@ section.page-header .breadcrumb a:hover {
     height: auto;
 }
 #header.fixed #topNav a.logo > img {
-    height: auto;
-    margin-top: 9px;
+  height: 30px;
+  margin-top: 9px;
 }
 .validation-error-label{
     color: red;
@@ -114,6 +114,7 @@ section.page-header .breadcrumb a:hover {
   color: rgb(255, 255, 255);
   height: auto;
   line-height: normal;  
+  margin-left: 12px;
 }
 #topMain.nav-pills > li.notification_side > a span {
   font-family: Open Sans;
@@ -207,6 +208,30 @@ section.page-header .breadcrumb a:hover {
   color: #ffffff !important;
   position: absolute;
   z-index: 999;
+}
+.post_number::after {
+  border-right: 6px solid rgba(0, 0, 0, 0);
+  border-top: 6px solid #ff7a76;
+  bottom: -5px;
+  content: " ";
+  height: 0;
+  left: 50%;
+  margin-left: -4px;
+  position: absolute;
+  width: 0;
+}
+.post_number {
+  background: #ff7a76 none repeat scroll 0 0;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 2px 7px;
+  position: absolute;
+  right: -30px;
+  text-align: center;
+  top: -18px;
+}
+.fixed .post_number {
+  top: -6px;
 }
 
 /*************** media start here 	*************/

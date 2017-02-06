@@ -177,6 +177,7 @@
                             <li class="notification_side">
                                 <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
                                     <span>NOTIFICATION</span>
+                                    <span class="post_number">31</span>
                                 </a>
                             </li>
 
@@ -229,8 +230,8 @@
         <div class="sidepanel-content custom_notification_data">
             <h2 class="sidepanel-title">Notification</h2>
 
-            <div class="custom_notification">
-                <ul class="scrollbar-inner" style="height: 500px;">
+            <div class="custom_notification" id="for_window_size">
+                <ul class="scrollbar-inner" >
                    
                     <li>
                         <a href="">
@@ -389,15 +390,24 @@
     </div>
     <!-- /SIDE PANEL -->
 
-<!-- JAVASCRIPT FILES -->
+
+<link href="<?= DEFAULT_CSS_PATH ?>custom_scrollbar.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo base_url().'public/front/js/scrollbar.min.js'; ?>"></script>
+
 <script type="text/javascript">var plugin_path = '<?= DEFAULT_PLUGINS_PATH ?>';</script> 
-
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>scripts.js"></script>
-
 <!-- REVOLUTION SLIDER -->
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.tools.min.js"></script>
 <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/js/jquery.themepunch.revolution.min.js"></script>
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>view/demo.revolution_slider.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        var window_height = $( window ).height();
+        $('#for_window_size').css({'height':window_height});
+        jQuery('.scrollbar-inner').scrollbar();
+    });    
+</script>
 
 </body>
 </html>
