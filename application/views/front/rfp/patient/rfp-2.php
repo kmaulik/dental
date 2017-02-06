@@ -172,7 +172,8 @@
 										<input type="text" name="treat_cat_text" class="form-control">
 									</div>
 								</div>
-							</div>			
+							</div>	
+							<hr/>			
 						</div>
 					</div>	
 					<!-- ========== End For Dynamic Select2 ============ -->
