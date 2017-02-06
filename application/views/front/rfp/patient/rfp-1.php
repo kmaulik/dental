@@ -150,7 +150,7 @@
 
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
-					<button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Next</button>
+					<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
 				</div>
 			</div>
 		</form>

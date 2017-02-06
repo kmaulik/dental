@@ -31,7 +31,14 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="pull-right">
+					<!-- Check For Submit RFP Or Not -->
+					<?php if(isset($confirm_rfp) && $confirm_rfp == '1') : ?>
+					<form action="" method="POST">
+						<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-check"></i> Submit</button>
+					</form>	
+					<?php else : ?>
 					<a href="<?=base_url('rfp/view_rfp_bid/'.encode($record['id']))?>" class="btn btn-info"><i class="fa fa-eye"></i> View Proposal</a>
+					<?php endif; ?>
 				</div>
 			</div>	
 			<div class="col-md-12">
