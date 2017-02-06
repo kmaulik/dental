@@ -35,16 +35,18 @@
 		<div class="row">
 			<!-- ALERT -->
 			<?php if($this->session->flashdata('success')) : ?>
-			<div class="alert alert-mini alert-success margin-bottom-30">
-				<?=$this->session->flashdata('success');?>
-			</div>
+				<div class="alert alert-success margin-bottom-30">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?=$this->session->flashdata('success');?>
+				</div>
 			<?php endif; ?>
 			<?php if($this->session->flashdata('error')) : ?>
-			<div class="alert alert-mini alert-danger margin-bottom-30">
-				<?=$this->session->flashdata('error');?>
-			</div>
+				<div class="alert alert-danger margin-bottom-30">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?=$this->session->flashdata('error');?>
+				</div>
 			<?php endif; ?>
-			<!-- /ALERT -->			
+			<!-- /ALERT -->				
 	
 			<div class="col-md-12">
 				<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
@@ -233,6 +235,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
 							<input type="hidden" id="total_img" value="1">
+							<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 							<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
 						</div>
 					</div>

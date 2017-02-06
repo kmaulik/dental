@@ -17,18 +17,18 @@
 		<div class="row">
 			<!-- ALERT -->
 			<?php if($this->session->flashdata('success')) : ?>
-			<div class="alert alert-success margin-bottom-30">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-				<?=$this->session->flashdata('success');?>
-			</div>
-		<?php endif; ?>
-		<?php if($this->session->flashdata('error')) : ?>
-		<div class="alert alert-danger margin-bottom-30">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			<?=$this->session->flashdata('error');?>
-		</div>
-	<?php endif; ?>
-	<!-- /ALERT -->				
+				<div class="alert alert-success margin-bottom-30">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?=$this->session->flashdata('success');?>
+				</div>
+			<?php endif; ?>
+			<?php if($this->session->flashdata('error')) : ?>
+				<div class="alert alert-danger margin-bottom-30">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<?=$this->session->flashdata('error');?>
+				</div>
+			<?php endif; ?>
+			<!-- /ALERT -->				
 	<div class="col-sm-12">
 		<a href="<?=base_url('rfp/add');?>" class="btn btn-3d btn-sm btn-reveal btn-info pull-right">
 			<i class="fa fa-plus"></i><span>Create RFP</span>

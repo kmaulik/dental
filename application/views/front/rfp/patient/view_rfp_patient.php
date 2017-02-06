@@ -27,13 +27,14 @@
 				<?=$this->session->flashdata('error');?>
 			</div>
 		<?php endif; ?>
-		<!-- /ALERT -->				
+		<!-- /ALERT -->					
 		<div class="row">
 			<div class="col-md-12">
 				<div class="pull-right">
 					<!-- Check For Submit RFP Or Not -->
 					<?php if(isset($confirm_rfp) && $confirm_rfp == '1') : ?>
 					<form action="" method="POST">
+						<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 						<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-check"></i> Submit</button>
 					</form>	
 					<?php else : ?>

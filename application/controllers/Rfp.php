@@ -30,7 +30,7 @@ class Rfp extends CI_Controller {
 
 		if($step == 0) // For First Page Of RFP
 		{
-			$this->session->unset_userdata('rfp_data');
+			//$this->session->unset_userdata('rfp_data');
 			$this->form_validation->set_rules('fname', 'first name', 'required');  
 			$this->form_validation->set_rules('lname', 'last name', 'required'); 
 			$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
@@ -69,8 +69,10 @@ class Rfp extends CI_Controller {
 							'dentition_type' => $this->input->post('dentition_type'),
 							);
 						$this->session->set_userdata('rfp_data',$rfp_data); // Store Last Insert Id & Dentition Type into Session
+						$this->session->set_flashdata('success', 'Basic Detail & Medical History Created Successfully');
 						redirect('rfp/add/1');
 					}else{
+						$this->session->set_flashdata('error', 'Error Into Create Basic Detail & Medical History');
 						redirect('rfp/add');
 					}
 					
@@ -196,11 +198,11 @@ class Rfp extends CI_Controller {
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_2);
 				
 				if($res){
+					$this->session->set_flashdata('success', 'Treatment Plan Created Successfully');
 					redirect('rfp/add/2');
-					//$this->session->set_flashdata('success', 'RFP Created Successfully');
 				} else {
+					$this->session->set_flashdata('error', 'Error Into Create Treatment Plan');
 					redirect('rfp/add/1');
-					//$this->session->set_flashdata('error', 'Error Into Create RFP In Step 2');
 				}	
 			}
 		}  
@@ -218,13 +220,13 @@ class Rfp extends CI_Controller {
 				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 				if($res){
-					//$this->session->set_flashdata('success', 'RFP Created Successfully');
+					$this->session->set_flashdata('success', 'Financial Information Created Successfully');
 					//$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
 					//$this->session->unset_userdata('rfp_data');
 					redirect('rfp/add/3');
 				} else {
 					redirect('rfp/add/2');
-					$this->session->set_flashdata('error', 'Error Into Create RFP In Step 3');
+					$this->session->set_flashdata('error', 'Error Into Create Financial Information');
 				}	
 
 			}
@@ -244,8 +246,8 @@ class Rfp extends CI_Controller {
 					$this->session->unset_userdata('rfp_data');
 					redirect('rfp');
 				} else {
-					redirect('rfp/add/3');
 					$this->session->set_flashdata('error', 'Error Into Confirm RFP');
+					redirect('rfp/add/3');
 				}	
 			}
 			else{
@@ -267,7 +269,7 @@ class Rfp extends CI_Controller {
 		{
 			if($step == 0) // For First Page Of RFP
 			{
-				$this->session->unset_userdata('rfp_data');
+				//$this->session->unset_userdata('rfp_data');
 				$this->form_validation->set_rules('fname', 'first name', 'required');  
 				$this->form_validation->set_rules('lname', 'last name', 'required'); 
 				$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
@@ -307,8 +309,10 @@ class Rfp extends CI_Controller {
 							'dentition_type' => $this->input->post('dentition_type'),
 							);
 						$this->session->set_userdata('rfp_data',$rfp_data); // Store Last Updated Id & Dentition Type into Session
+						$this->session->set_flashdata('success', 'Basic Detail & Medical History Updated Successfully');
 						redirect('rfp/edit/'.$id.'/1');
 					}else{
+						$this->session->set_flashdata('error', 'Error Into Update Basic Detail & Medical History');
 						redirect('rfp/edit/'.$id);					
 					}
 				}
@@ -484,10 +488,12 @@ class Rfp extends CI_Controller {
 
 					if($res){
 						// IF Success
+						$this->session->set_flashdata('success', 'Treatment Plan Updated Successfully');
 						redirect('rfp/edit/'.$id.'/2');
 					}
 					else{
 						// If Error
+						$this->session->set_flashdata('error', 'Error Into Update Treatment Plan');
 						redirect('rfp/edit/'.$id.'/1');
 					}
 				}
@@ -506,13 +512,13 @@ class Rfp extends CI_Controller {
 					$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 					if($res){
-						//$this->session->set_flashdata('success', 'RFP Updated Successfully');
+						$this->session->set_flashdata('success', 'Financial Information Updated Successfully');
 						//$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
 						//$this->session->unset_userdata('rfp_data');
 						redirect('rfp/edit/'.$id.'/3');
 					} else {
+						$this->session->set_flashdata('error', 'Error Into Update Financial Information');
 						redirect('rfp/edit/'.$id.'/2');
-						$this->session->set_flashdata('error', 'Error Into Update RFP');
 					}	
 
 				}

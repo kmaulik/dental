@@ -23,7 +23,20 @@
 	<div class="container">
 		<div class="row">
 			
-	
+		<!-- ALERT -->
+		<?php if($this->session->flashdata('success')) : ?>
+			<div class="alert alert-success margin-bottom-30">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<?=$this->session->flashdata('success');?>
+			</div>
+		<?php endif; ?>
+		<?php if($this->session->flashdata('error')) : ?>
+			<div class="alert alert-danger margin-bottom-30">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<?=$this->session->flashdata('error');?>
+			</div>
+		<?php endif; ?>
+		<!-- /ALERT -->				
 	<div class="col-md-12">
 		<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
 			
@@ -53,6 +66,7 @@
 			
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
+					<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 					<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-arrow-right"></i> Next</button>
 				</div>
 			</div>

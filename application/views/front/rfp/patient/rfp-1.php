@@ -22,7 +22,21 @@
 <section>
 	<div class="container">
 		<div class="row">
-			
+		
+		<!-- ALERT -->
+		<?php if($this->session->flashdata('success')) : ?>
+			<div class="alert alert-success margin-bottom-30">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<?=$this->session->flashdata('success');?>
+			</div>
+		<?php endif; ?>
+		<?php if($this->session->flashdata('error')) : ?>
+			<div class="alert alert-danger margin-bottom-30">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<?=$this->session->flashdata('error');?>
+			</div>
+		<?php endif; ?>
+		<!-- /ALERT -->					
 	
 	<div class="col-md-12">
 		<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
