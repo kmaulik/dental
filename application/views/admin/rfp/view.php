@@ -324,9 +324,6 @@ label {
 							<a href="" class="btn btn-danger"> Dis-Approve</a>
 						</div>
 					</div>	
-<<<<<<< HEAD
-					<!-- /Additional Section  -->					
-=======
 					<!-- /Additional Section  -->	
 
 					<!--  Financial Information  -->
@@ -349,8 +346,6 @@ label {
 						</div>
 					</div>	
 					<!--  /Financial Information  -->
-					
->>>>>>> db146b2c4389cd9b5a79f4c7c9748888b6cc0d31
 				</div>
 			</div>
 		</div>
