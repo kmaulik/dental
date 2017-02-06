@@ -75,7 +75,9 @@ class Rfp extends CI_Controller {
 					}
 					
 			}
-		} else {
+		} 
+		elseif($step == 1) 
+		{
 			//--------- For Check Step 1 is Success or not  ---------
 			if(!isset($this->session->userdata['rfp_data'])){
 				redirect('rfp/add');
@@ -86,16 +88,18 @@ class Rfp extends CI_Controller {
 			} else {
 				$this->form_validation->set_rules('other_description', 'Description', 'required');
 			}
-				
-			
+	
 			$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
 
-			if($this->form_validation->run() == FALSE){  
+			if($this->form_validation->run() == FALSE)
+			{  
 				$where = 'is_deleted !=  1 and is_blocked != 1';
 				$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
 				$data['subview']="front/rfp/patient/rfp-2";
 				$this->load->view('front/layouts/layout_main',$data);
-			} else {
+			} 
+			else 
+			{
 				
 				/*------------ For teeth and Treatment category data -------- */
 				
@@ -121,7 +125,8 @@ class Rfp extends CI_Controller {
 
 			    $error_cnt = 0;
 			    $img_path='';
-			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
+			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
+			    {
 					$location='uploads/rfp/';					
 					foreach($_FILES['img_path']['name'] as $key=>$data){
 
@@ -191,14 +196,44 @@ class Rfp extends CI_Controller {
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_2);
 				
 				if($res){
-					$this->session->set_flashdata('success', 'RFP Created Successfully');
+					redirect('rfp/add/2');
+					//$this->session->set_flashdata('success', 'RFP Created Successfully');
 				} else {
-					$this->session->set_flashdata('error', 'Error Into Create RFP');
-				}				
-				$this->session->unset_userdata('rfp_data');
-				redirect('rfp');
+					redirect('rfp/add/1');
+					//$this->session->set_flashdata('error', 'Error Into Create RFP In Step 2');
+				}	
 			}
-		}    	 
+		}  
+		elseif($step == 2) {
+			//--------- For Check Step 1 is Success or not  ---------
+			if(!isset($this->session->userdata['rfp_data'])){
+				redirect('rfp/add');
+			}	
+
+			if($this->input->post('submit')){
+				$rfp_step_3=array(
+					'insurance_provider' => $this->input->post('insurance_provider'),
+					'treatment_plan_total' => $this->input->post('treatment_plan_total'),
+					'status'	=> 1,
+					);
+				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
+				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
+				if($res){
+					$this->session->set_flashdata('success', 'RFP Created Successfully');
+					$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
+					$this->session->unset_userdata('rfp_data');
+					redirect('rfp/view_rfp/'.encode($rfp_id));
+				} else {
+					redirect('rfp/add/2');
+					$this->session->set_flashdata('error', 'Error Into Create RFP In Step 3');
+				}	
+
+			}
+			else{
+				$data['subview']="front/rfp/patient/rfp-3";
+				$this->load->view('front/layouts/layout_main',$data);
+			}
+		}  	 
 	}
 
 
@@ -256,7 +291,7 @@ class Rfp extends CI_Controller {
 					}
 				}
 			}
-			else{				
+			elseif($step == 1){				
 				//--------- For Check Step 1 is Success or not  ---------
 				if(!isset($this->session->userdata['rfp_data'])){
 					redirect('rfp/edit/'.$id);
@@ -426,15 +461,46 @@ class Rfp extends CI_Controller {
 					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_data);
 
 					if($res){
-						$this->session->set_flashdata('success', 'RFP Updated Successfully');
+						// IF Success
+						redirect('rfp/edit/'.$id.'/2');
 					}
 					else{
-						$this->session->set_flashdata('error', 'Error Into Update RFP');
+						// If Error
+						redirect('rfp/edit/'.$id.'/1');
 					}
-					$this->session->unset_userdata('rfp_data');
-					redirect('rfp');
 				}
 			}  
+			elseif($step == 2) {
+
+				if(!isset($this->session->userdata['rfp_data'])){
+					redirect('rfp/edit/'.$id);
+				}
+
+				if($this->input->post('submit')){
+					$rfp_step_3=array(
+						'insurance_provider' => $this->input->post('insurance_provider'),
+						'treatment_plan_total' => $this->input->post('treatment_plan_total'),
+						'status'	=> 1,
+						);
+					$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
+					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
+					if($res){
+						$this->session->set_flashdata('success', 'RFP Updated Successfully');
+						$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
+						$this->session->unset_userdata('rfp_data');
+						redirect('rfp/view_rfp/'.encode($rfp_id));
+					} else {
+						redirect('rfp/edit/'.$id.'/2');
+						$this->session->set_flashdata('error', 'Error Into Update RFP');
+					}	
+
+				}
+				else{
+					$data['record']=$rfp_arr;
+					$data['subview']="front/rfp/patient/edit_rfp-3";
+					$this->load->view('front/layouts/layout_main',$data);
+				}
+			}  	 
 		}else{
 			show_404();
 		}   
@@ -581,16 +647,31 @@ class Rfp extends CI_Controller {
      *  view RFP data 
     */
     public function view_rfp($rfp_id){
-        $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
+        
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
         {
-        	 $where=['rfp_id' => decode($rfp_id),'doctor_id' => $this->session->userdata('client')['id'],'is_deleted' => '0'];
-        	 $data['rfp_bid']=$this->Rfp_model->get_result('rfp_bid',$where,1);
-        	 $data['subview']="front/rfp/doctor/view_rfp_doctor";
+        	 //---------- Only Open RFP View By Doctor (Status = 3)-------
+        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status' => '3'],'1');
+       
+        	 if(empty($data['record'])){
+        	 	show_404();
+        	 }
+        	 else{
+	        	 $where=['rfp_id' => decode($rfp_id),'doctor_id' => $this->session->userdata('client')['id'],'is_deleted' => '0'];
+	        	 $data['rfp_bid']=$this->Rfp_model->get_result('rfp_bid',$where,1);
+	        	 $data['subview']="front/rfp/doctor/view_rfp_doctor";
+        	 }
         }
        elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
        {
-       		$data['subview']="front/rfp/patient/view_rfp_patient";
+       		$data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'patient_id' => $this->session->userdata['client']['id'] ],'1');
+       		 if(empty($data['record'])){
+        	 	show_404();
+        	 }
+        	 else{
+        	 	$data['subview']="front/rfp/patient/view_rfp_patient";
+        	 }
+       		
        }
 		$this->load->view('front/layouts/layout_main',$data);
     }

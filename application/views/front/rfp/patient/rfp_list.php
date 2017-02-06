@@ -43,6 +43,7 @@
 						<th>Title</th>
 						<th>First Name</th>
 						<th>Last Name</th>
+						<th>Status</th>
 						<th>Dentition Type</th>
 						<th style="width:235px;">Action</th>
 					</tr>
@@ -55,15 +56,29 @@
 						<td><?=$record['title']?></td>
 						<td><?=$record['fname']?></td>
 						<td><?=$record['lname']?></td>
+						<td>
+							<?php if($record['status'] == 0) :?>
+								<span class="label label-default">Draft</span>
+							<?php elseif($record['status'] == 1) : ?>
+								<span class="label label-primary">Pending</span>
+							<?php elseif($record['status'] == 2) : ?>
+								<span class="label label-danger">Invalid</span>
+							<?php elseif($record['status'] == 3) : ?>
+								<span class="label label-info">Open</span>
+							<?php elseif($record['status'] == 4) : ?>
+								<span class="label label-success">Close</span>			
+							<?php endif; ?>
+						</td>
 						<td><?=$record['dentition_type']?></td>
 						<td>
 							<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info">
 								<i class="fa fa-eye"></i><span>View</span>
 							</a>
+							
 							<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-green">
 								<i class="fa fa-edit"></i><span>Edit</span>
 							</a>
-							<!--  -->
+							
 							<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" >
 								<i class="fa fa-trash"></i><span>Delete</span>
 							</a>
