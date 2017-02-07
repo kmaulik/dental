@@ -24,7 +24,7 @@ class Dashboard extends CI_Controller {
     /**
      * function use for logout from admin panel.(HDA)
      */
-    public function log_out() {                
+    public function log_out() {
         $this->session->unset_userdata('admin');
         $this->session->set_flashdata('message', array('message' => 'Log out Successfully.', 'class' => 'alert alert-success'));
         redirect('admin/login');
@@ -80,8 +80,6 @@ class Dashboard extends CI_Controller {
         }  
         $data['subview'] = 'admin/profile_edit';
         $this->load->view('admin/layouts/layout_main', $data);      
-        
-
     }
 
     public function change_password() {

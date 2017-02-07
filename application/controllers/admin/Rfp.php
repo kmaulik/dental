@@ -74,8 +74,13 @@ class Rfp extends CI_Controller {
         redirect(site_url('admin/rfp'));
     }
 
-    public function admin_action_rfp(){
-
+    public function choose_action($rfp_id){
+        $rfp_id = decode($rfp_id);
+        if(is_int($rfp_id) == false){
+            show_404();
+        }
+        $data['subview'] = 'admin/rfp/choose_action';
+        $this->load->view('admin/layouts/layout_main', $data);
     }
 
 }

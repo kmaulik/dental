@@ -26,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 //$config['base_url'] = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
-$config['base_url'] = "http://clientapp.narola.online/sd/dental";
+$config['base_url'] = "http://localhost/dental";
 
 $config['site_name'] = 'Lorem Ipsum';
 /*

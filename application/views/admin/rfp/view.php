@@ -314,17 +314,7 @@ label {
 							<?php endif;?>
 						</div>
 					</div>	
-					<!-- /Additional Section  -->
-
-					<!--  Additional Section -->
-					<div class="rfp-additional">
-						<h4 class="rfp-title">Your Action</h4>
-						<div class="col-sm-12">
-							<a href="" class="btn btn-success"> Approve</a>
-							<a href="" class="btn btn-danger"> Dis-Approve</a>
-						</div>
-					</div>	
-					<!-- /Additional Section  -->	
+					<!-- /Additional Section  -->					
 
 					<!--  Financial Information  -->
 					<div class="rfp-history">
@@ -346,6 +336,18 @@ label {
 						</div>
 					</div>	
 					<!--  /Financial Information  -->
+
+					<!--  Additional Section -->
+					<div class="rfp-additional">
+						<h4 class="rfp-title">Your Action</h4>
+						<div class="col-sm-12">
+							<a href="<?php echo base_url().'admin/rfp/choose_action';  ?>" class="btn btn-success"> Choose your Action </a>							
+						</div>
+
+
+					</div>	
+					<!-- /Additional Section  -->	
+
 				</div>
 			</div>
 		</div>
