@@ -219,7 +219,7 @@ class Treatment_category extends CI_Controller {
     }
 
     public function download_sample(){
-        $path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/sample.xlsx';        
+        $path = $_SERVER['DOCUMENT_ROOT'].'/uploads/sample.xlsx';        
         $data = file_get_contents($path); // Read the file's contents        
         $name = 'sample.xlsx';
         force_download($name, $data); 

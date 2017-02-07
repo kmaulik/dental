@@ -92,14 +92,8 @@ defined('TRAVEL_MAX_PRICE_PER_KM') OR define('TRAVEL_MAX_PRICE_PER_KM', 0.10); /
 defined('TRAVEL_MIN_PRICE_PER_KM') OR define('TRAVEL_MIN_PRICE_PER_KM', 0.04); // Highest price for the travel - set values for max price on offer-ride-part-2
 // ---------------------------------------------------------------------------------------------
 
+defined('Asset_path') OR define('Asset_path', 'http://clientapp.narola.online/sd/dental/');
 
-defined('Asset_path') OR define('Asset_path', 'http://localhost/dental/');
-
-// AIzaSyBREMF2gH26r6gNypcVlo_-PSU_qIh2Yu8
-// AIzaSyD64sZIBsE6am2XBXc3LjV1v8-ap6WKFEs
-// AIzaSyCa2Z6_KWmvPTRlf11a7nFOGr8dWR07lQQ
-
-defined('API_KEY') OR define('API_KEY', 'AIzaSyCa2Z6_KWmvPTRlf11a7nFOGr8dWR07lQQ'); // v! Default API Key use fot whole site
 defined('DEFAULT_IMAGE_PATH') OR define('DEFAULT_IMAGE_PATH', Asset_path . 'public/front/images/'); // highest automatically-assigned error code
 defined('DEFAULT_JS_PATH') OR define('DEFAULT_JS_PATH', Asset_path . 'public/front/js/'); // highest automatically-assigned error code
 defined('DEFAULT_CSS_PATH') OR define('DEFAULT_CSS_PATH', Asset_path . 'public/front/css/'); // highest automatically-assigned error code
