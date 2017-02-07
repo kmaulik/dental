@@ -57,7 +57,9 @@
 						</div>
 					</div>
 
-					
+					<!-- Posted Teeth values For validation and value selected for teeth and treatment category -->
+					<?php  $teeth_post = $this->input->post('teeth'); ?>
+					<!-- // ENDs comment  -->
 					<div class="row">
 						<div class="col-md-12 col-sm-12" id="primary">
 							<div class="form-group">
@@ -146,6 +148,61 @@
 					</div>	
 
 					<div class="list_treatment_category">
+						<!-- For Validation Time Data -->	
+						<?php if(!empty($teeth_post)) :?>
+							<?php foreach($teeth_post as $k=>$val) :?>
+								<?php 
+									$post_cat_id = $this->input->post('treatment_cat_id_'.$val);
+									$post_cat_text = $this->input->post('treat_cat_text_'.$val);  
+								?>
+								<div class="row treatment_cat_<?=$val?>">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<label><span class="cat_label">Treatment Category For Teeth <?=$val?></span>
+											<span class="check_label">	
+											<input type="checkbox" class="toggle_text" name="chk_box_name" id="chk_box_id_<?=$val?>" value="<?=$val?>" <?php if($post_cat_text != '') { echo "checked"; }?>>	
+									Not finding your category? (Tick here and manually enter)</span></label> 
+											
+											<select id="treatment_id_<?=$val?>" class="form-control select2" name="treatment_cat_id_<?=$val?>[]" data-placeholder="Select Treatment Category" multiple>
+												<?php $post_cat=$this->input->post('treatment_cat_id_'.$val); ?>
+												<?php foreach($treatment_category as $cat) :?>
+													<option value="<?=$cat['id']?>" 
+														<?php 
+															if(isset($post_cat_id) && in_array($cat['id'],$post_cat_id)) { 
+																echo "selected"; 
+															}
+															?>>
+														<?=$cat['title']." (".$cat['code'].")"?>
+													</option>
+												<?php endforeach;?>
+											</select>	
+										</div>
+										
+										<?php echo form_error('treatment_cat_id_<?=$val?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
+									</div>
+								</div>	
+								
+								<div class="row treat_text_area_<?=$val?>">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
+											<input type="text" name="treat_cat_text_<?=$val?>" class="form-control" value="<?=$post_cat_text;?>">
+										</div>
+									</div>
+								</div>
+								<!-- IF Extra Category Text Not Exixt then hide the textbox -->
+								<?php 										
+									if($post_cat_text == '') :
+								?>
+									<script>
+										$(".treat_text_area_<?=$val?>").hide();
+									</script>
+								<?php endif; ?>	
+								<!-- ======= -->
+								<hr/>	
+							<?php endforeach; ?>
+						<?php endif; ?>
+						<!-- For Validation Time Data -->	
 					</div>	
 
 					<!-- ========== Use For Dynamic Select2 (Default Not Display)============ -->
@@ -374,9 +431,35 @@
 	});	
 
 
-	// $("#frmrfp").submit(function(){
-	// 	alert($(".treatment_cat select").length);
-	// });
+	// ===========Check Validation For teeth category ===============//
+	$("#frmrfp").submit(function(e){
+		$(".cat_error").remove();
+		var validation_error=0;
+		
+		$(".toggle_cat:checkbox:checked").each(function(key){
+			var teeth_val = $(this).val();
+			var category_val= $("#treatment_id_"+teeth_val).val();
+		  	if(category_val)
+		  	{
+		  		if(category_val.length > 5){
+		  			var error_msg='<div class="alert alert-mini alert-danger cat_error">Only Select Max. 5 Category per Teeth.</div>';
+			  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
+			  		validation_error = 1;
+		  		}
+		  	}	
+		  	else{
+		  		var error_msg='<div class="alert alert-mini alert-danger cat_error">Select Atleast 1 Category For Teeth '+teeth_val+'.</div>';
+		  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
+		  		validation_error = 1;
+		  	}
+
+		});
+
+		if(validation_error != 0){
+			e.preventDefault();
+		}
+	});
+	// =========== END Check Validation For teeth category ===============//
 
 </script>
 
