@@ -324,6 +324,7 @@ class Rfp extends CI_Controller {
 				}
 				if($this->session->userdata['rfp_data']['dentition_type'] != 'other') // If Type other than skip this validation 
 				{
+					// pr($_POST,1);
 					$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
 				} 
 				else{

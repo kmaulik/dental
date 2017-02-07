@@ -374,6 +374,10 @@
 	});	
 
 
+	// $("#frmrfp").submit(function(){
+	// 	alert($(".treatment_cat select").length);
+	// });
+
 </script>
 
 
