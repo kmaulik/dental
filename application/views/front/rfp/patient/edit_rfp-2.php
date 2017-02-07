@@ -170,48 +170,50 @@
 						<?php if(empty($teeth_post)){ ?> 
 							<?php if($this->session->userdata['rfp_data']['dentition_type'] != 'other' && !empty($teeth_arr)):?>
 								<?php foreach($teeth_arr as $key=>$val) :?>
-									<div class="row treatment_cat_<?=$key?>">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label><span class="cat_label">Treatment Category For Teeth <?=$key?></span>
-												<span class="check_label">	
-												<input type="checkbox" class="toggle_text" name="chk_box_name" id="chk_box_id_<?=$key?>" value="<?=$key?>" <?php if($val->cat_text != '') { echo "checked"; }?>>	
-										Not finding your category? (Tick here and manually enter)</span></label> 
+									<div class="treatment_cat_<?=$key?>">	
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label><span class="cat_label">Treatment Category For Teeth <?=$key?></span>
+													<span class="check_label">	
+													<input type="checkbox" class="toggle_text" name="chk_box_name" id="chk_box_id_<?=$key?>" value="<?=$key?>" <?php if($val->cat_text != '') { echo "checked"; }?>>	
+											Not finding your category? (Tick here and manually enter)</span></label> 
+													
+													<select id="treatment_id_<?=$key?>" class="form-control select2" name="treatment_cat_id_<?=$key?>[]" data-placeholder="Select Treatment Category" multiple>
+														<?php foreach($treatment_category as $cat) :?>
+															<option value="<?=$cat['id']?>" 
+																	<?php 
+																		if(isset($val->cat_id) && in_array($cat['id'],$val->cat_id)) { 
+																			echo "selected"; 
+																		}
+																	?>>
+																	<?=$cat['title']." (".$cat['code'].")"?>
+															</option>
+														<?php endforeach;?>
+													</select>	
+												</div>
 												
-												<select id="treatment_id_<?=$key?>" class="form-control select2" name="treatment_cat_id_<?=$key?>[]" data-placeholder="Select Treatment Category" multiple>
-													<?php foreach($treatment_category as $cat) :?>
-														<option value="<?=$cat['id']?>" 
-																<?php 
-																	if(isset($val->cat_id) && in_array($cat['id'],$val->cat_id)) { 
-																		echo "selected"; 
-																	}
-																?>>
-																<?=$cat['title']." (".$cat['code'].")"?>
-														</option>
-													<?php endforeach;?>
-												</select>	
+												<?php echo form_error('treatment_cat_id_<?=$key?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 											</div>
-											
-											<?php echo form_error('treatment_cat_id_<?=$key?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-										</div>
-									</div>	
-									
-									<div class="row treat_text_area_<?=$key?>">
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
-												<input type="text" name="treat_cat_text_<?=$key?>" class="form-control" value="<?=$val->cat_text;?>">
+										</div>	
+										
+										<div class="row treat_text_area_<?=$key?>">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
+													<input type="text" name="treat_cat_text_<?=$key?>" class="form-control" value="<?=$val->cat_text;?>">
+												</div>
 											</div>
 										</div>
-									</div>
-									<!-- IF Extra Category Text Not Exixt then hide the textbox -->
-									<?php if($val->cat_text == '') :?>
-										<script>
-											$(".treat_text_area_<?=$key?>").hide();
-										</script>
-									<?php endif; ?>	
-									<!-- ======= -->
-									<hr/>	
+										<!-- IF Extra Category Text Not Exixt then hide the textbox -->
+										<?php if($val->cat_text == '') :?>
+											<script>
+												$(".treat_text_area_<?=$key?>").hide();
+											</script>
+										<?php endif; ?>	
+										<!-- ======= -->
+										<hr/>	
+									</div>		
 								<?php endforeach; ?>
 							<?php endif; ?>
 						<!-- END Edit Data -->
@@ -222,51 +224,53 @@
 										$post_cat_id = $this->input->post('treatment_cat_id_'.$val);
 										$post_cat_text = $this->input->post('treat_cat_text_'.$val);  
 									?>
-									<div class="row treatment_cat_<?=$val?>">
-										<div class="col-sm-12">
-											<div class="form-group">
-												<label><span class="cat_label">Treatment Category For Teeth <?=$val?></span>
-												<span class="check_label">	
-												<input type="checkbox" class="toggle_text" name="chk_box_name" id="chk_box_id_<?=$val?>" value="<?=$val?>" <?php if($post_cat_text != '') { echo "checked"; }?>>	
-										Not finding your category? (Tick here and manually enter)</span></label> 
+									<div class="treatment_cat_<?=$key?>">
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group">
+													<label><span class="cat_label">Treatment Category For Teeth <?=$val?></span>
+													<span class="check_label">	
+													<input type="checkbox" class="toggle_text" name="chk_box_name" id="chk_box_id_<?=$val?>" value="<?=$val?>" <?php if($post_cat_text != '') { echo "checked"; }?>>	
+											Not finding your category? (Tick here and manually enter)</span></label> 
+													
+													<select id="treatment_id_<?=$val?>" class="form-control select2" name="treatment_cat_id_<?=$val?>[]" data-placeholder="Select Treatment Category" multiple>
+														<?php $post_cat=$this->input->post('treatment_cat_id_'.$val); ?>
+														<?php foreach($treatment_category as $cat) :?>
+															<option value="<?=$cat['id']?>" 
+																<?php 
+																	if(isset($post_cat_id) && in_array($cat['id'],$post_cat_id)) { 
+																		echo "selected"; 
+																	}
+																	?>>
+																<?=$cat['title']." (".$cat['code'].")"?>
+															</option>
+														<?php endforeach;?>
+													</select>	
+												</div>
 												
-												<select id="treatment_id_<?=$val?>" class="form-control select2" name="treatment_cat_id_<?=$val?>[]" data-placeholder="Select Treatment Category" multiple>
-													<?php $post_cat=$this->input->post('treatment_cat_id_'.$val); ?>
-													<?php foreach($treatment_category as $cat) :?>
-														<option value="<?=$cat['id']?>" 
-															<?php 
-																if(isset($post_cat_id) && in_array($cat['id'],$post_cat_id)) { 
-																	echo "selected"; 
-																}
-																?>>
-															<?=$cat['title']." (".$cat['code'].")"?>
-														</option>
-													<?php endforeach;?>
-												</select>	
+												<?php echo form_error('treatment_cat_id_<?=$val?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 											</div>
-											
-											<?php echo form_error('treatment_cat_id_<?=$val?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-										</div>
-									</div>	
+										</div>	
 									
-									<div class="row treat_text_area_<?=$val?>">
-										<div class="col-md-12">
-											<div class="form-group">
-												<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
-												<input type="text" name="treat_cat_text_<?=$val?>" class="form-control" value="<?=$post_cat_text;?>">
+										<div class="row treat_text_area_<?=$val?>">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
+													<input type="text" name="treat_cat_text_<?=$val?>" class="form-control" value="<?=$post_cat_text;?>">
+												</div>
 											</div>
 										</div>
-									</div>
-									<!-- IF Extra Category Text Not Exixt then hide the textbox -->
-									<?php 										
-										if($post_cat_text == '') :
-									?>
-										<script>
-											$(".treat_text_area_<?=$val?>").hide();
-										</script>
-									<?php endif; ?>	
-									<!-- ======= -->
-									<hr/>	
+										<!-- IF Extra Category Text Not Exixt then hide the textbox -->
+										<?php 										
+											if($post_cat_text == '') :
+										?>
+											<script>
+												$(".treat_text_area_<?=$val?>").hide();
+											</script>
+										<?php endif; ?>	
+										<!-- ======= -->
+										<hr/>	
+									</div>	
 								<?php endforeach; ?>
 						<?php } ?>
 						<!-- END Validation Time Data -->	
