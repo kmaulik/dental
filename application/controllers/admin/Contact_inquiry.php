@@ -63,9 +63,7 @@ class Contact_inquiry extends CI_Controller {
      /**
      * Function is used to perform Send Mail & Update Status
      */
-     public function reply(){
-
-                         
+    public function reply(){
         //------ For Email Template -----------
         /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
         $html_content=mailer('contact_inquiry','AccountActivation'); 
@@ -76,24 +74,24 @@ class Contact_inquiry extends CI_Controller {
 
         $email_config = mail_config();
         $this->email->initialize($email_config);
-        $subject=config('site_name').' - Contact Inquiry Reply';    
+        $subject=config('site_name').' - Contact Inquiry Reply';
         $this->email->from(config('contact_email'), config('sender_name'))
                     ->to($this->input->post('email'))
                     ->subject($subject)
                     ->message($html_content);
 
-       if($this->email->send()){
-        $where = 'id = ' . $this->db->escape($this->input->post('id'));
-        $update_array = array(
-            'status' => 1
-            );
-        $this->Admin_contact_inquiry_model->update_record('contact_inquiry', $where, $update_array);
-        $this->session->set_flashdata('message',['message'=>'Replied to Contact Inquiry successfully !','class'=>'success']);
-    }else{
-       $this->session->set_flashdata('message',['message'=>'Error Into Contact Inquiry Reply.Please try again!','class'=>'danger']);
+        if($this->email->send()){
+            $where = 'id = ' . $this->db->escape($this->input->post('id'));
+            $update_array = array(
+                'status' => 1
+                );
+            $this->Admin_contact_inquiry_model->update_record('contact_inquiry', $where, $update_array);
+            $this->session->set_flashdata('message',['message'=>'Replied to Contact Inquiry successfully !','class'=>'success']);
+        }else{
+            $this->session->set_flashdata('message',['message'=>'Error Into Contact Inquiry Reply.Please try again!','class'=>'danger']);
+        }
+        redirect(site_url('admin/contact_inquiry'));
     }
-    redirect(site_url('admin/contact_inquiry'));
-}
 
 
 

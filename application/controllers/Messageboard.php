@@ -62,7 +62,7 @@ class Messageboard extends CI_Controller {
     		$data=$this->Messageboard_model->insert_record('messages',$data);
 
     		if($data){
-
+    			// ------------------------------------------------------------------------
     			// v! insert data notifications table
 				$noti_data = [
 								'from_id'=>$this->session->userdata('client')['id'],
@@ -73,7 +73,8 @@ class Messageboard extends CI_Controller {
 							];
 														
 				$this->Notification_model->insert_notification($noti_data);				
-
+				// ------------------------------------------------------------------------
+								
 		    	$user_data=$this->Messageboard_model->get_result('users',['id' => decode($user_id)],'1');
 		    	$rfp_data=$this->Messageboard_model->get_result('rfp',['id' => decode($rfp_id)],'1');
 		    	//------------ Send Mail Config-----------------

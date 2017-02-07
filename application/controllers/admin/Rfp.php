@@ -7,7 +7,7 @@ class Rfp extends CI_Controller {
     public function __construct() {
         parent::__construct();
         error_reporting(0);
-        $this->load->model(['Rfp_model']);
+        $this->load->model(['Rfp_model','Notification_model']);
     }
 
     /**
@@ -37,6 +37,7 @@ class Rfp extends CI_Controller {
     public function view($rfp_id){
         $data['title'] = 'Admin View RFP';
         $data['heading'] = 'View RFP Page';  
+        $data['rfp_id'] = decode($rfp_id);
         $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
         //pr($data,1);
         $data['subview'] = 'admin/rfp/view';
@@ -74,11 +75,49 @@ class Rfp extends CI_Controller {
         redirect(site_url('admin/rfp'));
     }
 
-    public function choose_action($rfp_id){
+    public function choose_action($rfp_id){        
         $rfp_id = decode($rfp_id);
-        if(is_int($rfp_id) == false){
-            show_404();
+        $data['rfp_id'] = $rfp_id;        
+        $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');
+        
+        if(empty($rfp_id)){    show_404(); }
+
+        if($_POST){
+            $remarks = $this->input->post('remarks');
+            $action = $this->input->post('action');
+            $message = $this->input->post('message');            
+            if($action == 'yes'){ $status='3'; }else{ $status='2'; }
+            
+            if(!empty($record['admin_remarks'])){
+                $last_remark = json_decode($record['admin_remarks'],true);
+                $last_cnt = $last_remark['attempt_no']+1;                
+            }else{                
+                $last_cnt = '1';
+            }
+
+            $admin_remarks = [
+                                'attempt_no'=>$last_cnt,
+                                'last_message'=>$message,
+                                'last_remarks'=>$remarks
+                            ];
+
+            $admin_remarks_str = json_encode($admin_remarks);
+            $this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>$status,'admin_remarks'=>$admin_remarks_str]);
+            // ------------------------------------------------------------------------
+            $noti_data = [
+                            'from_id'=>$this->session->userdata('admin')['id'],
+                            'to_id'=>$record['patient_id'],
+                            'rfp_id' => $rfp_id,
+                            'noti_type'=>'admin_action',
+                            'noti_url'=>'rfp'
+                        ];
+            $this->Notification_model->insert_notification($noti_data);
+            qry();
+            // ------------------------------------------------------------------------            
+            $this->session->set_flashdata('message', ['message'=>'Action successfully completed','class'=>'success']);
+            redirect('admin/rfp');
         }
+
         $data['subview'] = 'admin/rfp/choose_action';
         $this->load->view('admin/layouts/layout_main', $data);
     }

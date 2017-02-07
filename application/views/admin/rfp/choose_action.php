@@ -10,8 +10,8 @@
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li><a href="<?php echo site_url('admin/rfp'); ?>">rfp</a></li>
-            <li><a href="#">View RFP Page</a></li>
+            <li><a href="<?php echo site_url('admin/rfp'); ?>">RFP</a></li>
+            <li><a href="<?php echo site_url('admin/rfp/view/'.encode($rfp_id)); ?>">View RFP Page</a></li>
             <li class="active">RFP action</li>
         </ul>
     </div>
@@ -24,10 +24,9 @@
     ?>
     <div class="row">
         <div class="col-md-12">
-            <form class="form-horizontal form-validate" id="frm_rfp_action" method="POST" enctype="multipart/form-data" onsubmit="return zip_validate()">
+            <form class="form-horizontal form-validate" id="frm_rfp_action" method="POST" >
                 <div class="panel panel-flat">
-                    <div class="panel-body">
-
+                    <div class="panel-body">                        
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Action :</label>
                             <div class="col-lg-3">
@@ -37,8 +36,21 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">Admin Remarks:</label>
+                            <label class="col-lg-3 control-label">
+                                    Your message:<br/>
+                                    <small style="color:red">(This message will sent it to patient.)</small>
+                             </label>
+                            <div class="col-lg-3">
+                                <textarea rows="4" name="message" class="form-control" placeholder="Message...."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">
+                                    Admin Remarks:<br/>                                    
+                             </label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="remarks" class="form-control" placeholder="Remarks...."></textarea>
                             </div>
@@ -80,10 +92,12 @@
         validClass: "validation-valid-label",
         ignore:[],
         rules: {
-            remarks:{required: true }
+            remarks:{required: true },
+            message:{required: true }
         },        
         messages: {
-            remarks:{required: 'Please provide a Remarks..' }
+            remarks:{required: 'Please provide a Remarks..' },
+            message:{required: 'Please provide a Message..'}
         }
     });
 </script>

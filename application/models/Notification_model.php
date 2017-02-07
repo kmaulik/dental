@@ -9,7 +9,8 @@ class Notification_model extends CI_Model {
 		$from_id = $data['from_id'];
 		$to_id = $data['to_id'];
 		$noti_type = $data['noti_type'];
-
+		$data['created_at'] = date('Y-m-d H:i:s');
+		
 		$noti_data = $this->db->get_where('notifications',['rfp_id'=>$rfp_id,'from_id'=>$from_id,'to_id'=>$to_id,'noti_type'=>$noti_type])
 							  ->row_array();
 		if(!empty($noti_data)){			
@@ -22,7 +23,9 @@ class Notification_model extends CI_Model {
 			$last_id = $this->db->insert_id();
 		}
 		return $last_id;
-	}
+	}	
+
+
 
 }
 

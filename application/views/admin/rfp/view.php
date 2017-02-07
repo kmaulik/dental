@@ -72,6 +72,20 @@ label {
 		<div class="col-md-12">
 			<div class="panel panel-flat">
 				<div class="panel-body">
+
+					<?php if($record['status'] == '1') { ?>
+						<!--  Additional Section -->
+						<div class="rfp-additional">
+							<h4 class="rfp-title">Your Action</h4>
+							<div class="col-sm-12">
+								<a href="<?php echo base_url().'admin/rfp/choose_action/'.encode($rfp_id);  ?>" class="btn btn-success">
+									Choose your Action 
+								</a>
+							</div>
+						</div>	
+						<!-- /Additional Section  -->
+					<?php } ?>
+																			
 					<!--  Basic Details  -->
 					<div class="rfp-basic">
 						<h4 class="rfp-title">Basic Details</h4>
@@ -134,8 +148,8 @@ label {
 					<!--  Treatment Plan  -->
 					<div class="rfp-treatment">
 						<h4 class="rfp-title">Treatment Plan</h4>
-						
-						<?php 
+
+						<?php
 						if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); }
 						if($record['dentition_type'] == 'primary') :?>
 							<div class="col-sm-12">
@@ -336,18 +350,6 @@ label {
 						</div>
 					</div>	
 					<!--  /Financial Information  -->
-
-					<!--  Additional Section -->
-					<div class="rfp-additional">
-						<h4 class="rfp-title">Your Action</h4>
-						<div class="col-sm-12">
-							<a href="<?php echo base_url().'admin/rfp/choose_action';  ?>" class="btn btn-success"> Choose your Action </a>							
-						</div>
-
-
-					</div>	
-					<!-- /Additional Section  -->	
-
 				</div>
 			</div>
 		</div>
