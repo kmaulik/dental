@@ -87,7 +87,14 @@ class Rfp extends CI_Controller {
             $remarks = $this->input->post('remarks');
             $action = $this->input->post('action');
             $message = $this->input->post('message');            
-            if($action == 'yes'){ $status='3'; }else{ $status='2'; }
+            
+            if($action == 'yes'){ 
+                $status='3'; 
+                $noti_msg = $record['title'].' has been successfully approved. and it is live.';
+            }else{ 
+                $status='2';
+                $noti_msg = $record['title'].' was denied.For know the reason check your mail.';
+            }
             
             if(!empty($record['admin_remarks'])){
                 $last_remark = json_decode($record['admin_remarks'],true);
@@ -110,11 +117,11 @@ class Rfp extends CI_Controller {
                             'to_id'=>$record['patient_id'],
                             'rfp_id' => $rfp_id,
                             'noti_type'=>'admin_action',
-                            'noti_msg'=>$message,
+                            'noti_msg'=>$noti_msg,
                             'noti_url'=>'rfp'
                         ];
             $this->Notification_model->insert_rfp_notification($noti_data);
-            // ------------------------------------------------------------------------            
+            // ------------------------------------------------------------------------
             //------ For Email Template -----------
             /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
             $html_content=mailer('contact_inquiry','AccountActivation'); 
@@ -136,8 +143,6 @@ class Rfp extends CI_Controller {
                 redirect('admin/rfp');
             }
             // ------------------------------------------------------------------------
-
-
             $this->session->set_flashdata('message', ['message'=>'Action successfully completed','class'=>'success']);
             redirect('admin/rfp');
         }
