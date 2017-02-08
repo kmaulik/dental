@@ -92,7 +92,7 @@ $(function () {
                    } else if (full.status == 1) {
                     status += '<span class="label label-primary">Pending</span>';
                    } else if (full.status == 2) {
-                    status += '<span class="label label-danger">Invalid</span>';
+                    status += '<span class="label label-danger">Submit Pending</span>';
                    } else if (full.status == 3) {
                     status += '<span class="label label-info">Open</span>';
                    } else if (full.status == 4) {

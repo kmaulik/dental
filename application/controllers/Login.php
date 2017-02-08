@@ -25,7 +25,7 @@ class Login extends CI_Controller {
             $data['subview']='front/login_front';
             $this->load->view('front/layouts/layout_main',$data);
         }else{
-
+            
             $email = $this->input->post('email_id');
             $password = $this->input->post('password');
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data

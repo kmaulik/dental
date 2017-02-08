@@ -40,7 +40,7 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">
                                     Your message:<br/>
-                                    <small style="color:red">(This message will sent it to patient.)</small>
+                                    <small style="color:red">( This message will sent it to patient in mail and in notification.)</small>
                              </label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="message" class="form-control" placeholder="Message...."></textarea>

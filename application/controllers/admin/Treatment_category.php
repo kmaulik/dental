@@ -10,6 +10,7 @@ class Treatment_category extends CI_Controller {
         $this->load->model(['Treatment_category_model']);
         $this->load->library('excel');
         $this->load->helper('download');
+        check_admin_login();
     }
 
     /**

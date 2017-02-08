@@ -6,6 +6,7 @@ class Patient extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model(array('Users_model','Country_model'));
+        check_admin_login();
 	}
 
 	public function index(){

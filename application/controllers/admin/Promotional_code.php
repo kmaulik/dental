@@ -7,7 +7,7 @@ class Promotional_code extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(['Promotional_code_model']);
-       
+        check_admin_login();
     }
 
     /**

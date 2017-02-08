@@ -8,6 +8,7 @@ class Contact_inquiry extends CI_Controller {
         parent::__construct();
         $this->load->model(['admin/Admin_contact_inquiry_model']);
         $this->load->library(['encryption', 'upload']);
+        check_admin_login();
     }
 
     /**

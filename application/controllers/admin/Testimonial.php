@@ -7,6 +7,7 @@ class Testimonial extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(['Testimonial_model']);
+        check_admin_login();
     }
 
     /**

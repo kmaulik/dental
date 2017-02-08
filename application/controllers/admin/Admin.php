@@ -5,27 +5,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Admin extends CI_Controller {
 
     public function __construct() {
-        parent::__construct();        
+        parent::__construct();
         $this->load->model(['Users_model']);
         $this->load->library(['encryption', 'upload']);        
     }
 
-    public function index() 
-    {
+    public function index() {
 
         $data['user_data'] = $this->session->userdata('admin');
-        
-        if (!empty($data['user_data'])) {
-            // $this->Users_model->update_user_data($data['user_data']['id'], ['last_login' => date('Y-m-d H:i:s')]);
+        if (!empty($data['user_data'])) {            
             redirect('admin/dashboard');
         }
 
-        if ($this->input->post()) 
-        {
+        if ($this->input->post()) {
 
             $email = $this->input->post('username');
             $password = $this->input->post('password');
-
+            
             //check_if_user_exist - three params 1->where condition 2->is get num_rows for query 3->is fetech single or all data
             $user_data = $this->Users_model->check_if_user_exist(['email_id' => $email], false, true,['1','2','3']);
             if (!empty($user_data)) 

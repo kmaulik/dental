@@ -8,6 +8,7 @@ class Cms extends CI_Controller {
         parent::__construct();
         $this->load->model(['Cms_model']);
         $this->load->library(['encryption', 'upload']);
+        check_admin_login();
     }
 
     /**

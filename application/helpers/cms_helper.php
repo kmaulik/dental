@@ -294,5 +294,23 @@
 
     }
 
+    function check_admin_login(){
+        $CI =& get_instance();
+        $res_data = $CI->session->userdata('admin');
+
+        $current_class = $CI->router->fetch_class();        
+        $allowed_class = ['dashboard','rfp'];
+
+        if(empty($res_data)){
+            redirect('admin');
+        }else{
+            // v! condirion for role is an agent
+            if($res_data['role_id'] == '3'){
+                if(in_array($current_class,$allowed_class) == false){
+                    redirect('admin');
+                }
+            }
+        }
+    }
 
 

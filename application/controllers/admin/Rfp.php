@@ -7,14 +7,14 @@ class Rfp extends CI_Controller {
     public function __construct() {
         parent::__construct();
         error_reporting(0);
-        $this->load->model(['Rfp_model','Notification_model']);
+        $this->load->model(['Rfp_model','Notification_model','Users_model']);
+        check_admin_login();
     }
 
     /**
      * Function load view of rfp list.
      */
-    public function index() {
-     
+    public function index() {     
         $data['subview'] = 'admin/rfp/index';
         $this->load->view('admin/layouts/layout_main', $data);
     }
@@ -22,8 +22,7 @@ class Rfp extends CI_Controller {
     /**
      * Function is used to get result based on datatable in rfp list page
      */
-    public function list_rfp() {
-     
+    public function list_rfp() {        
         $final['recordsTotal'] = $this->Rfp_model->get_rfp_count();
         $final['redraw'] = 1;
         $final['recordsFiltered'] = $final['recordsTotal'];
@@ -33,7 +32,7 @@ class Rfp extends CI_Controller {
 
     /**
      * Function is used to view specific data 
-     */
+    */
     public function view($rfp_id){
         $data['title'] = 'Admin View RFP';
         $data['heading'] = 'View RFP Page';  
@@ -75,11 +74,13 @@ class Rfp extends CI_Controller {
         redirect(site_url('admin/rfp'));
     }
 
-    public function choose_action($rfp_id){        
+    public function choose_action($rfp_id){
         $rfp_id = decode($rfp_id);
         $data['rfp_id'] = $rfp_id;        
         $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');
-        
+        // pr($record,1);
+        $user_data = $this->Users_model->check_if_user_exist(['id' => $record['patient_id']], false, true);        
+
         if(empty($rfp_id)){    show_404(); }
 
         if($_POST){
@@ -95,7 +96,7 @@ class Rfp extends CI_Controller {
                 $last_cnt = '1';
             }
 
-            $admin_remarks = [
+            $admin_remarks =[
                                 'attempt_no'=>$last_cnt,
                                 'last_message'=>$message,
                                 'last_remarks'=>$remarks
@@ -109,11 +110,34 @@ class Rfp extends CI_Controller {
                             'to_id'=>$record['patient_id'],
                             'rfp_id' => $rfp_id,
                             'noti_type'=>'admin_action',
+                            'noti_msg'=>$message,
                             'noti_url'=>'rfp'
                         ];
-            $this->Notification_model->insert_notification($noti_data);
-            qry();
+            $this->Notification_model->insert_rfp_notification($noti_data);
             // ------------------------------------------------------------------------            
+            //------ For Email Template -----------
+            /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
+            $html_content=mailer('contact_inquiry','AccountActivation'); 
+            $username= $user_data['fname'].' '.$user_data['lname'];
+            $html_content = str_replace("@USERNAME@",$username,$html_content);
+            $html_content = str_replace("@MESSAGE@",$message,$html_content);            
+
+            $email_config = mail_config();
+            $this->email->initialize($email_config);
+            $subject=config('site_name').' - Regarding your RFP -'.$record['title'];
+            $this->email->from(config('contact_email'), config('sender_name'))
+                    ->to($user_data['email_id'])
+                    ->subject($subject)
+                    ->message($html_content);
+
+            if($this->email->send() == false){
+                $this->session->set_flashdata('message', ['message'=>'Something is wrong with email send. Please try again.',
+                                                          'class'=>'danger']);
+                redirect('admin/rfp');
+            }
+            // ------------------------------------------------------------------------
+
+
             $this->session->set_flashdata('message', ['message'=>'Action successfully completed','class'=>'success']);
             redirect('admin/rfp');
         }

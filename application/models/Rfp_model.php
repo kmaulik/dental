@@ -2,11 +2,6 @@
 
 class Rfp_model extends CI_Model {
 
-    function __construct() {
-        parent::__construct();
-    }
-
-
      /**
      * @uses : this function is used to get result based on datatable in rfp list page
      * @param : @table 
@@ -15,6 +10,11 @@ class Rfp_model extends CI_Model {
     public function get_all_rfp() {        
         
         $this->db->select('id,title,CONCAT(fname," ",lname) as patient_name,dentition_type,status,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
+        
+        $admin_data = $this->session->userdata('admin');
+        $role_id = $admin_data['role_id'];
+
+        $this->db->where_not_in('status',['0']);
         $this->db->where('is_deleted !=', 1);
         
         $keyword = $this->input->get('search');
@@ -24,6 +24,7 @@ class Rfp_model extends CI_Model {
             $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR patient_name LIKE "%'.$keyword['value'].'%" OR dentition_type LIKE "%'.$keyword['value'].'%"', NULL);
         }
 
+        $this->db->order_by('status');
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
         $res_data = $this->db->get('rfp')->result_array();
         return $res_data;
@@ -36,6 +37,14 @@ class Rfp_model extends CI_Model {
      */
     public function get_rfp_count() {
         $this->db->where('is_deleted !=', 1);
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR patient_name LIKE "%'.$keyword['value'].'%" OR dentition_type LIKE "%'.$keyword['value'].'%"', NULL);
+        }
+
         $res_data = $this->db->get('rfp')->num_rows();
         return $res_data;
     }

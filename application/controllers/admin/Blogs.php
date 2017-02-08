@@ -8,6 +8,7 @@ class Blogs extends CI_Controller {
         parent::__construct();
         $this->load->model(['Blogs_model']);
         $this->load->library(['encryption', 'upload']);
+        check_admin_login();
     }
 
     /**

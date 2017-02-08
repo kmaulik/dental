@@ -25,7 +25,13 @@ class Notification_model extends CI_Model {
 		return $last_id;
 	}	
 
-
+	// this func will insert notification for the Admin action for the approve or disapprove RFp
+	public function insert_rfp_notification($data){
+		$data['created_at'] = date('Y-m-d H:i:s');
+		$this->db->insert('notifications',$data);
+		$last_id = $this->db->insert_id();
+		return $last_id;
+	}
 
 }
 

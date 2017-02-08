@@ -6,9 +6,7 @@ class Survey extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model(array('Survey_model'));
-
-		// $class_methods = get_class_methods($this->router->fetch_class());
-		// pr($class_methods,1);
+		check_admin_login();
 	}
 
 	public function index(){
