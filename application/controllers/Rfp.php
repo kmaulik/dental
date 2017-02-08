@@ -6,7 +6,7 @@ class Rfp extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
-		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model']);		
+		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
 	}	
 
 	public function index(){
@@ -87,6 +87,18 @@ class Rfp extends CI_Controller {
 			// If Type other than skip this validation 
 			if($this->session->userdata['rfp_data']['dentition_type'] != 'other') {
 				$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
+				//----- For Check Treatment Category Validation ------
+				if($this->input->post('teeth') != ''){
+					foreach($this->input->post('teeth') as $key=>$val){
+						$treat_cat_id = $this->input->post('treatment_cat_id_'.$val);
+						$treat_cat_text = $this->input->post('treat_cat_text_'.$val);
+						if($treat_cat_id == '' && $treat_cat_text == '')
+						{
+							$this->form_validation->set_rules('treatment_cat_id_'.$val.'[]', 'teeth category', 'required');
+						}
+					}
+				}
+				//------------------------------------	
 			} else {
 				$this->form_validation->set_rules('other_description', 'Description', 'required');
 			}
@@ -324,8 +336,19 @@ class Rfp extends CI_Controller {
 				}
 				if($this->session->userdata['rfp_data']['dentition_type'] != 'other') // If Type other than skip this validation 
 				{
-					// pr($_POST,1);
 					$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
+					//----- For Check Treatment Category Validation ------
+					if($this->input->post('teeth') != ''){
+						foreach($this->input->post('teeth') as $key=>$val){
+							$treat_cat_id = $this->input->post('treatment_cat_id_'.$val);
+							$treat_cat_text = $this->input->post('treat_cat_text_'.$val);
+							if($treat_cat_id == '' && $treat_cat_text == '')
+							{
+								$this->form_validation->set_rules('treatment_cat_id_'.$val.'[]', 'teeth category', 'required');
+							}
+						}
+					}
+					//------------------------------------------
 				} 
 				else{
 					$this->form_validation->set_rules('other_description', 'Description', 'required');
@@ -531,7 +554,7 @@ class Rfp extends CI_Controller {
 			} 
 			elseif($step == 3){
 			if($this->input->post('submit')){
-				
+
 				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 				$res=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1]);
 				if($res){
@@ -829,5 +852,138 @@ class Rfp extends CI_Controller {
             }
         }        
     }
+
+
+    //------------- Make Payment by patient when create a RFP ---------
+    public function make_payment(){
+    	
+		if($this->input->post('submit')) {
+			$final_price = config('patient_fees');
+			$discount=0;
+			$promotinal_code_id = '';
+			$rfp_id =$this->session->userdata['rfp_data']['rfp_last_id'];
+			//------ Calculate the discount based on coupan code ----
+			if($this->input->post('coupan_code') != ''){
+				$data=$this->Promotional_code_model->fetch_coupan_data();
+				if(isset($data['discount']) && $data['discount'] != '') {
+					$promotinal_code_id = $data['id'];
+					$discount = $data['discount'];
+					$final_price = $final_price - (($final_price * $discount) /100);
+				}
+			}
+			$payment_arr=[
+				'rfp_id'				=> $rfp_id,
+				'actual_price'  		=> config('patient_fees'),
+				'payable_price'			=> $final_price,
+				'discount'				=> $discount,
+				'promotinal_code_id'	=> $promotinal_code_id,
+			];
+
+			$this->session->set_userdata('payment_data',$payment_arr);
+			//----------------Paypal Payment------------------
+			$this->paypal_payment();
+			
+			//------ End Calculate the discount based on coupan code ----
+		}
+    }
+
+    //------------ Paypal Payment ---
+    public function paypal_payment(){
+
+		$action= 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+		$rfp_id= $this->session->userdata['payment_data']['rfp_id'];
+		$final_price = $this->session->userdata['payment_data']['payable_price'];
+		$form = '';
+		$form .= '<form name="frm_payment_method" action="' . $action . '" method="post">';
+		$form .= '<input type="hidden" name="business" value="demo.narolainfotech@gmail.com" />';
+		 // Instant Payment Notification & Return Page Details /
+		 $form .= '<input type="hidden" name="notify_url" value="' . base_url('rfp/complete_transaction') . '" />';
+		 $form .= '<input type="hidden" name="cancel_return" value="' . base_url('rfp/edit/'.encode($rfp_id).'/3') . '" />';
+		 $form .= '<input type="hidden" name="return" value="' . base_url('rfp/complete_transaction') . '" />';
+		 $form .= '<input type="hidden" name="rm" value="2" />';
+		 // Configures Basic Checkout Fields -->
+		 $form .= '<input type="hidden" name="lc" value="" />';
+		 $form .= '<input type="hidden" name="no_shipping" value="1" />';
+		 $form .= '<input type="hidden" name="no_note" value="1" />';
+		 // <input type="hidden" name="custom" value="localhost" />-->
+		 $form .= '<input type="hidden" name="currency_code" value="USD" />';
+		 $form .= '<input type="hidden" name="page_style" value="paypal" />';
+		 $form .= '<input type="hidden" name="charset" value="utf-8" />';
+		 $form .= '<input type="hidden" name="item_name" value="test" />';
+		 $form .= '<input type="hidden" value="_xclick" name="cmd"/>';
+		 $form .= '<input type="hidden" name="amount" value="'.$final_price.'" />';
+		 $form .= '<script>';
+		 $form .= 'setTimeout("document.frm_payment_method.submit()", 50);';
+		 $form .= '</script>';
+		 $form .= '</form>';
+		 echo $form;
+    }
+
+    //----------Complete Transaction and Insert data into Payment Transaction table & Update Status in RFP----- 
+    public function complete_transaction(){
+    	$data=$this->input->post();
+    	//pr($data,1);
+    	$this->load->model('Payment_transaction_model');
+    	$pay_arr = [
+    		'user_id'				=> $this->session->userdata['client']['id'],
+    		'rfp_id'				=> $this->session->userdata['payment_data']['rfp_id'],
+    		'actual_price'			=> $this->session->userdata['payment_data']['actual_price'],
+    		'payable_price'			=> $this->session->userdata['payment_data']['payable_price'],
+    		'discount'				=> $this->session->userdata['payment_data']['discount'],
+    		'promotional_code_id'	=> $this->session->userdata['payment_data']['promotinal_code_id'],
+    		'paypal_token'			=> $data['txn_id'],
+    		'created_at'			=> date("Y-m-d H:i:s"),
+    	];
+    	$res=$this->Payment_transaction_model->insert_record('payment_transaction',$pay_arr);
+    	if($res)
+    	{
+    		$condition=['id' => $this->session->userdata['payment_data']['rfp_id']];
+			$update_status=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1 , 'is_paid' => 1]);
+			if($update_status){
+
+				// ------------- Send Mail For Successfully RFP Created ------------
+		        /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
+		        $html_content=mailer('contact_inquiry','AccountActivation'); 
+		        $username= $this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname'];
+		        $message = "Thank you, For Create RFP <br/>
+					<p>Your RFP has been successfully submitted.</p>";
+				
+		        $html_content = str_replace("@USERNAME@",$username,$html_content);
+		        $html_content = str_replace("@MESSAGE@",$message,$html_content);
+		        //--------------------------------------
+
+		        $email_config = mail_config();
+		        $this->email->initialize($email_config);
+		        $subject=config('site_name').' - Thank you For Create RFP';    
+		        $this->email->from(config('contact_email'), config('sender_name'))
+		                    ->to($this->session->userdata['client']['email_id'])
+		                    ->subject($subject)
+		                    ->message($html_content);
+
+		      	$this->email->send();
+		     	//--------------------- End Mail -----------------------------------
+		      	$this->session->unset_userdata('rfp_data');
+				$this->session->unset_userdata('payment_data');	
+				$data['subview'] = 'front/rfp/payment_success';
+				$this->load->view('front/layouts/layout_main',$data);
+			}else{
+				$this->session->unset_userdata('rfp_data');
+				$this->session->unset_userdata('payment_data');	
+				$this->session->set_flashdata('error', 'Error Into Change Payment & RFP Status, Please Contact to Admin');
+				redirect('rfp');
+			}
+    	}
+    	else
+    	{
+    		$this->session->unset_userdata('rfp_data');
+			$this->session->unset_userdata('payment_data');	
+    		$this->session->set_flashdata('error', 'Error Into Payment Transaction, Please Contact To Admin');
+    		redirect('rfp');
+    	}
+    	
+    	
+    }
+
+
 
 }

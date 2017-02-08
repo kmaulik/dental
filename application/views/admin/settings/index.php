@@ -31,6 +31,7 @@
                 <input type="hidden" name="slug" id="slug" value="<?php echo (isset($record['slug'])) ? $record['slug'] : set_value('slug'); ?>">
                 <div class="panel panel-flat">
                     <div class="panel-body">
+                        <!-- ============== Basic Setting Section ============ -->
                         <div class="form-group">
                             <h2 class="setting-heading">Basic Configuration</h3>
                            <hr/> 
@@ -90,6 +91,8 @@
                                 <textarea  name="site_keywords" id="site_keywords" placeholder="Enter Site Keyword" class="form-control tokenfield-teal" ><?php echo (isset($record['site_keywords'])) ? $record['site_keywords'] : set_value('site_keywords'); ?></textarea>
                             </div>
                         </div>
+                        <!-- ============== /Basic Setting Section ============ -->
+                        <!-- ============== Social Setting Section ============ -->
                         <div class="form-group">
                             <h2 class="setting-heading">Social Settings</h3>
                            <hr/> 
@@ -117,7 +120,20 @@
                             <div class="col-lg-6">
                                 <input type="text" name="youtube_link" id="youtube_link" placeholder="Enter YouTube Link" class="form-control" value="<?php echo (isset($record['youtube_link'])) ? $record['youtube_link'] : set_value('youtube_link'); ?>">
                             </div>
-                        </div>    
+                        </div> 
+                        <!-- ============== /Social Setting Section ============ -->
+                        <!-- ============== Payment Setting Section ============ -->
+                        <div class="form-group">
+                            <h2 class="setting-heading">Payment Settings</h3>
+                           <hr/> 
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Patient Fees:</label>
+                            <div class="col-lg-6">
+                                <input type="text" name="patient_fees" id="patient_fees" placeholder="Enter Patient Fees" class="form-control NumbersAndDot" value="<?php echo (isset($record['patient_fees'])) ? $record['patient_fees'] : set_value('patient_fees'); ?>">
+                            </div>
+                        </div> 
+                        <!-- ============== /Payment Setting Section ============ -->
                        <div class="text-right">
                         <button class="btn btn-success" type="submit">Save <i class="icon-arrow-right14 position-right"></i></button>
                     </div>
@@ -128,6 +144,9 @@
 </div>
 </div>
 <script>
+$('.NumbersAndDot').keyup(function () { 
+    this.value = this.value.replace(/[^0-9.]/g,'');
+});
 
 $(function(){
      // Add class on init
@@ -206,6 +225,9 @@ $("#frmsettings").validate({
         youtube_link: {
             required: true,
         },
+        patient_fees: {
+            required: true,
+        },
 
     },
     messages: {
@@ -247,6 +269,9 @@ $("#frmsettings").validate({
         },
         youtube_link: {
             required: "Please provide YouTube Link",
+        }, 
+        patient_fees: {
+            required: "Please provide Patient Fees",
         },
 
     }

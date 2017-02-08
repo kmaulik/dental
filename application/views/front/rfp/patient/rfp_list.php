@@ -1,5 +1,10 @@
-<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
+<style>
+/*.rfp-table tbody td:last-child {
+    width: 22%;
+}*/
+</style>
 
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>RFP List</h1>
@@ -36,7 +41,7 @@
 	</div>	
 	<div class="col-sm-12">
 		<div class="table-responsive">
-			<table class="table table-hover">
+			<table class="table table-hover rfp-table">
 				<thead>
 					<tr>
 						<th>#</th>

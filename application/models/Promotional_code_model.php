@@ -44,13 +44,20 @@ class Promotional_code_model extends CI_Model {
      * @param : @table 
      * @author : HPA
      */
-    public function get_result($table, $condition = null) {
+    public function get_result($table, $condition = null,$single='') {
         $this->db->select('*');
         if (!is_null($condition)) {
             $this->db->where($condition);
         }
         $query = $this->db->get($table);
-        return $query->result_array();
+
+        if($single){
+            return $query->row_array();
+        }else{
+            return $query->result_array();
+        }
+        
+        
     }
 
     /**
@@ -92,6 +99,21 @@ class Promotional_code_model extends CI_Model {
         $query = $this->db->get();
         return $query->num_rows();
     }
+
+    /**
+     * @uses : This function is used to Fetch Promotional Code Data
+     * @author : DHK
+     */
+    public function fetch_coupan_data(){
+        $this->db->where('start_date <=', date("Y-m-d"));
+        $this->db->where('end_date >=', date("Y-m-d"));
+        $this->db->where('code', $this->input->post('coupan_code'));
+        $this->db->where('is_deleted', 0);
+        $this->db->where('is_blocked', 0);
+        $query= $this->db->get('promotional_code');
+        return $query->row_array();
+
+    }   
 
 
 
