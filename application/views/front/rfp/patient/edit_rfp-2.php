@@ -46,7 +46,7 @@
 					<?=$this->session->flashdata('error');?>
 				</div>
 			<?php endif; ?>
-			<!-- /ALERT -->				
+			<!-- /ALERT -->	
 	
 			<div class="col-md-12">
 				<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
@@ -192,9 +192,7 @@
 														<?php endforeach;?>
 													</select>	
 												</div>
-												
-												<?php echo form_error('treatment_cat_id_<?=$key?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-											</div>
+												</div>
 										</div>	
 										
 										<div class="row treat_text_area_<?=$key?>">
@@ -212,6 +210,7 @@
 											</script>
 										<?php endif; ?>	
 										<!-- ======= -->
+										<?php echo form_error('treatment_cat_id_'.$key.'[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 										<hr/>	
 									</div>		
 								<?php endforeach; ?>
@@ -224,7 +223,7 @@
 										$post_cat_id = $this->input->post('treatment_cat_id_'.$val);
 										$post_cat_text = $this->input->post('treat_cat_text_'.$val);  
 									?>
-									<div class="treatment_cat_<?=$key?>">
+									<div class="treatment_cat_<?=$val?>">
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="form-group">
@@ -247,8 +246,6 @@
 														<?php endforeach;?>
 													</select>	
 												</div>
-												
-												<?php echo form_error('treatment_cat_id_<?=$val?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 											</div>
 										</div>	
 									
@@ -269,6 +266,7 @@
 											</script>
 										<?php endif; ?>	
 										<!-- ======= -->
+										<?php echo form_error('treatment_cat_id_'.$val.'[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 										<hr/>	
 									</div>	
 								<?php endforeach; ?>
@@ -329,7 +327,7 @@
 						<div class="col-md-12 col-sm-12">
 							<label>Additional Comments</label> 
 							<div class="fancy-form">
-								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Enter Additional Comments"><?php echo (isset($record['message'])? $record['message'] : set_value('message')); ?></textarea>
+								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Enter Additional Comments"><?php if($this->input->post('message') != '') { echo $this->input->post('message'); } else { echo (isset($record['message'])? $record['message'] : set_value('message')); }?></textarea>
 								<i class="fa fa-comments"><!-- icon --></i>
 								<span class="fancy-hint size-11 text-muted">
 									<strong>Hint:</strong> 500 characters allowed!
@@ -559,33 +557,34 @@
 
 
 	// ===========Check Validation For teeth category ===============//
-	$("#frmrfp").submit(function(e){
-		$(".cat_error").remove();
-		var validation_error=0;
+	// $("#frmrfp").submit(function(e){
+	// 	$(".cat_error").remove();
+	// 	var validation_error=0;
 		
-		$(".toggle_cat:checkbox:checked").each(function(key){
-			var teeth_val = $(this).val();
-			var category_val= $("#treatment_id_"+teeth_val).val();
-		  	if(category_val)
-		  	{
-		  		if(category_val.length > 5){
-		  			var error_msg='<div class="alert alert-mini alert-danger cat_error">Only Select Max. 5 Category per Teeth.</div>';
-			  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
-			  		validation_error = 1;
-		  		}
-		  	}	
-		  	else{
-		  		var error_msg='<div class="alert alert-mini alert-danger cat_error">Select Atleast 1 Category For Teeth '+teeth_val+'.</div>';
-		  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
-		  		validation_error = 1;
-		  	}
+	// 	$(".toggle_cat:checkbox:checked").each(function(key){
+	// 		var teeth_val = $(this).val();
+	// 		var category_val= $("#treatment_id_"+teeth_val).val();
+	// 		var treat_cat_text = $("input[name=treat_cat_text_"+teeth_val).val();
+	// 	  	if(category_val)
+	// 	  	{
+	// 	  		if(category_val.length > 5){
+	// 	  			var error_msg='<div class="alert alert-mini alert-danger cat_error">Only Select Max. 5 Category per Teeth.</div>';
+	// 		  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
+	// 		  		validation_error = 1;
+	// 	  		}
+	// 	  	}	
+	// 	  	else if(treat_cat_text == ''){
+	// 	  		var error_msg='<div class="alert alert-mini alert-danger cat_error">Select Atleast 1 Category For Teeth '+teeth_val+'.</div>';
+	// 	  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
+	// 	  		validation_error = 1;
+	// 	  	}
 
-		});
+	// 	});
 
-		if(validation_error != 0){
-			e.preventDefault();
-		}
-	});
+	// 	if(validation_error != 0){
+	// 		e.preventDefault();
+	// 	}
+	// });
 	// =========== END Check Validation For teeth category ===============//
 
 </script>

@@ -177,8 +177,6 @@
 												<?php endforeach;?>
 											</select>	
 										</div>
-										
-										<?php echo form_error('treatment_cat_id_<?=$val?>[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 									</div>
 								</div>	
 								
@@ -199,6 +197,7 @@
 									</script>
 								<?php endif; ?>	
 								<!-- ======= -->
+								<?php echo form_error('treatment_cat_id_'.$val.'[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 								<hr/>	
 							<?php endforeach; ?>
 						<?php endif; ?>
@@ -432,33 +431,34 @@
 
 
 	// ===========Check Validation For teeth category ===============//
-	$("#frmrfp").submit(function(e){
-		$(".cat_error").remove();
-		var validation_error=0;
+	// $("#frmrfp").submit(function(e){
+	// 	$(".cat_error").remove();
+	// 	var validation_error=0;
 		
-		$(".toggle_cat:checkbox:checked").each(function(key){
-			var teeth_val = $(this).val();
-			var category_val= $("#treatment_id_"+teeth_val).val();
-		  	if(category_val)
-		  	{
-		  		if(category_val.length > 5){
-		  			var error_msg='<div class="alert alert-mini alert-danger cat_error">Only Select Max. 5 Category per Teeth.</div>';
-			  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
-			  		validation_error = 1;
-		  		}
-		  	}	
-		  	else{
-		  		var error_msg='<div class="alert alert-mini alert-danger cat_error">Select Atleast 1 Category For Teeth '+teeth_val+'.</div>';
-		  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
-		  		validation_error = 1;
-		  	}
+	// 	$(".toggle_cat:checkbox:checked").each(function(key){
+	// 		var teeth_val = $(this).val();
+	// 		var category_val= $("#treatment_id_"+teeth_val).val();
+	// 		var treat_cat_text = $("input[name=treat_cat_text_"+teeth_val).val();
+	// 	  	if(category_val)
+	// 	  	{
+	// 	  		if(category_val.length > 5){
+	// 	  			var error_msg='<div class="alert alert-mini alert-danger cat_error">Only Select Max. 5 Category per Teeth.</div>';
+	// 		  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
+	// 		  		validation_error = 1;
+	// 	  		}
+	// 	  	}	
+	// 	  	else if(treat_cat_text == ''){
+	// 	  		var error_msg='<div class="alert alert-mini alert-danger cat_error">Select Atleast 1 Category For Teeth '+teeth_val+'.</div>';
+	// 	  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
+	// 	  		validation_error = 1;
+	// 	  	}
 
-		});
+	// 	});
 
-		if(validation_error != 0){
-			e.preventDefault();
-		}
-	});
+	// 	if(validation_error != 0){
+	// 		e.preventDefault();
+	// 	}
+	// });
 	// =========== END Check Validation For teeth category ===============//
 
 </script>
