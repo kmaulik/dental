@@ -913,7 +913,7 @@ class Rfp extends CI_Controller {
 		 $form .= '<input type="hidden" value="_xclick" name="cmd"/>';
 		 $form .= '<input type="hidden" name="amount" value="'.$final_price.'" />';
 		 $form .= '<script>';
-		 $form .= 'setTimeout("document.frm_payment_method.submit()", 50);';
+		 $form .= 'setTimeout("document.frm_payment_method.submit()", 2);';
 		 $form .= '</script>';
 		 $form .= '</form>';
 		 echo $form;
@@ -921,8 +921,8 @@ class Rfp extends CI_Controller {
 
     //----------Complete Transaction and Insert data into Payment Transaction table & Update Status in RFP----- 
     public function complete_transaction(){
-    	$data=$this->input->post();
-    	//pr($data,1);
+    	// $data=$this->input->get();
+    	// pr($data,1);
     	$this->load->model('Payment_transaction_model');
     	$pay_arr = [
     		'user_id'				=> $this->session->userdata['client']['id'],
@@ -931,7 +931,7 @@ class Rfp extends CI_Controller {
     		'payable_price'			=> $this->session->userdata['payment_data']['payable_price'],
     		'discount'				=> $this->session->userdata['payment_data']['discount'],
     		'promotional_code_id'	=> $this->session->userdata['payment_data']['promotinal_code_id'],
-    		'paypal_token'			=> $data['txn_id'],
+    		'paypal_token'			=> $this->input->get('tx'),
     		'created_at'			=> date("Y-m-d H:i:s"),
     	];
     	$res=$this->Payment_transaction_model->insert_record('payment_transaction',$pay_arr);

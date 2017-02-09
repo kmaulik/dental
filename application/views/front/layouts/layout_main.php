@@ -51,7 +51,8 @@
                             <ul class="dropdown-menu pull-right">
                                 <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
                                 <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>   
-                                <li><a tabindex="-1" href="<?=base_url('messageboard')?>"><i class="fa fa-envelope"></i> Message</a></li>                             
+                                <li><a tabindex="-1" href="<?=base_url('messageboard')?>"><i class="fa fa-envelope"></i> MESSAGE</a></li>    
+                                <li><a tabindex="-1" href="<?=base_url('payment_transaction/history')?>"><i class="fa fa-money"></i> PAYMENT HISTORY</a></li>                         
                                 <li class="divider"></li>
                                 <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
                             </ul>

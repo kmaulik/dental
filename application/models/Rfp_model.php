@@ -142,8 +142,8 @@ class Rfp_model extends CI_Model {
         }
         if($date_data != ''){
             $date=explode(" ",$date_data);
-            $this->db->where('rfp.created_at >=', $date[0]);
-            $this->db->where('rfp.created_at <=', $date[2]);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
         }
         $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
@@ -161,8 +161,8 @@ class Rfp_model extends CI_Model {
         }
         if($date_data != ''){
             $date=explode(" ",$date_data);
-            $this->db->where('rfp.created_at >=', $date[0]);
-            $this->db->where('rfp.created_at <=', $date[2]);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
         }
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
