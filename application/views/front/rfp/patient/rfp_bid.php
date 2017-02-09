@@ -83,7 +83,7 @@
 								<div class="media-body">
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
-										<a href="#fakelink"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
+										<a href="#fakelink" id="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 										<div class="pull-right msg-btn">
 											<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
 											<?php if($bid_list['is_chat_started'] == 1) :?>
@@ -182,7 +182,7 @@
 </div>
 <!-- ================== /Modal Popup For Place a Bid ========================= -->		
 
-
+<script type="text/javascript" src="<?php echo base_url().'public/front/js/vague.js'; ?>"></script>
 <script>
 function send_msg(key){
 	var rfp_data = <?php echo json_encode($rfp_bid_list); ?>;
@@ -191,5 +191,17 @@ function send_msg(key){
 	$("#rfp_bid_id").val(rfp_data[key]['rfp_bid_id']);
 	$("#to_id").val(rfp_data[key]['doctor_id']);
 }
+
+var vague = $('#my_custom_strong').Vague({
+    intensity:      3,      // Blur Intensity
+    forceSVGUrl:    false,   // Force absolute path to the SVG filter,
+    // default animation options
+    animationOptions: {
+      duration: 1000,
+      easing: 'linear' // here you can use also custom jQuery easing functions
+    }
+});
+
+vague.blur();
 
 </script>

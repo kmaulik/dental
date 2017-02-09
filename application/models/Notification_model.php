@@ -33,6 +33,28 @@ class Notification_model extends CI_Model {
 		return $last_id;
 	}
 
+	public function get_all_notifications($user_id){
+		$this->db->order_by('created_at','desc');
+		$this->db->select('notifications.*,u1.fname as from_fname,u1.lname as from_lname,u2.fname as to_fname,u2.lname as to_lname,rfp.title');
+		
+		$this->db->join('users as u1','notifications.from_id = u1.id');
+		$this->db->join('users as u2','notifications.to_id = u2.id');
+		
+		$this->db->join('rfp','notifications.rfp_id = rfp.id','left');
+
+		$this->db->where(['notifications.to_id'=>$user_id]);
+		$res_array = $this->db->get('notifications')->result_array();
+
+		// qry();
+		// pr($res_array,1);
+
+		return $res_array;
+	}
+
+	public function get_unread_cnt($user_id){
+		$res = $this->db->get_where('notifications',['to_id'=>$user_id,'is_read'=>'0'])->num_rows();
+		return $res;
+	}
 }
 
 /* End of file Notification_model.php */

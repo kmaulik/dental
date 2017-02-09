@@ -51,12 +51,10 @@
 			<ul class="nav nav-tabs nav-top-border">
 				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>
 				<li class="<?php if($tab == 'avatar'){ echo 'active'; }?>"><a href="#avatar" data-toggle="tab">Avatar</a></li>
-				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>
-				<li class="<?php if($tab == 'privacy'){ echo 'active'; }?>"><a href="#privacy" data-toggle="tab">Privacy</a></li>
+				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>				
 			</ul>
 			
-			<div class="tab-content margin-top-20">				
-
+			<div class="tab-content margin-top-20">
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade <?php if($tab == 'info'){ echo 'in active'; }?>" id="info">
 					<?php 
@@ -182,7 +180,6 @@
 						</div>
 
 					</form>
-
 				</div>
 				<!-- /AVATAR TAB -->
 
@@ -228,73 +225,9 @@
 						</div>
 
 					</form>
-
 				</div>
 				<!-- /PASSWORD TAB -->
-
-				<!-- PRIVACY TAB -->
-				<div class="tab-pane fade <?php if($tab == 'privacy'){ echo 'in active'; }?>" id="privacy">
-
-					<form  method="post">
-						<div class="sky-form">
-
-							<table class="table table-bordered table-striped">
-								<tbody>
-									<tr>
-										<td>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.</td>
-										<td>
-											<div class="inline-group">
-												<label class="radio nomargin-top nomargin-bottom">
-													<input type="radio" name="radioOption" checked=""><i></i> Yes
-												</label>
-
-												<label class="radio nomargin-top nomargin-bottom">
-													<input type="radio" name="radioOption" checked=""><i></i> No
-												</label>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.</td>
-										<td>
-											<label class="checkbox nomargin">
-												<input type="checkbox" name="checkbox" checked=""><i></i> Yes
-											</label>
-										</td>
-									</tr>
-									<tr>
-										<td>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.</td>
-										<td>
-											<label class="checkbox nomargin">
-												<input type="checkbox" name="checkbox" checked=""><i></i> Yes
-											</label>
-										</td>
-									</tr>
-									<tr>
-										<td>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.</td>
-										<td>
-											<label class="checkbox nomargin">
-												<input type="checkbox" name="checkbox" checked=""><i></i> Yes
-											</label>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-
-						</div>
-
-						<div class="margin-top-10">
-							<a href="#" class="btn btn-primary"><i class="fa fa-check"></i> Save Changes </a>
-							<a href="#" class="btn btn-default">Cancel </a>
-						</div>
-
-					</form>
-
-				</div>
-				<!-- /PRIVACY TAB -->
-
 			</div>
-
 		</div>
 
 		
@@ -305,8 +238,7 @@
 				<?php if($db_data['avatar'] == '') { ?>
 					<img src="<?php echo base_url(); ?>uploads/default/no_image_found.jpg" alt="" />
 				<?php }else{ ?>
-					<img src="<?php echo base_url(); ?>uploads/avatars/<?= $db_data['avatar'] ?>" alt="" 
-						 onerror="this.src='<?php echo base_url().'uploads/default/no_image_found.jpg'; ?>'" />
+					<img src="<?php echo base_url(); ?>uploads/avatars/<?= $db_data['avatar'] ?>" alt="" />
 				<?php } ?>
 
 				<h2 class="size-18 margin-top-10 margin-bottom-0"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></h2>

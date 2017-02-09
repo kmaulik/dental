@@ -1,3 +1,11 @@
+<?php 
+    $client_login = $this->session->userdata('client');    
+    $all_notifications = get_notifications(); 
+
+    if(!empty($client_login)) { 
+        $unread_cnt = get_notifications_unread_count();
+    }
+?>
 <!DOCTYPE html>
 <!--[if IE 8]>          <html class="ie ie8"> <![endif]-->
 <!--[if IE 9]>          <html class="ie ie9"> <![endif]-->
@@ -173,24 +181,19 @@
                             </li>
                             <li class="dropdown <?php if($this->uri->segment(1)=='contact_us') echo 'active'; ?>">
                                 <a href="<?=base_url('contact_us')?>">CONTACT US</a>
-                            </li>                            
-                            <li class="notification_side">
-                                <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
-                                    <span>NOTIFICATION</span>
-                                    <span class="post_number">31</span>
-                                </a>
-                            </li>
+                            </li>  
 
-                            <!-- <li class="dropdown">
-                                <a href="<?=base_url('login')?>">LOGIN</a>
-                            </li>
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" href="#">REGISTRATION</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="<?=base_url('registration/patient')?>">PATIENT</a></li>
-                                    <li><a href="<?=base_url('registration/doctor')?>">DOCTOR</a></li>
-                                </ul>    
-                            </li> -->
+                            <?php if(!empty($client_login)) { ?>                          
+                                <li class="notification_side">
+                                    <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
+                                        <span>NOTIFICATION</span>
+                                        <?php if($unread_cnt != 0) { ?>
+                                            <span class="post_number"><?php echo $unread_cnt; ?></span>
+                                        <?php } ?>
+                                    </a>
+                                </li>
+                            <?php } ?>
+                             
                             </ul>
                         </nav>
                     </div>
@@ -222,6 +225,7 @@
                 sidepanel-inverse       = By default, sidepanel is placed on right (left for RTL)
                                 If you add "sidepanel-inverse", will be placed on left side (right on RTL).
         -->
+
     <div id="sidepanel" class="sidepanel-light">
         <a id="sidepanel_close" href="#"><!-- close -->
             <i class="glyphicon glyphicon-remove"></i>
@@ -230,161 +234,29 @@
         <div class="sidepanel-content custom_notification_data">
             <h2 class="sidepanel-title">Notification</h2>
 
-            <div class="custom_notification" id="for_window_size">
-                <ul class="scrollbar-inner" >
-                   
+            <div class="custom_notification" >
+                <ul class="scrollbar-inner " id="for_window_size" >
+                    <?php 
+                        if(!empty($all_notifications)) { 
+                            foreach($all_notifications as $noti) {
+                    ?>
                     <li>
+                        <a href="">
+                            <p class="notifly_head"><?php echo $noti['noti_msg']; ?></p>
+                            <!-- <p class="notifly_msg">Near :0.00Miles </p>  -->
+                            <p class="notifly_ago"><?php echo time_ago($noti['created_at']); ?></p>
+                        </a>
+                    </li>
+                    <?php } } ?>
+                    <!-- <li class="read">
                         <a href="">
                             <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
                             <p class="notifly_msg">Near :0.00Miles </p> 
                             <p class="notifly_ago">2 weeks ago</p>                   
                         </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-                    <li>
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li>
-
+                    </li> -->                    
                 </ul>
             </div>
-
-            
 
         </div>
     </div>
@@ -394,6 +266,7 @@
 <link href="<?= DEFAULT_CSS_PATH ?>custom_scrollbar.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url().'public/front/js/scrollbar.min.js'; ?>"></script>
 
+
 <script type="text/javascript">var plugin_path = '<?= DEFAULT_PLUGINS_PATH ?>';</script> 
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>scripts.js"></script>
 <!-- REVOLUTION SLIDER -->
@@ -402,10 +275,10 @@
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>view/demo.revolution_slider.js"></script>
 
 <script type="text/javascript">
+    jQuery('.scrollbar-inner').scrollbar();
     jQuery(document).ready(function(){
-        var window_height = $( window ).height();
-        $('#for_window_size').css({'height':window_height});
-        jQuery('.scrollbar-inner').scrollbar();
+        var window_height = $( window ).height();        
+        $('.scrollbar-inner').css({'height':window_height});
     });    
 </script>
 

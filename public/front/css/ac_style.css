@@ -159,10 +159,14 @@ section.page-header .breadcrumb a:hover {
   color: rgb(255, 255, 255) !important;
 }      
 #sidepanel .sidepanel-content.custom_notification_data h2 {
+  display: none;
   margin-bottom: 30px;
   margin-left: 20px;
   margin-top: 11px;
   position: relative;
+}
+.sidepanel-light {
+  overflow: visible !important;
 }
 #sidepanel .sidepanel-content.custom_notification_data {
   margin: 0;
@@ -184,7 +188,13 @@ section.page-header .breadcrumb a:hover {
   overflow: auto;
 }
 .custom_notification ul {
-  height: 720px !important;
+  /*height: 720px !important;*/
+}
+.custom_notification ul {
+  max-height: 100% !important;
+}
+.custom_notification ul li.read {
+  background: #fff;
 }
 .custom_notification ul li {
   background: #f4f4f4 none repeat scroll 0 0;
@@ -205,8 +215,15 @@ section.page-header .breadcrumb a:hover {
 }
 #sidepanel > a {
   background: #31b0d5 none repeat scroll 0 0 !important;
+  border-right: 1px solid #cccccc;
   color: #ffffff !important;
+  font-size: 16px;
+  height: 30px;
+  left: -30px;
+  line-height: 30px;
   position: absolute;
+  top: 0;
+  width: 30px;
   z-index: 999;
 }
 .post_number::after {
