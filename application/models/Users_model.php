@@ -99,8 +99,15 @@ class Users_model extends CI_Model {
     }
 
     public function get_patients_count(){
-        $this->db->where('role_id', 5);
+        $this->db->where('role_id', 5); // Role id - 5 recognise as patient Id
         $this->db->where('is_deleted !=', 1);
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
         $res_data = $this->db->get('users')->num_rows();
         return $res_data;
     }
@@ -127,8 +134,15 @@ class Users_model extends CI_Model {
     }
 
     public function get_doctors_count(){
-        $this->db->where('role_id', 4);
+        $this->db->where('role_id', 4); // Role id - 5 recognise as patient Id
         $this->db->where('is_deleted !=', 1);
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
         $res_data = $this->db->get('users')->num_rows();
         return $res_data;
     }    

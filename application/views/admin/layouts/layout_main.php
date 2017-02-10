@@ -131,6 +131,16 @@
                                             </a>
                                         </li> 
                                     <?php } ?>  
+
+                                     <!-- Treatment Category Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'payment_transaction') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/payment_transaction'; ?>">
+                                                <i class="icon-coins"></i>
+                                                <span>Payment Transaction</span>
+                                            </a>
+                                        </li> 
+                                    <?php } ?>  
                                     
                                     <!-- Email Template Menu -->
                                     <?php if($role_id != 3) { ?>

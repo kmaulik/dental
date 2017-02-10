@@ -8,7 +8,16 @@ class Survey_model extends CI_Model {
 	}
 	
 	public function get_survey_count(){
-		$res = $this->db->get_where('survey',['is_deleted'=>'0'])->num_rows();
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('name LIKE "%' . $keyword['value'] . '%" OR survey_desc LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+
+        $this->db->where('is_deleted','0');
+		$res = $this->db->get('survey')->num_rows();
 		return $res;
 	}
 

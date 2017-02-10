@@ -32,6 +32,13 @@ class Email_template_model extends CI_Model {
      * @author : HPA
      */
     public function get_email_count() {
+        
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
         $res_data = $this->db->get('email_template')->num_rows();
         return $res_data;
     }

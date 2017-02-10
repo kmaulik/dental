@@ -34,7 +34,16 @@ class Blogs_model extends CI_Model {
      * @author : HPA
      */
     public function get_blogs_count() {
+       
         $this->db->where('is_deleted !=', 1);
+        
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('blog_title LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+        
         $res_data = $this->db->get('blog')->num_rows();
         return $res_data;
     }

@@ -34,7 +34,15 @@ class Cms_model extends CI_Model {
      * @author : HPA
      */
     public function get_cms_count() {
+        
         $this->db->where('is_deleted !=', 1);
+        
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR seo_title LIKE "%'.$keyword['value'].'%"', NULL);
+        }
         $res_data = $this->db->get('cms_page')->num_rows();
         return $res_data;
     }
