@@ -37,7 +37,7 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('address', 'address', 'required');
                 $this->form_validation->set_rules('city', 'city', 'required');
                 $this->form_validation->set_rules('country_id', 'country', 'required');
-                $this->form_validation->set_rules('zipcode', 'zipcode', 'required');                
+                $this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_mycustom_func'); 
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
                                                  ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);

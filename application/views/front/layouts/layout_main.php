@@ -225,7 +225,7 @@
                 
                 sidepanel-inverse       = By default, sidepanel is placed on right (left for RTL)
                                 If you add "sidepanel-inverse", will be placed on left side (right on RTL).
-        -->
+    -->
 
     <div id="sidepanel" class="sidepanel-light">
         <a id="sidepanel_close" href="#"><!-- close -->
@@ -238,12 +238,30 @@
             <div class="custom_notification" >
                 <ul class="scrollbar-inner " id="for_window_size" >
                     <?php 
-                        if(!empty($all_notifications)) { 
+                        if(!empty($all_notifications)) {
                             foreach($all_notifications as $noti) {
-                    ?>
+
+                                $link = '';
+                                if($noti['noti_type'] == 'message'){
+                                    $link = base_url().'messageboard/message/'.encode($noti['rfp_id']).'/'.encode($noti['from_id']);
+                                }
+                                if($noti['noti_type'] == 'doc_bid'){
+                                    $link = base_url().'rfp/view_rfp_bid/'.encode($noti['rfp_id']);
+                                }
+                    ?>  
                     <li>
-                        <a href="">
-                            <p class="notifly_head"><?php echo $noti['noti_msg']; ?></p>
+                        <a href="<?php echo $link; ?>">
+                            <p class="notifly_head">
+                                <?php echo $noti['noti_msg']; ?>
+                                <?php
+                                    if($noti['noti_type'] == 'message'){
+                                        echo "You have unread message for ".$noti['title']." from ".$noti['to_fname'];
+                                    }
+                                    if($noti['noti_type'] == 'doc_bid'){
+                                        echo "You have new bid on ".$noti['title'].' by '.$noti['to_fname'];
+                                    }
+                                ?>
+                            </p>
                             <!-- <p class="notifly_msg">Near :0.00Miles </p>  -->
                             <p class="notifly_ago"><?php echo time_ago($noti['created_at']); ?></p>
                         </a>

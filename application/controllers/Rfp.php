@@ -652,12 +652,15 @@ class Rfp extends CI_Controller {
     	$this->Messageboard_model->insert_record('messages',$data);
     	// ------------------------------------------------------------------------
     	// v! insert data notifications table
+    	$frm_id = $this->session->userdata('client')['id'];
+    	$rfp_id = $this->input->post('rfp_id');
+    	$link = 'messageboard/message/'.encode($rfp_id).'/'.encode($frm_id);
 		$noti_data = [
 						'from_id'=>$this->session->userdata('client')['id'],
 						'to_id'=>$this->input->post('to_id'),
-						'rfp_id' => $this->input->post('rfp_id'),
+						'rfp_id' => $rfp_id,
 						'noti_type'=>'message',
-						'noti_url'=>'messageboard'								
+						'noti_url'=>$link
 					];
 												
 		$this->Notification_model->insert_notification($noti_data);
@@ -794,25 +797,25 @@ class Rfp extends CI_Controller {
 	    	);
 
 	    	$res=$this->Rfp_model->insert_record('rfp_bid',$data);
-
 	    	// ------------------------------------------------------------------------
 	    	// v! insert data notifications table
+	    	$rfp_id = $this->input->post('rfp_id');
+	    	$link = 'rfp/view_rfp_bid/'.encode($rfp_id);
+
 	    	$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true);
 			$noti_data = [
 							'from_id'=>$this->session->userdata('client')['id'],
 							'to_id'=>$rfp_data['patient_id'],
-							'rfp_id' => $this->input->post('rfp_id'),
+							'rfp_id' => $rfp_id,
 							'noti_type'=>'doc_bid',
-							'noti_url'=>'bid'
+							'noti_url'=>$link
 						];
 													
 			$this->Notification_model->insert_notification($noti_data);
 	    	// ------------------------------------------------------------------------
-
 	    	if($res){
 	    		$this->session->set_flashdata('success', 'Bid Placed Successfully!');
-	    	}
-	    	else{
+	    	}else{
 	    		$this->session->set_flashdata('error', 'Error Into Place Bid, Please try again!');
 	    	}
     	}else{
@@ -826,12 +829,10 @@ class Rfp extends CI_Controller {
 	    	$res=$this->Rfp_model->update_record('rfp_bid',$where,$data);
 	    	if($res){
 	    		$this->session->set_flashdata('success', 'Bid Updated Successfully!');
-	    	}
-	    	else{
+	    	}else{
 	    		$this->session->set_flashdata('error', 'Error Into Update Bid, Please try again!');
 	    	}
-    	}	
-	    	
+    	}	    	
     	redirect('rfp/view_rfp/'.encode($this->input->post('rfp_id')));
     }
 

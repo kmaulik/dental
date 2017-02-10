@@ -9,12 +9,13 @@ class Rfp extends CI_Controller {
         error_reporting(0);
         $this->load->model(['Rfp_model','Notification_model','Users_model']);
         check_admin_login();
+        // pr($this->session->userdata('admin'));
     }
 
     /**
      * Function load view of rfp list.
      */
-    public function index() {     
+    public function index() {
         $data['subview'] = 'admin/rfp/index';
         $this->load->view('admin/layouts/layout_main', $data);
     }
@@ -22,7 +23,7 @@ class Rfp extends CI_Controller {
     /**
      * Function is used to get result based on datatable in rfp list page
      */
-    public function list_rfp() {        
+    public function list_rfp() {
         $final['recordsTotal'] = $this->Rfp_model->get_rfp_count();
         $final['redraw'] = 1;
         $final['recordsFiltered'] = $final['recordsTotal'];
@@ -34,11 +35,12 @@ class Rfp extends CI_Controller {
      * Function is used to view specific data 
     */
     public function view($rfp_id){
+
         $data['title'] = 'Admin View RFP';
         $data['heading'] = 'View RFP Page';  
         $data['rfp_id'] = decode($rfp_id);
         $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
-        //pr($data,1);
+        // pr($data['record'],1);
         $data['subview'] = 'admin/rfp/view';
         $this->load->view('admin/layouts/layout_main', $data);
     }
@@ -77,11 +79,9 @@ class Rfp extends CI_Controller {
     public function choose_action($rfp_id){
         $rfp_id = decode($rfp_id);
         $data['rfp_id'] = $rfp_id;        
-        $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');
-        // pr($record,1);
-        $user_data = $this->Users_model->check_if_user_exist(['id' => $record['patient_id']], false, true);        
-
-        if(empty($rfp_id)){    show_404(); }
+        $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');        
+        $user_data = $this->Users_model->check_if_user_exist(['id' => $record['patient_id']], false, true);
+        if(empty($rfp_id)){ show_404(); }
 
         if($_POST){
             $remarks = $this->input->post('remarks');
@@ -106,7 +106,9 @@ class Rfp extends CI_Controller {
             $admin_remarks =[
                                 'attempt_no'=>$last_cnt,
                                 'last_message'=>$message,
-                                'last_remarks'=>$remarks
+                                'last_remarks'=>$remarks,
+                                'last_action_by'=>$this->session->userdata('admin')['email_id'],
+                                'last_action'=>date('Y-m-d H:i:s')
                             ];
 
             $admin_remarks_str = json_encode($admin_remarks);
@@ -146,9 +148,8 @@ class Rfp extends CI_Controller {
             $this->session->set_flashdata('message', ['message'=>'Action successfully completed','class'=>'success']);
             redirect('admin/rfp');
         }
-
-        $data['subview'] = 'admin/rfp/choose_action';
-        $this->load->view('admin/layouts/layout_main', $data);
+        // $data['subview'] = 'admin/rfp/choose_action';
+        // $this->load->view('admin/layouts/layout_main', $data);
     }
 
 }

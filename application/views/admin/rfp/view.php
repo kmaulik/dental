@@ -1,56 +1,59 @@
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/media/fancybox.min.js"></script>
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>pages/gallery.js"></script>
 
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>pages/form_inputs.js"></script>
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/forms/selects/select2.min.js"></script>
+
 <style>
-.rfp-title{
-	border-bottom: 2px solid gray;
-    margin-bottom: 0px;
-    margin-top: 10px;
-}
-.teeth th{
-	text-align: center;
-	color: #000;
-	font-size: 15px;
-}
-.teeth td{
-	padding: 12px !important;
-}
-h4.rfp-title {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-}
-.rfp-basic,.rfp-history, .rfp-treatment,.rfp-additional {
-    display: inline-block;
-    width: 100%;
-    margin-bottom: 10px;
-}
-.rfp-history .col-sm-12, .rfp-additional .col-sm-12 {
-    margin-bottom: 20px;
-    line-height: 16px;
-}
-label {
-    font-size: 15px;
-    font-weight: 600;
-}
-.rfp-additional a img {
-    border: 2px solid #ccc;
-    padding: 2px;
-}
-.rfp-additional a {
-    margin-right: 10px;
-}
-.col_custom label {
-    display: block;
-    margin-bottom: 10px;
-}
-.col_custom .thumbnail {
-    float: left;
-    margin-right: 10px;
-}
-.manual_category{
-	padding-left: 40px;
-}
+	.rfp-title{
+		border-bottom: 2px solid gray;
+	    margin-bottom: 0px;
+	    margin-top: 10px;
+	}
+	.teeth th{
+		text-align: center;
+		color: #000;
+		font-size: 15px;
+	}
+	.teeth td{
+		padding: 12px !important;
+	}
+	h4.rfp-title {
+	    margin-bottom: 20px;
+	    border-bottom: 1px solid #ccc;
+	    padding-bottom: 10px;
+	}
+	.rfp-basic,.rfp-history, .rfp-treatment,.rfp-additional {
+	    display: inline-block;
+	    width: 100%;
+	    margin-bottom: 10px;
+	}
+	.rfp-history .col-sm-12, .rfp-additional .col-sm-12 {
+	    margin-bottom: 20px;
+	    line-height: 16px;
+	}
+	label {
+	    font-size: 15px;
+	    font-weight: 600;
+	}
+	.rfp-additional a img {
+	    border: 2px solid #ccc;
+	    padding: 2px;
+	}
+	.rfp-additional a {
+	    margin-right: 10px;
+	}
+	.col_custom label {
+	    display: block;
+	    margin-bottom: 10px;
+	}
+	.col_custom .thumbnail {
+	    float: left;
+	    margin-right: 10px;
+	}
+	.manual_category{
+		padding-left: 40px;
+	}
 </style>
 
 <div class="page-header page-header-default">
@@ -73,17 +76,105 @@ label {
 			<div class="panel panel-flat">
 				<div class="panel-body">
 
+					<div class="rfp-history">
+						<h4 class="rfp-title">Previous Admin or Agent Remarks</h4>
+						<?php
+							$last_remark = $record['admin_remarks'];
+							if(!empty($last_remark)){
+								$last_remark_arr = json_decode($last_remark,true);													
+						?>
+							<div class="col-sm-12">
+								<label>Total Attempt No : </label> 
+								<?php echo $last_remark_arr['attempt_no']; ?>
+							</div>
+							<div class="col-sm-12">
+								<label>Last Send message : </label> 
+								<?php echo $last_remark_arr['last_message']; ?>
+							</div>
+							<div class="col-sm-12">
+								<label>Last Remark by admin : </label> 
+								<?php echo $last_remark_arr['last_remarks']; ?>
+							</div>												
+							<div class="col-sm-12">
+								<label>Last Action Date: </label> 
+								<?php 
+									echo '&nbsp;&nbsp;'.date('d/m/Y',strtotime($last_remark_arr['last_action']));
+									echo ' ( '.get_no_of_days($last_remark_arr['last_action']).' Days before)';
+								?>
+							</div>
+							<div class="col-sm-12">
+								<label>Last Review by : </label> 
+								<?php echo $last_remark_arr['last_action_by']; ?>
+							</div>
+						<?php } else { ?>
+							<div class="col-sm-12">
+								No  Remarks Yet													
+							</div>
+						<?php } ?>
+					</div>						
+
 					<?php if($record['status'] == '1') { ?>
 						<!--  Additional Section -->
-						<div class="rfp-additional">
+						<div class="rfp-additional" id="action_choose">
 							<h4 class="rfp-title">Your Action</h4>
 							<div class="col-sm-12">
-								<a href="<?php echo base_url().'admin/rfp/choose_action/'.encode($rfp_id);  ?>" class="btn btn-success">
+								<a class="btn btn-success" onclick="$('#action_div').slideDown(); $('#action_choose').slideUp();">
 									Choose your Action 
 								</a>
 							</div>
 						</div>	
 						<!-- /Additional Section  -->
+						
+						<div class="col-md-12" id="action_div" style="display:none" >
+				            <form class="form-horizontal form-validate" id="frm_rfp_action" method="POST" 
+				            	  action="<?php echo base_url().'admin/rfp/choose_action/'.encode($rfp_id);  ?>">
+				                <div class="panel panel-flat">
+				                    <div class="panel-body">
+				                        <div class="form-group">
+				                            <label class="col-lg-3 control-label">Action :</label>
+				                            <div class="col-lg-3">
+				                                <select name="action" class="form-control select" id="action">
+				                                    <option value="no">Dis-Approve</option>
+				                                    <option value="yes">Approve</option>
+				                                </select>
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group">
+				                            <label class="col-lg-3 control-label">
+				                                    Your message:<br/>
+				                                    <small style="color:red">( This message will sent it to patient in mail.)</small>
+				                             </label>
+				                            <div class="col-lg-3">
+				                                <textarea rows="4" name="message" class="form-control" placeholder="Message...."></textarea>
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group">
+				                            <label class="col-lg-3 control-label">
+				                                    Admin Remarks:<br/>                                    
+				                             </label>
+				                            <div class="col-lg-3">
+				                                <textarea rows="4" name="remarks" class="form-control" placeholder="Remarks...."></textarea>
+				                            </div>
+				                        </div>
+
+				                        <div class="form-group">
+				                            <label class="col-lg-3 control-label">
+				                                    
+				                             </label>
+				                            <div class="col-lg-3">
+				                                <button class="btn btn-success" type="submit">Save <i class="icon-arrow-right14 position-right"></i></button>
+				                                <a class="btn btn-default" 
+				                                	onclick="$('#action_div').slideUp(); $('#action_choose').slideDown();">Cancel</a>
+				                            </div>
+				                        </div>				                        
+				                    </div>
+				                </div>
+				            </form>
+				        </div>
+
+
 					<?php } ?>
 																			
 					<!--  Basic Details  -->
@@ -355,3 +446,40 @@ label {
 		</div>
 	</div>
 </div>
+
+
+<script type="text/javascript">
+
+    $(function() {        
+        // Fixed width. Single select
+        $('.select').select2({
+            minimumResultsForSearch: Infinity,
+            width: 250            
+        });
+    });
+ 
+
+    // fname ,lname
+    // city country_id zipcode gender
+    //---------------------- Validation -------------------
+    $("#frm_rfp_action").validate({
+        errorClass: 'validation-error-label',
+        successClass: 'validation-valid-label',
+        highlight: function(element, errorClass) {
+            $(element).removeClass(errorClass);            
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).removeClass(errorClass);            
+        },
+        validClass: "validation-valid-label",
+        ignore:[],
+        rules: {
+            remarks:{required: true },
+            message:{required: true }
+        },        
+        messages: {
+            remarks:{required: 'Please provide a Remarks..' },
+            message:{required: 'Please provide a Message..'}
+        }
+    });
+</script>

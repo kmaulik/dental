@@ -335,5 +335,19 @@
         return $all_notifications;
     }
 
+    function get_no_of_days($start_date){
+        
+        $current_date = date('Y-m-d');        
+        $start_date_timestamp = strtotime($start_date);
+        $end_date_timestamp = strtotime($current_date);
+
+        $timeDiff = abs($end_date_timestamp - $start_date_timestamp);
+        $numberDays = $timeDiff/86400;  // 86400 seconds in one day
+        // and you might want to convert to integer
+        return $numberDays = intval($numberDays);
+    }
+
+
+
 
 

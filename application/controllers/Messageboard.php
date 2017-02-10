@@ -62,19 +62,22 @@ class Messageboard extends CI_Controller {
     		$data=$this->Messageboard_model->insert_record('messages',$data);
 
     		if($data){
+    			
     			// ------------------------------------------------------------------------
     			// v! insert data notifications table
+    			$frm_id =$this->session->userdata('client')['id'];
+    			$link = 'messageboard/message/'.encode($rfp_id).'/'.encode($frm_id);
 				$noti_data = [
-								'from_id'=>$this->session->userdata('client')['id'],
+								'from_id'=>$frm_id,
 								'to_id'=>decode($user_id),
 								'rfp_id' => decode($rfp_id),
 								'noti_type'=>'message',
-								'noti_url'=>'messageboard'								
+								'noti_url'=>$link
 							];
 														
-				$this->Notification_model->insert_notification($noti_data);				
+				$this->Notification_model->insert_notification($noti_data);
 				// ------------------------------------------------------------------------
-								
+
 		    	$user_data=$this->Messageboard_model->get_result('users',['id' => decode($user_id)],'1');
 		    	$rfp_data=$this->Messageboard_model->get_result('rfp',['id' => decode($rfp_id)],'1');
 		    	//------------ Send Mail Config-----------------
