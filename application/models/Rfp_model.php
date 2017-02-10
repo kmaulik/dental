@@ -36,15 +36,20 @@ class Rfp_model extends CI_Model {
      * @author : HPA
      */
     public function get_rfp_count() {
-        $this->db->where('is_deleted !=', 1);
+        $this->db->select('id,title,CONCAT(fname," ",lname) as patient_name,dentition_type,status,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
+        
+        $admin_data = $this->session->userdata('admin');
+        $role_id = $admin_data['role_id'];
 
+        $this->db->where_not_in('status',['0']);
+        $this->db->where('is_deleted !=', 1);
+        
         $keyword = $this->input->get('search');
         $keyword = str_replace('"', '', $keyword);
         
         if (!empty($keyword['value'])) {
             $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR patient_name LIKE "%'.$keyword['value'].'%" OR dentition_type LIKE "%'.$keyword['value'].'%"', NULL);
         }
-
         $res_data = $this->db->get('rfp')->num_rows();
         return $res_data;
     }
@@ -137,8 +142,9 @@ class Rfp_model extends CI_Model {
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
+
         if ($search_data != '') {
-            $this->db->where('title LIKE "%' . $search_data . '%" OR CONCAT(rfp.fname," ", rfp.lname) LIKE "%'.$search_data.'%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+            $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
         if($date_data != ''){
             $date=explode(" ",$date_data);
@@ -156,8 +162,9 @@ class Rfp_model extends CI_Model {
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
+       
         if ($search_data != '') {
-            $this->db->where('title LIKE "%' . $search_data . '%" OR CONCAT(rfp.fname," ", rfp.lname) LIKE "%'.$search_data.'%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+            $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
         if($date_data != ''){
             $date=explode(" ",$date_data);

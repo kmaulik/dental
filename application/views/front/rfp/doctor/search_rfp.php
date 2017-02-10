@@ -126,7 +126,7 @@ span.time {
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
-									<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP Title, Patient Name, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+									<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP Title, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 									<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
 										<em>Search RFP From Here</em>
 									</span>

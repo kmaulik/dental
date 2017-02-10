@@ -37,7 +37,8 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('address', 'address', 'required');
                 $this->form_validation->set_rules('city', 'city', 'required');
                 $this->form_validation->set_rules('country_id', 'country', 'required');
-                $this->form_validation->set_rules('zipcode', 'zipcode', 'required');                
+                $this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
+                                             ['validate_zipcode'=>'Please Enter Valid Zipcode']);                
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
                                                  ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
@@ -63,23 +64,22 @@ class Dashboard extends CI_Controller {
             
             if($tab == 'info'){ 
 
-                $loc_arr['lat'] = $data['db_data']['latitude'];
-                $loc_arr['lng'] = $data['db_data']['longitude'];
+                $longitude = $data['db_data']['longitude'];
+                $latitude = $data['db_data']['latitude'];
 
                 $zipcode = $this->input->post('zipcode');
 
                 if($zipcode != $data['db_data']['zipcode']){
 
-                    $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
-                    $res = $this->unirest->get($str);
-                    $res_arr = json_decode($res->raw_body,true);
-
-                    if($res_arr['status'] != 'OK'){
-                        $this->session->set_flashdata('error', 'Zip code must be valid. Please try again.');
-                        redirect('dashboard/edit_profile');
-                    }else{
-                        $loc_arr = $res_arr['results'][0]['geometry']['location'];
-                    }                    
+                    //-------- Fetch Longitude and Latitude based on zipcode ----
+                    $longitude='';
+                    $latitude='';
+                    $location_data = $this->validate_zipcode($zipcode,1);
+                    if($location_data['status'] == 'OK'){
+                        $longitude = $location_data['results'][0]['geometry']['location']['lng'];
+                        $latitude= $location_data['results'][0]['geometry']['location']['lat'];
+                    }
+                    //--------------------------
                 }                
 
                 $fname = $this->input->post('fname');
@@ -101,8 +101,8 @@ class Dashboard extends CI_Controller {
                                     'zipcode'=>$zipcode,
                                     'gender'=>$gender,
                                     'phone'=>$phone,
-                                    'latitude' => $loc_arr['lat'],
-                                    'longitude' => $loc_arr['lng'],
+                                    'latitude' => $latitude,
+                                    'longitude' => $longitude,
                                     'birth_date'=>$birth_date
                                 );
 
@@ -156,14 +156,40 @@ class Dashboard extends CI_Controller {
 
     // v! Custom Form validation
     public function validate_birthdate($str){
-        $field_value = $str; //this is redundant, but it's to show you how
+         $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
-            if(count($arr_date) == 3 && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
                 return TRUE;
             }else{
                 return FALSE;
             }
+        }        
+    }
+
+     /* @DHK Custom Form validation for zipcode
+    /* Param 1 : Zipcode
+    /* Param 2 : for return array if null then return TRUE/FALSE(Optional)
+    */
+    public function validate_zipcode($zipcode,$data=''){
+        if($zipcode != '')
+        {
+            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+            $res = $this->unirest->get($str);
+            $res_arr = json_decode($res->raw_body,true);
+            // If $data is not null means return a longitude and latitude array ohter wise only status True/False
+            if($data){
+                return $res_arr;
+            }
+            else
+            {
+                if($res_arr['status'] != 'OK' && !empty($zipcode)){
+                    return FALSE;
+                }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {
+                    return TRUE;
+                }
+            }
+            
         }        
     }
 

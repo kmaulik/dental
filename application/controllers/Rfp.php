@@ -6,6 +6,7 @@ class Rfp extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
+		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
 	}	
 
@@ -35,6 +36,8 @@ class Rfp extends CI_Controller {
 			$this->form_validation->set_rules('lname', 'last name', 'required'); 
 			$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
 											 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+			$this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
+											 ['validate_zipcode'=>'Please Enter Valid Zipcode']);
 			$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 			$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 			$this->form_validation->set_rules('allergies', 'allergies', 'required');
@@ -48,10 +51,24 @@ class Rfp extends CI_Controller {
 			   $data['subview']="front/rfp/patient/rfp-1";
 			   $this->load->view('front/layouts/layout_main',$data);
 			}else{
+
+				//-------- Fetch Longitude and Latitude based on zipcode ----
+				$longitude='';
+				$latitude='';
+				$location_data = $this->validate_zipcode($this->input->post('zipcode'),1);
+				if($location_data['status'] == 'OK'){
+					$longitude = $location_data['results'][0]['geometry']['location']['lng'];
+					$latitude= $location_data['results'][0]['geometry']['location']['lat'];
+				}
+				//--------------------------
+
 				$rfp_step_1= array(
 						'fname' 			=> $this->input->post('fname'),
 						'lname' 			=> $this->input->post('lname'),
 						'birth_date'		=> $this->input->post('birth_date'),
+						'zipcode'			=> $this->input->post('zipcode'),
+						'longitude'			=> $longitude,
+						'latitude'			=> $latitude,
 						'title' 			=> $this->input->post('title'),
 						'dentition_type' 	=> $this->input->post('dentition_type'),
 						'allergies' 		=> $this->input->post('allergies'),
@@ -286,6 +303,8 @@ class Rfp extends CI_Controller {
 				$this->form_validation->set_rules('lname', 'last name', 'required'); 
 				$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
 												 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+				$this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
+											 ['validate_zipcode'=>'Please Enter Valid Zipcode']);
 				$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 				$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 				$this->form_validation->set_rules('allergies', 'allergies', 'required');
@@ -301,10 +320,23 @@ class Rfp extends CI_Controller {
 				   $this->load->view('front/layouts/layout_main',$data);
 				}else{
 
+					//-------- Fetch Longitude and Latitude based on zipcode ----
+					$longitude='';
+					$latitude='';
+					$location_data = $this->validate_zipcode($this->input->post('zipcode'),1);
+					if($location_data['status'] == 'OK'){
+						$longitude = $location_data['results'][0]['geometry']['location']['lng'];
+						$latitude= $location_data['results'][0]['geometry']['location']['lat'];
+					}
+					//--------------------------
+
 					$rfp_step_1= array(
 						'fname' 			=> $this->input->post('fname'),
 						'lname' 			=> $this->input->post('lname'),
 						'birth_date'		=> $this->input->post('birth_date'),
+						'zipcode'			=> $this->input->post('zipcode'),
+						'longitude'			=> $longitude,
+						'latitude'			=> $latitude,
 						'title' 			=> $this->input->post('title'),
 						'dentition_type' 	=> $this->input->post('dentition_type'),
 						'allergies' 		=> $this->input->post('allergies'),
@@ -845,7 +877,7 @@ class Rfp extends CI_Controller {
         $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
-            if(count($arr_date) == 3 && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
                 return TRUE;
             }else{
                 return FALSE;
@@ -853,6 +885,31 @@ class Rfp extends CI_Controller {
         }        
     }
 
+    /* @DHK Custom Form validation for zipcode
+    /* Param 1 : Zipcode
+    /* Param 2 : for return array if null then return TRUE/FALSE(Optional)
+    */
+    public function validate_zipcode($zipcode,$data=''){
+        if($zipcode != '')
+        {
+            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+            $res = $this->unirest->get($str);
+            $res_arr = json_decode($res->raw_body,true);
+            // If $data is not null means return a longitude and latitude array ohter wise only status True/False
+            if($data){
+	            return $res_arr;
+            }
+            else
+            {
+            	if($res_arr['status'] != 'OK' && !empty($zipcode)){
+	                return FALSE;
+	            }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {
+	                return TRUE;
+	            }
+            }
+            
+        }        
+    }
 
     //------------- Make Payment by patient when create a RFP ---------
     public function make_payment(){

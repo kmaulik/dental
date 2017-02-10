@@ -18,12 +18,12 @@ class Payment_transaction extends CI_Controller {
 
 		$this->load->library('pagination');	 
 		$config['base_url'] = base_url().'payment_transaction/history?search='.$search_data.'&date='.$date_data.'&sort='.$sort_data;
-		$config['total_rows'] = $this->Payment_transaction_model->get_payment_transaction_count($search_data,$date_data);
+		$config['total_rows'] = $this->Payment_transaction_model->get_payment_transaction_front_count($search_data,$date_data);
 		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());		
 		$this->pagination->initialize($config);
-		$data['transaction_list']=$this->Payment_transaction_model->get_payment_transaction_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);	
+		$data['transaction_list']=$this->Payment_transaction_model->get_payment_transaction_front_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);	
 		$data['subview']="front/payment/payment_history";
 		$this->load->view('front/layouts/layout_main',$data);
 	}

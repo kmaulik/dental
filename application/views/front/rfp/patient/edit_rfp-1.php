@@ -83,6 +83,16 @@
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
+				<div class="col-md-6 col-sm-6">	
+					<div class="form-group">
+						<label>Zip Code</label>
+						<input type="text" name="zipcode" class="form-control" placeholder="Zip Code" value="<?php if($this->input->post('zipcode') != '') { echo $this->input->post('zipcode'); } else { if(isset($record['zipcode'])) { echo $record['zipcode']; } else { if(set_value('zipcode') != '') { echo set_value('zipcode'); }else { echo $this->session->userdata['client']['zipcode']; }}} ?>" >
+					</div>
+					<?php echo form_error('zipcode','<div class="alert alert-mini alert-danger">','</div>'); ?>
+				</div>		
+				
+			</div>	
+			<div class="row dentition_type">
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>RFP Title</label>
@@ -90,9 +100,7 @@
 					</div>
 					<?php echo form_error('title','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
-			</div>	
-			<div class="row dentition_type">
-				<div class="col-md-12 col-sm-12">
+				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Dentition Type</label>	
 						<select name="dentition_type" class="form-control" id="dentition_type">

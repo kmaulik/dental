@@ -61,7 +61,7 @@
 							<?php elseif($record['status'] == 1) : ?>
 								<span class="label label-primary">Pending</span>
 							<?php elseif($record['status'] == 2) : ?>
-								<span class="label label-danger">Invalid</span>
+								<span class="label label-danger">Submit Pending</span>
 							<?php elseif($record['status'] == 3) : ?>
 								<span class="label label-info">Open</span>
 							<?php elseif($record['status'] == 4) : ?>

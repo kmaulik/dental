@@ -34,7 +34,14 @@ class Promotional_code_model extends CI_Model {
      * @author : HPA
      */
     public function get_promotionalcode_count() {
-        $this->db->where('is_deleted !=', 1);
+         $this->db->where('is_deleted !=', 1);
+        
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%" OR code LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
         $res_data = $this->db->get('promotional_code')->num_rows();
         return $res_data;
     }

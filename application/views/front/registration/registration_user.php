@@ -42,11 +42,11 @@
 				<form method="post" action="" id="frmregister" >					
 					<div class="clearfix">
 						<div class="form-group">
-							<input type="text" name="fname" class="form-control" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
+							<input type="text" name="fname" class="form-control AlphaAndDot" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
 						</div>						
 
 						<div class="form-group">
-							<input type="text" name="lname" class="form-control" placeholder="Last Name" value="<?php echo set_value('lname'); ?>" >
+							<input type="text" name="lname" class="form-control AlphaAndDot" placeholder="Last Name" value="<?php echo set_value('lname'); ?>" >
 						</div>
 
 						<!-- Email -->
@@ -114,7 +114,7 @@
 						</div>
 									
 						<div class="form-group">
-							<input type="text" name="phone" class="form-control" placeholder="Phone" value="<?php echo set_value('phone'); ?>" >
+							<input type="text" name="phone" class="form-control NumbersAndPlus" placeholder="Phone" value="<?php echo set_value('phone'); ?>" >
 						</div>					
 
 						<div class="form-group">
@@ -151,4 +151,12 @@
 
 <script type="text/javascript">
 	$('#country_id').val('231');
+
+	$('.AlphaAndDot').keyup(function () { 
+    	this.value = this.value.replace(/[^A-Za-z.]/g,'');
+	});
+
+	$('.NumbersAndPlus').keyup(function () { 
+    	this.value = this.value.replace(/[^0-9+ ]/g,'');
+  });
 </script> 

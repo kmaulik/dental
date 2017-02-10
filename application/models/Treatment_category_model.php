@@ -30,6 +30,13 @@ class Treatment_category_model extends CI_Model {
  
     public function get_treatment_category_count() {
         $this->db->where('is_deleted !=', 1);
+        
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('title LIKE "%' . $keyword['value'] . '%" or code LIKE "%'.$keyword['value'].'%"', NULL);
+        }
         $res_data = $this->db->get('treatment_category')->num_rows();
         return $res_data;
     }

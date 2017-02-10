@@ -36,9 +36,18 @@ class Admin_users_model extends CI_Model {
      * @author : HPA
      */
     public function get_users_count() {
+
+        $this->db->join('role r','u.role_id = r.id');
         $this->db->where_in('role_id', [2,3]);
         $this->db->where('is_deleted !=', 1);
-        $res_data = $this->db->get('users')->num_rows();
+
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('fname LIKE "%' . $keyword['value'] . '%" OR lname LIKE "%' . $keyword['value'] . '%" OR email_id LIKE "%' . $keyword['value'] . '%" OR role_name LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+        $res_data = $this->db->get('users u')->num_rows();
         return $res_data;
     }
 

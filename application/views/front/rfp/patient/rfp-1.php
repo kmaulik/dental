@@ -84,14 +84,21 @@
 				</div>
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
+						<label>Zip Code</label>
+						<input type="text" name="zipcode" class="form-control" placeholder="Zip Code" value="<?php if(set_value('zipcode') != '') { echo set_value('zipcode'); }else { echo $this->session->userdata['client']['zipcode']; } ?>" >
+					</div>
+					<?php echo form_error('zipcode','<div class="alert alert-mini alert-danger">','</div>'); ?>
+				</div>
+			</div>	
+			<div class="row dentition_type">
+				<div class="col-md-6 col-sm-6">
+					<div class="form-group">
 						<label>RFP Title</label>
 						<input type="text" name="title" class="form-control" placeholder="RFP Title" value="<?=set_value('title');?>" >
 					</div>
 					<?php echo form_error('title','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
-			</div>	
-			<div class="row dentition_type">
-				<div class="col-md-12 col-sm-12">
+				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Dentition Type</label>	
 						<select name="dentition_type" class="form-control" id="dentition_type">
