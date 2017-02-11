@@ -667,7 +667,7 @@ class Rfp extends CI_Controller {
 	public function view_rfp_bid($rfp_id){
 
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
-		//pr($data['rfp_bid_list'],1);
+		// pr($data['rfp_bid_list'],1);
 		$data['subview']="front/rfp/patient/rfp_bid";
 		$this->load->view('front/layouts/layout_main',$data);
 	}
@@ -1042,6 +1042,27 @@ class Rfp extends CI_Controller {
     	
     }
 
+    //-------------- Doctor Review -------------------
+    public function doctor_review(){
+
+    	if($this->input->post('submit')){
+    		$rating_data= [
+    			'rfp_id'		=>	$this->input->post('rfp_id'),
+    			'doctor_id'		=>	$this->input->post('doctor_id'),
+    			'rating'		=>	$this->input->post('rating'),
+    			'description'	=>	$this->input->post('description'),
+    			'created_at'	=>  "Y-m-d H:i:s",
+    		];
+    		$res=$this->Rfp_model->insert_record('rfp_rating',$rating_data);
+    		if($res){
+    			$this->session->set_flashdata('success', 'Review Submitted Successfully');
+    		}else{
+    			$this->session->set_flashdata('error', 'Error Into Submit Review, Please Try Again!');
+    		}
+    		redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
+    	}
+    }
+    //------------- End Review --------------
 
 
 }

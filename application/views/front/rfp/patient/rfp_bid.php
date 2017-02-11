@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>rating.css" type="text/css">
 <style>
 .rfp-title h3{
 	text-align: center;
@@ -33,6 +34,7 @@
 .store-list .msg-btn{
 	margin: 5px 0px;
 }
+
 </style>
 
 <section class="page-header page-header-xs">
@@ -83,18 +85,21 @@
 								<div class="media-body">
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
-										<a href="#fakelink" id="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
+										<a href="#fakelink" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 										<div class="pull-right msg-btn">
+											<!-- Add Condition For Review Here -->
+											<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+											<!-- End Review -->
 											<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
 											<?php if($bid_list['is_chat_started'] == 1) :?>
-												<a href="<?=base_url('messageboard/message/'.encode($bid_list['id']).'/'.encode($bid_list['doctor_id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" title="View Mail"><i class="fa fa-eye"></i></a> 	
+												<a href="<?=base_url('messageboard/message/'.encode($bid_list['id']).'/'.encode($bid_list['doctor_id']))?>" class="label label-info rfp-price" title="View Mail"><i class="fa fa-eye"></i></a> 	
 											<?php endif; ?>
 											<span class="label label-success rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
 										</div>	
 									</h4>
 									<ul class="list-inline">
 										<li>
-											<?php $rate=number_format(($bid_list['rating']/2),2);?>
+											<?php $rate=number_format(($bid_list['avg_rating']),2);?>
 											<?php if($rate == 0):?>
 								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star.png';?>" class="rating-img">
 								            <?php elseif($rate <=0.5):?>
@@ -182,7 +187,66 @@
 </div>
 <!-- ================== /Modal Popup For Place a Bid ========================= -->		
 
-<script type="text/javascript" src="<?php echo base_url().'public/front/js/vague.js'; ?>"></script>
+<!-- ==================== Modal Popup For Doctor Review  ========================= -->
+<div class="modal fade doctor_review" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Review</h4>
+			</div>
+			<form action="<?=base_url('rfp/doctor_review')?>" method="POST" id="frmreview">
+				<input type="hidden" name="rfp_id" id="review_rfp_id">
+				<!-- <input type="hidden" name="rfp_title" id="rfp_title"> -->
+				<input type="hidden" name="doctor_id" id="doctor_id">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<label>Rating</label>	
+							<div class="stars">
+						        <input type="radio" name="rating" class="star-1" id="star-1"  value="1" />
+						        <label class="star-1" for="star-1">1</label>
+						        <input type="radio" name="rating" class="star-2" id="star-2" value="2" />
+						        <label class="star-2" for="star-2">2</label>
+						        <input type="radio" name="rating" class="star-3" id="star-3" value="3" />
+						        <label class="star-3" for="star-3">3</label>
+						        <input type="radio" name="rating" class="star-4" id="star-4" value="4" />
+						        <label class="star-4" for="star-4">4</label>
+						        <input type="radio" name="rating" class="star-5" id="star-5" value="5" />
+						        <label class="star-5" for="star-5">5</label>
+						        <span></span>
+						    </div>
+						</div>	
+						<div class="col-sm-12">
+							<label>Comment (Optional)</label>
+							<div class="form-group">
+								<textarea name="description" id="description" class="form-control" rows="5"></textarea>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-info" value="Submit Review">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+						</div>	
+					</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Doctor Review ========================= -->		
+
+
+<script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
+<!-- <script type="text/javascript" src="<?php echo DEFAULT_JS_PATH.'vague.js'; ?>"></script> -->
 <script>
 function send_msg(key){
 	var rfp_data = <?php echo json_encode($rfp_bid_list); ?>;
@@ -192,16 +256,75 @@ function send_msg(key){
 	$("#to_id").val(rfp_data[key]['doctor_id']);
 }
 
-var vague = $('#my_custom_strong').Vague({
-    intensity:      3,      // Blur Intensity
-    forceSVGUrl:    false,   // Force absolute path to the SVG filter,
-    // default animation options
-    animationOptions: {
-      duration: 1000,
-      easing: 'linear' // here you can use also custom jQuery easing functions
+function send_review(key){
+	var rfp_data = <?php echo json_encode($rfp_bid_list); ?>;
+	$("#review_rfp_id").val(rfp_data[key]['id']);
+	//$("#rfp_title").val(rfp_data[key]['title']);
+	$("#doctor_id").val(rfp_data[key]['doctor_id']);
+}
+
+// var vague = $('.my_custom_strong').Vague({
+//     intensity:      3,      // Blur Intensity
+//     forceSVGUrl:    false,   // Force absolute path to the SVG filter,
+//     // default animation options
+//     animationOptions: {
+//       duration: 1000,
+//       easing: 'linear' // here you can use also custom jQuery easing functions
+//     }
+// });
+
+// vague.blur();
+
+
+//--------------- For Message Form Validation --------------
+$("#frmmsg").validate({
+    errorClass: 'validation-error-label',
+    successClass: 'validation-valid-label',
+    highlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    unhighlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    rules: {
+        message: {
+            required: true,
+        }
+    },
+    messages: {
+        message: {
+            required: "Please provide a Message"
+        }
     }
 });
 
-vague.blur();
+//--------------- For Review Form Validation --------------
+$("#frmreview").validate({
+    errorClass: 'validation-error-label',
+    successClass: 'validation-valid-label',
+    highlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    unhighlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    rules: {
+        rating: {
+            required: true,
+        }
+    },
+    errorPlacement: function (error, element) {
+        if (element.attr("type") == "radio") {
+            error.insertAfter(".stars");
+        } else {
+            error.insertAfter(element)
+        }
+    },
+    messages: {
+        rating: {
+            required: "Please provide a Rating"
+        }
+    }
+});
 
 </script>
