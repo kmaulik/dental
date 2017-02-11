@@ -12,12 +12,11 @@ class Dashboard extends CI_Controller {
     }	
 
     public function index() {
-       
         $data['subview']="front/dashboard";
         $this->load->view('front/layouts/layout_main',$data);
     }
 
-    public function edit_profile(){    	
+    public function edit_profile(){
         $loc_arr = array();
         $user_data = $this->session->userdata('client');
         $user_id = $user_data['id'];
@@ -32,13 +31,12 @@ class Dashboard extends CI_Controller {
             $data['tab'] = $tab;
 
             if($tab == 'info'){
-                $this->form_validation->set_rules('fname', 'first name', 'required');  
-                $this->form_validation->set_rules('lname', 'last name', 'required');                                              
-                $this->form_validation->set_rules('address', 'address', 'required');
+                $this->form_validation->set_rules('fname', 'first name', 'required');
+                $this->form_validation->set_rules('lname', 'last name', 'required');
                 $this->form_validation->set_rules('city', 'city', 'required');
                 $this->form_validation->set_rules('country_id', 'country', 'required');
                 $this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
-                                             ['validate_zipcode'=>'Please Enter Valid Zipcode']);                
+                                             ['validate_zipcode'=>'Please Enter Valid Zipcode']);
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
                                                  ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
@@ -147,6 +145,15 @@ class Dashboard extends CI_Controller {
         }
     } // END of function edit_profile
 
+    public function rfp_bids(){
+
+    }
+
+    public function rfp_won(){
+        
+    }
+
+
     public function remove_avatar($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['avatar'=>'']);
@@ -156,10 +163,10 @@ class Dashboard extends CI_Controller {
 
     // v! Custom Form validation
     public function validate_birthdate($str){
-         $field_value = $str; //this is redundant, but it's to show you how
+        $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
-            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){
                 return TRUE;
             }else{
                 return FALSE;
@@ -167,7 +174,7 @@ class Dashboard extends CI_Controller {
         }        
     }
 
-     /* @DHK Custom Form validation for zipcode
+    /* @DHK Custom Form validation for zipcode
     /* Param 1 : Zipcode
     /* Param 2 : for return array if null then return TRUE/FALSE(Optional)
     */

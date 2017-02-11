@@ -771,8 +771,8 @@ class Rfp extends CI_Controller {
 	        	 $data['subview']="front/rfp/doctor/view_rfp_doctor";
         	 }
         }
-       elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
-       {
+       	elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
+       	{
        		$data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'patient_id' => $this->session->userdata['client']['id'] ],'1');
        		 if(empty($data['record'])){
         	 	show_404();
@@ -781,7 +781,7 @@ class Rfp extends CI_Controller {
         	 	$data['subview']="front/rfp/patient/view_rfp_patient";
         	 }
        		
-       }
+       	}
 		$this->load->view('front/layouts/layout_main',$data);
     }
 

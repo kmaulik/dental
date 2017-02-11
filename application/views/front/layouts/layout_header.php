@@ -26,7 +26,7 @@
     <link href="<?= DEFAULT_CSS_PATH ?>header-1.css" rel="stylesheet" type="text/css" />
     <link href="<?= DEFAULT_CSS_PATH ?>color_scheme/darkblue.css" rel="stylesheet" type="text/css" id="color_scheme" />
 
-    <link href="<?= DEFAULT_CSS_PATH ?>ac_style.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DEFAULT_CSS_PATH ?>ap_style.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>jquery/jquery-2.1.4.min.js"></script>
 

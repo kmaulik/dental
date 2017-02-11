@@ -2,12 +2,12 @@
 
 class Rfp_model extends CI_Model {
 
-     /**
+    /**
      * @uses : this function is used to get result based on datatable in rfp list page
      * @param : @table 
      * @author : HPA
      */
-    public function get_all_rfp() {        
+    public function get_all_rfp() {
         
         $this->db->select('id,title,CONCAT(fname," ",lname) as patient_name,dentition_type,status,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
         
@@ -54,8 +54,7 @@ class Rfp_model extends CI_Model {
         return $res_data;
     }
 
-
-     /**
+    /**
      * @uses : This function is used get result from the table
      * @param : @table 
      * @author : HPA
@@ -73,8 +72,7 @@ class Rfp_model extends CI_Model {
         }
     }
 
-
-     /**
+    /**
      * @uses : This function is used to insert record
      * @param : @table, @data_array = array of update  
      * @author : HPA
@@ -87,7 +85,7 @@ class Rfp_model extends CI_Model {
         }
     }
 
-     /**
+    /**
      * @uses : This function is used to update record
      * @param : @table, @record_id, @data_array = array of update  
      * @author : HPA
@@ -138,7 +136,7 @@ class Rfp_model extends CI_Model {
     }
 
     /* --------------- For Doctor Search RFP --------- */
-     public function search_rfp_count($search_data,$date_data) {
+    public function search_rfp_count($search_data,$date_data) {
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
@@ -180,6 +178,50 @@ class Rfp_model extends CI_Model {
         return $query->result_array();
     }
 
+    /* --------------- For Doctor Profile RFP --------- */
+    public function doctor_rfp_count($search_data,$date_data) {
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar');
+        $this->db->from('rfp');
+        $this->db->join('users u','rfp.patient_id = u.id');
+
+        if ($search_data != '') {
+            $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+        }
+        if($date_data != ''){
+            $date=explode(" ",$date_data);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
+        }
+        $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
+        $res_data = $this->db->get()->num_rows();
+        return $res_data;
+    }
+
+    public function doctor_rfp_result($limit,$offset,$search_data,$date_data,$sort_data){
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
+        $this->db->from('rfp');
+        $this->db->join('users u','rfp.patient_id = u.id');
+       
+        if ($search_data != '') {
+            $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+        }
+        
+        if($date_data != ''){
+            $date=explode(" ",$date_data);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
+            $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
+        }
+
+        $this->db->where('rfp.status','3'); // For RFP Status Open (3)
+        $this->db->where('rfp.is_deleted','0');
+        $this->db->where('rfp.is_blocked','0');
+        $this->db->order_by('rfp.id',$sort_data);
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
     /* --------------- For Patient List RFP Bid --------- */
     public function get_rfp_bid_data($rfp_id){

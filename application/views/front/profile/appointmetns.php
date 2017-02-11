@@ -1,20 +1,3 @@
-<!-- 
-	PAGE HEADER 
-	
-	CLASSES:
-		.page-header-xs	= 20px margins
-		.page-header-md	= 50px margins
-		.page-header-lg	= 80px margins
-		.page-header-xlg= 130px margins
-		.dark			= dark page header
-
-		.shadow-before-1 	= shadow 1 header top
-		.shadow-after-1 	= shadow 1 header bottom
-		.shadow-before-2 	= shadow 2 header top
-		.shadow-after-2 	= shadow 2 header bottom
-		.shadow-before-3 	= shadow 3 header top
-		.shadow-after-3 	= shadow 3 header bottom
--->
 <section class="page-header page-header-xs">
 	<div class="container">
 
@@ -49,12 +32,11 @@
 		<div class="col-lg-9 col-md-9 col-sm-8 col-lg-push-3 col-md-push-3 col-sm-push-4 margin-bottom-80">
 
 			<ul class="nav nav-tabs nav-top-border">
-				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>
-				<li class="<?php if($tab == 'avatar'){ echo 'active'; }?>"><a href="#avatar" data-toggle="tab">Avatar</a></li>
-				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>				
+				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>				
 			</ul>
 			
 			<div class="tab-content margin-top-20">
+
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade <?php if($tab == 'info'){ echo 'in active'; }?>" id="info">
 					<?php 
@@ -134,110 +116,12 @@
 				</div>
 				<!-- /PERSONAL INFO TAB -->
 
-				<!-- AVATAR TAB -->
-				<div class="tab-pane fade <?php if($tab == 'avatar'){ echo 'in active'; }?>" id="avatar">
-
-					<form class="clearfix"  method="post" enctype="multipart/form-data">
-						<div class="form-group">
-							<div class="row">
-								<div class="col-md-9 col-sm-8">
-									<div class="sky-form nomargin">
-										<label class="label">Select File</label>
-										<label for="file" class="input input-file">
-											<div class="button">
-												<input type="file" id="file" name="img_avatar"
-													  onchange="this.parentNode.nextSibling.value = this.value">
-													  Browse
-											</div>
-											<input type="text" readonly id="img_text">
-										</label>
-									</div>
-									
-									<?php if($db_data['avatar'] != '') { ?>
-										<a href="<?php echo base_url().'dashboard/remove_avatar/'.encode($db_data['id']); ?>" class="btn btn-danger btn-xs noradius">
-											<i class="fa fa-times"></i>
-											Remove Avatar
-										</a>
-									<?php } ?>
-
-									<div class="clearfix margin-top-20">
-										<span class="label label-warning">NOTE! </span>
-										<p>
-											Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet!
-										</p>
-									</div>
-
-								</div>
-
-							</div>
-
-						</div>
-
-						<div class="margiv-top10">
-							<input type="hidden" name="tab" value="avatar">
-							<button type="submit" class="btn btn-primary">Save Changes </button>
-							<a href="#" class="btn btn-default">Cancel </a>
-						</div>
-
-					</form>
-				</div>
-				<!-- /AVATAR TAB -->
-
-				<!-- PASSWORD TAB -->
-				<div class="tab-pane fade <?php if($tab == 'password'){ echo 'in active'; }?>" id="password">
-
-					<form  method="post">
-
-						<div class="form-group">
-							<label class="control-label">Current Password</label>
-							<input type="password" name="current_password" class="form-control">
-						</div>
-
-						<div class="form-group">
-							<?php echo form_error('current_password','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">New Password</label>
-							<input type="password" class="form-control" name="password">
-						</div>
-
-						<div class="form-group">
-							<?php echo form_error('password','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">Re-type New Password</label>
-							<input type="password" class="form-control" name="re_password">
-						</div>
-
-						<div class="form-group">
-							<?php echo form_error('re_password','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>
-
-						<div class="margiv-top10">
-							<input type="hidden" name="tab" value="password">
-							<button type="submit" class="btn btn-primary">
-								<i class="fa fa-check"></i>
-								Change Password
-							</button>
-							<a href="#" class="btn btn-default">Cancel </a>
-						</div>
-
-					</form>
-				</div>
-				<!-- /PASSWORD TAB -->
 			</div>
 		</div>
-
 		
+		<!-- load Partial view for the side bar  -->
 		<?php $this->load->view('front/layouts/side_bar_profile'); ?>
-		
+
 	</div>
 </section>
 <!-- / -->
-
-<script type="text/javascript">
-	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
-	$('#country_id').val("<?php echo $db_data['country_id']; ?>");	
-</script>

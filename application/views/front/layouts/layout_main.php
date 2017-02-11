@@ -275,10 +275,13 @@
                         </a>
                     </li> -->                    
                 </ul>
+
             </div>
 
         </div>
+        <div class="fixed_clear_btn"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></div>  
     </div>
+
     <!-- /SIDE PANEL -->
 
 
@@ -297,6 +300,7 @@
     jQuery('.scrollbar-inner').scrollbar();
     jQuery(document).ready(function(){
         var window_height = $( window ).height();        
+        //window_height = window_height-63; 
         $('.scrollbar-inner').css({'height':window_height});
     });    
 </script>
