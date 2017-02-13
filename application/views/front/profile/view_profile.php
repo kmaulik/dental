@@ -1,3 +1,4 @@
+
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
 
@@ -27,7 +28,7 @@
 				<li><a href="#review" data-toggle="tab">Review</a></li>				
 			</ul>
 			
-			<div class="tab-content margin-top-20">
+			<div class="tab-content">
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade in active" id="info">
 					<div class="form-group">
@@ -147,11 +148,9 @@
 				<div class="text-muted">
 					<h2 class="size-18 text-muted margin-bottom-6 text-center"><b>Total Review</b></h2>
 					<hr/>
-					<p class="text-center">
-						<div class="avg-star-rating">
-						    <span class="display_rating"></span>
-						</div>
-					</p>	
+					<div class="avg-star-rating">
+						<span class="display_rating"></span>
+					</div>
 					<script>
 						$(".avg-star-rating .display_rating").rateYo({
 							rating: <?=isset($overall_review['avg_rating'])?$overall_review['avg_rating']:'0'?>,
@@ -159,9 +158,7 @@
 							readOnly: true
 						});
 					</script>	
-					<p class="text-center">
-						<h4><?=isset($overall_review['avg_rating'])?$overall_review['avg_rating']:'0'?> / 5.0 (<?=isset($overall_review['total_rating'])?$overall_review['total_rating']:'0'?>)</h4>	
-					</p>			
+					<h4><?=isset($overall_review['avg_rating'])?number_format($overall_review['avg_rating'],2):'0'?> / 5.0 (<?=isset($overall_review['total_rating'])?$overall_review['total_rating']:'0'?>)</h4>			
 				</div>
 			</div>
 			<!-- /info -->

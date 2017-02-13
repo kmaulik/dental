@@ -375,11 +375,30 @@ section.page-header .breadcrumb a:hover {
 .star-rating .point{
   margin-left: 5px;
   padding: 5px;
-    background-color: #31b0d5;
-    color: #fff;
-    border-radius: 5px;
+  background-color: #31b0d5;
+  color: #fff;
+  border-radius: 5px;
 }
 /************* End RFP BId & Review List ************/
+
+/************* View Profile **************/
+.view_profile .tab-content{ 
+  padding: 20px;
+  margin-top: 0px;
+}
+.view_profile .tab-content span.title{
+  font-weight: bold;
+}
+.view_profile .text-muted .avg-star-rating  span{
+  margin: 0 auto;
+}
+.view_profile .text-muted{
+  text-align: center;
+}
+.view_profile .text-muted h4{
+  margin-top: 20px;
+}
+/************ End View Profile **********/
 
 
 
