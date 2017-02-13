@@ -125,7 +125,7 @@ class Rfp extends CI_Controller {
 			if($this->form_validation->run() == FALSE)
 			{  
 				$where = 'is_deleted !=  1 and is_blocked != 1';
-				$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);   
+				$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
 				$data['subview']="front/rfp/patient/rfp-2";
 				$this->load->view('front/layouts/layout_main',$data);
 			} 
@@ -740,7 +740,6 @@ class Rfp extends CI_Controller {
 		$date_data= $this->input->get('date') ? $this->input->get('date') :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
 		//------- /Filter RFP ----
-		$this->load->library('pagination');
 		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.'&sort='.$sort_data;
 		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data);
 		$config['per_page'] = 10;

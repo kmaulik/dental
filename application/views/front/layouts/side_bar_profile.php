@@ -1,3 +1,7 @@
+<?php
+	$controller_name = $this->router->fetch_class();
+	$method_name = $this->router->fetch_method();
+?>
 <!-- LEFT -->
 <div class="col-lg-3 col-md-3 col-sm-4 col-lg-pull-9 col-md-pull-9 col-sm-pull-8">
 
@@ -14,8 +18,29 @@
 
 	<!-- SIDE NAV -->
 	<ul class="side-nav list-group margin-bottom-60" id="sidebar-nav">
-		<li class="list-group-item"><a href="page-profile.html"><i class="fa fa-eye"></i> PROFILE</a></li>				
-		<li class="list-group-item active"><a href="page-profile-settings.html"><i class="fa fa-gears"></i> SETTINGS</a></li>				
+		<li class="list-group-item <?php if($method_name == 'edit_profile'){ echo 'active'; } ?>">
+			<a href="<?php echo base_url().'dashboard/edit_profile';?>">
+				<i class="fa fa-eye"></i>
+				PROFILE
+			</a>
+		</li>
+		
+		<!-- Only for the Doctors Login - RFP Bids -->
+		<li class="list-group-item <?php if($method_name == 'rfp_bids'){ echo 'active'; } ?>">
+			<a href="<?php echo base_url().'dashboard/rfp_bids'; ?>">
+				<i class="fa fa-gears"></i>
+				RFP Bids
+			</a>
+		</li>
+
+		<!-- Only for the Doctors Login - RFP Bids -->
+		<li class="list-group-item <?php if($method_name == 'rfp_alert'){ echo 'active'; } ?>">
+			<a href="<?php echo base_url().'dashboard/rfp_alert'; ?>">
+				<i class="fa fa-gears"></i>
+				RFP Alerts Setting
+			</a>
+		</li>
+
 	</ul>
 	<!-- /SIDE NAV -->
 

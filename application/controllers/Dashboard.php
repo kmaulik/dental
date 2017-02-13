@@ -7,7 +7,7 @@ class Dashboard extends CI_Controller {
     public function __construct(){
         parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
-        $this->load->model(['Users_model','Country_model']);
+        $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model']);
         $this->load->library('unirest');
     }	
 
@@ -145,12 +145,63 @@ class Dashboard extends CI_Controller {
         }
     } // END of function edit_profile
 
+    // List of Won RFP and offer appointment and communication on it (Appointment Pending, Contact Patient, Payment Status)
+    // v! Doctor Profile Tab
     public function rfp_bids(){
+        $loc_arr = array();
+        $user_data = $this->session->userdata('client');
+        $user_id = $user_data['id'];
+        $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
+        $data['tab'] = 'info';
 
+        //------- Filter RFP ----
+        $search_data= $this->input->get('search') ? $this->input->get('search') :'';
+        $date_data= $this->input->get('date') ? $this->input->get('date') :'';
+        $sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
+        //------- /Filter RFP ----        
+        $config['base_url'] = base_url().'dashboard/rfp_bids?search='.$search_data.'&date='.$date_data.'&sort='.$sort_data;
+        $config['total_rows'] = $this->Rfp_model->doctor_rfp_count($search_data,$date_data);
+        $config['per_page'] = 10;
+        $offset = $this->input->get('per_page');
+        $config = array_merge($config,pagination_front_config());       
+        $this->pagination->initialize($config);
+        $data['rfp_data']=$this->Rfp_model->doctor_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
+
+        // pr($data['rfp_data']);
+        // qry(1);        
+        
+        $data['subview']="front/profile/appointmetns";
+        $this->load->view('front/layouts/layout_main',$data);
     }
 
-    public function rfp_won(){
+    // v! Doctor Profile Tab
+    public function rfp_alert(){
+        $loc_arr = array();
+        $user_data = $this->session->userdata('client');
+        $user_id = $user_data['id'];
+        $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
+        $all_settings = $data['db_data']['alert_search_setting'];
+
+        $data['settings'] = [];
+
+        if(!empty($all_settings)){
+            $data['settings'] = json_decode($all_settings,true);
+        }
+
+        if($_POST){            
+            $treatment_cat = $this->input->post('treatment_cat');
+            $res_arr = ['treatment_cat'=>$treatment_cat];
+            $res_str = json_encode($res_arr);
+            $this->Users_model->update_user_data($user_id,['alert_search_setting'=>$res_str]);
+            $this->session->set_flashdata('success','Search setting has been successfully saved.');
+            redirect('dashboard/rfp_alert');
+        }
+
+        $where = 'is_deleted !=  1 and is_blocked != 1';
+        $data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
         
+        $data['subview']="front/profile/doctor_alert";
+        $this->load->view('front/layouts/layout_main',$data);
     }
 
 

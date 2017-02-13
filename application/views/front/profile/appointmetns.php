@@ -1,13 +1,113 @@
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
+<style>
+	.list-group-item .avatar {
+	    width: 40px;
+	    height: 40px;
+	    margin: 0 10px;
+	}
+	span.favorite {
+	    margin: 0 5px;
+	}
+	span.favorite_rfp{
+		color: #1980B6;
+	}
+	span.unfavorite_rfp{
+		color: #555555;
+	}
+	span.name {
+	    width: 100px;
+	    position: relative;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    font-weight: 700;
+	    margin: 0 10px;
+	}
+	span.subject {
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    margin: 0 10px;
+	}
+	span.attachment {
+	    float: right;
+	    position: absolute;
+	    right: 85px;
+	    top: 20px;
+	    text-align: right;
+	}
+	span.time {
+	    float: right;
+	    width: 80px;
+	    position: absolute;
+	    right: 10px;
+	    top: 20px;
+	    text-align: right;
+	    font-size: 13px;
+	}
+	@media (max-width:479px){
+	.rfp-right {
+	    display: block;
+	    margin-top: 10px;
+	    margin-bottom: 5px;
+	    text-align: center;
+	}
+	.rfp-right span.attachment {
+	    float: none;
+	    position: relative;
+	    right: 0;
+	    top: 0;
+	    text-align: right;
+	    margin-right: 10px;
+	}
+	.rfp-right span.time {
+	    float: none;
+	    width: 80px;
+	    position: relative;
+	    right: 0;
+	    top: 0;
+	    text-align: right;
+	    font-size: 13px;
+	}
+	.rfp-left span.name {
+	    width: 100%;
+	    position: relative;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    font-weight: 700;
+	    margin: 0 10px;
+	    display: block;
+	    text-align: center;
+	}
+	.rfp-left span.subject {
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    margin: 0 10px;
+	    text-align: center;
+	    margin: 5px auto;
+	    display: inline-block;
+	    width: 100%;
+	}
+
+	.list-group-item .rfp-left .avatar {
+	    width: 40px;
+	    height: 40px;
+	    margin: 0 auto;
+	    display: block;
+
+	}
+	}
+</style>
 <section class="page-header page-header-xs">
 	<div class="container">
-
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb breadcrumb-inverse">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Edit Profile</a></li>
 			<li class="active"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></li>
 		</ol><!-- /breadcrumbs -->
-
 	</div>
 </section>
 <!-- /PAGE HEADER -->
@@ -32,96 +132,132 @@
 		<div class="col-lg-9 col-md-9 col-sm-8 col-lg-push-3 col-md-push-3 col-sm-push-4 margin-bottom-80">
 
 			<ul class="nav nav-tabs nav-top-border">
-				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>				
+				<li class="active">
+					<a href="#info" data-toggle="tab">
+						Personal Info
+					</a>
+				</li>
 			</ul>
-			
 			<div class="tab-content margin-top-20">
-
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade <?php if($tab == 'info'){ echo 'in active'; }?>" id="info">
-					<?php 
-						$all_errors = validation_errors('<li>','</li>');
-						if($all_errors != '' && $tab == 'info') { 
-					?>
-						<div class="alert alert-mini alert-danger">				
-							<ul>							
-								<?php echo $all_errors; ?>
-							</ul>
-						</div>
-					<?php } ?>
+					<form action="" method="GET" id="search_rfp">
+						<div class="row">
+							
+							<div class="alert-message"></div>
 
-					<form role="form"  method="post">
-						<div class="form-group">
-							<label class="control-label">First Name</label>
-							<input type="text" placeholder="First name" name="fname" class="form-control" value="<?php echo $db_data['fname']; ?>">
-						</div>
-						<div class="form-group">
-							<label class="control-label">Last Name</label>
-							<input type="text" placeholder="Last name" name="lname" class="form-control" value="<?php echo $db_data['lname']; ?>">
-						</div>
-						<div class="form-group">
-							<label class="control-label">Email ID</label>
-							<input type="text" placeholder="Email ID" name="email_id" readonly class="form-control" value="<?php echo $db_data['email_id']; ?>">
-						</div>
-						<div class="form-group">
-							<label class="control-label">City</label>
-							<input type="text" placeholder="City" name='city' class="form-control" value="<?php echo $db_data['city']; ?>">
-						</div>
-						<div class="form-group">
-							<label class="control-label">Country</label>							
-							<select name="country_id" class="form-control select2" id="country_id">
-								<option value="" selected disabled>Select Country</option>
-								<?php foreach($country_list as $country) : ?>
-									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
-										<?=$country['name']?>
-									</option>
-								<?php endforeach; ?>
-							</select>	
-						</div>
 
-						<div class="form-group">
-							<label class="control-label">Zipcode</label>
-							<input type="text" placeholder="zipcode" name="zipcode" class="form-control" value="<?php echo $db_data['zipcode']; ?>">
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">Gender</label>
-							<select name="gender" id="" class="form-control">
-								<option value="male" <?php if($db_data['gender']=='male'){ echo 'selected'; } ?>>Male</option>
-								<option value="female" <?php if($db_data['gender']=='female'){ echo 'selected'; } ?> >Female</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label class="control-label">Phone No</label>
-							<input type="text" placeholder="zipcode" name="phone" class="form-control" value="<?php echo $db_data['phone']; ?>">
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">Birth Date</label>
-							<input type="text" placeholder="YYYY-MM-DD" name="birth_date" class="form-control birth_date" value="<?php echo $db_data['birth_date']; ?>">
-							<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
-						</div>
-
-						<!-- <div class="form-group">
-							<label class="control-label">Address</label>
-							<textarea name="address" id="address" class="form-control"><?php echo $db_data['address']; ?></textarea>
-						</div> -->
-
-						<div class="margiv-top10">
-							<input type="hidden" name="tab" value="info">
-							<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save Changes </button>
-							<a href="#" class="btn btn-default">Cancel </a>
-						</div>
+							<div class="col-lg-5 col-md-12">
+								<label>Filter Data</label>
+								<div class="form-group">
+									<div class="fancy-form"><!-- input -->
+										<i class="fa fa-search"></i>
+										<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP Title, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+										<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
+											<em>Search RFP From Here</em>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-5">
+								<label>Filter Date Wise</label>
+								<input type="text" name="date" class="form-control rangepicker" value="<?=$this->input->get('date') ? $this->input->get('date') :''?>" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31" readonly>
+							</div>
+							<div class="col-lg-2 col-md-3 sorting">
+								<label>Sort</label>
+								<select name="sort" class="form-control" id="sort">
+									<option value="desc">Latest RFP</option>
+									<option value="asc">Oldest RFP</option>
+								</select>
+							</div>	
+							<div class="col-lg-2 col-md-4">
+								<label>&nbsp;</label>
+								<input type="submit" name="btn_search" class="btn btn-info" value="Search">
+								<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
+							</div>	
+						</div>	
 					</form>
+
+					<?php if(count($rfp_data) > 0) :?>
+						<div class="list-group success square no-side-border search_rfp">
+							<?php foreach($rfp_data as $record) :?>
+								<!-- href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" -->
+								<a  class="list-group-item">
+									<div class="rfp-left">
+										<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
+											<!-- Means Favorite RFP -->
+											<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['id'])?>"></span>
+										<?php else : ?>
+											<!-- Means Not Favorite RFP -->
+											<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['id'])?>"></span>
+										<?php endif; ?>
+										<img src="<?php if($record['avatar'] != '') 
+				                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
+				                    	else 
+				                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
+										<span class="name"><?=$record['fname']." ".$record['lname'];?></span>
+										<span class="subject">
+											<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
+											<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
+										</span>
+									</div>	
+									<div class="rfp-right">
+										<?php if($record['img_path'] != '') :?>
+											<span class="attachment"><i class="fa fa-paperclip"></i></span>
+										<?php endif; ?>
+										<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
+									</div>
+								</a>
+							<?php endforeach; ?>	
+						</div>
+						<?php echo $this->pagination->create_links(); ?>
+					<?php else : ?>
+						<h3>No RFP Available</h3>
+					<?php endif; ?>			
 				</div>
 				<!-- /PERSONAL INFO TAB -->
 
 			</div>
 		</div>
-		
 		<!-- load Partial view for the side bar  -->
 		<?php $this->load->view('front/layouts/side_bar_profile'); ?>
-
 	</div>
 </section>
 <!-- / -->
+
+<script type="text/javascript">
+	//----------------- For Add To favorite & Remove Favorite RFP ------------------
+	$(".favorite").on( "click", function() {
+		var rfp_id= $(this).attr('data-id');
+		var classNames = $(this).attr('class').split(' ');
+		var data1=$(this);
+		if($.inArray('unfavorite_rfp',classNames) != '-1')
+		{
+			bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
+				if(res){
+					$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
+						if(data){
+							data1.removeClass('unfavorite_rfp');
+							data1.addClass('favorite_rfp');
+							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times; </button>RFP added to your favorite list successfully.</div>');
+						}
+					});
+				}	
+			});
+		}else{
+			bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
+				if(res){	
+					$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
+						if(data){
+							data1.removeClass('favorite_rfp');
+							data1.addClass('unfavorite_rfp');
+							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times; </button>RFP removed to your favorite list successfully. </div>');
+						}
+					});
+				}
+			});
+		}
+		return false;
+	});
+
+</script>

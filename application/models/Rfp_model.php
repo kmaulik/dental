@@ -180,9 +180,10 @@ class Rfp_model extends CI_Model {
 
     /* --------------- For Doctor Profile RFP --------- */
     public function doctor_rfp_count($search_data,$date_data) {
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar');
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->join('rfp_bid','rfp_bid.rfp_id = rfp.id');
 
         if ($search_data != '') {
             $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
@@ -192,36 +193,41 @@ class Rfp_model extends CI_Model {
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
         }
-        $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
+        $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
+        // $this->db->or_where('rfp_bid.doctor_id',$this->session->userdata('client')['id']); // v! New Condition
         $res_data = $this->db->get()->num_rows();
         return $res_data;
     }
 
     public function doctor_rfp_result($limit,$offset,$search_data,$date_data,$sort_data){
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,
+                         (select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id,
+                         rfp_bid.status as rfp_won_status,rfp_bid.is_chat_started,rfp_bid.amount,rfp_bid.description as bid_desc');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
-       
+        $this->db->join('rfp_bid','rfp_bid.rfp_id = rfp.id','left'); // v! New Condition
+        
         if ($search_data != '') {
             $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
-        
         if($date_data != ''){
             $date=explode(" ",$date_data);
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
         }
-
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
+        // $this->db->or_where('rfp_bid.doctor_id',$this->session->userdata('client')['id']); // v! New Condition
         $this->db->order_by('rfp.id',$sort_data);
         $this->db->limit($limit,$offset);
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    // ------------------------------------------------------------------------
 
     /* --------------- For Patient List RFP Bid --------- */
     public function get_rfp_bid_data($rfp_id){
