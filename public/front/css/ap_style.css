@@ -330,6 +330,59 @@ section.page-header .breadcrumb a:hover {
 
 
 
+/************* List of RFP Bid & Review List **************/
+.rfp-title h3{
+  text-align: center;
+}
+.store-list{
+  padding: 15px;
+  margin-bottom: 30px;
+  background-color: #eeeeee;
+  position: relative;
+
+}
+.store-list .list-inline{
+  margin-bottom: 5px;
+}
+.store-list .rating{
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+.store-list .bid-desc{
+  margin-bottom: 5px;
+}
+.store-list .rfp-mail{
+  padding-left: 10px;
+}
+.store-list .rfp-price{
+  font-size: 18px;
+  padding: 8px 10px !important;
+}
+.store-list .rating-img{
+  height: 20px;
+}
+.store-list .msg-btn{
+  margin: 5px 0px;
+}
+
+.store-list .star-rating{
+  margin: 10px 0px;
+}
+.star-rating #rateYo{
+  float: left;
+}
+.star-rating .point{
+  margin-left: 5px;
+  padding: 5px;
+    background-color: #31b0d5;
+    color: #fff;
+    border-radius: 5px;
+}
+/************* End RFP BId & Review List ************/
+
+
+
 
 /*************** media start here 	*************/
 @media (min-width:481px) and (max-width:767px){

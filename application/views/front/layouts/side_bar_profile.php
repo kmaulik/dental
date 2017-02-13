@@ -14,8 +14,8 @@
 
 	<!-- SIDE NAV -->
 	<ul class="side-nav list-group margin-bottom-60" id="sidebar-nav">
-		<li class="list-group-item"><a href="page-profile.html"><i class="fa fa-eye"></i> PROFILE</a></li>				
-		<li class="list-group-item active"><a href="page-profile-settings.html"><i class="fa fa-gears"></i> SETTINGS</a></li>				
+		<li class="list-group-item"><a href="#"><i class="fa fa-eye"></i> PROFILE</a></li>				
+		<li class="list-group-item active"><a href="#"><i class="fa fa-gears"></i> SETTINGS</a></li>				
 	</ul>
 	<!-- /SIDE NAV -->
 
