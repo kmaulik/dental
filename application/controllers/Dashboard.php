@@ -251,4 +251,17 @@ class Dashboard extends CI_Controller {
         }        
     }
 
+    /* @DHK View User Profile
+    /* Param 1 : User Id
+    */
+    public function view_profile($user_id){
+
+        $data['db_data'] = $this->Users_model->get_data(['id'=>decode($user_id)],true);
+        $data['review_data'] = $this->Rfp_model->get_user_rating(decode($user_id));
+        $data['overall_review']=$this->Rfp_model->get_overall_rating(decode($user_id));
+        //pr($data['overall_review'],1);
+        $data['subview']="front/profile/view_profile";
+        $this->load->view('front/layouts/layout_main',$data);
+    }
+
 }

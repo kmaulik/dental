@@ -248,4 +248,31 @@ class Rfp_model extends CI_Model {
         return $query->result_array();
     }
 
+    /* --------------- For User Rating --------- */
+    public function get_user_rating($user_id){
+        $this->db->select('rr.id as rating_id,rr.rating,rr.description as feedback,rr.created_at,rfp.id as rfp_id,rfp.title as rfp_title,u.id as user_id,CONCAT(u.fname," ",u.lname) as user_name,u.avatar');
+        $this->db->from('rfp_rating rr');
+        $this->db->join('rfp','rr.rfp_id = rfp.id');
+        $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->where('rr.doctor_id',$user_id);
+        $this->db->where('rr.is_deleted',0);
+        $this->db->where('rr.is_blocked',0);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    /* ----------------- For Get Overall Review & Average ------------- */
+    public function get_overall_rating($user_id){
+
+        $this->db->select('rr.doctor_id,avg(rr.rating) as avg_rating,count(rr.id) as total_rating');
+        $this->db->where('rr.doctor_id',$user_id);
+        $this->db->where('rr.is_deleted',0);
+        $this->db->where('rr.is_blocked',0);
+        $this->db->group_by('rr.doctor_id');
+        $query = $this->db->get('rfp_rating rr');
+        return $query->row_array();
+
+    } 
+
+
 }    

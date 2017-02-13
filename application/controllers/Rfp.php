@@ -667,6 +667,7 @@ class Rfp extends CI_Controller {
 	public function view_rfp_bid($rfp_id){
 
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
+		$data['is_rated_rfp']=$this->Rfp_model->get_result('rfp_rating',['rfp_id' => decode($rfp_id)]);
 		// pr($data['rfp_bid_list'],1);
 		$data['subview']="front/rfp/patient/rfp_bid";
 		$this->load->view('front/layouts/layout_main',$data);
@@ -1050,7 +1051,7 @@ class Rfp extends CI_Controller {
     			'doctor_id'		=>	$this->input->post('doctor_id'),
     			'rating'		=>	$this->input->post('rating'),
     			'description'	=>	$this->input->post('description'),
-    			'created_at'	=>  "Y-m-d H:i:s",
+    			'created_at'	=>  date("Y-m-d H:i:s"),
     		];
     		$res=$this->Rfp_model->insert_record('rfp_rating',$rating_data);
     		if($res){

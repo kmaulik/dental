@@ -1,41 +1,6 @@
-<link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>rating.css" type="text/css">
-<style>
-.rfp-title h3{
-	text-align: center;
-}
-.store-list{
-	padding: 15px;
-	margin-bottom: 30px;
-	background-color: #eeeeee;
-	position: relative;
+<link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
+<script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
 
-}
-.list-inline{
-	margin-bottom: 5px;
-}
-.rating{
-	font-size: 15px;
-	font-weight: 600;
-	color: #fff;
-}
-.bid-desc{
-	margin-bottom: 5px;
-}
-.rfp-mail{
-	padding-left: 10px;
-}
-.rfp-price{
-	font-size: 18px;
-	padding: 8px 10px !important;
-}
-.rating-img{
-	height: 20px;
-}
-.store-list .msg-btn{
-	margin: 5px 0px;
-}
-
-</style>
 
 <section class="page-header page-header-xs">
 	<div class="container">
@@ -85,10 +50,12 @@
 								<div class="media-body">
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
-										<a href="#fakelink" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
+										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 										<div class="pull-right msg-btn">
 											<!-- Add Condition For Review Here -->
-											<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+											<?php if(isset($is_rated_rfp) && count($is_rated_rfp) == 0) : ?>
+												<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+											<?php endif; ?>
 											<!-- End Review -->
 											<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
 											<?php if($bid_list['is_chat_started'] == 1) :?>
@@ -100,30 +67,20 @@
 									<ul class="list-inline">
 										<li>
 											<?php $rate=number_format(($bid_list['avg_rating']),2);?>
-											<?php if($rate == 0):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star.png';?>" class="rating-img">
-								            <?php elseif($rate <=0.5):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star1.png';?>" class="rating-img">
-								            <?php elseif($rate <=1):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star2.png';?>" class="rating-img">
-								            <?php elseif($rate <=1.5):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star3.png';?>" class="rating-img">
-								            <?php elseif($rate <=2):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star4.png';?>" class="rating-img">
-								            <?php elseif($rate <=2.5):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star5.png';?>" class="rating-img">
-								            <?php elseif($rate <=3):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star6.png';?>" class="rating-img">
-								            <?php elseif($rate <=3.5):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star7.png';?>" class="rating-img">
-								            <?php elseif($rate <=4):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star8.png';?>" class="rating-img">
-								            <?php elseif($rate <=4.5):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star9.png';?>" class="rating-img">
-								            <?php elseif($rate <=5):?>
-								            	<img src="<?=DEFAULT_IMAGE_PATH.'rating/star10.png';?>" class="rating-img">
-								            <?php endif;?>
+											<div class="avg-star-rating">
+											    <span class="display_rating_<?=$key?>"></span>
+											</div>
 										</li>
+										<!-- For Display Star Rating -->
+										<script>
+											$(".avg-star-rating .display_rating_<?=$key?>").rateYo({
+												rating: <?=$rate?>,
+												starWidth : "25px",
+												readOnly: true
+											});
+										</script>
+										<!-- End Display Star Rating -->
+
 										<li>(<?=$bid_list['total_review']?$bid_list['total_review']:'0'?>)</li>
 										<li><span class="label label-info rating"><?=$rate?> / 5.0</span></li>
 										<li> | </li>
@@ -206,19 +163,13 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<label>Rating</label>	
-							<div class="stars">
-						        <input type="radio" name="rating" class="star-1" id="star-1"  value="1" />
-						        <label class="star-1" for="star-1">1</label>
-						        <input type="radio" name="rating" class="star-2" id="star-2" value="2" />
-						        <label class="star-2" for="star-2">2</label>
-						        <input type="radio" name="rating" class="star-3" id="star-3" value="3" />
-						        <label class="star-3" for="star-3">3</label>
-						        <input type="radio" name="rating" class="star-4" id="star-4" value="4" />
-						        <label class="star-4" for="star-4">4</label>
-						        <input type="radio" name="rating" class="star-5" id="star-5" value="5" />
-						        <label class="star-5" for="star-5">5</label>
-						        <span></span>
-						    </div>
+						    <div class="star-rating">
+							    <span id="rateYo"></span>
+							    <span class="point" style="display:none">0</span>
+							</div>
+						</div>
+						<div class="col-sm-12">	
+							<input type="hidden" name="rating" id="rating"/>
 						</div>	
 						<div class="col-sm-12">
 							<label>Comment (Optional)</label>
@@ -248,6 +199,27 @@
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 <!-- <script type="text/javascript" src="<?php echo DEFAULT_JS_PATH.'vague.js'; ?>"></script> -->
 <script>
+
+$(function () {
+ 
+$(".star-rating #rateYo").rateYo({
+    halfStar: true,
+     onSet: function (rating, rateYoInstance) {
+			$(".point").show();
+			$("#rating").val(rating);
+		}
+  });
+
+$(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
+
+	var rating = data.rating;
+	$(".point").show();
+	$(".point").text(rating +" Star");
+});
+
+});
+
+
 function send_msg(key){
 	var rfp_data = <?php echo json_encode($rfp_bid_list); ?>;
 	$("#rfp_id").val(rfp_data[key]['id']);
@@ -262,6 +234,7 @@ function send_review(key){
 	//$("#rfp_title").val(rfp_data[key]['title']);
 	$("#doctor_id").val(rfp_data[key]['doctor_id']);
 }
+
 
 // var vague = $('.my_custom_strong').Vague({
 //     intensity:      3,      // Blur Intensity
@@ -299,32 +272,26 @@ $("#frmmsg").validate({
 });
 
 //--------------- For Review Form Validation --------------
-$("#frmreview").validate({
-    errorClass: 'validation-error-label',
-    successClass: 'validation-valid-label',
-    highlight: function(element, errorClass) {
-        $(element).removeClass(errorClass);
-    },
-    unhighlight: function(element, errorClass) {
-        $(element).removeClass(errorClass);
-    },
-    rules: {
-        rating: {
-            required: true,
-        }
-    },
-    errorPlacement: function (error, element) {
-        if (element.attr("type") == "radio") {
-            error.insertAfter(".stars");
-        } else {
-            error.insertAfter(element)
-        }
-    },
-    messages: {
-        rating: {
-            required: "Please provide a Rating"
-        }
-    }
-});
+// $("#frmreview").validate({
+// 	ignore: [],
+//     errorClass: 'validation-error-label',
+//     successClass: 'validation-valid-label',
+//     highlight: function(element, errorClass) {
+//         $(element).removeClass(errorClass);
+//     },
+//     unhighlight: function(element, errorClass) {
+//         $(element).removeClass(errorClass);
+//     },
+//     rules: {
+//         rating: {
+//             required: true,
+//         }
+//     },
+//     messages: {
+//         rating: {
+//             required: "Please provide a Rating"
+//         }
+//     }
+// });
 
 </script>
