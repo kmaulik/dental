@@ -133,6 +133,15 @@
                                 <input type="text" name="patient_fees" id="patient_fees" placeholder="Enter Patient Fees" class="form-control NumbersAndDot" value="<?php echo (isset($record['patient_fees'])) ? $record['patient_fees'] : set_value('patient_fees'); ?>">
                             </div>
                         </div> 
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Doctor Fees:</label>
+                            <div class="col-lg-6">
+                                <input type="text" name="doctor_fees" id="doctor_fees" placeholder="Enter Patient Fees" 
+                                     class="form-control NumbersAndDot" 
+                                value="<?php echo (isset($record['doctor_fees'])) ? $record['doctor_fees'] : set_value('doctor_fees'); ?>">
+                            </div>
+                        </div> 
                         <!-- ============== /Payment Setting Section ============ -->
                        <div class="text-right">
                         <button class="btn btn-success" type="submit">Save <i class="icon-arrow-right14 position-right"></i></button>
@@ -228,6 +237,9 @@ $("#frmsettings").validate({
         patient_fees: {
             required: true,
         },
+        doctor_fees: {
+            required: true,
+        }
 
     },
     messages: {
@@ -273,7 +285,9 @@ $("#frmsettings").validate({
         patient_fees: {
             required: "Please provide Patient Fees",
         },
-
+        doctor_fees: {
+            required: "Please Provide Doctor Fees",
+        }
     }
 });
 
