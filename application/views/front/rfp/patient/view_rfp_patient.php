@@ -1,11 +1,11 @@
-<style>
+<!--<style>
 #coupan_code{
 	padding-left: 12px;
 }
 #apply-code{
 	cursor: pointer;
 }
-</style>
+</style>-->
 
 <section class="page-header page-header-xs">
 	<div class="container">

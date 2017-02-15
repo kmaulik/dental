@@ -1,4 +1,4 @@
-<style>
+<!--<style>
 .right-msg .media-body {
   text-align: right;
 }
@@ -54,11 +54,11 @@ padding: 20px;
   max-height: 760px;
   overflow: auto;
 }
-.text_right {
+.send_message_area.text_right {
   margin-top: 20px;
   text-align: right;
 }
-.btn_info {
+.send_message_area .btn_info {
   background: #1980b6 none repeat scroll 0 0;
   border: 2px solid #1980b6;
   border-radius: 4px !important;
@@ -68,7 +68,7 @@ padding: 20px;
   padding: 9px 30px;
   transition: all 0.5s ease-in-out 0s;
 }
-.btn_info:hover {
+.send_message_area .btn_info:hover {
   background: transparent none repeat scroll 0 0;
   color: #1980b6;
 }
@@ -132,7 +132,7 @@ padding: 20px;
   font-size: 13px;
 }
 }
-</style>
+</style>-->
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Messageboard</h1>

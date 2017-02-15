@@ -1,12 +1,12 @@
-<style>
-	.table th{
+<!--<style>
+	.table.table_custom_data th{
 		text-align: center;
 		color: #000;
 	}
-	.table .checkbox{
+	.table.table_custom_data .checkbox{
 		margin-right: 0px;
 	}
-	.rfp-title{
+	.rfp-title.rfp_h3{
 		border-bottom: 2px solid gray;
 		margin-bottom: 0px;
 		margin-top: 10px;
@@ -14,7 +14,7 @@
 	.check_label{
 		float: right;
 	}
-</style>
+</style>-->
   <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 
 <section class="page-header page-header-xs">
@@ -54,7 +54,7 @@
 					
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
-							<h3 class="rfp-title">Treatment Plan</h3>
+							<h3 class="rfp-title rfp_h3">Treatment Plan</h3>
 						</div>
 					</div>
 					<!-- Posted Teeth values For validation and value selected for teeth and treatment category -->
@@ -65,7 +65,7 @@
 						<div class="col-md-12 col-sm-12" id="primary">
 							<div class="form-group">
 								<div class="table-responsive">	
-									<table class="table table-bordered">
+									<table class="table table-bordered table_custom_data">
 										<thead>
 											<tr>
 												<th colspan="16">Primary Dentition</th>
@@ -320,7 +320,7 @@
 
 					<div class="row">
 						<div class="col-sm-12">
-							<h3 class="rfp-title">Additional Section</h3>
+							<h3 class="rfp-title rfp_h3">Additional Section</h3>
 						</div>	
 					</div>	
 					<div class="row">

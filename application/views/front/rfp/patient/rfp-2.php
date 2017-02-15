@@ -1,4 +1,4 @@
-<style>
+<!--<style>
 	.table th{
 		text-align: center;
 		color: #000;
@@ -14,7 +14,7 @@
 	.check_label{
 		float: right;
 	}
-</style>
+</style>-->
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 
 <section class="page-header page-header-xs">
@@ -64,7 +64,7 @@
 						<div class="col-md-12 col-sm-12" id="primary">
 							<div class="form-group">
 								<div class="table-responsive">	
-									<table class="table table-bordered">
+									<table class="table table-bordered table_custom_data">
 										<thead>
 											<tr>
 												<th colspan="16">Primary Dentition</th>

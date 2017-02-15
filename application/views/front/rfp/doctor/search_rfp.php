@@ -1,4 +1,4 @@
-<style>
+<!--<style>
 .list-group-item .avatar {
     width: 40px;
     height: 40px;
@@ -98,7 +98,7 @@ span.time {
 
 }
 }
-</style>
+</style>-->  
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 <section class="page-header page-header-xs">
 	<div class="container">

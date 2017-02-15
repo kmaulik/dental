@@ -1,10 +1,10 @@
-<style>
+<!--<style>
 	.rfp-title{
 		border-bottom: 2px solid gray;
 		margin-bottom: 0px;
 		margin-top: 10px;
 	}
-</style>
+</style>-->
 
 <section class="page-header page-header-xs">
 	<div class="container">

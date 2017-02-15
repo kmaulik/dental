@@ -1,8 +1,8 @@
-<style>
+<!--<style>
 .pagination-css{
 	margin-top: 10px;
 }
-</style>
+</style>-->
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH.'message-board.css'?>">
 
 <section class="page-header page-header-xs">

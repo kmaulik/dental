@@ -1,9 +1,9 @@
-<style type="text/css">
+<!--<style type="text/css">
 	/* Hide the arrows for the revolution slider */
 	.tparrows {
 		display: none !important;
 	}
-</style>
+</style>-->
 <!-- REVOLUTION SLIDER -->
 <link href="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/css/extralayers.css" rel="stylesheet" type="text/css" />
 <link href="<?= DEFAULT_PLUGINS_PATH ?>slider.revolution/css/settings.css" rel="stylesheet" type="text/css" />

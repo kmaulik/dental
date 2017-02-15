@@ -346,7 +346,6 @@ section.page-header .breadcrumb a:hover {
 }
 .store-list .rating{
   font-size: 15px;
-  font-weight: 600;
   color: #fff;
 }
 .store-list .bid-desc{
@@ -400,10 +399,235 @@ section.page-header .breadcrumb a:hover {
 }
 /************ End View Profile **********/
 
+.right-msg .media-body {
+  text-align: right;
+}
+.right-msg img.pull-left {
+  float: right !important;
+  margin-left: 15px !important;
+}
+.right-msg img.pull-left, .left-msg img.pull-left {
+  margin: 0;
+}
+.right-msg .user_name .block {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+.left-msg .user_name .block {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.user_name {
+  position: relative;
+}
+.comment-item.right-msg, .comment-item.left-msg {
+  margin-bottom: 20px;
+  min-height: 95px;
+  border-radius: 6px; 
+  margin-right: 5px;
+}
+.wrapper_msg h4 {
+  color: #1980b6;
+  margin: 0 0 5px !important;
+}
+.left-msg img.pull-left {
+  margin-right: 15px !important;
+}
+.comment-item.right-msg {
+  background: #f1f1f1 none repeat scroll 0 0;
+  padding: 15px;
+}
+.comment-item.left-msg { 
+  padding: 0px 15px;
+}
+.wrapper_msg {
+  background: #fff none repeat scroll 0 0;
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);
+padding: 20px;
+}
+.wrapper_msg h4.page-header {
+  margin-bottom: 20px !important;
+}
+.wrapper_inner_box{
+  max-height: 760px;
+  overflow: auto;
+}
+.send_message_area.text_right {
+  margin-top: 20px;
+  text-align: right;
+}
+.send_message_area .btn_info {
+  background: #1980b6 none repeat scroll 0 0;
+  border: 2px solid #1980b6;
+  border-radius: 4px !important;
+  color: #fff;
+  height: auto;
+  line-height: normal;
+  padding: 9px 30px;
+  transition: all 0.5s ease-in-out 0s;
+}
+.send_message_area .btn_info:hover {
+  background: transparent none repeat scroll 0 0;
+  color: #1980b6;
+}
+.right-msg .user_name h4 {
+  padding-left: 120px;
+}
+.left-msg .user_name h4 {
+  padding-right: 120px;
+}
+.pagination-css{
+  margin-top: 10px;
+}
+.list-group-item .avatar {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+}
+span.favorite {
+    margin: 0 5px;
+}
+span.favorite_rfp{
+  color: #1980B6;
+}
+span.unfavorite_rfp{
+  color: #555555;
+}
+span.name {
+    width: 100px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    margin: 0 10px;
+}
+span.subject {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0 10px;
+}
+span.attachment {
+    float: right;
+    position: absolute;
+    right: 85px;
+    top: 20px;
+    text-align: right;
+}
+span.time {
+    float: right;
+    width: 80px;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    text-align: right;
+    font-size: 13px;
+}
+  .rfp-title{
+    border-bottom: 2px solid gray;
+    margin-bottom: 0px;
+    margin-top: 10px;
+  } 
+.table.table_custom_data th{
+    text-align: center;
+    color: #000;
+  }
+  .table.table_custom_data .checkbox{
+    margin-right: 0px;
+  }
+  .rfp-title.rfp_h3{
+    border-bottom: 2px solid gray;
+    margin-bottom: 0px;
+    margin-top: 10px;
+  }
+  .check_label{
+    float: right;
+  }
+  #coupan_code{
+  padding-left: 12px;
+}
+#apply-code{
+  cursor: pointer;
+}
+.tparrows {
+    display: none !important;
+  }
+  .btn_search_reset {
+    font-size: 13px;
+    padding: 0 7px;
+}
+.list_groop_item_2 span.time {
+    top: 14px;
+}
+.bottom_space {
+    margin-bottom: 40px;
+}
+.modal {
+    background: rgba(0,0,0,0.8);
+}
 
 
 
 /*************** media start here 	*************/
+@media (min-width:768px) and (max-width:991px){
+  .wrapper_inner_box {
+  padding-right: 20px;
+}
+}
+
+@media (min-width:992px) and (max-width:1199px){
+  .wrapper_inner_box {
+  padding-right: 20px;
+}
+}
+
+@media (max-width:767px){
+.right-msg .user_name h4 {
+  padding-left: 0;
+}
+.right-msg .user_name .block {
+  left: auto;
+  position: relative;
+  top: auto;
+}
+.right-msg img.pull-left {
+  float: none !important;
+  margin-left: 0 !important;
+}
+.user-avatar {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+.right-msg .media-body {
+  text-align: center;
+}
+.left-msg img.pull-left {
+  float: none !important;
+  margin-right: 0 !important;
+}
+.left-msg .media-body {
+  text-align: center;
+}
+.left-msg .user_name h4 {
+  padding-right: 0;
+}
+.left-msg .user_name .block {
+  position: relative;
+  right: auto;
+  top: auto;
+}
+.wrapper_inner_box {
+  padding-right: 15px;
+}
+.message {
+  font-size: 13px;
+}
+}
+
 @media (min-width:481px) and (max-width:767px){
 #header #topNav a.logo {
   height: 40px !important;
@@ -414,6 +638,61 @@ section.page-header .breadcrumb a:hover {
   max-height: 100% !important;
 }
 }
+
+@media (max-width:479px){
+.rfp-right {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.rfp-right span.attachment {
+    float: none;
+    position: relative;
+    right: 0;
+    top: 0;
+    text-align: right;
+    margin-right: 10px;
+}
+.rfp-right span.time {
+    float: none;
+    width: 80px;
+    position: relative;
+    right: 0;
+    top: 0;
+    text-align: right;
+    font-size: 13px;
+}
+.rfp-left span.name {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    margin: 0 10px;
+    display: block;
+    text-align: center;
+}
+.rfp-left span.subject {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0 10px;
+    text-align: center;
+    margin: 5px auto;
+    display: inline-block;
+    width: 100%;
+}
+
+.list-group-item .rfp-left .avatar {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    display: block;
+
+}
+}  
 
 @media (min-width:320px) and (max-width:480px){
 #header #topNav a.logo {

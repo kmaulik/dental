@@ -1,5 +1,5 @@
 <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
-<style>
+<!--<style>
 	.list-group-item .avatar {
 	    width: 40px;
 	    height: 40px;
@@ -99,7 +99,7 @@
 
 	}
 	}
-</style>
+</style>  --> 
 <section class="page-header page-header-xs">
 	<div class="container">
 		<!-- breadcrumbs -->
@@ -172,8 +172,8 @@
 							</div>	
 							<div class="col-lg-2 col-md-4">
 								<label>&nbsp;</label>
-								<input type="submit" name="btn_search" class="btn btn-info" value="Search">
-								<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
+								<input type="submit" name="btn_search" class="btn btn-info btn_search_reset" value="Search">
+								<input type="reset" name="reset" class="btn btn-default btn_search_reset" value="Reset" id="reset">
 							</div>	
 						</div>	
 					</form>
@@ -182,7 +182,7 @@
 						<div class="list-group success square no-side-border search_rfp">
 							<?php foreach($rfp_data as $record) :?>
 								<!-- href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" -->
-								<a  class="list-group-item">
+								<a  class="list-group-item list_groop_item_2">
 									<div class="rfp-left">
 										<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
 											<!-- Means Favorite RFP -->

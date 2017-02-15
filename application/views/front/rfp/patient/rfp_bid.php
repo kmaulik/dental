@@ -32,8 +32,8 @@
 				</div>
 			<?php endif; ?>
 			<!-- /ALERT -->				
-			<div class="col-sm-12 rfp-title">
-				<h3><?=isset($rfp_bid_list[0]['title'])?$rfp_bid_list[0]['title']:''?></h3>
+			<div class="col-sm-12 rfp-title bottom_space">
+				<h3 class=""><?=isset($rfp_bid_list[0]['title'])?$rfp_bid_list[0]['title']:''?></h3>
 			</div>
 			<div class="col-sm-12">
 				<!-- Bid List -->	
