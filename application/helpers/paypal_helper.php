@@ -569,7 +569,7 @@
 	  * @nvpstr is NVPString.
 	  * @nvpArray is Associative Array.
 	   ----------------------------------------------------------------------------------
-	  */
+	 */
 	function deformatNVP($nvpstr)
 	{
 		$intial=0;

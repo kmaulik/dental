@@ -38,14 +38,20 @@
 <!-- -->
 <section>
 	<div class="container">
-		<!-- ALERT -->
+		<!-- ALERT -->		
 		<?php if($this->session->flashdata('success')) : ?>
-		<div class="alert alert-mini alert-success margin-bottom-30">
+		<div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+				&times;
+			</button>
 			<?=$this->session->flashdata('success');?>
 		</div>
 		<?php endif; ?>
 		<?php if($this->session->flashdata('error')) : ?>
-		<div class="alert alert-mini alert-danger margin-bottom-30">
+		<div class="alert alert-danger ">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+				&times;
+			</button>
 			<?=$this->session->flashdata('error');?>
 		</div>
 		<?php endif; ?>
