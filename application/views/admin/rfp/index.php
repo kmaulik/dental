@@ -96,6 +96,8 @@ $(function () {
                    } else if (full.status == 3) {
                     status += '<span class="label label-info">Open</span>';
                    } else if (full.status == 4) {
+                    status += '<span class="label label-warning">In-Progress</span>';
+                   } else if (full.status == 5) {
                     status += '<span class="label label-success">Close</span>';
                    }
                 return status;

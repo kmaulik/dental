@@ -238,7 +238,7 @@ class Rfp_model extends CI_Model {
             'rfp.is_blocked' => 0,
             'rb.is_deleted' => 0,
         ];
-        $this->db->select('rfp.id,rfp.title,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.is_chat_started,rb.created_at,u.fname,u.lname,u.avatar,rr.avg as avg_rating,rr.count1 as total_review');
+        $this->db->select('rfp.id,rfp.title,rfp.status as rfp_status,rb.id as rfp_bid_id,rb.doctor_id,rb.amount as bid_amount,rb.description,rb.status as bid_status,rb.is_chat_started,rb.created_at,u.fname,u.lname,u.avatar,rr.avg as avg_rating,rr.count1 as total_review');
         $this->db->from('rfp');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         $this->db->join('users u','rb.doctor_id = u.id');
@@ -273,6 +273,5 @@ class Rfp_model extends CI_Model {
         return $query->row_array();
 
     } 
-
 
 }    

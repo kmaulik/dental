@@ -1,3 +1,4 @@
+<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
 
@@ -52,8 +53,13 @@
 									<h4 class="media-heading">
 										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 										<div class="pull-right msg-btn">
-											<!-- Add Condition For Review Here -->
-											<?php if(isset($is_rated_rfp) && count($is_rated_rfp) == 0) : ?>
+											<!-- For Choose Winner Doctor (Once Choose winner doctor then hide the button) -->
+											<?php if($bid_list['rfp_status'] < 4 ) : ?> <!-- 4 Means In_Progress (Winner Doctor) For this RFP -->
+												<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_list['id']).'/'.encode($bid_list['rfp_bid_id']))?>" class="label label-info rfp-price confirm_winner" title="Choose Winner" ><i class="fa fa-trophy"></i></a> 
+											<?php endif; ?>	
+											<!-- End Choose Winner Doctor -->
+											<!-- Add Condition For Review Here (If Review not given & Bid status winner(2) then display)-->
+											<?php if(isset($is_rated_rfp) && count($is_rated_rfp) == 0 && $bid_list['bid_status'] == 2) : ?>
 												<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
 											<?php endif; ?>
 											<!-- End Review -->
@@ -247,6 +253,17 @@ function send_review(key){
 // });
 
 // vague.blur();
+
+$(".confirm_winner").click(function(e) {
+	e.preventDefault();
+	var lHref = $(this).attr('href');
+	bootbox.confirm('Are you sure to winner doctor for this rfp ?' ,function(res){
+		if(res){
+			window.location.href = lHref;
+		}
+	});	
+});
+	
 
 
 //--------------- For Message Form Validation --------------

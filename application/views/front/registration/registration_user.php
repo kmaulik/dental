@@ -118,7 +118,7 @@
 						</div>					
 
 						<div class="form-group">
-							<input type="text" name="birth_date" placeholder="YYYY-MM-DD" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>">
+							<input type="text" name="birth_date" placeholder="Birth Date" class="form-control birth_date" data-format="yyyy-mm-dd" data-lang="en" data-RTL="false" value="<?php echo set_value('birth_date'); ?>">
 							<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 						</div>
 

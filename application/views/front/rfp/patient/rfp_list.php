@@ -65,6 +65,8 @@
 							<?php elseif($record['status'] == 3) : ?>
 								<span class="label label-info">Open</span>
 							<?php elseif($record['status'] == 4) : ?>
+								<span class="label label-warning">In-Progress</span>			
+							<?php elseif($record['status'] == 5) : ?>
 								<span class="label label-success">Close</span>			
 							<?php endif; ?>
 						</td>

@@ -38,9 +38,17 @@
 							<a href="<?=base_url('messageboard/message/'.encode($record['id']).'/'.encode($record['patient_id']))?>" class="btn btn-info"><i class="fa fa-envelope"></i> Message</a>
 						<?php endif; ?>
 						<!-- ====== End Check chat is started or not ====== -->
-						<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="update_bid"><i class="fa fa-edit"></i> Update Bid</a>
+						<!-- ====== For Check RFP status In-progress(Winner) or not ====== -->
+						<?php //if($record['status'] < 4 ) : ?> <!-- 4 Means In_Progress (Winner Doctor) For this RFP then hide bid button -->
+							<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="update_bid"><i class="fa fa-edit"></i> View Bid</a>
+						<?php //endif; ?>
+						<!-- ====== End Check RFP status In-progress(Winner) or not ====== -->
 					<?php else : ?>
-						<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="place_bid"><i class="fa fa-plus"></i> Place Bid</a>
+						<!-- ====== For Check RFP status In-progress(Winner) or not ====== -->
+						<?php if($record['status'] < 4 ) : ?> <!-- 4 Means In_Progress (Winner Doctor) For this RFP then hide bid button -->
+							<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="place_bid"><i class="fa fa-plus"></i> Place Bid</a>
+						<?php endif; ?>
+						<!-- ====== End Check RFP status In-progress(Winner) or not ====== -->
 					<?php endif; ?>
 					<!-- ====== End Check Bid Already Placed Or Not  ====== -->
 					<a href="<?=base_url('rfp/search_rfp')?>" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back To RFP List</a>
@@ -92,7 +100,7 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 							<div class="form-group">
-								<input type="submit" name="submit" class="btn btn-info" value="Submit">
+								<input type="submit" name="submit" class="btn btn-info custom-submit" value="Submit">
 								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 							</div>	
 						</div>	
@@ -120,6 +128,12 @@ $("#update_bid").click(function(){
 	$("#rfp_bid_id").val(<?=$rfp_bid['id']?>);
 	$("#amount").val("<?=$rfp_bid['amount']?>");
 	$("#description").val("<?=$rfp_bid['description']?>");
+
+	//---------- For Read Only when update bid ----
+	$('#amount').prop('readonly', true);
+	$('#description').prop('readonly', true);
+	$('.custom-submit').hide();
+	//---------------------------------------------
 });
 
 //---------------------- Validation -------------------

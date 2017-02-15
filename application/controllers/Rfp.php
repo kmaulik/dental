@@ -12,6 +12,12 @@ class Rfp extends CI_Controller {
 
 	public function index(){
 		
+		//-------------- If Role Id (4 Means doctor then redirect to search rfp)
+		if($this->session->userdata['client']['role_id'] == 4) {
+			redirect('rfp/search_rfp');
+		}
+		//------------------------------------------------------------------
+
 		$this->load->library('pagination');
 		$where = ['is_deleted' => 0 , 'is_blocked' => 0, 'patient_id' => $this->session->userdata['client']['id']];
 		$config['base_url'] = base_url().'rfp/index';
@@ -668,7 +674,7 @@ class Rfp extends CI_Controller {
 
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
 		$data['is_rated_rfp']=$this->Rfp_model->get_result('rfp_rating',['rfp_id' => decode($rfp_id)]);
-		// pr($data['rfp_bid_list'],1);
+		//pr($data['rfp_bid_list'],1);
 		$data['subview']="front/rfp/patient/rfp_bid";
 		$this->load->view('front/layouts/layout_main',$data);
 	}
@@ -760,8 +766,7 @@ class Rfp extends CI_Controller {
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
         {
         	 //---------- Only Open RFP View By Doctor (Status = 3)-------
-        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status' => '3'],'1');
-       
+        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status >= ' => '3'],'1');
         	 if(empty($data['record'])){
         	 	show_404();
         	 }
@@ -1063,6 +1068,30 @@ class Rfp extends CI_Controller {
     	}
     }
     //------------- End Review --------------
+
+    /* @DHK Choose Winner Doctor By Patient (Update RFP And rfp_bid Status for winner)
+    /* Param 1 : RFP ID
+    /* Param 2 : RFP BID ID
+    */
+    public function choose_winner_doctor($rfp_id,$rfp_bid_id){
+    	// Update RFP Status 
+    	$upd_rfp_status = ['status' => '4']; // 4 Means In-Progress (Winner) For this RFP
+    	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
+    	
+    	if($res_rfp){
+	    	// Update RFP Bid Status 
+			$upd_rfp_bid_status = ['status' => '2']; // 2 Means Winner Doctor For This BID
+	    	$res_rfp_bid=$this->Rfp_model->update_record('rfp_bid',['id' => decode($rfp_bid_id)],$upd_rfp_bid_status);
+	    	if($res_rfp_bid){
+	    		$this->session->set_flashdata('success', 'Winner Choose Successfully');
+	    	}else{
+	    		$this->session->set_flashdata('error', 'Error Into Choose Winner, Please Try Again!');
+	    	}
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Choose Winner, Please Try Again!');
+    	}
+    	redirect('rfp/view_rfp_bid/'.$rfp_id);
+    }
 
 
 }
