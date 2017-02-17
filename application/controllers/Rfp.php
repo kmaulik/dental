@@ -141,16 +141,19 @@ class Rfp extends CI_Controller {
 				/*------------ For teeth and Treatment category data -------- */
 				
 				$teeth=[];
+				$teeth_cat_array=[];
 				$teeth_data='';
 				if($this->input->post('teeth')){
 					foreach($this->input->post('teeth') as $key=>$val){
 						foreach($this->input->post('treatment_cat_id_'.$val) as $k=>$v){
 							$teeth[$val]['cat_id'][$k]=$v;
+							array_push($teeth_cat_array,$v);
 						}
 						$teeth[$val]['cat_text']=$this->input->post('treat_cat_text_'.$val);	
 					}
 					$teeth_data=json_encode($teeth);
 				} 
+				$teeth_cat_array=array_unique($teeth_cat_array);
 				/*------------ For teeth and Treatment category data -------- */ 
 
 				//-------------- For Multiple File Upload  ----------
@@ -225,6 +228,7 @@ class Rfp extends CI_Controller {
 		
 				$rfp_step_2=array(
 					'teeth_data' => $teeth_data,
+					'teeth_category'	=> implode(",",$teeth_cat_array),
 					'other_description' => $this->input->post('other_description'),
 					'message' => $this->input->post('message'),
 					'img_path' => $img_path,
@@ -404,16 +408,19 @@ class Rfp extends CI_Controller {
 					//pr($_FILES,1);
 					/*------------ For teeth and Treatment category data -------- */ 
 					$teeth=[];
+					$teeth_cat_array=[];
 					$teeth_data='';
 					if($this->input->post('teeth')){
 						foreach($this->input->post('teeth') as $key=>$val){
 							foreach($this->input->post('treatment_cat_id_'.$val) as $k=>$v){
 								$teeth[$val]['cat_id'][$k]=$v;
+								array_push($teeth_cat_array,$v);
 							}
 							$teeth[$val]['cat_text']=$this->input->post('treat_cat_text_'.$val);	
 						}
 						$teeth_data=json_encode($teeth);
 					} 
+					$teeth_cat_array=array_unique($teeth_cat_array);
 					/*------------ For teeth and Treatment category data -------- */ 
 
 					// ------------------------------------------------------------------------
@@ -542,6 +549,7 @@ class Rfp extends CI_Controller {
 						$rfp_data['img_path'] = $final_str;						 
 					}									
 					$rfp_data['teeth_data']=$teeth_data;
+					$rfp_data['teeth_category']	= implode(",",$teeth_cat_array);
 					$rfp_data['other_description']=$this->input->post('other_description');
 					$rfp_data['message']=$this->input->post('message');
 
@@ -742,18 +750,24 @@ class Rfp extends CI_Controller {
 	*/ 
 	public function search_rfp(){    
 		
+		$where = 'is_deleted !=  1 and is_blocked != 1';
+		$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
+		//pr($_GET,1);
 		//------- Filter RFP ----
 		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
 		$date_data= $this->input->get('date') ? $this->input->get('date') :'';
+		$category_data = $this->input->get('treatment_cat_id') ? implode(",",$this->input->get('treatment_cat_id')) :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
 		//------- /Filter RFP ----
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.'&sort='.$sort_data;
-		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data);
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.'&category='.$category_data.'&sort='.$sort_data;
+		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$category_data);
+		//qry(1);
 		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
-		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$category_data,$sort_data);
+		//qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
 	}

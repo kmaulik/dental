@@ -135,8 +135,27 @@ class Rfp_model extends CI_Model {
         return $query->result_array();
     }
 
+
+   
     /* --------------- For Doctor Search RFP --------- */
-    public function search_rfp_count($search_data,$date_data) {
+    public function search_rfp_count($search_data,$date_data,$category_data) {
+        
+        //-------- For Multiple Category search --------------
+        $str='';
+        if($category_data != ''){
+            $cat_data=explode(",",$category_data);
+
+            foreach($cat_data as $key=>$cat_id)
+            {
+                if($key == 0) {  
+                    $str .="FIND_IN_SET($cat_id,teeth_category)";
+                }else{
+                    $str .=" OR FIND_IN_SET($cat_id,teeth_category)";
+                }
+            }
+        }
+        //-------- End Multiple Category search --------------
+
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
@@ -149,6 +168,9 @@ class Rfp_model extends CI_Model {
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
         }
+        if($category_data != ''){
+            $this->db->where("(".$str.") != 0");
+        }    
         $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
@@ -156,7 +178,25 @@ class Rfp_model extends CI_Model {
         return $res_data;
     }
 
-    public function search_rfp_result($limit,$offset,$search_data,$date_data,$sort_data){
+    public function search_rfp_result($limit,$offset,$search_data,$date_data,$category_data,$sort_data){
+        
+        
+        //-------- For Multiple Category search --------------
+        $str='';
+        if($category_data != ''){
+            $cat_data=explode(",",$category_data);
+
+            foreach($cat_data as $key=>$cat_id)
+            {
+                if($key == 0) {  
+                    $str .="FIND_IN_SET($cat_id,teeth_category)";
+                }else{
+                    $str .=" OR FIND_IN_SET($cat_id,teeth_category)";
+                }
+            }
+        }
+        //-------- End Multiple Category search --------------
+
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
@@ -169,6 +209,10 @@ class Rfp_model extends CI_Model {
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") >=', $date[0]);
             $this->db->where('date_format(rfp.created_at,"%Y-%m-%d") <=', $date[2]);
         }
+
+        if($category_data != ''){
+            $this->db->where("(".$str.") != 0");
+        }    
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
@@ -177,6 +221,7 @@ class Rfp_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
 
     /* --------------- For Doctor Profile RFP --------- */
     public function doctor_rfp_count($search_data,$date_data) {
@@ -244,6 +289,7 @@ class Rfp_model extends CI_Model {
         $this->db->join('users u','rb.doctor_id = u.id');
         $this->db->join('(SELECT avg(rating) AS avg, count(rating) AS count1,doctor_id FROM rfp_rating where is_deleted=0 and is_blocked=0 GROUP BY doctor_id) rr','rr.doctor_id = rb.doctor_id','LEFT');
         $this->db->where($where);
+        $this->db->order_by('rb.id','desc');
         $query = $this->db->get();
         return $query->result_array();
     }
