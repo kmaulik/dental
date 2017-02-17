@@ -55,6 +55,19 @@ class Notification_model extends CI_Model {
 		$res = $this->db->get_where('notifications',['to_id'=>$user_id,'is_read'=>'0'])->num_rows();
 		return $res;
 	}
+
+	public function get_noti_data($data){
+		$this->db->where($data);
+		$res = $this->db->get('notifications')->row_array();
+		return $res;
+	}
+
+	public function update_notification($cond,$data){
+		$this->db->where($cond);
+		$this->db->update('notifications',$data);
+	}
+
+
 }
 
 /* End of file Notification_model.php */

@@ -1,7 +1,5 @@
-<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
-
 
 <section class="page-header page-header-xs">
 	<div class="container">

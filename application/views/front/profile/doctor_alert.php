@@ -77,9 +77,7 @@
 							<label class="control-label">Treatment Category</label>							
 							<select name="treatment_cat[]" class="form-control select2" id="treatment_cat" multiple data-placeholder="Select Treatment Category">								
 								<?php foreach($treatment_category as $t_cat) : ?>
-									<option value="<?=$t_cat['id']?>" 
-										<?php if(in_array($t_cat['id'], $all_treatment_cat)){ echo 'selected'; } ?>><?=$t_cat['title']?>
-									</option>
+									<option value="<?=$t_cat['id']?>"<?php if(in_array($t_cat['id'], $all_treatment_cat)){ echo 'selected'; } ?>><?=$t_cat['title']?></option>
 								<?php endforeach; ?>
 							</select>	
 						</div>

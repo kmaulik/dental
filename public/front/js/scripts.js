@@ -2579,6 +2579,51 @@
 			});
 		}
 
+		//--------------------------------------------------------------------------------------------
+
+		// v! New instance for datepicker for the disable future date by adding endDate: '+0d'
+		var _container_disable_past = jQuery('.disable_past');
+		var date = new Date();
+		
+		if(_container_disable_past.length > 0) {
+			loadScript(plugin_path + 'bootstrap.datepicker/js/bootstrap-datepicker.min.js', function() {
+		
+				if(jQuery().datepicker) {
+
+					_container_disable_past.each(function() {
+						var _t 		= jQuery(this),
+							_lang 	=	_t.attr('data-lang') || 'en';
+
+						if(_lang != 'en' && _lang != '') { // load language file
+							loadScript(plugin_path + 'bootstrap.datepicker/locales/bootstrap-datepicker.'+_lang+'.min.js');
+						}
+
+						jQuery(this).datepicker({
+							format:			_t.attr('data-format') 			|| 'yyyy-mm-dd', 
+							language: 		_lang,
+							rtl: 			_t.attr('data-RTL') 			== "true"  ? true  : false,
+							changeMonth: 	_t.attr('data-changeMonth') 	== "false" ? false : true,
+							todayBtn: 		_t.attr('data-todayBtn') 		== "false" ? false : "linked",							
+							autoclose: 		_t.attr('data-autoclose') 		== "false" ? false : true,
+							todayHighlight: _t.attr('data-todayHighlight') 	== "false" ? false : true,
+							startDate: date,
+							onRender: function(date) {
+								// return date.valueOf() < nowDate.valueOf() ? 'disabled' : '';
+							}
+						}).on('changeDate', function(ev) {
+
+							// AJAX POST - OPTIONAL
+
+						}).data('datepicker'); 
+					});
+					
+				}
+
+			});
+		}
+
+		//--------------------------------------------------------------------------------------------
+
 		/** Range Picker
 			<input type="text" class="form-control rangepicker" value="2015-01-01 - 2016-12-31" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31">
 		 ******************* **/
@@ -2628,14 +2673,16 @@
 		var _container_3 = jQuery('.timepicker');
 		
 		if(_container_3.length > 0) {
-			loadScript(plugin_path + 'timepicki/timepicki.min.js', function() {
-			
+			loadScript(plugin_path + 'timepicki/timepicki.min.js', function() {			
 				if(jQuery().timepicki) {
-
-					_container_3.timepicki();
-					
+					_container_3.timepicki({
+						show_meridian:false,
+						min_hour_value:0,
+						max_hour_value:23,
+						step_size_minutes:15,						
+						increase_direction:'up'						
+					});
 				}
-
 			});
 		}
 

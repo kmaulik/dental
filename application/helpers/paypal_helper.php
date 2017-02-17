@@ -45,8 +45,10 @@
 
 	define('USE_PROXY', false);
 	define('version', '64');
+
+	// 100$ 50$ x 2 
 	
-	define('SUBSCRIPTION_PRICE', 14.99);
+	define('SUBSCRIPTION_PRICE',50.00);
 	//define('SUBSCRIPTION_PRICE', 1.35);
 
 	/* An express checkout transaction starts with a token, that

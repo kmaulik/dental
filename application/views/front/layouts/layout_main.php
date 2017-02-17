@@ -40,8 +40,7 @@
         <!-- Top Bar -->
         <div id="topBar">
             <div class="container">
-   
-                        
+
                 <!-- right -->
                 <ul class="top-links list-inline pull-right">
                     <?php if($this->session->userdata('client')) :?>
@@ -131,8 +130,7 @@
 
                     </ul>
                     <!-- /BUTTONS -->
-
-
+                    
                     <!-- Logo -->
                     <a class="logo pull-left" href="<?php echo base_url(); ?>">
                         <img src="<?= DEFAULT_IMAGE_PATH ?>logo.png" alt="" />
@@ -240,7 +238,7 @@
                     <?php 
                         if(!empty($all_notifications)) {
                             foreach($all_notifications as $noti) {
-
+                                $noti_id = $noti['id'];
                                 $link = '';
                                 if($noti['noti_type'] == 'message'){
                                     $link = base_url().'messageboard/message/'.encode($noti['rfp_id']).'/'.encode($noti['from_id']);
@@ -249,8 +247,8 @@
                                     $link = base_url().'rfp/view_rfp_bid/'.encode($noti['rfp_id']);
                                 }
                     ?>  
-                    <li>
-                        <a href="<?php echo $link; ?>">
+                    <li style="cursor:pointer" id="li_<?php echo $noti['id']; ?>" class="<?php if($noti['is_read'] == '1'){ echo 'read'; }?>">
+                        <a onclick="notification_action('<?php echo $noti_id; ?>')">
                             <p class="notifly_head">
                                 <?php echo $noti['noti_msg']; ?>
                                 <?php
@@ -266,14 +264,7 @@
                             <p class="notifly_ago"><?php echo time_ago($noti['created_at']); ?></p>
                         </a>
                     </li>
-                    <?php } } ?>
-                    <!-- <li class="read">
-                        <a href="">
-                            <p class="notifly_head">New job named dhsa;ldsa on 16th January 2017  has been posted by </p>
-                            <p class="notifly_msg">Near :0.00Miles </p> 
-                            <p class="notifly_ago">2 weeks ago</p>                   
-                        </a>
-                    </li> -->                    
+                    <?php } } ?>                    
                 </ul>
 
             </div>
@@ -281,13 +272,32 @@
         </div>
         <div class="fixed_clear_btn"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></div>  
     </div>
-
     <!-- /SIDE PANEL -->
 
+    <!-- Small Modal -->
+    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button> -->
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
 
+                <!-- header modal -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Small modal</h4>
+                </div>
+
+                <!-- body modal -->
+                <div class="modal-body">
+                    ...
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<!--  Custom Scroll Bar Style and Script -->
 <link href="<?= DEFAULT_CSS_PATH ?>custom_scrollbar.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url().'public/front/js/scrollbar.min.js'; ?>"></script>
-
 
 <script type="text/javascript">var plugin_path = '<?= DEFAULT_PLUGINS_PATH ?>';</script> 
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>scripts.js"></script>
@@ -297,12 +307,29 @@
 <script type="text/javascript" src="<?= DEFAULT_JS_PATH ?>view/demo.revolution_slider.js"></script>
 
 <script type="text/javascript">
+    
     jQuery('.scrollbar-inner').scrollbar();
     jQuery(document).ready(function(){
         var window_height = $( window ).height();        
         //window_height = window_height-63; 
         $('.scrollbar-inner').css({'height':window_height});
-    });    
+    });
+
+    function notification_action(noti_id){
+        // $('.bs-example-modal-sm').modal('show');
+        // bootbox.alert(noti_id);
+        // return false;
+        $.ajax({
+            type:"POST",
+            url:"<?php echo base_url().'home/read_notification'; ?>",
+            data:{noti_id:noti_id},
+            dataType:"json",
+            success:function(data){
+
+            }
+        });
+    }
+    
 </script>
 
 </body>

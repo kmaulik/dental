@@ -82,7 +82,15 @@
 							$last_remark = $record['admin_remarks'];
 							if(!empty($last_remark)){
 								$last_remark_arr = json_decode($last_remark,true);													
+								$last_remark_arr = end($last_remark_arr);
+								// pr(end($last_remark_arr));
 						?>
+							<div class="col-sm-12">								
+								<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_theme_primary">
+									<i class="icon-alarm-add position-right"></i>
+									View History
+								</button>
+							</div>
 							<div class="col-sm-12">
 								<label>Total Attempt No : </label> 
 								<?php echo $last_remark_arr['attempt_no']; ?>
@@ -435,7 +443,7 @@
 							?>
 						</div>
 						<div class="col-sm-12">
-							<label>Treatment Plan Total : <?php if($record['treatment_plan_total'] != '') 
+							<label>Treatment Plan Total : <?php if($record['treatment_plan_total'] != '')
 							{	echo "$ ".$record['treatment_plan_total'];	} 
 							else
 							{	echo "N/A";	}	
@@ -448,6 +456,63 @@
 		</div>
 	</div>
 </div>
+
+<!-- Primary modal -->
+<div id="modal_theme_primary" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-primary">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h6 class="modal-title">History of RFP Reviews</h6>
+			</div>
+
+			<div class="modal-body">
+				<?php
+					$last_remark = $record['admin_remarks'];
+					if(!empty($last_remark)){
+						$last_remark_arr = json_decode($last_remark,true);
+						// pr($last_remark_arr);
+						$last_cnt =  count($last_remark_arr);
+						foreach($last_remark_arr as $l_arr){
+							$style='border-bottom:1px dotted black; margin-bottom:10px;';
+							if($last_cnt == $l_arr['attempt_no']){
+								$style = '';
+							}
+				?>
+						<div class="col-sm-12">
+							<label>Total Attempt No : </label> 
+							<?php echo $l_arr['attempt_no']; ?>
+						</div>
+						<div class="col-sm-12">
+							<label>Last Send message : </label> 
+							<?php echo $l_arr['last_message']; ?>
+						</div>
+						<div class="col-sm-12">
+							<label>Last Remark by admin : </label> 
+							<?php echo $l_arr['last_remarks']; ?>
+						</div>												
+						<div class="col-sm-12">
+							<label>Last Action Date: </label> 
+							<?php 
+								echo '&nbsp;&nbsp;'.date('d/m/Y',strtotime($l_arr['last_action']));
+								echo ' ( '.get_no_of_days($l_arr['last_action']).' Days before)';
+							?>
+						</div>
+						<div class="col-sm-12" style="<?php echo $style; ?>">
+							<label>Last Review by : </label> 
+							<?php echo $l_arr['last_action_by']; ?>
+						</div>					
+
+				<?php } } ?>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>				
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /primary modal -->
 
 
 <script type="text/javascript">

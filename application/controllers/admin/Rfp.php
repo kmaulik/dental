@@ -79,16 +79,21 @@ class Rfp extends CI_Controller {
     public function choose_action($rfp_id){
         $rfp_id = decode($rfp_id);
         $data['rfp_id'] = $rfp_id;        
-        $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');        
+        $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');
+
         $user_data = $this->Users_model->check_if_user_exist(['id' => $record['patient_id']], false, true);
         if(empty($rfp_id)){ show_404(); }
 
         if($_POST){
+
+            $last_remark = json_decode($record['admin_remarks'],true);
+
+
             $remarks = $this->input->post('remarks');
             $action = $this->input->post('action');
             $message = $this->input->post('message');            
             
-            if($action == 'yes'){ 
+            if($action == 'yes'){
                 $status='3'; 
                 $noti_msg = $record['title'].' has been successfully approved. and it is live.';
             }else{ 
@@ -98,8 +103,8 @@ class Rfp extends CI_Controller {
             
             if(!empty($record['admin_remarks'])){
                 $last_remark = json_decode($record['admin_remarks'],true);
-                $last_cnt = $last_remark['attempt_no']+1;                
-            }else{                
+                $last_cnt = count($last_remark)+1;
+            }else{
                 $last_cnt = '1';
             }
 
@@ -111,7 +116,16 @@ class Rfp extends CI_Controller {
                                 'last_action'=>date('Y-m-d H:i:s')
                             ];
 
-            $admin_remarks_str = json_encode($admin_remarks);
+            if(!empty($last_remark)){
+                $arr_remark[] =$admin_remarks;
+                $final_remark = array_merge($last_remark,$arr_remark);
+            }else{
+                $final_remark[] =$admin_remarks;
+            }
+
+            // pr($final_remark,1);
+
+            $admin_remarks_str = json_encode($final_remark);
             $this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>$status,'admin_remarks'=>$admin_remarks_str]);
             // ------------------------------------------------------------------------
             $noti_data = [

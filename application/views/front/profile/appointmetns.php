@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
+
 <!--<style>
 	.list-group-item .avatar {
 	    width: 40px;
