@@ -1,4 +1,3 @@
-<script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>RFP List</h1>

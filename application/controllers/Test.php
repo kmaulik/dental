@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Test extends CI_Controller {
 
 	public $name = '';
-    public $subscription_price = 25.99;
+    public $subscription_price = 50.75;
 
 	public function __construct(){
 		parent::__construct();
@@ -81,7 +81,7 @@ class Test extends CI_Controller {
 
     public function get_detail(){
 
-        $res = GetRecurringPaymentsProfileDetails('I-H285BA9SF95D');
+        $res = GetRecurringPaymentsProfileDetails('I-6FXBH5TWMHYS');
         pr($res);
 
     }

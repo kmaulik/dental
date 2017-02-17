@@ -568,6 +568,23 @@ span.time {
 .modal {
     background: rgba(0,0,0,0.8);
 }
+.dashboard_design {
+  display: inline-block;
+  width: 100%;
+}
+.dashboard_design ul {
+  list-style: outside none none;
+  padding: 0;
+}
+.dashboard_design li {
+  float: left;
+  width: 25%;
+}
+.dashboard_design ul::after {
+  clear: both;
+  content: " ";
+  display: block;
+}
 
 
 

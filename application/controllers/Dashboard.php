@@ -203,8 +203,7 @@ class Dashboard extends CI_Controller {
         $data['subview']="front/profile/doctor_alert";
         $this->load->view('front/layouts/layout_main',$data);
     }
-
-
+    
     public function remove_avatar($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['avatar'=>'']);
