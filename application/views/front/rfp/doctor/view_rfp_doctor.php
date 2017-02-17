@@ -83,7 +83,7 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-sm-12">
-							<label>Amount</label>
+							<label>Amount ($)</label>
 							<div class="form-group">
 								<input type="text" name="amount" id="amount" class="form-control NumbersAndDot">
 							</div>	

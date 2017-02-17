@@ -148,6 +148,14 @@ span.time {
 							<label>&nbsp;</label>
 							<input type="submit" name="btn_search" class="btn btn-info" value="Search">
 							<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
+						</div>
+						<div class="col-lg-12">
+							<label>Treatment Category </label>
+							<select id="treatment_cat_id" class="form-control select2" name="treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
+								<?php foreach($treatment_category as $cat) :?>
+									<option value="<?=$cat['id']?>" <?php if($this->input->get('treatment_cat_id') != '' && in_array($cat['id'],$this->input->get('treatment_cat_id'))) { echo "selected"; } ?>><?=$cat['title']." (".$cat['code'].")"?></option>
+								<?php endforeach;?>
+							</select>		
 						</div>	
 					</div>	
 				</form>
@@ -197,6 +205,7 @@ $("#reset").click(function(){
 	$('input[name=search]').val('');
 	$('input[name=date]').val('');
 	$("#sort").val('desc');
+	$("#treatment_cat_id").val('');
 	$("#search_rfp").submit();
 });
 
