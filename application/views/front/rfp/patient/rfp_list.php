@@ -75,15 +75,15 @@
 							<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info">
 								<i class="fa fa-eye"></i><span>View</span>
 							</a>
-							<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit option -->
+							<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit & delete option -->
 							<?php if($record['status'] == 0 || $record['status'] == 1 || $record['status'] == 2) : ?>
 								<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-green">
 									<i class="fa fa-edit"></i><span>Edit</span>
 								</a>
+								<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" >
+									<i class="fa fa-trash"></i><span>Delete</span>
+								</a>
 							<?php endif; ?>
-							<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" >
-								<i class="fa fa-trash"></i><span>Delete</span>
-							</a>
 						</td>
 					</tr>
 				<?php endforeach; ?>
