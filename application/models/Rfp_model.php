@@ -320,4 +320,21 @@ class Rfp_model extends CI_Model {
 
     } 
 
+    /*-------------- Payment list with payment details ----------- 
+    /* Get RFP data with status (3 - open, 4 - In-progress) and payment history For Dashboard Refund
+    */
+    public function get_payment_list_user_wise(){
+
+        $this->db->select('rfp.id as rfp_id,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as user_name,rfp.status as rfp_status,rfp.dentition_type as dentition_type,pt.id as payment_id,pt.payable_price as paid_price,pt.paypal_token as paypal_token,r.id as refund_id,r.status as refund_status');
+        $this->db->from('payment_transaction pt');
+        $this->db->join('rfp','pt.rfp_id = rfp.id');
+        $this->db->join('refund r','pt.id = r.payment_id','left');
+        $this->db->where_in('rfp.status',[3,4]); // 3 & 4 Means Open & Pending (Winner) RFP
+        $this->db->where('pt.user_id',$this->session->userdata['client']['id']);
+        $this->db->order_by('pt.created_at','desc');
+        $query = $this->db->get();
+        return $query->result_array();
+
+    } 
+
 }    

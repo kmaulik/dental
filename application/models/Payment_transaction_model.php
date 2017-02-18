@@ -36,7 +36,7 @@ class Payment_transaction_model extends CI_Model {
     }
 
     /**
-     * @uses : this function is used to count rows of blogs based on datatable in blog list page [For Admin Side]
+     * @uses : this function is used to count rows of transaction based on datatable in transaction list page [For Admin Side]
      * @param : @table 
      * @author : HPA
      */
@@ -61,7 +61,6 @@ class Payment_transaction_model extends CI_Model {
         $res_data = $this->db->get('payment_transaction pt')->num_rows();
         return $res_data;
     }
-
 
 
     /**

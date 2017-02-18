@@ -76,7 +76,7 @@
 					<div class="form-group">
 						<label>Birth Date</label>	
 						<input type="text" name="birth_date" id="birth_date" class="form-control datepicker" 
-							  placeholder="YYYY-MM-DD" value="<?php if(set_value('birth_date') != '') { echo set_value('birth_date'); }
+							  placeholder="YYYY-MM-DD" onchange="fetch_definition_type()" value="<?php if(set_value('birth_date') != '') { echo set_value('birth_date'); }
 							  	else { echo $this->session->userdata['client']['birth_date']; } ?>" >
 						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
 					</div>
@@ -103,9 +103,9 @@
 						<label>Dentition Type</label>	
 						<select name="dentition_type" class="form-control" id="dentition_type">
 							<option value=""> Select Dentition Type</option>
-							<option value="primary">Primary</option>
+							<!-- <option value="primary">Primary</option>
 							<option value="permenant">Permenant</option>
-							<option value="other">Other</option>
+							<option value="other">Other</option> -->
 						</select>
 					</div>
 					<?php echo form_error('dentition_type','<div class="alert alert-mini alert-danger">','</div>'); ?>	
@@ -183,8 +183,6 @@
 
 
 <script>
-
-	$("#dentition_type").val("<?=set_value('dentition_type');?>");
 		
 	$(".new_person").click(function(){
 		$("input[name=fname]").val('');
@@ -192,6 +190,34 @@
 		$("input[name=birth_date]").val('');
 		$("input[name=zipcode]").val('');
 	});
+
+
+	//------ For Check Age and display dentition type -----------------------
+	fetch_definition_type();
+	function fetch_definition_type(){
+		if($("#birth_date").val() != '')
+		{
+			//$(".dentition_type").show();
+			dob = new Date($("#birth_date").val());
+			var today = new Date();
+			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+			//console.log('Your Age is : '+age);
+			if(age > 16) 
+			{
+				var data='<option value=""> Select Dentition Type</option><option value="permenant">Permenant</option><option value="other">Other</option>';
+				$("#dentition_type").html(data);
+			}else{
+				var data='<option value=""> Select Dentition Type</option><option value="primary">Primary</option><option value="permenant">Permenant</option><option value="other">Other</option>';				
+				$("#dentition_type").html(data);
+			}
+			$("#dentition_type").val("<?=set_value('dentition_type');?>");
+		}
+		else{
+			//$(".dentition_type").hide();
+			$("#dentition_type").html('');
+		}	
+		
+	}
 
 </script>
 

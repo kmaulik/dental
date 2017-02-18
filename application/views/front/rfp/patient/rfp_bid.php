@@ -56,15 +56,21 @@
 												<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_list['id']).'/'.encode($bid_list['rfp_bid_id']))?>" class="label label-info rfp-price confirm_winner" title="Choose Winner" ><i class="fa fa-trophy"></i></a> 
 											<?php endif; ?>	
 											<!-- End Choose Winner Doctor -->
-											<!-- Add Condition For Review Here (If Review not given & Bid status winner(2) then display)-->
-											<?php if(isset($is_rated_rfp) && count($is_rated_rfp) == 0 && $bid_list['bid_status'] == 2) : ?>
-												<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+											<!-- Add Condition For Message & Review Button (Bid status winner(2) then display)-->
+											<?php if($bid_list['bid_status'] == 2) :?>
+												<!-- If Review not given for this RFP then display the review button -->
+												<?php if(isset($is_rated_rfp) && count($is_rated_rfp) == 0) : ?>
+													<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+												<?php endif; ?>
+												<!-- End Review -->
+												<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
+												<!-- Display all Message button (If Chat started b/w doctor & patient)-->
+												<?php if($bid_list['is_chat_started'] == 1) :?>
+													<a href="<?=base_url('messageboard/message/'.encode($bid_list['id']).'/'.encode($bid_list['doctor_id']))?>" class="label label-info rfp-price" title="View Mail"><i class="fa fa-eye"></i></a> 	
+												<?php endif; ?>
+												<!-- End all Message button-->
 											<?php endif; ?>
-											<!-- End Review -->
-											<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
-											<?php if($bid_list['is_chat_started'] == 1) :?>
-												<a href="<?=base_url('messageboard/message/'.encode($bid_list['id']).'/'.encode($bid_list['doctor_id']))?>" class="label label-info rfp-price" title="View Mail"><i class="fa fa-eye"></i></a> 	
-											<?php endif; ?>
+											<!-- End Message & Review Button-->
 											<span class="label label-success rfp-price">&#36;<?=$bid_list['bid_amount']?></span>
 										</div>	
 									</h4>

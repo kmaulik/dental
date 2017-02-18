@@ -12,6 +12,10 @@ class Dashboard extends CI_Controller {
     }	
 
     public function index() {
+        
+        
+        $data['rfp_list']=$this->Rfp_model->get_payment_list_user_wise();
+        //pr($data['rfp_list'],1);
         $data['subview']="front/dashboard";
         $this->load->view('front/layouts/layout_main',$data);
     }
@@ -261,6 +265,25 @@ class Dashboard extends CI_Controller {
         //pr($data['overall_review'],1);
         $data['subview']="front/profile/view_profile";
         $this->load->view('front/layouts/layout_main',$data);
+    }
+
+     /* @DHK Refund Payment Request
+    /* Param 1 : User Id
+    */
+    public function refund_request(){
+        $refund_arr=[
+            'payment_id' => $this->input->post('payment_id'),
+            'rfp_id' => $this->input->post('rfp_id'),
+            'description' => $this->input->post('description'),
+            'created_at' => date("Y-m-d H:i:s"),
+        ];
+        $res=$this->Rfp_model->insert_record('refund',$refund_arr);
+        if($res){
+            $this->session->set_flashdata('success','Refund Request Successfully Submitted');
+        }else{
+            $this->session->set_flashdata('success','Error Into Refund Request');
+        }
+        redirect('dashboard');
     }
 
 }
