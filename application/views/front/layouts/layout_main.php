@@ -258,6 +258,14 @@
                                     if($noti['noti_type'] == 'doc_bid'){
                                         echo "You have new bid on ".$noti['title'].' by '.$noti['to_fname'];
                                     }
+
+                                    if($noti['noti_type'] == 'doc_won'){
+                                        echo 'Congratulation..!! You\'ve won one RFP from client. Click here to proceed.' ;
+                                    }
+
+                                    if($noti['noti_type'] == 'doc_review'){
+                                        echo 'Congratulation..!! You\'ve review from the patient. Click here to show. ' ;
+                                    }                                    
                                 ?>
                             </p>
                             <!-- <p class="notifly_msg">Near :0.00Miles </p>  -->
@@ -316,9 +324,7 @@
     });
 
     function notification_action(noti_id){
-        // $('.bs-example-modal-sm').modal('show');
-        // bootbox.alert(noti_id);
-        // return false;
+
         $.ajax({
             type:"POST",
             url:"<?php echo base_url().'home/read_notification'; ?>",
@@ -329,7 +335,7 @@
             }
         });
     }
-    
+
 </script>
 
 </body>

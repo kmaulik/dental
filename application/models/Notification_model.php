@@ -26,6 +26,7 @@ class Notification_model extends CI_Model {
 	}	
 
 	// this func will insert notification for the Admin action for the approve or disapprove RFp
+	// this ill be only use for the insert 
 	public function insert_rfp_notification($data){
 		$data['created_at'] = date('Y-m-d H:i:s');
 		$this->db->insert('notifications',$data);
@@ -44,10 +45,7 @@ class Notification_model extends CI_Model {
 
 		$this->db->where(['notifications.to_id'=>$user_id]);
 		$res_array = $this->db->get('notifications')->result_array();
-
-		// qry();
-		// pr($res_array,1);
-
+		
 		return $res_array;
 	}
 

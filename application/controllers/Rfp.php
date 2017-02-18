@@ -1064,7 +1064,11 @@ class Rfp extends CI_Controller {
     //-------------- Doctor Review -------------------
     public function doctor_review(){
 
+    	
     	if($this->input->post('submit')){
+    		
+    		$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true);
+
     		$rating_data= [
     			'rfp_id'		=>	$this->input->post('rfp_id'),
     			'doctor_id'		=>	$this->input->post('doctor_id'),
@@ -1073,6 +1077,19 @@ class Rfp extends CI_Controller {
     			'created_at'	=>  date("Y-m-d H:i:s"),
     		];
     		$res=$this->Rfp_model->insert_record('rfp_rating',$rating_data);
+
+    		// ------------------------------------------------------------------------
+	    	$noti_data = [
+	    					'from_id'=>$rfp_data['patient_id'],
+	    					'to_id'=>$this->input->post('doctor_id'),
+	    					'rfp_id'=>$this->input->post('rfp_id'),
+	    					'noti_type'=>'doc_review',
+	    					'noti_msg'=>'',
+	    					'noti_url'=>''
+	    				];
+	    	$this->Notification_model->insert_rfp_notification($noti_data);
+	    	// ------------------------------------------------------------------------
+
     		if($res){
     			$this->session->set_flashdata('success', 'Review Submitted Successfully');
     		}else{
@@ -1088,14 +1105,32 @@ class Rfp extends CI_Controller {
     /* Param 2 : RFP BID ID
     */
     public function choose_winner_doctor($rfp_id,$rfp_bid_id){
+    	
     	// Update RFP Status 
+	    $rfp_bid_fetch = $this->Rfp_model->get_result('rfp_bid',['id'=>decode($rfp_bid_id)],true);
+	    $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>decode($rfp_id)],true);
+	    
     	$upd_rfp_status = ['status' => '4']; // 4 Means In-Progress (Winner) For this RFP
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
     	
     	if($res_rfp){
 	    	// Update RFP Bid Status 
 			$upd_rfp_bid_status = ['status' => '2']; // 2 Means Winner Doctor For This BID
-	    	$res_rfp_bid=$this->Rfp_model->update_record('rfp_bid',['id' => decode($rfp_bid_id)],$upd_rfp_bid_status);
+	    	
+	    	$res_rfp_bid = $this->Rfp_model->update_record('rfp_bid',['id' => decode($rfp_bid_id)],$upd_rfp_bid_status);
+
+	    	// ------------------------------------------------------------------------
+	    	$noti_data = [
+	    					'from_id'=>$rfp_data['patient_id'],
+	    					'to_id'=>$rfp_bid_fetch['doctor_id'],
+	    					'rfp_id'=>decode($rfp_id),
+	    					'noti_type'=>'doc_won',
+	    					'noti_msg'=>'',
+	    					'noti_url'=>''
+	    				];
+	    	$this->Notification_model->insert_rfp_notification($noti_data);
+	    	// ------------------------------------------------------------------------
+
 	    	if($res_rfp_bid){
 	    		$this->session->set_flashdata('success', 'Winner Choose Successfully');
 	    	}else{
