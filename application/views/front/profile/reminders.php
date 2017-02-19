@@ -16,11 +16,13 @@
 		<!-- ALERT -->
 		<?php if($this->session->flashdata('success')) : ?>
 			<div class="alert alert-success margin-bottom-30">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 				<?=$this->session->flashdata('success');?>
 			</div>
 		<?php endif; ?>
 		<?php if($this->session->flashdata('error')) : ?>
 			<div class="alert alert-danger margin-bottom-30">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 				<?=$this->session->flashdata('error');?>
 			</div>
 		<?php endif; ?>
@@ -40,7 +42,8 @@
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade in active" id="info">
 					
-					<a class="btn btn-primary" onclick="$('#reminders_modal').modal('show'); ">
+					<a class="btn btn-primary" onclick="$('#reminder_modal_form').trigger('reset');
+						$('#reminder_id_hidden').val(''); $('#reminders_modal').modal('show'); ">
 						<i class="et-clock"></i>
 						Add Reminder
 					</a>
@@ -49,42 +52,60 @@
 					<br/>
 					<br/>
 
-					<?php if(count($rfp_data) > 0) :?>
-						<div class="list-group success square no-side-border search_rfp">
-							<?php foreach($rfp_data as $record) :?>
-								<!-- href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" -->
-								<a  class="list-group-item list_groop_item_2">
-									<div class="rfp-left">
-										<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
-											<!-- Means Favorite RFP -->
-											<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['id'])?>"></span>
-										<?php else : ?>
-											<!-- Means Not Favorite RFP -->
-											<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['id'])?>"></span>
-										<?php endif; ?>
-										<img src="<?php if($record['avatar'] != '') 
-				                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
-				                    	else 
-				                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
-										<span class="name"><?=$record['fname']." ".$record['lname'];?></span>
-										<span class="subject">
-											<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
-											<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
-										</span>
-									</div>	
-									<div class="rfp-right">
-										<?php if($record['img_path'] != '') :?>
-											<span class="attachment"><i class="fa fa-paperclip"></i></span>
-										<?php endif; ?>
-										<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
-									</div>
-								</a>
-							<?php endforeach; ?>	
+					<div class="row">
+						<div class="col-md-12">
+							<h4>My Reminders</h4>	
+							<hr/>
 						</div>
-						<?php echo $this->pagination->create_links(); ?>
-					<?php else : ?>
-						<h3>No data Available</h3>
-					<?php endif; ?>			
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Reminder Title</th>
+											<th>Reminder Time</th>
+											<th>Is Active ?</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach($reminders_data as $reminder) : ?>
+											<tr>
+												<td>1</td>
+												<td><?=$reminder['reminder_title']?></td>
+												<td><?=$reminder['reminder_time']?></td>
+												<td>
+													<?php
+														if($reminder['is_active']=='1'){
+															echo 'Yes';
+														}else{
+															echo 'No';
+														}
+													?>
+												</td>
+												<td>													
+													<a class="btn btn-3d btn-xs btn-reveal btn-green" 
+														data-id="<?php echo $reminder['id']; ?>"
+														onclick="edit_reminder(this)"
+													    data-toggle="modal" data-target=".refund_request">
+														<i class="fa fa-money"></i><span>Edit</span>
+													</a>
+													<a class="btn btn-3d btn-xs btn-reveal btn-green" 
+														data-id="<?php echo $reminder['id']; ?>"
+														onclick="delete_reminder(this)"
+														data-toggle="modal" data-target=".refund_request">
+														<i class="fa fa-money"></i><span>Delete</span>
+													</a>
+												</td>
+											</tr>
+										<?php endforeach; ?>	
+									</tbody>
+								</table>
+							</div>			
+						</div>	
+					</div>
+						
 				</div>
 				<!-- /PERSONAL INFO TAB -->
 
@@ -107,7 +128,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myLargeModalLabel">Doctor Reminder</h4>
 			</div>
-			<form action="<?php echo base_url().'home/add_reminder'; ?>" method="POST" onsubmit="return validate_form();">
+			<form action="<?php echo base_url().'home/add_reminder'; ?>" id="reminder_modal_form" method="POST" onsubmit="return validate_form();">
 				<div class="modal-body">
 					<div class="row">						
 						<div class="col-sm-12">							
@@ -136,7 +157,7 @@
 							<div class="form-group">
 								<label>Make reminder active ?</label>																
 								<label class="switch switch-info">
-									<input type="checkbox" checked="" name="is_active">
+									<input type="checkbox" checked="" name="is_active" id="is_active">
 									<span class="switch-label" data-on="YES" data-off="NO"></span>									
 								</label>								
 							</div>
@@ -148,7 +169,72 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 						<div class="form-group">
-							<input type="submit" name="submit" class="btn btn-info" value="Add">
+							<input type="hidden" name="reminder_id_hidden" id="reminder_id_hidden" />
+							<input type="submit" name="submit" class="btn btn-info" value="Save">
+							<a onclick="$('#reminders_modal').modal('hide')" class="btn btn-default cancel-payment">Cancel</a>
+						</div>	
+					</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Place a Bid ========================= -->
+
+<!-- ==================== Modal Popup For Apply Promotional Code ========================= -->
+<div class="modal fade" id="reminders_modal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Doctor Reminder</h4>
+			</div>
+			<form action="<?php echo base_url().'home/add_reminder'; ?>" id="reminder_modal_form" method="POST" onsubmit="return validate_form();">
+				<div class="modal-body">
+					<div class="row">						
+						<div class="col-sm-12">							
+							<div class="form-group">
+								<label>Reminder Title</label>								
+								<input type="text" class="form-control" name="reminder_title" id="reminder_title" />
+								<span class="reminder_title_msg"></span>
+							</div>
+							
+							<div class="form-group">
+								<label>Reminder date</label>
+								<input type="text" class="form-control disable_past" data-format="yyyy-mm-dd" 
+									   data-lang="en" data-RTL="false" readonly  id="reminder_date" name="reminder_date" >
+								<span class="reminder_date_msg"></span>	   
+							</div>
+
+							<div class="form-group">
+								<label>Reminder date</label>
+								<input type="text" class="form-control timepicker" id="reminder_time" name="reminder_time"
+										readonly >
+								<span class="reminder_time_msg"></span>
+							</div>	
+							
+							<br/>	
+
+							<div class="form-group">
+								<label>Make reminder active ?</label>																
+								<label class="switch switch-info">
+									<input type="checkbox" checked="" name="is_active" id="is_active">
+									<span class="switch-label" data-on="YES" data-off="NO"></span>									
+								</label>								
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="hidden" name="reminder_id_hidden" id="reminder_id_hidden" />
+							<input type="submit" name="submit" class="btn btn-info" value="Save">
 							<a onclick="$('#reminders_modal').modal('hide')" class="btn btn-default cancel-payment">Cancel</a>
 						</div>	
 					</div>	
@@ -191,6 +277,42 @@
 			return false;
 		}
 	}
+
+	function delete_reminder(obj){
+		var reminder_id = $(obj).attr('data-id');
+		bootbox.confirm('Are you sure ?',function(res){
+			if(res){
+				window.location.href="<?php echo base_url().'home/delete_reminder/'; ?>"+reminder_id;
+			}
+		});
+	}
+
+	function edit_reminder(obj){
+		var reminder_id = $(obj).attr('data-id');
+		console.log(edit_reminder);
+		$.ajax({
+			type:"POST",
+			url:"<?php echo base_url().'home/get_reminder_data'; ?>",
+			data:{reminder_id:reminder_id},
+			dataType:'JSON',
+			success:function(data){
+
+				$('#reminder_id_hidden').val(data['id']);
+				$('#reminder_title').val(data['reminder_title']);
+				$('#reminder_date').val(data['only_date']);
+				$('#reminder_time').val(data['only_time']);
+				
+				if(data['is_active'] == '1'){
+					$('#is_active').attr('checked',true);
+				}else{
+					$('#is_active').attr('checked',false);
+				}
+
+				$('#reminders_modal').modal('show');
+			}
+		});
+	}
+
 
 </script>
 

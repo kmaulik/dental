@@ -5,7 +5,7 @@ class Home extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		$this->load->model(['Testimonial_model','Notification_model','Users_model','Reminders_model']);
+		$this->load->model(['Testimonial_model','Notification_model','Users_model','Reminders_model','Rfp_model']);
 	}
 
 	public function index(){
@@ -44,7 +44,8 @@ class Home extends CI_Controller {
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         $data['tab'] = 'info';
 
-        $data['rfp_data'] = [];
+        $data['reminders_data'] = $this->Rfp_model->get_result('reminders',['user_id'=>$user_id,'is_deleted'=>'0']);
+        // pr($res,1);
 		$data['subview']="front/profile/reminders";
         $this->load->view('front/layouts/layout_main',$data);
 	}
@@ -63,6 +64,8 @@ class Home extends CI_Controller {
 			$active_val = '1';
 		}
 		
+		$reminder_id_hidden = $this->input->post('reminder_id_hidden');
+
 		$ins_data = array(
 							'user_id'=>$this->session->userdata('client')['id'],
 							'reminder_title'=>$reminder_title,
@@ -70,17 +73,31 @@ class Home extends CI_Controller {
 							'is_active'=>$active_val,
 							'created_at'=>date('Y-m-d H:i:s')
 						);
-		$this->Reminders_model->insert_data($ins_data);
+		if(empty($reminder_id_hidden)){
+			$this->Reminders_model->insert_data($ins_data);
+		}else{
+			$this->Reminders_model->update_data(['id'=>$reminder_id_hidden],$ins_data);
+		}
 		$this->session->set_flashdata('success','New Reminder has been successfully created.');
 		redirect('home/reminders');
 	}
-
-	public function edit_reminder(){
-
+	
+	public function get_reminder_data(){
+		$user_data = $this->session->userdata('client');
+        $user_id = $user_data['id'];
+		$reminder_id = $this->input->post('reminder_id');
+		$reminders_data = $this->Rfp_model->get_result('reminders',
+															  ['user_id'=>$user_id,'is_deleted'=>'0','id'=>$reminder_id],true);
+		
+		$reminders_data['only_date'] = date('Y-m-d',strtotime($reminders_data['reminder_time']));
+		$reminders_data['only_time'] = date('H:i',strtotime($reminders_data['reminder_time']));
+		echo json_encode($reminders_data);
 	}
 
-	public function delete_reminder(){
-
+	public function delete_reminder($reminder_id){
+		$this->Rfp_model->update_record('reminders',['id'=>$reminder_id],['is_deleted'=>'1']);
+		$this->session->set_flashdata('success','Reminder has been deleted successfully.');
+		redirect('home/reminders');
 	}
 
 	// ------------------------------------------------------------------------
