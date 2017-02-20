@@ -16,7 +16,15 @@ class Dashboard extends CI_Controller {
         
         $data['rfp_list']=$this->Rfp_model->get_payment_list_user_wise();
         //pr($data['rfp_list'],1);
-        $data['subview']="front/dashboard";
+        if($this->session->userdata('client')['role_id'] == 4) // Means 4 Doctor Dashboard 
+        {
+            $data['subview']="front/doctor_dashboard";
+        }
+        else if($this->session->userdata('client')['role_id'] == 5) // Means 5 Patient Dashboard
+        {
+            $data['subview']="front/patient_dashboard";
+        }
+        
         $this->load->view('front/layouts/layout_main',$data);
     }
 
