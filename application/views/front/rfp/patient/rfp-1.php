@@ -202,7 +202,7 @@
 			var today = new Date();
 			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
 			//console.log('Your Age is : '+age);
-			if(age > 16) 
+			if(age > 18) 
 			{
 				var data='<option value=""> Select Dentition Type</option><option value="permenant">Permenant</option><option value="other">Other</option>';
 				$("#dentition_type").html(data);
