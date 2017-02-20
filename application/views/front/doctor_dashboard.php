@@ -1,3 +1,9 @@
+<?php 	
+	$all_treatment_cat = [];
+	if(!empty($settings)){
+		$all_treatment_cat = $settings['treatment_cat'];
+	}	
+?>
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
@@ -12,6 +18,7 @@
 <!-- -->
 <section>
 	<div class="container">
+		
 		<div class="row">
 			<!-- ALERT -->
 			<?php if($this->session->flashdata('success')) : ?>
@@ -30,10 +37,9 @@
 
 			<div class="col-md-12">
 				<h1>WelCome To Dashboard</h1>	
-			</div>	
-			
+			</div>		
 		</div>
-
+		
 		<div class="row">
 
 			<div class="col-md-4">
@@ -109,7 +115,10 @@
 				</div>
 
 			</div>
+		</div>
 
+		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+			<i class="fa fa-cog"></i>
 		</div>
 
 		<!-- Payment Table -->
@@ -133,53 +142,110 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach($rfp_list as $key=>$list) : ?>
+							<?php if(!empty($rfp_list)) { ?>
+								<?php foreach($rfp_list as $key=>$list) { ?>
+									<tr>
+										<td><?=$list['rfp_title']?></td>
+										<td><?=$list['user_name']?></td>
+										<td>
+											<?php if($list['rfp_status'] == 0) :?>
+												<span class="label label-default">Draft</span>
+											<?php elseif($list['rfp_status'] == 1) : ?>
+												<span class="label label-primary">Pending</span>
+											<?php elseif($list['rfp_status'] == 2) : ?>
+												<span class="label label-danger">Submit Pending</span>
+											<?php elseif($list['rfp_status'] == 3) : ?>
+												<span class="label label-info">Open</span>
+											<?php elseif($list['rfp_status'] == 4) : ?>
+												<span class="label label-warning">In-Progress</span>			
+											<?php elseif($list['rfp_status'] == 5) : ?>
+												<span class="label label-success">Close</span>			
+											<?php endif; ?>
+										</td>
+										<td><?=$list['dentition_type']?></td>
+										<td><?=$list['paid_price']?></td>
+										<td>
+											<?php if($list['refund_status'] == '') :?>
+											<span class="label label-default">--</span>
+											<?php elseif($list['refund_status'] == '0') :?>
+											<span class="label label-info">In-Progress</span>
+											<?php elseif($list['refund_status'] == '1') :?>
+											<span class="label label-success">Approved</span>
+											<?php elseif($list['refund_status'] == '2') :?>
+											<span class="label label-danger">Rejected</span>
+											<?php endif; ?>
+										</td>
+										<td>
+											<?php if($list['refund_id'] == '') :?>
+												<a onclick="refund_request(<?=$key?>)" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="modal" data-target=".refund_request">
+													<i class="fa fa-money"></i><span>Refund</span>
+												</a>
+											<?php endif; ?>
+										</td>
+									</tr>
+								<?php } ?>
+							<?php }else{ ?>
 								<tr>
-									<td><?=$list['rfp_title']?></td>
-									<td><?=$list['user_name']?></td>
-									<td>
-										<?php if($list['rfp_status'] == 0) :?>
-											<span class="label label-default">Draft</span>
-										<?php elseif($list['rfp_status'] == 1) : ?>
-											<span class="label label-primary">Pending</span>
-										<?php elseif($list['rfp_status'] == 2) : ?>
-											<span class="label label-danger">Submit Pending</span>
-										<?php elseif($list['rfp_status'] == 3) : ?>
-											<span class="label label-info">Open</span>
-										<?php elseif($list['rfp_status'] == 4) : ?>
-											<span class="label label-warning">In-Progress</span>			
-										<?php elseif($list['rfp_status'] == 5) : ?>
-											<span class="label label-success">Close</span>			
-										<?php endif; ?>
-									</td>
-									<td><?=$list['dentition_type']?></td>
-									<td><?=$list['paid_price']?></td>
-									<td>
-										<?php if($list['refund_status'] == '') :?>
-										<span class="label label-default">--</span>
-										<?php elseif($list['refund_status'] == '0') :?>
-										<span class="label label-info">In-Progress</span>
-										<?php elseif($list['refund_status'] == '1') :?>
-										<span class="label label-success">Approved</span>
-										<?php elseif($list['refund_status'] == '2') :?>
-										<span class="label label-danger">Rejected</span>
-										<?php endif; ?>
-									</td>
-									<td>
-										<?php if($list['refund_id'] == '') :?>
-											<a onclick="refund_request(<?=$key?>)" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="modal" data-target=".refund_request">
-												<i class="fa fa-money"></i><span>Refund</span>
-											</a>
-										<?php endif; ?>
+									<td colspan="7" class="text-center">
+										<b>No data Found</b>
 									</td>
 								</tr>
-							<?php endforeach; ?>	
+							<?php } ?>
 						</tbody>
 					</table>
 				</div>			
 			</div>	
 		</div>	
 		<!-- Payment List -->
+
+		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+	
+		<div class="row">
+			
+			<ul class="nav nav-tabs nav-top-border">
+				<li class="active">
+					<a href="#info" data-toggle="tab">
+						RFP Search Alert
+					</a>
+				</li>
+			</ul>
+			
+			<div class="tab-content margin-top-20">
+				<!-- PERSONAL INFO TAB -->
+				<div class="tab-pane fade in active" id="info">
+					<div class="form-group">
+						<label class="control-label">Treatment Category</label>							
+						<select name="treatment_cat[]" class="form-control select2" id="treatment_cat" multiple data-placeholder="Select Treatment Category">
+							<?php foreach($treatment_category as $t_cat) : ?>
+								<option value="<?=$t_cat['id']?>"<?php if(in_array($t_cat['id'], $all_treatment_cat)){ echo 'selected'; } ?>><?=$t_cat['title']?></option>
+							<?php endforeach; ?>
+						</select>	
+					</div>
+
+					<div class="margiv-top10">
+						<input type="hidden" name="test" value="" >
+						<a onclick="save_alert_data()" class="btn btn-primary"><i class="fa fa-check"></i> Save Changes </a>
+					</div>
+					
+					<hr/>
+					
+					<div class="form-group">
+						<label class="control-label">
+							<b> Note : </b> 
+						</label>
+						Save a RFp alert setting. Based on this setting you'll have notification in website and in email for yourselected search criteria.
+					</div>					
+				</div>
+				<!-- /PERSONAL INFO TAB -->				
+			</div>
+		</div>
+
+		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+
 	</div>
 </section>	
 
@@ -236,12 +302,26 @@
 <!-- ================== /Modal Popup For Refund Payment ========================= -->				
 
 <script>
-function refund_request(key){
-	var rfp_data = <?php echo json_encode($rfp_list); ?>;
-	console.log(rfp_data[key]);
-	$("#rfp_id").val(rfp_data[key]['rfp_id']);
-	$("#payment_id").val(rfp_data[key]['payment_id']);
-	$("#rfp_title").val(rfp_data[key]['rfp_title']);
-	$("#refund_amt").val(rfp_data[key]['paid_price']);
-}
+	function refund_request(key){
+		var rfp_data = <?php echo json_encode($rfp_list); ?>;
+		console.log(rfp_data[key]);
+		$("#rfp_id").val(rfp_data[key]['rfp_id']);
+		$("#payment_id").val(rfp_data[key]['payment_id']);
+		$("#rfp_title").val(rfp_data[key]['rfp_title']);
+		$("#refund_amt").val(rfp_data[key]['paid_price']);
+	}
+
+	function save_alert_data(){
+		var treatment_cat = $('#treatment_cat').val();
+
+		$.ajax({
+			type:"POST",
+			url:"<?php echo base_url().'dashboard/save_dashboard_alert'; ?>",
+			data:{treatment_cat:treatment_cat},
+			dataType:"JSON",
+			success:function(data){
+				bootbox.alert('Alert has been saved successfully.');
+			}
+		});
+	}
 </script>

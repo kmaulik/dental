@@ -32,15 +32,6 @@
 				RFP Bids
 			</a>
 		</li>
-
-		<!-- Only for the Doctors Login - RFP Bids -->
-		<li class="list-group-item <?php if($method_name == 'rfp_alert'){ echo 'active'; } ?>">
-			<a href="<?php echo base_url().'dashboard/rfp_alert'; ?>">
-				<i class="fa fa-gears"></i>
-				RFP Alerts Setting
-			</a>
-		</li>
-
  
 	</ul>
 	<!-- /SIDE NAV -->

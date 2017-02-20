@@ -23,14 +23,12 @@
 -->
 <section class="page-header page-header-xs">
 	<div class="container">
-
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb breadcrumb-inverse">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Edit Profile</a></li>
 			<li class="active"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></li>
 		</ol><!-- /breadcrumbs -->
-
 	</div>
 </section>
 <!-- /PAGE HEADER -->

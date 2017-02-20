@@ -15,13 +15,31 @@ class Dashboard extends CI_Controller {
         
         
         $data['rfp_list']=$this->Rfp_model->get_payment_list_user_wise();
-        //pr($data['rfp_list'],1);
-        if($this->session->userdata('client')['role_id'] == 4) // Means 4 Doctor Dashboard 
-        {
+        
+        $user_data = $this->session->userdata('client');
+        $user_id = $user_data['id'];
+        $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
+
+        
+        // Means 4 Doctor Dashboard 
+        if($this->session->userdata('client')['role_id'] == 4) {
+            
+            $all_settings = $data['db_data']['alert_search_setting'];
+            $data['settings'] = [];
+
+            if(!empty($all_settings)){
+                $data['settings'] = json_decode($all_settings,true);
+            }
+
+            $where = 'is_deleted !=  1 and is_blocked != 1';
+            $data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
+
+            // pr($data['treatment_category'],1);
+
             $data['subview']="front/doctor_dashboard";
-        }
-        else if($this->session->userdata('client')['role_id'] == 5) // Means 5 Patient Dashboard
-        {
+
+        } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
+
             $data['subview']="front/patient_dashboard";
         }
         
@@ -186,35 +204,7 @@ class Dashboard extends CI_Controller {
         $this->load->view('front/layouts/layout_main',$data);
     }
 
-    // v! Doctor Profile Tab
-    public function rfp_alert(){
-        $loc_arr = array();
-        $user_data = $this->session->userdata('client');
-        $user_id = $user_data['id'];
-        $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
-        $all_settings = $data['db_data']['alert_search_setting'];
-
-        $data['settings'] = [];
-
-        if(!empty($all_settings)){
-            $data['settings'] = json_decode($all_settings,true);
-        }
-
-        if($_POST){            
-            $treatment_cat = $this->input->post('treatment_cat');
-            $res_arr = ['treatment_cat'=>$treatment_cat];
-            $res_str = json_encode($res_arr);
-            $this->Users_model->update_user_data($user_id,['alert_search_setting'=>$res_str]);
-            $this->session->set_flashdata('success','Search setting has been successfully saved.');
-            redirect('dashboard/rfp_alert');
-        }
-
-        $where = 'is_deleted !=  1 and is_blocked != 1';
-        $data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
-        
-        $data['subview']="front/profile/doctor_alert";
-        $this->load->view('front/layouts/layout_main',$data);
-    }
+    // v! - rfp_alert() function in bkp for 20_2 for RFP alert module    
     
     public function remove_avatar($id){
         $id = decode($id);
@@ -292,6 +282,17 @@ class Dashboard extends CI_Controller {
             $this->session->set_flashdata('success','Error Into Refund Request');
         }
         redirect('dashboard');
+    }
+
+    public function save_dashboard_alert(){
+        $user_data = $this->session->userdata('client');
+        $user_id = $user_data['id'];
+
+        $treatment_cat = $this->input->post('treatment_cat');
+        $res_arr = ['treatment_cat'=>$treatment_cat];
+        $res_str = json_encode($res_arr);
+        $this->Users_model->update_user_data($user_id,['alert_search_setting'=>$res_str]);
+        echo json_encode(['success'=>true]);
     }
 
 }
