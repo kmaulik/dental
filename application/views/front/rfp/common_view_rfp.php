@@ -14,7 +14,7 @@
 					<span class="title">Patient Name : </span> <span><?=$record['fname']." ".$record['lname']?></span>
 				</div>	
 				<div class="col-sm-6">
-					<span class="title">BirthDate : </span> <span><?=$record['birth_date']?></span>
+					<span class="title">BirthDate : </span> <span><?=date("m-d-Y",strtotime($record['birth_date']));?></span>
 				</div>
 				<div class="col-sm-6">
 					<span class="title">Dentition Type : </span> <span><?=$record['dentition_type']?></span>

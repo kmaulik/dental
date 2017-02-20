@@ -75,10 +75,10 @@
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Birth Date</label>	
-						<input type="text" name="birth_date" id="birth_date" class="form-control datepicker" 
-							  placeholder="YYYY-MM-DD" onchange="fetch_definition_type()" value="<?php if(set_value('birth_date') != '') { echo set_value('birth_date'); }
-							  	else { echo $this->session->userdata['client']['birth_date']; } ?>" >
-						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
+						<input type="text" name="birth_date" id="birth_date" data-format="mm-dd-yyyy" class="form-control datepicker" 
+							  placeholder="MM-DD-YYYY" onchange="fetch_definition_type()" value="<?php if(set_value('birth_date') != '') { echo set_value('birth_date'); }
+							  	else { echo date("m-d-Y",strtotime($this->session->userdata['client']['birth_date'])); } ?>" >
+						<small class="text-muted block">Please Select Date in MM-DD-YYYY Format</small>	
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
@@ -201,7 +201,7 @@
 			dob = new Date($("#birth_date").val());
 			var today = new Date();
 			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
-			//console.log('Your Age is : '+age);
+			console.log('Your Age is : '+age);
 			if(age > 18) 
 			{
 				var data='<option value=""> Select Dentition Type</option><option value="permenant">Permenant</option><option value="other">Other</option>';

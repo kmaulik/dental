@@ -69,7 +69,7 @@
 					</div>
 					<div class="form-group">
 						<span class="title">Birth Date : </span>
-						<span class="desc"> <?=$db_data['birth_date']?></span>
+						<span class="desc"> <?=date("m-d-Y",strtotime($db_data['birth_date']))?></span>
 					</div>
 				</div>	
 				<!-- /PERSONAL INFO TAB -->

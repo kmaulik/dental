@@ -99,7 +99,10 @@ class Dashboard extends CI_Controller {
                 $zipcode = $this->input->post('zipcode');
                 $gender = $this->input->post('gender');
                 $phone = $this->input->post('phone');
-                $birth_date = $this->input->post('birth_date');
+
+                $a = explode('-',$this->input->post('birth_date'));
+                $birth_date = $a[2].'-'.$a[0].'-'.$a[1];
+                
                 $address = $this->input->post('address');                
 
                 $upd_data = array(
@@ -228,7 +231,7 @@ class Dashboard extends CI_Controller {
         $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
-            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){
+            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[0], $arr_date[1], $arr_date[2])){                
                 return TRUE;
             }else{
                 return FALSE;

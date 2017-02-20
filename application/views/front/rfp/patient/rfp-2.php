@@ -340,7 +340,7 @@
 	function add_more_img(){
 		var total_img_upload = $('.fancy-file-upload').length;		
 
-		if(total_img_upload <5){
+		if(total_img_upload < 10){
 			
 
 			var fancy_html = '';
@@ -359,7 +359,7 @@
 				$('#remove_btn').hide();
 			}			
 		}else{
-			bootbox.alert('Can not enter more than 5 images.');
+			bootbox.alert('Can not enter more than 10 images.');
 		}	
 	}
 

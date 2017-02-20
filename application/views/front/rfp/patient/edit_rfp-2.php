@@ -386,7 +386,7 @@
 										<span class="button">Choose File</span>
 									</div>
 								</div>
-								<small class="text-muted block">Max Allow File : 5 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
+								<small class="text-muted block">Max Allow File : 10 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
 								<a class="btn btn-primary" onclick="add_more_img()">Add</a>
 								<a class="btn btn-danger" style="display:none" id="remove_btn" onclick="remove_img()">Remove</a>
 							</div>
@@ -465,7 +465,7 @@
 		var olg_img = $('.rpf_attachment a').length;
 
 		var total_img= olg_img + total_img_upload ;
-		if(total_img <5){
+		if(total_img < 10){
 			
 
 			var fancy_html = '';
@@ -484,7 +484,7 @@
 				$('#remove_btn').hide();
 			}			
 		}else{
-			bootbox.alert('Can not enter more than 5 attachment.');
+			bootbox.alert('Can not enter more than 10 attachment.');
 		}	
 	}
 
