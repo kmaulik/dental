@@ -75,11 +75,11 @@
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>Birth Date</label>	
-						<input type="text" name="birth_date" id="birth_date" class="form-control datepicker" 
-							  placeholder="YYYY-MM-DD" onchange="fetch_definition_type()" value="<?php if($this->input->post('birth_date') != '') { echo $this->input->post('birth_date'); } else { if(isset($record['birth_date'])) { echo $record['birth_date']; } else { 
+						<input type="text" name="birth_date" id="birth_date" data-format="mm-dd-yyyy" class="form-control datepicker" 
+							  placeholder="MM-DD-YYYY" onchange="fetch_definition_type()" value="<?php if($this->input->post('birth_date') != '') { echo $this->input->post('birth_date'); } else { if(isset($record['birth_date'])) { echo date("m-d-Y",strtotime($record['birth_date'])); } else { 
 							  	if(set_value('birth_date') != '') { echo set_value('birth_date'); }
-							  	else { echo $this->session->userdata['client']['birth_date']; }}} ?>" >
-						<small class="text-muted block">Please Select Date in YYYY-MM-DD Format</small>	
+							  	else { echo date("m-d-Y",strtotime($this->session->userdata['client']['birth_date'])); }}} ?>" >
+						<small class="text-muted block">Please Select Date in MM-DD-YYYY Format</small>	
 					</div>
 					<?php echo form_error('birth_date','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>

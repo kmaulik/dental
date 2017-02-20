@@ -67,11 +67,13 @@ class Rfp extends CI_Controller {
 					$latitude= $location_data['results'][0]['geometry']['location']['lat'];
 				}
 				//--------------------------
+				$a = explode('-',$this->input->post('birth_date'));
+            	$birth_date = $a[2].'-'.$a[0].'-'.$a[1];
 
 				$rfp_step_1= array(
 						'fname' 			=> $this->input->post('fname'),
 						'lname' 			=> $this->input->post('lname'),
-						'birth_date'		=> $this->input->post('birth_date'),
+						'birth_date'		=> $birth_date,
 						'zipcode'			=> $this->input->post('zipcode'),
 						'longitude'			=> $longitude,
 						'latitude'			=> $latitude,
@@ -339,11 +341,13 @@ class Rfp extends CI_Controller {
 						$latitude= $location_data['results'][0]['geometry']['location']['lat'];
 					}
 					//--------------------------
+					$a = explode('-',$this->input->post('birth_date'));
+            		$birth_date = $a[2].'-'.$a[0].'-'.$a[1];
 
 					$rfp_step_1= array(
 						'fname' 			=> $this->input->post('fname'),
 						'lname' 			=> $this->input->post('lname'),
-						'birth_date'		=> $this->input->post('birth_date'),
+						'birth_date'		=> $birth_date,
 						'zipcode'			=> $this->input->post('zipcode'),
 						'longitude'			=> $longitude,
 						'latitude'			=> $latitude,
@@ -440,9 +444,9 @@ class Rfp extends CI_Controller {
 				    $total_file = explode("|",$rfp_data_qry['img_path']);
 				    $img_path='';
 				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
-				    	//----- Check For Max 5 file upload ----
-				    	if(count($total_file) >= 5){
-				    		$this->session->set_flashdata('error', 'Allowed Only 5 Attachments');
+				    	//----- Check For Max 10 file upload ----
+				    	if(count($total_file) >= 10){
+				    		$this->session->set_flashdata('error', 'Allowed Only 10 Attachments');
 							redirect('rfp/edit/'.$id.'/1');
 						}
 						//--------------
@@ -893,11 +897,11 @@ class Rfp extends CI_Controller {
     }
 
     // v! Custom Form validation
-    public function validate_birthdate($str){
+     public function validate_birthdate($str){
         $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
-            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[0], $arr_date[1], $arr_date[2])){                
                 return TRUE;
             }else{
                 return FALSE;

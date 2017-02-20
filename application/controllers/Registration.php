@@ -21,7 +21,7 @@ class Registration extends CI_Controller {
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
         $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');                
         $this->form_validation->set_rules('birth_date', 'Birth Date', 'callback_validate_birthdate',
-                                            ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+                                            ['validate_birthdate'=>'Date should be in MM-DD-YYYY Format.']);
         $this->form_validation->set_rules('zipcode', 'zipcode', 'callback_validate_zipcode',
                                              ['validate_zipcode'=>'Please Enter Valid Zipcode']);
         $this->form_validation->set_rules('gender', 'Gender', 'trim|required');
@@ -46,6 +46,9 @@ class Registration extends CI_Controller {
 
 
             $rand=random_string('alnum',5);
+            $a = explode('-',$this->input->post('birth_date'));
+            $birth_date = $a[2].'-'.$a[0].'-'.$a[1];
+
             $data=array(
                 'role_id' => $this->input->post('role'),
                 'fname' => $this->input->post('fname'),
@@ -60,7 +63,7 @@ class Registration extends CI_Controller {
                 'zipcode' => $this->input->post('zipcode'),
                 'gender' => $this->input->post('gender'),
                 'phone' => $this->input->post('phone'),
-                'birth_date' => $this->input->post('birth_date'),
+                'birth_date' => $birth_date,
                 'longitude' => $longitude,
                 'latitude' => $latitude,
                 'activation_code'  => $rand,
@@ -223,7 +226,7 @@ class Registration extends CI_Controller {
         $field_value = $str; //this is redundant, but it's to show you how
         if($field_value != ''){
             $arr_date = explode('-',$field_value);
-            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[1], $arr_date[2], $arr_date[0])){                
+            if(count($arr_date) == 3 && is_numeric($arr_date[0]) && is_numeric($arr_date[1]) && is_numeric($arr_date[2]) && checkdate($arr_date[0], $arr_date[1], $arr_date[2])){                
                 return TRUE;
             }else{
                 return FALSE;
