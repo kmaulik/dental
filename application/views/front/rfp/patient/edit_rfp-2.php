@@ -49,7 +49,7 @@
 	
 			<div class="col-md-12">
 				<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
-					<input type="hidden" id="dentition_type" value="<?=$this->session->userdata['rfp_data']['dentition_type'];?>">
+					<input type="hidden" id="dentition_type" value="<?=$record['dentition_type'];?>">
 					
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
@@ -167,7 +167,7 @@
 					<div class="list_treatment_category">						
 						<!-- For Edit Data -->
 						<?php if(empty($teeth_post)){ ?> 
-							<?php if($this->session->userdata['rfp_data']['dentition_type'] != 'other' && !empty($teeth_arr)):?>
+							<?php if($record['dentition_type'] != 'other' && !empty($teeth_arr)):?>
 								<?php foreach($teeth_arr as $key=>$val) :?>
 									<div class="treatment_cat_<?=$key?>">	
 										<div class="row">
@@ -306,16 +306,49 @@
 					</div>	
 					<!-- ========== End For Dynamic Select2 ============ -->
 
-
-					<div class="row">	
-						<div class="col-md-12 col-sm-12" id="other">
-							<div class="form-group">
-								<label>Other Description</label> 
-								<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
+					<!-- For Other Treatment Category -->
+					
+						<div id="other">
+							<div class="row">	
+								<div class="col-md-12 col-sm-12">
+									<div class="form-group">
+										<label>Other Description</label> 
+										<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
+									</div>
+									<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
+								</div>
 							</div>
-							<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>
-					</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label>Other Treatment Category
+										<span class="check_label">		
+										<input type="checkbox" class="other_treatment_cat" <?php if($record['other_treatment_cat_text'] != '') { echo 'checked=checked'; } ?>>Not finding your category? (Tick here and manually enter)</span></label>
+										<select id="other_treatment_cat_id" class="form-control select2" name="other_treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
+											<?php $other_treatment_cat_arr=explode(",",$record['other_treatment_cat_id']); ?>
+											<?php foreach($treatment_category as $cat) :?>
+												<option value="<?=$cat['id']?>" <?php if($this->input->post('other_treatment_cat_id') != '') 
+																			{ echo set_select('other_treatment_cat_id[]', $cat['id']); } 
+																			else
+																			{	if(in_array($cat['id'],$other_treatment_cat_arr)) { echo "selected"; }	}	
+																			?>><?=$cat['title']." (".$cat['code'].")"?></option>
+											<?php endforeach;?>
+										</select>	
+									</div>
+								</div>	
+							</div>
+							<div class="row other_treatment_cat_text" <?php if($record['other_treatment_cat_text'] == '') { echo 'style="display:none"'; } ?>>	
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
+										<input type="text" name="other_treatment_cat_text" class="form-control" value="<?php echo (isset($record['other_treatment_cat_text'])? $record['other_treatment_cat_text'] : '');?>">
+									</div>
+								</div>
+							</div>	
+							<?php echo form_error('other_treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>	
+					
+					<!-- End For Other Treatment Category -->
 
 					<div class="row">
 						<div class="col-sm-12">
@@ -331,7 +364,11 @@
 								<span class="fancy-hint size-11 text-muted">
 									<strong>Hint:</strong> 500 characters allowed!
 									<span class="pull-right">
-										<span id="textarea-chars-info">0/500</span> Characters
+										<span id="textarea-chars-info"><span class="count-text_data">0</span>/500</span> Characters
+										<script>
+											var text_length=$(".char-count").val().length;
+											$(".count-text_data").html(text_length);
+										</script>
 									</span>
 								</span>
 							</div>	
@@ -396,7 +433,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
 							<input type="hidden" id="total_img" value="1">
-							<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
+							<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 							<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
 						</div>
 					</div>
@@ -541,6 +578,18 @@
 
 
 	//------ For Text Box Hide And Show -------
+
+	//--------- For Other Category textbox hide and show ------
+	$(".other_treatment_cat").click(function(e) {
+		if($(this). prop("checked") == true) {
+			$(".other_treatment_cat_text").show();
+		}else{
+			$(".other_treatment_cat_text").hide();
+			$("input[name=other_treatment_cat_text]").val('');
+		}
+	});
+	//--------- End Other Category textbox hide and show ------
+
 
 
 	$(".list_treatment_category").on('click', '.toggle_text', function() {

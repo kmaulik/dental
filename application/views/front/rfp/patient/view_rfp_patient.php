@@ -42,7 +42,7 @@
 					<!-- Check For Submit RFP Or Not -->
 					<?php if(isset($confirm_rfp) && $confirm_rfp == '1') : ?>
 					<form action="" method="POST">
-						<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
+						<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 						<?php if($record['is_paid'] == 0) :?>
 							<a class="btn btn-success" data-toggle="modal" data-target=".promotional_code"><i class="fa fa-check"></i> Make a Payment</a>
 						<?php else : ?>
@@ -77,6 +77,7 @@
 			</div>
 			<form action="<?=base_url('rfp/make_payment')?>" method="POST" id="frmcoupan">
 				<input type="hidden" name="is_paid" value="1">
+				<input type="hidden" name="rfp_id" value="<?=encode($record['id'])?>">
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">

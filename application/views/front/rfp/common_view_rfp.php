@@ -3,7 +3,13 @@
 		<div class="panel-body">
 			<!--  Basic Details  -->
 			<div class="rfp-basic">
-				<h4 class="rfp-title">Basic Details</h4>
+				<h4 class="rfp-title">Basic Details
+					<!-- For check Rfp created by = session id && status < 3 (open)  then display edit button-->
+					<?php if($this->session->userdata['client']['id'] == $record['patient_id'] && $record['status'] < 3): ?>
+						<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="pull-right"><i class="fa fa-edit"></i> Edit</a>	
+					<?php endif; ?>
+
+				</h4>
 				<!-- <div class="col-sm-12">
 					<span class="title">RFP Title : </span> <span><?=$record['title']?></span>
 				</div> -->
@@ -45,7 +51,12 @@
 
 			<!--  Treatment Plan  -->
 			<div class="rfp-treatment">
-				<h4 class="rfp-title">Treatment Plan</h4>
+				<h4 class="rfp-title">Treatment Plan
+					<!-- For check Rfp created by = session id && status < 3 (open)  then display edit button-->
+					<?php if($this->session->userdata['client']['id'] == $record['patient_id'] && $record['status'] < 3): ?>
+						<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/1')?>" class="pull-right"><i class="fa fa-edit"></i>Edit</a>
+					<?php endif;?>
+				</h4>
 				<?php $teeth_arr1=array(); ?>						
 				<?php if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); } ?>
 				<?php if($record['dentition_type'] == 'primary') :?>
@@ -144,11 +155,36 @@
 								</table>
 						</div>	
 					</div>
+				<!-- Other Treatment Category Type -->	
 				<?php elseif($record['dentition_type'] == 'other') :?>
 					<div class="col-sm-12">
 						<label>Other Description : </label> <?=$record['other_description'] ?> 	
 					</div>
+					<!-- ===== For Other Treatment Category === -->
+					<div class="col-sm-12">
+						<label>Treatment Category</label>
+						<ul>
+							<?php $other_category=explode(",",$record['other_treatment_cat_id']); ?>
+							<?php if(count($other_category) > 0) :?>
+								<?php foreach($other_category as $category) :?>
+									<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?></li>
+								<?php endforeach; ?>
+							<?php else : ?>
+								<li> N/A</li>
+							<?php endif;?>	
+						</ul>
+					</div>
+					<!-- ===== End Other Treatment Category === -->	
+					<!-- ===== For Check Other Manual Category Exist or not === -->
+					<?php if($record['other_treatment_cat_text'] != '') :?>
+					<div class="col-sm-12 manual_category">
+						<label>Manual Category</label> 
+							<?= $record['other_treatment_cat_text'];?>
+					</div>	
+					<?php endif; ?>
+					<!-- ===== End Check Other Manual Category Exist or not === -->
 				<?php endif;?>
+				<!-- End Other Treatment Category Type -->	
 
 				<?php if(!empty($teeth_arr)) : ?>
 					<?php foreach($teeth_arr as $key=>$val) :?>
@@ -235,7 +271,12 @@
 
 			<!--  Financial Information  -->
 			<div class="rfp-history">
-				<h4 class="rfp-title">Financial Information</h4>
+				<h4 class="rfp-title">Financial Information
+					<!-- For check Rfp created by = session id && status < 3 (open)  then display edit button-->
+					<?php if($this->session->userdata['client']['id'] == $record['patient_id'] && $record['status'] < 3): ?>
+						<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/2')?>" class="pull-right"><i class="fa fa-edit"></i>Edit</a>
+					<?php endif;?>
+				</h4>
 				<div class="col-sm-12">
 					<label>Insurance Provider : </label> 
 					<?php if($record['insurance_provider'] != '') 

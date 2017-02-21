@@ -198,7 +198,9 @@
 		if($("#birth_date").val() != '')
 		{
 			//$(".dentition_type").show();
-			dob = new Date($("#birth_date").val());
+			var birthdate = $("#birth_date").val().split('-');
+			var birth_date=birthdate[2]+"-"+birthdate[0]+"-"+birthdate[1];
+			dob = new Date(birth_date);
 			var today = new Date();
 			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
 			console.log('Your Age is : '+age);

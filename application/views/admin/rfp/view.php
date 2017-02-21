@@ -360,6 +360,34 @@
 							<div class="col-sm-12">
 								<label>Other Description : </label> <?=$record['other_description'] ?> 	
 							</div>
+							<!-- ===== For Other Treatment Category === -->
+							<div class="col-sm-12">
+								<label>Treatment Category</label>
+								<ul>
+									<?php 
+										$other_category = [];
+										if(!empty($record['other_treatment_cat_id'])){
+											$other_category=explode(",",$record['other_treatment_cat_id']); 
+										}
+									?>
+									<?php if(count($other_category) > 0) :?>
+										<?php foreach($other_category as $category) :?>
+											<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?></li>
+										<?php endforeach; ?>
+									<?php else : ?>
+										<li> N/A</li>
+									<?php endif;?>	
+								</ul>
+							</div>
+							<!-- ===== End Other Treatment Category === -->	
+							<!-- ===== For Check Other Manual Category Exist or not === -->
+							<?php if($record['other_treatment_cat_text'] != '') :?>
+							<div class="col-sm-12 manual_category">
+								<label>Manual Category : </label> 
+									<?= $record['other_treatment_cat_text'];?>
+							</div>	
+							<?php endif; ?>
+							<!-- ===== End Check Other Manual Category Exist or not === -->
 						<?php endif;?>
 
 						<?php if(!empty($teeth_arr)) : ?>
