@@ -235,15 +235,44 @@
 					</div>	
 					<!-- ========== End For Dynamic Select2 ============ -->
 
-					<div class="row">	
-						<div class="col-md-12 col-sm-12" id="other">
-							<div class="form-group">
-								<label>Other Description</label> 
-								<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo set_value('other_description'); ?></textarea>
+					<!-- For Other Treatment Category -->
+					
+						<div id="other">
+							<div class="row">	
+								<div class="col-md-12 col-sm-12">
+									<div class="form-group">
+										<label>Other Description</label> 
+										<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo set_value('other_description'); ?></textarea>
+									</div>
+									<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
+								</div>
 							</div>
-							<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>
-					</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label>Other Treatment Category
+										<span class="check_label">		
+										<input type="checkbox" class="other_treatment_cat">Not finding your category? (Tick here and manually enter)</span></label>
+										<select id="other_treatment_cat_id" class="form-control select2" name="other_treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
+											<?php foreach($treatment_category as $cat) :?>
+												<option value="<?=$cat['id']?>" <?=set_select('other_treatment_cat_id[]', $cat['id']) ?>><?=$cat['title']." (".$cat['code'].")"?></option>
+											<?php endforeach;?>
+										</select>	
+									</div>
+								</div>	
+							</div>
+							<div class="row other_treatment_cat_text" style="display:none">	
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>In case your doctor stated a treatment code, not in our repository, kindly manually enter it in the following field</label>
+										<input type="text" name="other_treatment_cat_text" class="form-control">
+									</div>
+								</div>
+							</div>	
+							<?php echo form_error('other_treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div>	
+					
+					<!-- End For Other Treatment Category -->
 
 					<div class="row">
 						<div class="col-sm-12">
@@ -259,7 +288,11 @@
 								<span class="fancy-hint size-11 text-muted">
 									<strong>Hint:</strong> 500 characters allowed!
 									<span class="pull-right">
-										<span id="textarea-chars-info">0/500</span> Characters
+										<span id="textarea-chars-info"><span class="count-text_data">0</span>/500</span> Characters
+										<script>
+											var text_length=$(".char-count").val().length;
+											$(".count-text_data").html(text_length);
+										</script>
 									</span>
 								</span>
 							</div>	
@@ -280,7 +313,7 @@
 										<span class="button">Choose File</span>
 									</div>
 								</div>
-								<small class="text-muted block">Max Allow File : 5 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
+								<small class="text-muted block">Max Allow File : 10 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
 								<a class="btn btn-primary" onclick="add_more_img()">Add</a>
 								<a class="btn btn-danger" style="display:none" id="remove_btn" onclick="remove_img()">Remove</a>
 							</div>
@@ -413,6 +446,17 @@
 		}
 		
 	});
+
+	//--------- For Other Category textbox hide and show ------
+	$(".other_treatment_cat").click(function(e) {
+		if($(this). prop("checked") == true) {
+			$(".other_treatment_cat_text").show();
+		}else{
+			$(".other_treatment_cat_text").hide();
+			$("input[name=other_treatment_cat_text]").val('');
+		}
+	});
+	//--------- End Other Category textbox hide and show ------
 
 
 	//------ For Text Box Hide And Show -------

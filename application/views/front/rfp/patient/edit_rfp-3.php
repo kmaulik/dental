@@ -66,7 +66,7 @@
 			
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
-					<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
+					<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/1')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 					<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-arrow-right"></i> Next</button>
 				</div>
 			</div>

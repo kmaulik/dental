@@ -425,6 +425,17 @@
 		//$ack = strtoupper($resArray["ACK"]);
 		return $resArray;
 	}
+
+	/*------------- Get Transaction Details based on transaction Id ------------ */
+	function GetTransactionDetails($token)
+	{
+		$nvpstr="&TRANSACTIONID=" . $token;
+		
+		//'---------------------------------------------------------------------------
+		$resArray=hash_call("GetTransactionDetails",$nvpstr);
+		//$ack = strtoupper($resArray["ACK"]);
+		return $resArray;
+	}
 	
 	/*
 	'-------------------------------------------------------------------------------------------------------------------------------------------
