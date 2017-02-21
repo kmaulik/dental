@@ -280,7 +280,7 @@
 										<span class="button">Choose File</span>
 									</div>
 								</div>
-								<small class="text-muted block">Max Allow File : 5 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
+								<small class="text-muted block">Max Allow File : 10 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
 								<a class="btn btn-primary" onclick="add_more_img()">Add</a>
 								<a class="btn btn-danger" style="display:none" id="remove_btn" onclick="remove_img()">Remove</a>
 							</div>

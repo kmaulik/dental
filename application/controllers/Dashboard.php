@@ -32,17 +32,21 @@ class Dashboard extends CI_Controller {
             }
 
             $where = 'is_deleted !=  1 and is_blocked != 1';
-            $data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
 
-            // pr($data['treatment_category'],1);
+            $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
+            $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps
+
+            $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
+
+            // qry();
+            // pr($data['won_rfps'],1);
 
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
-
             $data['subview']="front/patient_dashboard";
         }
-        
+                
         $this->load->view('front/layouts/layout_main',$data);
     }
 

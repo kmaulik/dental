@@ -117,10 +117,133 @@
 			</div>
 		</div>
 
+		
+
 		<div class="divider divider-color divider-center divider-short"><!-- divider -->
 			<i class="fa fa-cog"></i>
 		</div>
 
+		<!-- Doctor's All favorite RFP -->
+		<div class="row">
+			
+			<div class="alert-message"></div>
+
+			<div class="col-md-12">
+				<h4> Favorite RFP </h4>
+				<hr/>
+			</div>	
+			<div class="col-md-12">
+				<?php 
+					$i = 0;
+					if(count($rfp_data_fav) > 0) :
+				?>
+					<div class="list-group success square no-side-border search_rfp">
+						<?php foreach($rfp_data_fav as $record) :?>
+							<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" 
+							   class="list-group-item a_fav_rfp <?php if($i > 2){ echo 'hide'; }  ?> ">
+								<div class="rfp-left">
+									<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
+										<!-- Means Favorite RFP -->
+										<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>
+									<?php else : ?>
+										<!-- Means Not Favorite RFP -->
+										<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>
+									<?php endif; ?>
+									<img src="<?php if($record['avatar'] != '') 
+			                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
+			                    	else 
+			                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">								
+									<span class="subject">
+										<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
+										<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
+									</span>
+								</div>	
+								<div class="rfp-right">
+									<?php if($record['img_path'] != '') :?>
+										<span class="attachment"><i class="fa fa-paperclip"></i></span>
+									<?php endif; ?>
+									<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
+								</div>
+							</a>
+
+						<?php $i++; ?>	
+						<?php endforeach; ?>
+						
+						<?php if(count($rfp_data_fav) > 3) { ?>
+							<br/>
+							<a onclick="$('.a_fav_rfp').removeClass('hide');$(this).hide();" 
+							   class="btn btn-primary text-center">
+								Show More
+							</a>
+						<?php } ?>
+					</div>					
+				<?php else : ?>
+					<h3>No RFP Available</h3>
+				<?php endif; ?>	
+			</div>	
+		</div>	
+		<!-- // ENDS here FAV RFPs -->
+
+		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+		
+		<!-- Doctor's All WON RFP -->
+		<div class="row">
+			<?php pr($won_rfps); ?>
+			<div class="col-md-12">
+				<h4> Won RFPs </h4>
+				<hr/>
+			</div>	
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>RFP Title</th>
+								<th>Patient Name</th>
+								<th>Patient Email</th>
+								<th>Dentition Type</th>
+								<th>Price</th>
+								<th>Refund Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(!empty($won_rfps)) { ?>
+								<?php foreach($won_rfps as $w_rfp) { ?>
+									<tr>
+										<td><?php echo $w_rfp['title']; ?></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>
+											<a class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="modal">
+												<i class="fa fa-money"></i><span>Action</span>
+											</a>
+										</td>
+									</tr>
+								<?php } ?>
+							<?php }else{ ?>
+								<tr>
+									<td colspan="7" class="text-center">
+										<b>No data Found</b>
+									</td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>	
+			</div>	
+		</div>	
+		<!-- // ENDS here WON RFP -->
+
+		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+		
 		<!-- Payment Table -->
 		<div class="row">
 			<div class="col-md-12">
@@ -201,7 +324,8 @@
 		<div class="divider divider-color divider-center divider-short"><!-- divider -->
 			<i class="fa fa-cog"></i>
 		</div>
-	
+		
+		<!-- Alert Doctor -->
 		<div class="row">
 			
 			<ul class="nav nav-tabs nav-top-border">
@@ -241,10 +365,7 @@
 				<!-- /PERSONAL INFO TAB -->				
 			</div>
 		</div>
-
-		<div class="divider divider-color divider-center divider-short"><!-- divider -->
-			<i class="fa fa-cog"></i>
-		</div>
+		<!-- EDNS here Alert -->
 
 	</div>
 </section>	
@@ -324,4 +445,41 @@
 			}
 		});
 	}
+
+	//----------------- For Add To favorite & Remove Favorite RFP ------------------
+	$(".favorite").on( "click", function() {	
+		
+			var rfp_id= $(this).attr('data-id');
+			var classNames = $(this).attr('class').split(' ');
+			var data1=$(this);
+			if($.inArray('unfavorite_rfp',classNames) != '-1')
+			{
+				bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
+					if(res){
+						$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
+							if(data){
+								data1.removeClass('unfavorite_rfp');
+								data1.addClass('favorite_rfp');
+								$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
+							}
+						});
+					}	
+				});
+			}
+			else{
+				bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
+					if(res){	
+						$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
+							if(data){
+								data1.removeClass('favorite_rfp');
+								data1.addClass('unfavorite_rfp');
+								$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP removed to your favorite list successfully. </div>');
+							
+							}
+						});
+					}
+				});
+			}
+		return false;
+	});
 </script>

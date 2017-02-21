@@ -324,7 +324,6 @@ class Rfp_model extends CI_Model {
     /* Get RFP data with status (3 - open, 4 - In-progress) and payment history For Dashboard Refund
     */
     public function get_payment_list_user_wise(){
-
         $this->db->select('rfp.id as rfp_id,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as user_name,rfp.status as rfp_status,rfp.dentition_type as dentition_type,pt.id as payment_id,pt.payable_price as paid_price,pt.paypal_token as paypal_token,r.id as refund_id,r.status as refund_status');
         $this->db->from('payment_transaction pt');
         $this->db->join('rfp','pt.rfp_id = rfp.id');
@@ -334,7 +333,29 @@ class Rfp_model extends CI_Model {
         $this->db->order_by('pt.created_at','desc');
         $query = $this->db->get();
         return $query->result_array();
-
     } 
+
+    // v! used in dashboard - get all favorite RFP
+    public function get_user_fav_rfp($user_id,$limit,$offset=false){
+        $this->db->select('rfp_favorite.*,rfp.title,rfp.dentition_type,rfp.created_at as rfp_created,users.avatar,rfp.img_path,
+                           (select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$user_id.') as favorite_id,
+                           rfp.id as rfp_id');
+        $this->db->where(['rfp.status'=>'3','rfp.is_deleted'=>'0','rfp.is_blocked'=>'0']); // conditions with rfp table
+        $this->db->join('rfp','rfp.id=rfp_favorite.rfp_id');
+        $this->db->where(['users.is_deleted'=>'0','users.is_blocked'=>'0']); // conidtion with users table
+        $this->db->join('users','users.id=rfp.patient_id');
+        $this->db->order_by('rfp_favorite.updated_at','desc');
+        $this->db->limit($limit,$offset);
+        $res = $this->db->get('rfp_favorite')->result_array();
+        return $res;
+    }
+
+    public function get_user_won_rfp($user_id){
+        $this->db->select('rfp_bid.*,rfp.title,rfp.dentition_type,rfp.created_at as rfp_created');
+        $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
+        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id]);
+        $res = $this->db->get('rfp_bid')->result_array();
+        return $res;
+    }
 
 }    
