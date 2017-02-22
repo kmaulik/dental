@@ -179,6 +179,7 @@ span.time {
 									<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
 									<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
 								</span>
+								<!-- <span class="distance">(<?=round($record['distance'],2)." Miles"?>)</span> -->
 							</div>	
 							<div class="rfp-right">
 								<?php if($record['img_path'] != '') :?>

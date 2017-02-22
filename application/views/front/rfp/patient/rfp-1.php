@@ -90,7 +90,7 @@
 					<?php echo form_error('zipcode','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
 			</div>	
-			<div class="row dentition_type">
+			<div class="row">
 				<div class="col-md-6 col-sm-6">
 					<div class="form-group">
 						<label>RFP Title</label>
@@ -98,7 +98,7 @@
 					</div>
 					<?php echo form_error('title','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
-				<div class="col-md-6 col-sm-6">
+				<div class="col-md-6 col-sm-6 dentition_type">
 					<div class="form-group">
 						<label>Dentition Type</label>	
 						<select name="dentition_type" class="form-control" id="dentition_type">
@@ -111,6 +111,22 @@
 					<?php echo form_error('dentition_type','<div class="alert alert-mini alert-danger">','</div>'); ?>	
 				</div>
 			</div>	
+
+			<!-- Range Picker -->
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<div class="margin-bottom-20">
+						<label for="donation">Travel Distance (In. Miles)</label>
+						<label class="field">
+							<input type="text" name="distance_travel" id="distance_travel" class="form-control NumbersAndRange">
+						</label> 
+					</div>                
+					<div class="slider-wrapper black-slider custom-range-slider">
+						<div id="slider5"></div>
+					</div>
+				</div>
+			</div>
+			<!-- End Range Picker -->
 
 			<div class="row">
 				<div class="col-md-12 col-sm-12">
@@ -183,6 +199,12 @@
 
 
 <script>
+	$('.NumbersAndRange').keyup(function () { 
+    	this.value = this.value.replace(/[^0-9+ ]/g,'');
+    	if(this.value > 2000){
+    		this.value= 2000;
+    	}
+  });
 		
 	$(".new_person").click(function(){
 		$("input[name=fname]").val('');
@@ -220,6 +242,51 @@
 		}	
 		
 	}
+
+
+	$(window).ready(function() {
+		//------- For Range Picker -------------
+		loadScript(plugin_path + 'jquery/jquery-ui.min.js', function() { /** jQuery UI **/
+			loadScript(plugin_path + 'jquery/jquery.ui.touch-punch.min.js', function() { /** Mobile Touch Slider **/
+				loadScript(plugin_path + 'form.slidebar/jquery-ui-slider-pips.min.js', function() { /** Slider Script **/
+		            
+		            var initialValue = 100;
+					$("#slider5").slider({
+						value: initialValue,
+						animate: true,
+						min: 0,
+						max: 2000,
+						step: 1,
+						range: "min",
+						slide: function(event, ui) {
+							$("#distance_travel").val(ui.value);
+							//------- For Tooltip -------
+							var curValue = ui.value || initialValue;
+							var tooltip = '<div class="tooltip"><div class="tooltip-inner">' + curValue + '</div><div class="tooltip-arrow"></div></div>';
+							$('.ui-slider-handle').html(tooltip);
+							//-------------------------------
+						}
+					});
+
+					$("#slider5").slider("pips" , {
+						rest: false
+					});	
+					
+					$("#distance_travel").val($("#slider5").slider("value"));
+					$("#distance_travel").blur(function() {
+						$("#slider5").slider("value", $(this).val());
+						//------- For Tooltip -------
+						var curValue = $(this).val() || initialValue;
+						var tooltip = '<div class="tooltip"><div class="tooltip-inner">' + curValue + '</div><div class="tooltip-arrow"></div></div>';
+						$('.ui-slider-handle').html(tooltip);
+						//-------------------------------
+					});
+
+				});	
+			});
+		});
+		//------- End For Range Picker -------------
+	});
 
 </script>
 

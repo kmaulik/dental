@@ -207,6 +207,9 @@
 							<label>Dentition Type : </label> <?=$record['dentition_type']?>
 						</div>
 						<div class="col-sm-6">
+							<label>Travel Distance : </label> <?=$record['distance_travel']." Miles"?>
+						</div>
+						<div class="col-sm-6">
 							<label>RFP Status : </label> 
 							<?php if($record['status'] == 0) :?>
 								<span class="label label-default">Draft</span>

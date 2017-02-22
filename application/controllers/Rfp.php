@@ -79,6 +79,7 @@ class Rfp extends CI_Controller {
 						'latitude'			=> $latitude,
 						'title' 			=> $this->input->post('title'),
 						'dentition_type' 	=> $this->input->post('dentition_type'),
+						'distance_travel'	=> $this->input->post('distance_travel'),
 						'allergies' 		=> $this->input->post('allergies'),
 						'medication_list' 	=> $this->input->post('medication_list'),
 						'heart_problem' 	=> $this->input->post('heart_problem'),
@@ -365,6 +366,7 @@ class Rfp extends CI_Controller {
 						'latitude'			=> $latitude,
 						'title' 			=> $this->input->post('title'),
 						'dentition_type' 	=> $this->input->post('dentition_type'),
+						'distance_travel'	=> $this->input->post('distance_travel'),
 						'allergies' 		=> $this->input->post('allergies'),
 						'medication_list' 	=> $this->input->post('medication_list'),
 						'heart_problem' 	=> $this->input->post('heart_problem'),
@@ -794,17 +796,24 @@ class Rfp extends CI_Controller {
 		//------- Filter RFP ----
 		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
 		$date_data= $this->input->get('date') ? $this->input->get('date') :'';
-		$category_data = $this->input->get('treatment_cat_id') ? implode(",",$this->input->get('treatment_cat_id')) :'';
+		$cat_data =  $this->input->get('treatment_cat_id') ? $this->input->get('treatment_cat_id') :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
 		//------- /Filter RFP ----
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.'&category='.$category_data.'&sort='.$sort_data;
-		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$category_data);
+		$category_data='';
+		if($cat_data != ''){
+			foreach($cat_data as $cat) {
+				$category_data .= "&treatment_cat_id[]=".$cat;
+			}
+		}
+			
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data;
+		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data);
 		//qry(1);
 		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
-		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$category_data,$sort_data);
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data);
 		//qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);

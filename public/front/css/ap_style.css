@@ -587,6 +587,33 @@ span.time {
 }
 
 
+/********** Range Picker Tooltip *********/
+.custom-range-slider .tooltip {
+    position: absolute;
+    z-index: 1020;
+    display: block;
+    padding: 5px;
+    font-size: 11px;
+    visibility: visible;
+    margin-top: -2px;
+    bottom:120%;
+    margin-left: -2em;
+    opacity: 1;
+}
+
+.custom-range-slider .tooltip .tooltip-arrow {
+    bottom: 0;
+    left: 50%;
+    margin-left: -5px;
+    border-top: 5px solid #000000;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+/********** End Range Picker Tooltip *********/
+
 
 /*************** media start here 	*************/
 @media (min-width:768px) and (max-width:991px){
