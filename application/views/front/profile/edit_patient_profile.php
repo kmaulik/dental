@@ -15,6 +15,8 @@
 		.shadow-before-3 	= shadow 3 header top
 		.shadow-after-3 	= shadow 3 header bottom
 -->
+<?php //echo $map['js']; ?>
+
 <section class="page-header page-header-xs">
 	<div class="container">
 
@@ -30,7 +32,7 @@
 <!-- /PAGE HEADER -->
 
 <!-- -->
-<section>
+<section>	
 	<div class="container">
 		<!-- ALERT -->
 		<?php if($this->session->flashdata('success')) : ?>
@@ -51,7 +53,10 @@
 			<ul class="nav nav-tabs nav-top-border">
 				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>
 				<li class="<?php if($tab == 'avatar'){ echo 'active'; }?>"><a href="#avatar" data-toggle="tab">Avatar</a></li>
-				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>				
+				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>
+				
+				<li><a href="#office_map" data-toggle="tab">Office Map</a></li>
+
 			</ul>
 			
 			<div class="tab-content margin-top-20">
@@ -69,6 +74,7 @@
 					<?php } ?>
 
 					<form role="form"  method="post">
+
 						<div class="form-group">
 							<label class="control-label">First Name</label>
 							<input type="text" placeholder="First name" name="fname" class="form-control" value="<?php echo $db_data['fname']; ?>">
@@ -135,7 +141,7 @@
 				<!-- /PERSONAL INFO TAB -->
 
 				<!-- AVATAR TAB -->
-				<div class="tab-pane fade <?php if($tab == 'avatar'){ echo 'in active'; }?>" id="avatar">
+				<div class="tab-pane fade <?php if($tab == 'avatar'){ echo 'in active'; }?>" id="avatar">					
 
 					<form class="clearfix"  method="post" enctype="multipart/form-data">
 						<div class="form-group">
@@ -185,7 +191,7 @@
 
 				<!-- PASSWORD TAB -->
 				<div class="tab-pane fade <?php if($tab == 'password'){ echo 'in active'; }?>" id="password">
-
+					
 					<form  method="post">
 
 						<div class="form-group">
@@ -227,9 +233,31 @@
 					</form>
 				</div>
 				<!-- /PASSWORD TAB -->
+				
+				<!-- Office Map TAB -->
+				<div class="tab-pane fade" id="office_map">
+					<input type="text" id="myPlaceTextBox" />
+					<br/>
+					<br/>
+					<div id="googleMap" style="width:100%;height:400px;"></div>
+
+						<script>
+							function myMap() {
+								var mapProp= {
+							    	center:new google.maps.LatLng(51.508742,-0.120850),
+							    	zoom:5,
+								};
+								var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+							}
+						</script>
+
+						<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw"></script>
+				</div>
+				<!--  //Office Map TAB -->
+
 			</div>
 		</div>
-
+		
 		
 		<?php $this->load->view('front/layouts/side_bar_profile'); ?>
 		
@@ -240,4 +268,7 @@
 <script type="text/javascript">
 	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
 	$('#country_id').val("<?php echo $db_data['country_id']; ?>");	
+	jQuery(document).ready(function($) {
+		myMap();
+	});
 </script>

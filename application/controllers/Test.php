@@ -75,13 +75,13 @@ class Test extends CI_Controller {
         $resArray = CreateRecurringPaymentsProfile();
         $ack = strtoupper($resArray["ACK"]);
         if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-	        echo "IFF";
+	       pr($resArray);
         }
     }
 
     public function get_detail(){
 
-        $res = GetRecurringPaymentsProfileDetails('I-6FXBH5TWMHYS');
+        $res = GetRecurringPaymentsProfileDetails('I-03B53XWAV3K2');
         pr($res);
 
     }
@@ -90,6 +90,27 @@ class Test extends CI_Controller {
     public function paypal_info($token='1DJ17032VY967502X'){
         $data=GetTransactionDetails($token);
         pr($data,1);
+    }
+
+    public function google_map(){
+        $this->load->library('googlemaps');
+
+        $config['center'] = '37.4419, -122.1419';
+        $config['zoom'] = 'auto';
+        $config['places'] = TRUE;
+        $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
+
+        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
+
+        $config['placesAutocompleteOnChange'] = 'alert(\'You selected a place\');';
+        
+        $this->googlemaps->initialize($config);
+
+        $data['map'] = $this->googlemaps->create_map();
+
+        pr($data);
+
+        $this->load->view('test_view', $data);
     }
 
 }

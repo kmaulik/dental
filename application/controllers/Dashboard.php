@@ -8,7 +8,7 @@ class Dashboard extends CI_Controller {
         parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
         $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model']);
-        $this->load->library('unirest');
+        $this->load->library(['unirest']);
     }	
 
     public function index() {
@@ -59,7 +59,23 @@ class Dashboard extends CI_Controller {
         $decode_pass = $this->encrypt->decode($data['db_data']['password']);
 
         $data['tab'] = 'info';
-        
+
+        // ------------------------------------------------------------------------
+        // Google Maps
+        // ------------------------------------------------------------------------
+        // $this->load->library('googlemaps');
+        // $config['center'] = '37.4419, -122.1419';
+        // $config['zoom'] = '5';
+        // $config['places'] = TRUE;
+        // $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
+        // $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport        
+        // $config['placesAutocompleteOnChange'] = 'alert(\'You selected a place\');';
+        // $this->googlemaps->initialize($config);
+        // $data['map'] = $this->googlemaps->create_map();
+        // ------------------------------------------------------------------------
+
+        // pr($data['map'],1);
+                                
         if($_POST){            
             $tab = $this->input->post('tab');            
             $data['tab'] = $tab;

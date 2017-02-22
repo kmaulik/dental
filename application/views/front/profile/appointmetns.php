@@ -115,6 +115,8 @@
 <!-- -->
 <section>
 	<div class="container">
+
+		
 		<!-- ALERT -->
 		<?php if($this->session->flashdata('success')) : ?>
 		<div class="alert alert-mini alert-success margin-bottom-30">

@@ -48,7 +48,7 @@
 
 	// 100$ 50$ x 2 
 	
-	define('SUBSCRIPTION_PRICE',50.00);
+	define('SUBSCRIPTION_PRICE',36);
 	//define('SUBSCRIPTION_PRICE', 1.35);
 
 	/* An express checkout transaction starts with a token, that
@@ -327,7 +327,7 @@
 
 		$nvpstr.="&DESC=".urlencode("Inventory Subscription($" . SUBSCRIPTION_PRICE . " monthly)");
 		$nvpstr.="&BILLINGPERIOD=Month";
-		$nvpstr.="&BILLINGFREQUENCY=1";
+		$nvpstr.="&BILLINGFREQUENCY=2";
 		
 		$nvpstr.="&AMT=".SUBSCRIPTION_PRICE;
 
