@@ -15,7 +15,7 @@
 		.shadow-before-3 	= shadow 3 header top
 		.shadow-after-3 	= shadow 3 header bottom
 -->
-<?php //echo $map['js']; ?>
+<?php echo $map['js']; ?>
 
 <section class="page-header page-header-xs">
 	<div class="container">
@@ -53,10 +53,8 @@
 			<ul class="nav nav-tabs nav-top-border">
 				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>
 				<li class="<?php if($tab == 'avatar'){ echo 'active'; }?>"><a href="#avatar" data-toggle="tab">Avatar</a></li>
-				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>
-				
-				<li><a href="#office_map" data-toggle="tab">Office Map</a></li>
-
+				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>			
+				<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>"><a href="#office_map" data-toggle="tab">Office Map</a></li>
 			</ul>
 			
 			<div class="tab-content margin-top-20">
@@ -141,7 +139,7 @@
 				<!-- /PERSONAL INFO TAB -->
 
 				<!-- AVATAR TAB -->
-				<div class="tab-pane fade <?php if($tab == 'avatar'){ echo 'in active'; }?>" id="avatar">					
+				<div class="tab-pane fade <?php if($tab == 'avatar'){ echo 'in active'; }?>" id="avatar">
 
 					<form class="clearfix"  method="post" enctype="multipart/form-data">
 						<div class="form-group">
@@ -235,23 +233,27 @@
 				<!-- /PASSWORD TAB -->
 				
 				<!-- Office Map TAB -->
-				<div class="tab-pane fade" id="office_map">
+				<div class="tab-pane fade <?php if($tab == 'office_map'){ echo 'in active'; }?>" id="office_map">
 					<input type="text" id="myPlaceTextBox" />
 					<br/>
 					<br/>
-					<div id="googleMap" style="width:100%;height:400px;"></div>
+					<?php echo $map['html']; ?>
+					<!-- <div id="googleMap" style="width:100%;height:400px;"></div> -->
 
-						<script>
-							function myMap() {
-								var mapProp= {
-							    	center:new google.maps.LatLng(51.508742,-0.120850),
-							    	zoom:5,
-								};
-								var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-							}
-						</script>
+					<script>
+						// function myMap() {
+						// 	var mapProp= {
+						// 	    center:new google.maps.LatLng(51.508742,-0.120850),
+						// 	    zoom:5,
+						// 	};
+						// 	var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+						// 	google.maps.event.addListenerOnce(map, 'idle', function() {
+						// 	   google.maps.event.trigger(map, 'resize');
+						// 	});
+						// }
+					</script>
 
-						<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw"></script>
+					<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw&callback=myMap"></script> -->
 				</div>
 				<!--  //Office Map TAB -->
 
@@ -265,10 +267,33 @@
 </section>
 <!-- / -->
 
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw"></script> -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw&callback=myMap"></script> -->
+				
 <script type="text/javascript">
+	
 	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
-	$('#country_id').val("<?php echo $db_data['country_id']; ?>");	
-	jQuery(document).ready(function($) {
-		myMap();
-	});
+	$('#country_id').val("<?php echo $db_data['country_id']; ?>");
+
+	$(document).ready(function() {
+        $('a[href="#office_map"]').click(function(e) {
+            setTimeout(initialise, 1000);
+        });
+
+        function initialise() {
+           	var myMap = document.getElementById('map_canvas');
+            google.maps.event.trigger(myMap, 'resize');
+        };
+    });
+
+    function get_location(){
+    	var myPlaceTextBox_str = $('#myPlaceTextBox').val();
+       	myPlaceTextBox_str_decode = encodeURIComponent(btoa(myPlaceTextBox_str));
+       	window.location.href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map&address=';?>"+myPlaceTextBox_str_decode;
+    }
+
+     function fetch_lat_long(lat,longi){
+        bootbox.alert('lat --> '+lat+'long --'+longi);
+    }
+	
 </script>

@@ -58,25 +58,41 @@ class Dashboard extends CI_Controller {
         $data['country_list']=$this->Country_model->get_result('country');
         $decode_pass = $this->encrypt->decode($data['db_data']['password']);
 
-        $data['tab'] = 'info';
+        $get_tab = $this->input->get('tab');
+
+        if($get_tab == 'office_map'){
+            $data['tab'] = 'office_map';
+            // echo decode($this->input->get('address'));
+            // die();
+        }else{
+            $data['tab'] = 'info';
+        }
 
         // ------------------------------------------------------------------------
         // Google Maps
         // ------------------------------------------------------------------------
-        // $this->load->library('googlemaps');
-        // $config['center'] = '37.4419, -122.1419';
-        // $config['zoom'] = '5';
+        $this->load->library('googlemaps');
+        $config['center'] = '52.5200, 13.4050';
+        $config['zoom'] = 'auto';
         // $config['places'] = TRUE;
-        // $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
-        // $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport        
-        // $config['placesAutocompleteOnChange'] = 'alert(\'You selected a place\');';
-        // $this->googlemaps->initialize($config);
-        // $data['map'] = $this->googlemaps->create_map();
+        $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
+        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport        
+        $config['placesAutocompleteOnChange'] = 'get_location()';
+        $this->googlemaps->initialize($config);
+        
+        // ------------------------------------------------------------------------
+        $marker = array();
+        $marker['position'] = '52.5200, 13.4050'; 
+        $marker['infowindow_content'] = html_entity_decode('Doctor - My address');
+        $marker['draggable'] = true;
+        $marker['ondragend'] = 'fetch_lat_long(event.latLng.lat(),event.latLng.lng())';
+
+        $this->googlemaps->add_marker($marker);
+
+        $data['map'] = $this->googlemaps->create_map();
         // ------------------------------------------------------------------------
 
-        // pr($data['map'],1);
-                                
-        if($_POST){            
+        if($_POST){
             $tab = $this->input->post('tab');            
             $data['tab'] = $tab;
 
