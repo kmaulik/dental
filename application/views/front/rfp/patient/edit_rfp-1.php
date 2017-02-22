@@ -202,7 +202,7 @@
 
 <script>
 	$('.NumbersAndRange').keyup(function () { 
-    	this.value = this.value.replace(/[^0-9+ ]/g,'');
+    	this.value = this.value.replace(/[^0-9]/g,'');
     	if(this.value > 2000){
     		this.value= 2000;
     	}
