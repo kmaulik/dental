@@ -1006,7 +1006,12 @@ class Rfp extends CI_Controller {
 
 			$this->session->set_userdata('payment_data',$payment_arr);
 			//----------------Paypal Payment------------------
-			$this->paypal_payment();
+			// Final price is > 0 then redirect to paypal other wise skip it paypal
+			if($final_price > 0){		
+				$this->paypal_payment(); // Redirect to Paypal
+			}else{
+				redirect('rfp/complete_transaction'); // Skip paypal and follow next step after paypal
+			}
 			
 			//------ End Calculate the discount based on coupan code ----
 		}
