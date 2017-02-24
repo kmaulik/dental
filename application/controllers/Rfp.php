@@ -1195,5 +1195,18 @@ class Rfp extends CI_Controller {
     	redirect('rfp/view_rfp_bid/'.$rfp_id);
     }
 
+    /**
+     * Fetch Promotional code data Using Id 
+     * */
+    public function fetch_coupan_data(){
+
+        $data=$this->Promotional_code_model->fetch_coupan_data();
+        if(!empty($data)){    
+            echo json_encode($data);
+        }else{
+            echo 0;
+        }
+    }
+
 
 }

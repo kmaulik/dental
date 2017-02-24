@@ -129,7 +129,7 @@ $("#apply-code").click(function(){
 	var coupan_code = $("#coupan_code").val();
 	if(coupan_code != ''){
 		var discount_amt=0;
-		$.post("<?=base_url('admin/promotional_code/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
+		$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
 			
 			if(data != 0){
 				discount_amt = 	((<?=config('patient_fees')?> * data['discount'])/100);
