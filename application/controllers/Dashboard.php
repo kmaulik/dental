@@ -90,6 +90,8 @@ class Dashboard extends CI_Controller {
         $this->googlemaps->add_marker($marker);
 
         $data['map'] = $this->googlemaps->create_map();
+
+        // pr($data['map'],1);
         // ------------------------------------------------------------------------
 
         if($_POST){

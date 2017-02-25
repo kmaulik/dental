@@ -18,9 +18,13 @@
 	//' Replace <API_SIGNATURE> with your Signature
 	//'------------------------------------
 	
-	define('API_UserName', 'demo.narolainfotech_api1.gmail.com');
-	define('API_Password', 'AWK63L4MBFD4VW8L');
-	define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31ACJYWuU2SkL5peZ0DszYoNa9AnDc');
+	// define('API_UserName', 'demo.narolainfotech_api1.gmail.com');
+	// define('API_Password', 'AWK63L4MBFD4VW8L');
+	// define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31ACJYWuU2SkL5peZ0DszYoNa9AnDc');
+
+	define('API_UserName', 'vpa_api1.narola.email');
+	define('API_Password', 'SHZWUBFGFA3VCM7L');
+	define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31AI-OweKZBd-QsDk51yu3WG39Jc5i');	
 
 	// BN Code 	is only applicable for partners
 	define('sBNCode', 'PP-ECWizard');
@@ -48,7 +52,7 @@
 
 	// 100$ 50$ x 2 
 	
-	define('SUBSCRIPTION_PRICE',36);
+	define('SUBSCRIPTION_PRICE',80);
 	//define('SUBSCRIPTION_PRICE', 1.35);
 
 	/* An express checkout transaction starts with a token, that
@@ -59,7 +63,7 @@
 	   to PayPal to first authorize payment
 	   */
 
-	/*   
+	/*   2FCCXHFE6LQ92
 	'-------------------------------------------------------------------------------------------------------------------------------------------
 	' Purpose: 	Prepares the parameters for the SetExpressCheckout API Call.
 	' Inputs:  
@@ -79,7 +83,7 @@
 		$nvpstr="&AMT=". $paymentAmount;
 		$nvpstr = $nvpstr . "&PAYMENTACTION=" . $paymentType;
 		$nvpstr = $nvpstr . "&BILLINGAGREEMENTDESCRIPTION=".urlencode("Inventory Subscription($" . SUBSCRIPTION_PRICE . " monthly)");
-		$nvpstr = $nvpstr . "&BILLINGTYPE=RecurringPayments";
+		$nvpstr = $nvpstr . "&BILLINGTYPE=MerchantInitiatedBillingSingleAgreement";
 		$nvpstr = $nvpstr . "&RETURNURL=" . $returnURL;
 		$nvpstr = $nvpstr . "&CANCELURL=" . $cancelURL;
 		$nvpstr = $nvpstr . "&CURRENCYCODE=" . $currencyCodeType;
@@ -285,8 +289,8 @@
 		return $resArray;
 	}
 	
-	function CreateRecurringPaymentsProfile()
-	{
+	function CreateRecurringPaymentsProfile(){
+
 		//'--------------------------------------------------------------
 		//' At this point, the buyer has completed authorizing the payment
 		//' at PayPal.  The function will call PayPal to obtain the details
@@ -323,12 +327,12 @@
 		$nvpstr.="&SHIPTOCOUNTRY=".$shipToCountry;
 		//$nvpstr.="&SHIPTOCOUNTRY=US";
 		
-		$nvpstr.="&PROFILESTARTDATE=".urlencode(date("Y-m-d")."T".date("H:i:s")."Z");
+		$nvpstr.="&PROFILESTARTDATE=".urlencode("2017-02-25T03:05:00Z");
 
 		$nvpstr.="&DESC=".urlencode("Inventory Subscription($" . SUBSCRIPTION_PRICE . " monthly)");
-		$nvpstr.="&BILLINGPERIOD=Month";
-		$nvpstr.="&BILLINGFREQUENCY=2";
-		
+		$nvpstr.="&BILLINGPERIOD=Day";
+		$nvpstr.="&BILLINGFREQUENCY=1";
+		$nvpstr.="&TOTALBILLINGCYCLES=1";		
 		$nvpstr.="&AMT=".SUBSCRIPTION_PRICE;
 
 		$nvpstr.="&CURRENCYCODE=USD";
@@ -436,7 +440,7 @@
 		//$ack = strtoupper($resArray["ACK"]);
 		return $resArray;
 	}
-	
+
 	/*
 	'-------------------------------------------------------------------------------------------------------------------------------------------
 	' Purpose: 	This function makes a DoDirectPayment API call
@@ -489,6 +493,7 @@
 
 		return $resArray;
 	}
+
 
 
 	/**
@@ -628,5 +633,45 @@
 		//return 'INV'.$randomString;
 		return $randomString;
 	}
+
+	function CreateBillingAgreement($token){
+		$nvpstr="&TOKEN=" . $token;
+		$nvpstr .="&VERSION=86";
+		//'---------------------------------------------------------------------------
+		$resArray=hash_call("CreateBillingAgreement",$nvpstr);
+		//$ack = strtoupper($resArray["ACK"]);
+		return $resArray;
+	}
+
+	 //---------------- DoExpressCheckoutPayment @DHK -------
+	function DoExpressCheckoutPayment($payer_id,$token){
+
+		$nvpstr ="&PAYERID=" . $payer_id;
+		$nvpstr .="&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
+		$nvpstr .="&PAYMENTREQUEST_0_AMT=42";
+		$nvpstr .="&VERSION=86";
+		$nvpstr .="&TOKEN=".$token;
+		
+		//'---------------------------------------------------------------------------
+		$resArray=hash_call("DoExpressCheckoutPayment",$nvpstr);
+		//$ack = strtoupper($resArray["ACK"]);
+		return $resArray;
+	}
+
+	//---------------- DoReferenceTransaction @DHK --------
+	function DoReferenceTransaction($bill_id){
+		$nvpstr ="&VERSION=86";
+		$nvpstr .="&AMT=76";
+		$nvpstr .="&CURRENCYCODE=USD";		
+		$nvpstr .="&PAYMENTACTION=SALE";
+		$nvpstr .="&REFERENCEID=".$bill_id;
+		
+		//'---------------------------------------------------------------------------
+		$resArray=hash_call("DoReferenceTransaction",$nvpstr);
+		//$ack = strtoupper($resArray["ACK"]);
+		return $resArray;
+	}
+
+
 
 ?>
