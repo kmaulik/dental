@@ -43,14 +43,17 @@ class Test extends CI_Controller {
 
 	public function review() {
         $data = array();
-
         $data['back'] = base_url().'test';
         $data['subscribe'] = base_url().'test/subscribe';
 
+        pr($_REQUEST,1);
         if (isset($_REQUEST['token'])) {
             $token = $_REQUEST['token'];
+            //echo "Token => ".$token."<br/>";
+              $resarr=CreateBillingAgreement($token);
+              //$resarr11=GetShippingDetails($token);
+              pr($resarr,1);          
         }
-
         // If the Request object contains the variable 'token' then it means that the user is coming from PayPal site.
         if ($token != "") {
             $resArray = GetShippingDetails($token);
@@ -72,7 +75,10 @@ class Test extends CI_Controller {
         $data['subscribe'] = base_url().'test/subscribe';
         $finalPaymentAmount = $this->subscription_price;
         $resArray1 = ConfirmPayment($finalPaymentAmount);
+        //$refarray1=DoReferenceTransaction($resArray1);
+        // $this->paypal_info($resArray1['TRANSACTIONID']);
         $resArray = CreateRecurringPaymentsProfile();
+        //pr($refarray1,1);
         $ack = strtoupper($resArray["ACK"]);
         if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 	       pr($resArray);
@@ -81,13 +87,13 @@ class Test extends CI_Controller {
 
     public function get_detail(){
 
-        $res = GetRecurringPaymentsProfileDetails('I-03B53XWAV3K2');
-        pr($res);
+        $res = GetRecurringPaymentsProfileDetails('I-S1AT56H23RXL');
+        pr($res,1);
 
     }
 
 
-    public function paypal_info($token='1DJ17032VY967502X'){
+    public function paypal_info($token='3LC62956B2785522X'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }

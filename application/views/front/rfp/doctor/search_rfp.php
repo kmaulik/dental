@@ -143,18 +143,26 @@ span.time {
 								<option value="asc">Oldest RFP</option>
 							</select>
 						</div>	
-						<div class="col-lg-2 col-md-4">
-							<label>&nbsp;</label>
-							<input type="submit" name="btn_search" class="btn btn-info" value="Search">
-							<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
-						</div>
-						<div class="col-lg-12">
+						<div class="col-lg-2 col-md-3 sorting">
+							<label>Favorite</label>
+							<select name="favorite_search" class="form-control" id="favorite_search">
+								<option value="All">All</option>
+								<option value="Include">Include Favorite</option>
+								<option value="Exclude">Exclude Favorite</option>
+							</select>
+						</div>	
+						<div class="col-lg-10">
 							<label>Treatment Category </label>
 							<select id="treatment_cat_id" class="form-control select2" name="treatment_cat_id[]" data-placeholder="Select Treatment Category" multiple>
 								<?php foreach($treatment_category as $cat) :?>
 									<option value="<?=$cat['id']?>" <?php if($this->input->get('treatment_cat_id') != '' && in_array($cat['id'],$this->input->get('treatment_cat_id'))) { echo "selected"; } ?>><?=$cat['title']." (".$cat['code'].")"?></option>
 								<?php endforeach;?>
 							</select>		
+						</div>
+						<div class="col-lg-2 col-md-4">
+							<label>&nbsp;</label>
+							<input type="submit" name="btn_search" class="btn btn-info" value="Search">
+							<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
 						</div>	
 					</div>	
 				</form>
@@ -180,6 +188,10 @@ span.time {
 									<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
 								</span>
 								<!-- <span class="distance">(<?=round($record['distance'],2)." Miles"?>)</span> -->
+								<?php if($record['bid_amt'] != '') :?>
+									<span class="bid_amt label label-info">$ <?=$record['bid_amt']?></span>
+								<?php endif;?>
+								<span class="total_bid label label-success">Total Bid : <?=$record['total_bid']?></span>
 							</div>	
 							<div class="rfp-right">
 								<?php if($record['img_path'] != '') :?>
@@ -201,10 +213,12 @@ span.time {
 
 <script>
 $("#sort").val("<?=$this->input->get('sort')?$this->input->get('sort'):'desc'?>");
+$("#favorite_search").val("<?=$this->input->get('favorite_search')?$this->input->get('favorite_search'):'All'?>");
 $("#reset").click(function(){
 	$('input[name=search]').val('');
 	$('input[name=date]').val('');
 	$("#sort").val('desc');
+	$("#favorite_search").val('All');
 	$("#treatment_cat_id").val('');
 	$("#search_rfp").submit();
 });
@@ -217,8 +231,8 @@ $(".favorite").on( "click", function() {
 		var data1=$(this);
 		if($.inArray('unfavorite_rfp',classNames) != '-1')
 		{
-			bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
-				if(res){
+			//bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
+				//if(res){
 					$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 						if(data){
 							data1.removeClass('unfavorite_rfp');
@@ -226,12 +240,12 @@ $(".favorite").on( "click", function() {
 							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
 						}
 					});
-				}	
-			});
+				//}	
+			//});
 		}
 		else{
-			bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
-				if(res){	
+			//bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
+			//	if(res){	
 					$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 						if(data){
 							data1.removeClass('favorite_rfp');
@@ -240,8 +254,8 @@ $(".favorite").on( "click", function() {
 						
 						}
 					});
-				}
-			});
+			//	}
+			//});
 		}
 	return false;
 });

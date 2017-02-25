@@ -132,11 +132,18 @@ $("#apply-code").click(function(){
 		$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
 			
 			if(data != 0){
-				discount_amt = 	((<?=config('patient_fees')?> * data['discount'])/100);
-				var final_price = <?=config('patient_fees')?> - discount_amt;
-				$(".final-prices").html(final_price);
-				$(".coupan-msg").html("Coupan Code Apply Successfully");
-				$(".coupan-msg").css("color", "green");
+				//---------- Check apply code limit for per user ----------
+				if(data['per_user_limit'] > data['total_apply_code']){
+					discount_amt = 	((<?=config('patient_fees')?> * data['discount'])/100);
+					var final_price = <?=config('patient_fees')?> - discount_amt;
+					$(".final-prices").html(final_price);
+					$(".coupan-msg").html("Coupan Code Apply Successfully");
+					$(".coupan-msg").css("color", "green");
+				}
+				else{
+					$(".coupan-msg").html("Sorry, You Already applied this code");
+					$(".coupan-msg").css("color", "red");
+				}
 			}else{
 				$(".coupan-msg").html("Invalid Coupan Code");
 				$(".coupan-msg").css("color", "red");

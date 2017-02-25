@@ -13,7 +13,7 @@ class Promotional_code_model extends CI_Model {
      */
     public function get_all_promotionalcode() {        
         
-        $this->db->select('id,title,code,discount,DATE_FORMAT(start_date,"%d %b %Y") AS start_date,DATE_FORMAT(end_date,"%d %b %Y") AS end_date,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
+        $this->db->select('id,title,code,per_user_limit,discount,DATE_FORMAT(start_date,"%d %b %Y") AS start_date,DATE_FORMAT(end_date,"%d %b %Y") AS end_date,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
         $this->db->where('is_deleted !=', 1);
         
         $keyword = $this->input->get('search');
@@ -112,12 +112,15 @@ class Promotional_code_model extends CI_Model {
      * @author : DHK
      */
     public function fetch_coupan_data(){
-        $this->db->where('start_date <=', date("Y-m-d"));
-        $this->db->where('end_date >=', date("Y-m-d"));
-        $this->db->where('code', $this->input->post('coupan_code'));
-        $this->db->where('is_deleted', 0);
-        $this->db->where('is_blocked', 0);
-        $query= $this->db->get('promotional_code');
+
+        $this->db->select('p.*,count(pt.id) as total_apply_code');
+        $this->db->join('payment_transaction pt','p.id = pt.promotional_code_id and pt.user_id ='.$this->session->userdata('client')['id'],'left');
+        $this->db->where('p.start_date <=', date("Y-m-d"));
+        $this->db->where('p.end_date >=', date("Y-m-d"));
+        $this->db->where('p.code', $this->input->post('coupan_code'));
+        $this->db->where('p.is_deleted', 0);
+        $this->db->where('p.is_blocked', 0);
+        $query= $this->db->get('promotional_code p');
         return $query->row_array();
 
     }   

@@ -35,6 +35,7 @@
                         <th>Code ID.</th>
                         <th>Code Title</th> 
                         <th>Code</th>
+                        <th>Apply Code Per User</th>
                         <th>Discout (%)</th> 
                         <th>Start Date</th>
                         <th>End Date</th>                    
@@ -73,6 +74,11 @@
                  {
                     sortable: false,
                     data: "code",
+                    visible: true
+                },
+                 {
+                    sortable: false,
+                    data: "per_user_limit",
                     visible: true
                 },
                 {

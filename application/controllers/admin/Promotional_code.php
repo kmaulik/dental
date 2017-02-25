@@ -88,6 +88,7 @@ class Promotional_code extends CI_Controller {
              $update_array = [
                 'title'           => $this->input->post('title'),
                 'code'            => $this->input->post('code'),
+                'per_user_limit'  => $this->input->post('per_user_limit'),
                 'start_date'      => $start_date,
                 'end_date'        => $end_date,
                 'discount'        => $this->input->post('discount'),
@@ -123,6 +124,7 @@ class Promotional_code extends CI_Controller {
             $insert_array = [
                 'title'         => $this->input->post('title'),
                 'code'          => $this->input->post('code'),
+                'per_user_limit'  => $this->input->post('per_user_limit'),
                 'start_date'    => $start_date,
                 'end_date'      => $end_date,
                 'discount'      => $this->input->post('discount'),

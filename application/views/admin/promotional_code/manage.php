@@ -41,6 +41,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-lg-3 control-label">Apply Code Per User:</label>
+                            <div class="col-lg-9">
+                                <input type="text" name="per_user_limit" id="per_user_limit" placeholder="Enter Limit Per User Use This Code" class="form-control NumbersOnly" value="<?php echo (isset($record['per_user_limit'])) ? $record['per_user_limit'] : set_value('per_user_limit'); ?>">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-lg-3 control-label">Code Date:</label>
                             <div class="col-lg-9">
                                 <input type="text" name="code_date" id="code_date" placeholder="Enter Code Date" class="form-control daterange-basic" value="<?php echo (isset($record['start_date'])) ? date("m/d/Y",strtotime($record['start_date'])).' - '.date("m/d/Y",strtotime($record['end_date'])) : set_value('code_date'); ?>">
@@ -77,6 +83,10 @@
 </div>
 </div>
 <script>
+$('.NumbersOnly').keyup(function () { 
+    this.value = this.value.replace(/[^0-9]/g,'');
+});
+
  $(".styled, .multiselect-container input").uniform({
         radioClass: 'choice'
     });
@@ -135,7 +145,10 @@ $("#frmcode").validate({
                 }
             }
         },
-         code_date: {
+        per_user_limit: {
+            required: true,
+        },  
+        code_date: {
             required: true,
         }, 
          discount: {
@@ -158,6 +171,9 @@ $("#frmcode").validate({
             required: "Please provide a Promotional Code",
             remote: "Promotional Code is already exist, please choose diffrent Promotional Code"
         },
+        per_user_limit: {
+            required: "Please provide a limit per user apply this code"
+        }, 
         code_date: {
             required: "Please provide a Promotional Code Date"
         },

@@ -798,6 +798,7 @@ class Rfp extends CI_Controller {
 		$date_data= $this->input->get('date') ? $this->input->get('date') :'';
 		$cat_data =  $this->input->get('treatment_cat_id') ? $this->input->get('treatment_cat_id') :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
+		$favorite_data= $this->input->get('favorite_search') ? $this->input->get('favorite_search') :'All';
 		//------- /Filter RFP ----
 		$category_data='';
 		if($cat_data != ''){
@@ -806,14 +807,15 @@ class Rfp extends CI_Controller {
 			}
 		}
 			
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data;
-		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data);
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data;
+		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data,$favorite_data);
 		//qry(1);
 		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
-		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data);
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data,$favorite_data);
+		//pr($data['rfp_data'],1);
 		//qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
@@ -990,7 +992,8 @@ class Rfp extends CI_Controller {
 			//------ Calculate the discount based on coupan code ----
 			if($this->input->post('coupan_code') != ''){
 				$data=$this->Promotional_code_model->fetch_coupan_data();
-				if(isset($data['discount']) && $data['discount'] != '') {
+				//--- Check code is valid and apply code limit for per user
+				if(isset($data['discount']) && $data['discount'] != '' && $data['per_user_limit'] > $data['total_apply_code']) {
 					$promotinal_code_id = $data['id'];
 					$discount = $data['discount'];
 					$final_price = $final_price - (($final_price * $discount) /100);

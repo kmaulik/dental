@@ -138,7 +138,7 @@ class Rfp_model extends CI_Model {
 
    
     /* --------------- For Doctor Search RFP --------- */
-    public function search_rfp_count($search_data,$date_data,$category_data) {
+    public function search_rfp_count($search_data,$date_data,$category_data,$favorite_data) {
         
         //-------- For Multiple Category search --------------
         $str='';
@@ -154,9 +154,12 @@ class Rfp_model extends CI_Model {
         }
         //-------- End Multiple Category search --------------
 
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,rb.amount as bid_amt,count(rb_bid.rfp_id) as total_bid,rf.rfp_id as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.doctor_id='.$this->session->userdata('client')['id'],'left');
+        $this->db->join('rfp_bid rb_bid','rfp.id = rb_bid.rfp_id','left');
 
         if ($search_data != '') {
             $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
@@ -168,18 +171,29 @@ class Rfp_model extends CI_Model {
         }
         if($category_data != ''){
             $this->db->where("(".$str.") != 0");
-        }    
+        }  
+
+        //----------- For Favorite RFP Filter ---------
+        if($favorite_data != '' && $favorite_data != 'All'){
+            if($favorite_data == 'Include'){
+                $this->db->where('rf.rfp_id is NOT NULL', NULL, FALSE);
+            }elseif($favorite_data == 'Exclude'){
+                $this->db->where('rf.rfp_id IS NULL', NULL, FALSE);
+            }
+        }
+
 
         //$this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
 
         $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
+        $this->db->group_by('rb_bid.rfp_id');
         $res_data = $this->db->get()->num_rows();
         return $res_data;
     }
 
-    public function search_rfp_result($limit,$offset,$search_data,$date_data,$category_data,$sort_data){
+    public function search_rfp_result($limit,$offset,$search_data,$date_data,$category_data,$sort_data,$favorite_data){
         
         
         //-------- For Multiple Category search --------------
@@ -196,10 +210,12 @@ class Rfp_model extends CI_Model {
         }
         //-------- End Multiple Category search --------------
 
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,rb.amount as bid_amt,count(rb_bid.rfp_id) as total_bid,rf.rfp_id as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
-       
+        $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.doctor_id='.$this->session->userdata('client')['id'],'left');
+        $this->db->join('rfp_bid rb_bid','rfp.id = rb_bid.rfp_id','left');
         if ($search_data != '') {
             $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
@@ -213,11 +229,21 @@ class Rfp_model extends CI_Model {
             $this->db->where("(".$str.") != 0");
         } 
 
+        //----------- For Favorite RFP Filter ---------
+        if($favorite_data != '' && $favorite_data != 'All'){
+            if($favorite_data == 'Include'){
+                $this->db->where('rf.rfp_id is NOT NULL', NULL, FALSE);
+            }elseif($favorite_data == 'Exclude'){
+                $this->db->where('rf.rfp_id IS NULL', NULL, FALSE);
+            }
+        }
+
         //$this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
 
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
+        $this->db->group_by('rb_bid.rfp_id');
         $this->db->order_by('rfp.id',$sort_data);
         $this->db->limit($limit,$offset);
         $query = $this->db->get();
@@ -227,11 +253,11 @@ class Rfp_model extends CI_Model {
 
     /* --------------- For Doctor Profile RFP --------- */
     public function doctor_rfp_count($search_data,$date_data) {
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,(select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id');
+        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,rf.rfp_id as favorite_id');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->join('rfp_bid','rfp_bid.rfp_id = rfp.id');
-
+        $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
         if ($search_data != '') {
             $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
         }
@@ -250,11 +276,12 @@ class Rfp_model extends CI_Model {
 
     public function doctor_rfp_result($limit,$offset,$search_data,$date_data,$sort_data){
         $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,
-                         (select rfp_id from rfp_favorite where rfp_id=rfp.id AND doctor_id ='.$this->session->userdata('client')['id'].') as favorite_id,
+                         rf.rfp_id as favorite_id,
                          rfp_bid.status as rfp_won_status,rfp_bid.is_chat_started,rfp_bid.amount,rfp_bid.description as bid_desc');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->join('rfp_bid','rfp_bid.rfp_id = rfp.id','left'); // v! New Condition
+        $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
         
         if ($search_data != '') {
             $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
