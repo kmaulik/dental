@@ -1112,9 +1112,7 @@ class Rfp extends CI_Controller {
 			$this->session->unset_userdata('payment_data');	
     		$this->session->set_flashdata('error', 'Error Into Payment Transaction, Please Contact To Admin');
     		redirect('rfp');
-    	}
-    	
-    	
+    	}    	    	
     }
 
     //-------------- Doctor Review -------------------

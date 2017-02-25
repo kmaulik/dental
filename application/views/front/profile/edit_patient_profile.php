@@ -17,6 +17,7 @@
 -->
 <?php echo $map['js']; ?>
 
+<?php //pr($map['html'],1);?>
 <section class="page-header page-header-xs">
 	<div class="container">
 
@@ -260,11 +261,11 @@
 			</div>
 		</div>
 		
-		
 		<?php $this->load->view('front/layouts/side_bar_profile'); ?>
 		
 	</div>
 </section>
+<?php echo $map['html']; ?>
 <!-- / -->
 
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw"></script> -->
