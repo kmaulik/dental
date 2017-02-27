@@ -662,7 +662,7 @@
 	//---------------- DoReferenceTransaction @DHK --------
 	function DoReferenceTransaction($bill_id){
 		$nvpstr ="&VERSION=86";
-		$nvpstr .="&AMT=105";
+		$nvpstr .="&AMT=400";
 		$nvpstr .="&CURRENCYCODE=USD";		
 		$nvpstr .="&PAYMENTACTION=SALE";
 		$nvpstr .="&REFERENCEID=".$bill_id;

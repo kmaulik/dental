@@ -46,7 +46,7 @@ class Test extends CI_Controller {
         }
 	}
 
-	public function review() {        
+	public function review() {
         $data = array();
 
         $PayerID = $this->input->get('PayerID');
@@ -90,8 +90,6 @@ class Test extends CI_Controller {
 
     }
 
-
-
     public function confirm() {
     	$data = array();
         $data['back'] = base_url().'test';
@@ -108,14 +106,14 @@ class Test extends CI_Controller {
     }
 
     public function get_detail(){
-        $res = GetRecurringPaymentsProfileDetails('B-99F95324GS1942214');
+        $res = GetRecurringPaymentsProfileDetails('B-0GP68457DN280314Y');
         pr($res);
 
     }
 
     public function new_test(){
         $str = 'B-8D922687M2395522M';
-
+        // B-8D922687M2395522M
         $res = DoReferenceTransaction($str);
         pr($res,1);
     }
@@ -125,56 +123,8 @@ class Test extends CI_Controller {
         pr($data,1);
     }
 
-    public function google_map(){
-        $this->load->library('googlemaps');
-
-        $config['center'] = '37.4419, -122.1419';
-        $config['zoom'] = 'auto';
-        $config['places'] = TRUE;
-        $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
-        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
-        $config['placesAutocompleteOnChange'] = 'alert(\'You selected a place\');';        
-        $this->googlemaps->initialize($config);
-
-        $data['map'] = $this->googlemaps->create_map();
-
-        pr($data);
-
-        $this->load->view('test_view', $data);
-    }
-
-    public function another(){
-        $url = 'https://api-3t.sandbox.paypal.com/nvp';
-        $body = array(
-                        'USER'=>'demo.narolainfotech_api1.gmail.com',
-                        'PWD'=>'AWK63L4MBFD4VW8L',
-                        'SIGNATURE'=>'AFcWxV21C7fd0v3bYYYRCpSSRl31ACJYWuU2SkL5peZ0DszYoNa9AnDc',
-                        'METHOD'=>'SetExpressCheckout',
-                        'VERSION'=>'86',
-                        'PAYMENTREQUEST_0_PAYMENTACTION'=>'AUTHORIZATION',
-                        'PAYMENTREQUEST_0_AMT'=>'25.00',
-                        'PAYMENTREQUEST_0_CURRENCYCODE'=>'USD',
-                        'L_BILLINGTYPE0'=>'MerchantInitiatedBilling',
-                        'L_BILLINGAGREEMENTDESCRIPTION0'=>'ClubUsage',
-                        'cancelUrl'=>'',
-                        'returnUrl'=>''
-                    );
-        $res = $this->unirest->post($url, $headers = array(), $body);
-        var_dump($res);
-    }
-
-    public function success_url(){
-        echo "success";
-    }
-
-    public function cancel_url(){
-        echo 'cancel';
-        pr($_REQUEST);
-    }
-
-
     public function dhk_test(){
-        $test=DoReferenceTransaction("B-5TY03574W1596271U");
+        $test=DoReferenceTransaction("B-0GP68457DN280314Y");
         pr($test,1);
     }
 
