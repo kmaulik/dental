@@ -18,13 +18,13 @@
 	//' Replace <API_SIGNATURE> with your Signature
 	//'------------------------------------
 	
-	// define('API_UserName', 'demo.narolainfotech_api1.gmail.com');
-	// define('API_Password', 'AWK63L4MBFD4VW8L');
-	// define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31ACJYWuU2SkL5peZ0DszYoNa9AnDc');
+	define('API_UserName', 'demo.narolainfotech_api1.gmail.com');
+	define('API_Password', 'AWK63L4MBFD4VW8L');
+	define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31ACJYWuU2SkL5peZ0DszYoNa9AnDc');
 
-	define('API_UserName', 'vpa_api1.narola.email');
-	define('API_Password', 'SHZWUBFGFA3VCM7L');
-	define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31AI-OweKZBd-QsDk51yu3WG39Jc5i');	
+	// define('API_UserName', 'vpa_api1.narola.email');
+	// define('API_Password', 'SHZWUBFGFA3VCM7L');
+	// define('API_Signature', 'AFcWxV21C7fd0v3bYYYRCpSSRl31AI-OweKZBd-QsDk51yu3WG39Jc5i');	
 
 	// BN Code 	is only applicable for partners
 	define('sBNCode', 'PP-ECWizard');
@@ -634,6 +634,7 @@
 		return $randomString;
 	}
 
+	 //---------------- CreateBillingAgreement @DHK -------
 	function CreateBillingAgreement($token){
 		$nvpstr="&TOKEN=" . $token;
 		$nvpstr .="&VERSION=86";
@@ -648,7 +649,7 @@
 
 		$nvpstr ="&PAYERID=" . $payer_id;
 		$nvpstr .="&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
-		$nvpstr .="&PAYMENTREQUEST_0_AMT=42";
+		$nvpstr .="&PAYMENTREQUEST_0_AMT=48";
 		$nvpstr .="&VERSION=86";
 		$nvpstr .="&TOKEN=".$token;
 		
@@ -661,15 +662,26 @@
 	//---------------- DoReferenceTransaction @DHK --------
 	function DoReferenceTransaction($bill_id){
 		$nvpstr ="&VERSION=86";
-		$nvpstr .="&AMT=76";
+		$nvpstr .="&AMT=105";
 		$nvpstr .="&CURRENCYCODE=USD";		
 		$nvpstr .="&PAYMENTACTION=SALE";
 		$nvpstr .="&REFERENCEID=".$bill_id;
 		
-		//'---------------------------------------------------------------------------
+		//---------------------------------------------------------------------------
 		$resArray=hash_call("DoReferenceTransaction",$nvpstr);
 		//$ack = strtoupper($resArray["ACK"]);
 		return $resArray;
+	}
+
+	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
+	function BillAgreementUpdate($REFERENCEID){
+
+		$nvpstr ="&VERSION=86";
+		$nvpstr .="&REFERENCEID=".$REFERENCEID;
+		$nvpstr .="&BILLINGAGREEMENTSTATUS=Canceled";
+		$resArray=hash_call("BillAgreementUpdate",$nvpstr);
+		return $resArray;
+
 	}
 
 

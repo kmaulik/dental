@@ -59,10 +59,21 @@ class Test extends CI_Controller {
             $token = $_REQUEST['token'];
             
             $ret_arr = CreateBillingAgreement($token);
-            $retttt = DoReferenceTransaction($ret_arr['BILLINGAGREEMENTID']);
+            if($ret_arr != ''){
+                $payer_id = $_REQUEST['PayerID'];
+                $token= $_REQUEST['token'];
+                $res1= DoExpressCheckoutPayment($payer_id,$token);
+                echo "Billing Agreement : <br>";
+                pr($ret_arr);
+                echo "Payment Transaction : <br>";
+                pr($res1);
+                $retttt = DoReferenceTransaction($ret_arr['BILLINGAGREEMENTID']);
+                echo "RefrenceTransaction : <br>";
+                pr($retttt,1);
+            }
+            
             // $express_ret = DoExpressCheckoutPayment($PayerID,$token);            
-            pr($retttt);
-            pr($ret_arr,1);
+            //pr($retttt);
         }
 
         // If the Request object contains the variable 'token' then it means that the user is coming from PayPal site.
@@ -109,7 +120,7 @@ class Test extends CI_Controller {
         pr($res,1);
     }
 
-    public function paypal_info($token='1DJ17032VY967502X'){
+    public function paypal_info($token='1CS826997L8535421'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }
@@ -160,6 +171,19 @@ class Test extends CI_Controller {
         echo 'cancel';
         pr($_REQUEST);
     }
+
+
+    public function dhk_test(){
+        $test=DoReferenceTransaction("B-5TY03574W1596271U");
+        pr($test,1);
+    }
+
+    /* ------- Cancel Billing Agreement ------------- */
+    public function BillAgreementUpdate($REFERENCEID='B-99F95324GS1942214'){
+        $cancel_bill=BillAgreementUpdate($REFERENCEID);
+        pr($cancel_bill,1);
+    }
+
 
 }
 
