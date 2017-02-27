@@ -120,7 +120,7 @@ class Test extends CI_Controller {
         pr($res,1);
     }
 
-    public function paypal_info($token='1CS826997L8535421'){
+    public function paypal_info($token='6GK839763R027910J'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }
@@ -172,19 +172,17 @@ class Test extends CI_Controller {
         pr($_REQUEST);
     }
 
-
-    public function dhk_test(){
-        $test=DoReferenceTransaction("B-5TY03574W1596271U");
+    //----------- Reference Transaction -----------
+    public function DoReferenceTransaction($REFERENCEID='B-34X69770KM776381D'){
+        $test=DoReferenceTransaction($REFERENCEID);
         pr($test,1);
     }
 
     /* ------- Cancel Billing Agreement ------------- */
-    public function BillAgreementUpdate($REFERENCEID='B-99F95324GS1942214'){
+    public function BillAgreementUpdate($REFERENCEID='B-34X69770KM776381D'){
         $cancel_bill=BillAgreementUpdate($REFERENCEID);
         pr($cancel_bill,1);
     }
-
-
 }
 
 /* End of file Test.php */

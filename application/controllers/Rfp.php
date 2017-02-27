@@ -1164,7 +1164,7 @@ class Rfp extends CI_Controller {
 	    $rfp_bid_fetch = $this->Rfp_model->get_result('rfp_bid',['id'=>decode($rfp_bid_id)],true);
 	    $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>decode($rfp_id)],true);
 	    
-    	$upd_rfp_status = ['status' => '4']; // 4 Means In-Progress (Winner) For this RFP
+    	$upd_rfp_status = ['status' => '4']; // 4 Means Waiting for doctor approval For this RFP
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
     	
     	if($res_rfp){
@@ -1193,6 +1193,29 @@ class Rfp extends CI_Controller {
     	}else{
     		$this->session->set_flashdata('error', 'Error Into Choose Winner, Please Try Again!');
     	}
+    	redirect('rfp/view_rfp_bid/'.$rfp_id);
+    }
+
+     /* @DHK Cancel Doctor By Patient (Update RFP status 3(Open) And rfp_bid Status (0) Pending)
+    /* Param 1 : RFP ID
+    /* Param 2 : RFP BID ID
+    */
+    public function cancel_winner_doctor($rfp_id,$rfp_bid_id){
+
+    	$upd_rfp_status = ['status' => '3']; // 3 Means Open Status For this RFP
+    	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
+    	if($res_rfp){
+	    	// Update RFP Bid Status 
+			$upd_rfp_bid_status = ['status' => '0']; // 0 Means  Pending For This BID
+	    	$res_rfp_bid = $this->Rfp_model->update_record('rfp_bid',['id' => decode($rfp_bid_id)],$upd_rfp_bid_status);
+		    if($res_rfp_bid){
+		    		$this->session->set_flashdata('success', 'Winner Cancel Successfully');
+		    	}else{
+		    		$this->session->set_flashdata('error', 'Error Into Cancel Winner, Please Try Again!');
+		    	}
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Cancel Winner, Please Try Again!');
+    	}	
     	redirect('rfp/view_rfp_bid/'.$rfp_id);
     }
 

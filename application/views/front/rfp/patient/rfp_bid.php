@@ -52,12 +52,18 @@
 										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 										<div class="pull-right msg-btn">
 											<!-- For Choose Winner Doctor (Once Choose winner doctor then hide the button) -->
-											<?php if($bid_list['rfp_status'] < 4 ) : ?> <!-- 4 Means In_Progress (Winner Doctor) For this RFP -->
+											<?php if($bid_list['rfp_status'] == 3) : ?> <!-- 3 Means (Open)  Agent Approve RFP -->
 												<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_list['id']).'/'.encode($bid_list['rfp_bid_id']))?>" class="label label-info rfp-price confirm_winner" title="Choose Winner" ><i class="fa fa-trophy"></i></a> 
 											<?php endif; ?>	
 											<!-- End Choose Winner Doctor -->
-											<!-- Add Condition For Message & Review Button (Bid status winner(2) then display)-->
-											<?php if($bid_list['bid_status'] == 2) :?>
+
+											<!-- Add Condition For Cancel Winner Doctor (RFP status waiting for approval (4) && bid status (2) winner then display)-->
+											<?php if($bid_list['rfp_status'] == 4 && $bid_list['bid_status'] == 2) :?>
+												<a href="<?=base_url('rfp/cancel_winner_doctor/'.encode($bid_list['id']).'/'.encode($bid_list['rfp_bid_id']))?>" class="label label-danger rfp-price cancel_winner" title="Cancel Winner"><i class="fa fa-user-times"></i></a>
+											<?php endif; ?>
+
+											<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
+											<?php if($bid_list['rfp_status'] >= 5 && $bid_list['bid_status'] == 2) :?>
 												<!-- If Review not given for this RFP then display the review button -->
 												<?php if(isset($is_rated_rfp) && count($is_rated_rfp) == 0) : ?>
 													<a class="label label-info rfp-price" onclick="send_review(<?=$key?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
@@ -269,6 +275,16 @@ $(".confirm_winner").click(function(e) {
 });
 	
 
+$(".cancel_winner").click(function(e) {
+	e.preventDefault();
+	var lHref = $(this).attr('href');
+	bootbox.confirm('Are you sure to cancel winner for this rfp ?' ,function(res){
+		if(res){
+			window.location.href = lHref;
+		}
+	});	
+});
+	
 
 //--------------- For Message Form Validation --------------
 $("#frmmsg").validate({
