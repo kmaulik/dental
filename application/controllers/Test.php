@@ -108,7 +108,7 @@ class Test extends CI_Controller {
     }
 
     public function get_detail(){
-        $res = GetRecurringPaymentsProfileDetails('I-WF86TXYK58J2');
+        $res = GetRecurringPaymentsProfileDetails('B-99F95324GS1942214');
         pr($res);
 
     }
