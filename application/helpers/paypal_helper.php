@@ -649,7 +649,7 @@
 
 		$nvpstr ="&PAYERID=" . $payer_id;
 		$nvpstr .="&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
-		$nvpstr .="&PAYMENTREQUEST_0_AMT=48";
+		$nvpstr .="&PAYMENTREQUEST_0_AMT=2";
 		$nvpstr .="&VERSION=86";
 		$nvpstr .="&TOKEN=".$token;
 		
@@ -674,11 +674,12 @@
 	}
 
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
-	function BillAgreementUpdate($REFERENCEID){
+	function BillAgreementUpdate($REFERENCEID,$STATUS=''){
 
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&REFERENCEID=".$REFERENCEID;
-		$nvpstr .="&BILLINGAGREEMENTSTATUS=Canceled";
+		//$nvpstr .="&BILLINGAGREEMENTSTATUS=Canceled";
+		$nvpstr .="&BILLINGAGREEMENTSTATUS=".$STATUS;
 		$resArray=hash_call("BillAgreementUpdate",$nvpstr);
 		return $resArray;
 
