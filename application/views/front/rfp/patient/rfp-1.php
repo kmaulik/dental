@@ -104,7 +104,7 @@
 						<select name="dentition_type" class="form-control" id="dentition_type">
 							<option value=""> Select Dentition Type</option>
 							<!-- <option value="primary">Primary</option>
-							<option value="permenant">Permenant</option>
+							<option value="permanent">permanent</option>
 							<option value="other">Other</option> -->
 						</select>
 					</div>
@@ -228,10 +228,10 @@
 			console.log('Your Age is : '+age);
 			if(age > 18) 
 			{
-				var data='<option value=""> Select Dentition Type</option><option value="permenant">Permenant</option><option value="other">Other</option>';
+				var data='<option value=""> Select Dentition Type</option><option value="permanent">permanent</option><option value="other">Other</option>';
 				$("#dentition_type").html(data);
 			}else{
-				var data='<option value=""> Select Dentition Type</option><option value="primary">Primary</option><option value="permenant">Permenant</option><option value="other">Other</option>';				
+				var data='<option value=""> Select Dentition Type</option><option value="primary">Primary</option><option value="permanent">permanent</option><option value="other">Other</option>';				
 				$("#dentition_type").html(data);
 			}
 			$("#dentition_type").val("<?=set_value('dentition_type');?>");

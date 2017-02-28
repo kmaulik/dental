@@ -54,6 +54,9 @@
 	.manual_category{
 		padding-left: 40px;
 	}
+	.label-dark-blue{
+		background: #4765a0 !important;
+	}
 </style>
 
 <div class="page-header page-header-default">
@@ -216,12 +219,14 @@
 							<?php elseif($record['status'] == 1) : ?>
 								<span class="label label-primary">Pending</span>
 							<?php elseif($record['status'] == 2) : ?>
-								<span class="label label-danger">Invalid</span>
+								<span class="label label-danger">Submit Pending</span>
 							<?php elseif($record['status'] == 3) : ?>
 								<span class="label label-info">Open</span>
 							<?php elseif($record['status'] == 4) : ?>
-								<span class="label label-warning">In-Progress</span>			
+								<span class="label label-warning">Waiting For Doctor Approval</span>	
 							<?php elseif($record['status'] == 5) : ?>
+								<span class="label label-dark-blue">In-Progress</span>			
+							<?php elseif($record['status'] == 6) : ?>
 								<span class="label label-success">Close</span>			
 							<?php endif; ?>
 						</div>
@@ -313,13 +318,13 @@
 										</table>
 								</div>
 							</div>	
-						<?php elseif($record['dentition_type'] == 'permenant') :?>	
+						<?php elseif($record['dentition_type'] == 'permanent') :?>	
 							<div class="col-sm-12">
 								<div class="table-responsive">	
 										<table class="table table-bordered teeth">
 											<thead>
 												<tr>
-													<th colspan="16">Permenant Dentition</th>
+													<th colspan="16">permanent Dentition</th>
 												</tr>
 												<tr>
 													<th colspan="8">upper right</th>

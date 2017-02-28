@@ -116,13 +116,13 @@
 								</table>
 						</div>
 					</div>	
-				<?php elseif($record['dentition_type'] == 'permenant') :?>	
+				<?php elseif($record['dentition_type'] == 'permanent') :?>	
 					<div class="col-sm-12">
 						<div class="table-responsive">	
 								<table class="table table-bordered teeth">
 									<thead>
 										<tr>
-											<th colspan="16">Permenant Dentition</th>
+											<th colspan="16">permanent Dentition</th>
 										</tr>
 										<tr>
 											<th colspan="8">upper right</th>

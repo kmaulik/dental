@@ -389,4 +389,29 @@ class Rfp_model extends CI_Model {
         return $res;
     }
 
+    /* -------------- For Display Active RFP In Dashboard @DHK------------------- */
+    public function get_active_rfp_patient_wise(){
+        $this->db->select('rfp.*,count(rb.rfp_id) as total_bid,min(rb.amount) as min_bid_amt');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.is_deleted=0','left');
+        $this->db->where_in('rfp.status',['3','4','5']); // Rfp Status 3,4,5 then display
+        $this->db->where('rfp.patient_id',$this->session->userdata['client']['id']);
+        $this->db->where('rfp.is_deleted',0);
+        $this->db->where('rfp.is_blocked',0);
+        $this->db->group_by('rb.rfp_id');
+        $this->db->order_by('rfp.id','desc');
+        $result = $this->db->get('rfp')->result_array();
+
+        foreach($result as $key=>$res){
+            $this->db->select('rb.*,u.id as user_id,CONCAT(u.fname," ",u.lname) as user_name,u.avatar,avg(rr.rating) as avg_rating,count(rr.doctor_id) as total_rating,( 3959 * acos( cos( radians(' . $res['latitude'] . ') ) * cos( radians( u.latitude ) ) * cos( radians( u.longitude ) - radians(' . $res['longitude'] . ') ) + sin( radians(' . $res['latitude'] . ') ) * sin( radians( u.latitude ) ) ) ) AS distance');
+            $this->db->join('users u','rb.doctor_id = u.id');
+            $this->db->join('rfp_rating rr','rb.doctor_id = rr.doctor_id','left');
+            $this->db->where('rb.is_deleted',0);
+            $this->db->where('rb.rfp_id',$res['id']);
+            $this->db->group_by('rb.doctor_id');
+            $data=$this->db->get('rfp_bid rb')->result_array();
+            $result[$key]['bid_data']=$data;
+        }
+        return $result;
+    } 
+
 }    

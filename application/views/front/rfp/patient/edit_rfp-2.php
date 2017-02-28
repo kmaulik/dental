@@ -117,13 +117,13 @@
 							</div>
 							<?php echo form_error('teeth[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>		
-						<div class="col-md-12 col-sm-12" id="permenant">
+						<div class="col-md-12 col-sm-12" id="permanent">
 							<div class="form-group">
 								<div class="table-responsive">	
 									<table class="table table-bordered">
 										<thead>
 											<tr>
-												<th colspan="16">Permenant Dentition</th>
+												<th colspan="16">permanent Dentition</th>
 											</tr>
 											<tr>
 												<th colspan="8">upper right</th>
@@ -451,25 +451,25 @@
 	function fetch_definition_data(){
 
 		$("#primary").hide();
-		$("#permenant").hide();
+		$("#permanent").hide();
 		$("#other").hide();
 
 		if($("#dentition_type").val() == 'primary'){
-			$("#permenant input[type='checkbox']").attr('checked', false);
+			$("#permanent input[type='checkbox']").attr('checked', false);
 			$("input[name='other_description']").val('');
 			$("#primary").show();
 		}
-		else if($("#dentition_type").val() == 'permenant'){
+		else if($("#dentition_type").val() == 'permanent'){
 			$("#primary input[type='checkbox']").attr('checked', false);
 			$("input[name='other_description']").val('');
-			$("#permenant").show();
+			$("#permanent").show();
 		}
 		else if($("#dentition_type").val() == 'other'){
-			$("#permenant input[type='checkbox']").attr('checked', false);
+			$("#permanent input[type='checkbox']").attr('checked', false);
 			$("#primary input[type='checkbox']").attr('checked', false);
 			$("#other").show();
 		} else {
-			$("#permenant input[type='checkbox']").attr('checked', false);
+			$("#permanent input[type='checkbox']").attr('checked', false);
 			$("#primary input[type='checkbox']").attr('checked', false);
 			$("input[name='other_description']").val('');
 		}
