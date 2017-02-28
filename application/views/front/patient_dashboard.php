@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
+<script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
@@ -34,7 +36,7 @@
 			
 		</div>
 
-		<div class="row">
+		<!-- <div class="row">
 
 			<div class="col-md-4">
 				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
@@ -110,7 +112,181 @@
 
 			</div>
 
-		</div>
+		</div> -->
+
+		<!-- Active RFP For this patient Table -->
+		<div class="row active_rfp">
+			<div class="col-md-12">
+				<h4>Active RFP
+				<a href="<?=base_url('rfp/add');?>" class="btn btn-3d btn-sm btn-reveal btn-info pull-right">
+					<i class="fa fa-plus"></i><span>Create RFP</span>
+				</a>	
+				</h4>	
+				<hr/>
+			</div>	
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th></th>
+								<th>#</th>
+								<th>RFP Title</th>
+								<th>User Name</th>
+								<th>RFP Status</th>
+								<th>Count Of Bid</th>
+								<th>% Saving of lowest bid</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(count($active_rfp_list) > 0) :?>
+								<?php foreach($active_rfp_list as $key=>$active_rfp) :?>
+									<tr class="<?php if($key >= 3) { echo "active_rfp_data"; } ?>">
+										<td>
+											<?php if(count($active_rfp['bid_data']) > 0) :?>
+												<a id="view_bid_data_<?=$key?>" class="view_bid_data" data-id="<?=$key?>" ><i class="fa fa-plus"></i></a>
+												<a id="hide_bid_data_<?=$key?>" class="hide_bid_data" data-id="<?=$key?>"><i class="fa fa-minus"></i></a>
+											<?php endif; ?>
+										</td>
+										<td><?=$key+1?></td>
+										<td><?=$active_rfp['title']?></td>
+										<td><?=$active_rfp['fname']." ".$active_rfp['lname']?></td>
+										<td>
+											<?php if($active_rfp['status'] == 0) :?>
+											<span class="label label-default">Draft</span>
+											<?php elseif($active_rfp['status'] == 1) : ?>
+												<span class="label label-primary">Pending</span>
+											<?php elseif($active_rfp['status'] == 2) : ?>
+												<span class="label label-danger">Submit Pending</span>
+											<?php elseif($active_rfp['status'] == 3) : ?>
+												<span class="label label-info">Open</span>
+											<?php elseif($active_rfp['status'] == 4) : ?>
+												<span class="label label-warning">Waiting For Doctor Approval</span>	
+											<?php elseif($active_rfp['status'] == 5) : ?>
+												<span class="label label-dark-blue">In-Progress</span>			
+											<?php elseif($active_rfp['status'] == 6) : ?>
+												<span class="label label-success">Close</span>			
+											<?php endif; ?>
+										</td>
+										<td><?=$active_rfp['total_bid']?></td>
+										<td>
+											<?php if($active_rfp['treatment_plan_total'] != '' && $active_rfp['min_bid_amt'] != '') :?>
+												<?php $Total_save = 100 - round((($active_rfp['min_bid_amt']*100) / $active_rfp['treatment_plan_total']),2); ?>
+												<?php if($Total_save > 0) :?>
+													<span class="label label-success total_save">+<?=$Total_save?> %</span>
+												<?php else :?>
+													<span class="label label-danger total_save"><?=$Total_save?> %</span>
+												<?php endif; ?>
+											<?php else : ?>
+												N/A
+											<?php endif; ?>
+										</td>
+									</tr>
+									<!-- ======= For Bid Details ========= -->
+									<tr id="bid_data_<?=$key?>" class="bid_data">
+										<td></td>
+										<td colspan="6">
+											<table class="table table-hover table-bordered">
+												<thead>
+													<th>Avatar</th>
+													<th>Name</th>
+													<th>Rating</th>
+													<th>Bid Amount</th>
+													<th>% Saving</th>
+													<th>Distance (Miles.)</th>
+													<th>Action</th>
+												</thead>
+												<tbody>
+													<?php foreach($active_rfp['bid_data'] as $k=>$bid_data) :?> 
+														<tr>
+															<td>
+																<img src="<?php if($bid_data['avatar'] != '') 
+									                    		{ echo base_url('uploads/avatars/'.$bid_data['avatar']); } 
+									                    	else 
+									                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar" width="40px" height="40px">		
+															</td>
+															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']))?>"><?=$bid_data['user_name']?></a></td>
+															<td>
+																<div class="star-rating">
+																    <span class="display_rating_<?=$key.'_'.$k?>"></span>
+																	<span class="avg_rating"><?=isset($bid_data['avg_rating'])?$bid_data['avg_rating']:'0'?> / 5.0 (<?=$bid_data['total_rating']?>)</span>
+																</div>
+															</td>
+															<!-- For Display Star Rating -->
+															<script>
+																$(".star-rating .display_rating_<?=$key.'_'.$k?>").rateYo({
+																	rating: <?=isset($bid_data['avg_rating'])?$bid_data['avg_rating']:'0'?>,
+																	starWidth : "20px",
+																	readOnly: true
+																});
+															</script>
+															<!-- End Display Star Rating -->		
+															<td><?=$bid_data['amount']?></td>
+															<td>
+																<?php if($active_rfp['treatment_plan_total'] != '' && $bid_data['amount'] != '') :?>
+																	<?php $Total_save = 100 - round((($bid_data['amount']*100) / $active_rfp['treatment_plan_total']),2); ?>
+																	<?php if($Total_save > 0) :?>
+																		<span class="label label-success total_save">+<?=$Total_save?> %</span>
+																	<?php else :?>
+																		<span class="label label-danger total_save"><?=$Total_save?> %</span>
+																	<?php endif; ?>
+																<?php else : ?>
+																	N/A
+																<?php endif; ?>
+															</td>
+															<td><?=round($bid_data['distance'],2)?></td>
+															<td>
+																<?php if($active_rfp['status'] == 3) : ?> <!-- 3 Means (Open)  Agent Approve RFP -->
+																	<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['id']))?>" class="label label-info rfp-price confirm_winner" title="Choose Winner" ><i class="fa fa-trophy"></i></a> 
+																<?php endif; ?>
+
+																<!-- Add Condition For Cancel Winner Doctor (RFP status waiting for approval (4) && bid status (2) winner then display)-->
+																<?php if($active_rfp['status'] == 4 && $bid_data['status'] == 2) :?>
+																	<a href="<?=base_url('rfp/cancel_winner_doctor/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['id']))?>" class="label label-danger rfp-price cancel_winner" title="Cancel Winner"><i class="fa fa-user-times"></i></a>
+																<?php endif; ?>
+
+																<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
+																<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
+																	<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>,<?=$k?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
+																	<!-- Display all Message button (If Chat started b/w doctor & patient)-->
+																	<?php if($bid_data['is_chat_started'] == 1) :?>
+																		<a href="<?=base_url('messageboard/message/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['doctor_id']))?>" class="label label-info rfp-price" title="View Mail"><i class="fa fa-eye"></i></a> 	
+																	<?php endif; ?>
+																	<!-- End all Message button-->
+																<?php endif; ?>
+																<!-- End Message & Review Button-->	
+
+															</td>
+														</tr>	
+													<?php endforeach;?>
+												</tbody>	
+											</table>
+										</td>
+									</tr>
+									<!-- =======End For Bid Details ============ -->
+								<?php endforeach; ?>
+								<tr>
+									<td colspan="7">
+										<a class="btn btn-3d btn-sm btn-reveal btn-success pull-right show_more">
+											<i class="fa fa-arrow-circle-down"></i><span>Show More</span>
+										</a>
+										<a class="btn btn-3d btn-sm btn-reveal btn-success pull-right show_less">
+											<i class="fa fa-arrow-circle-up"></i><span>Hide</span>
+										</a>	
+									</td>
+								</tr>	
+							<?php else :?>
+								<tr>
+									<td colspan="7">No Active RFP</td>
+								</tr>	
+							<?php endif; ?>	
+						</tbody>	
+					</table>	
+				</div>	
+			</div>
+		</div>		
+		<!-- End Active RFP For this patient Table -->
+
 
 		<!-- Payment Table -->
 		<div class="row">
@@ -147,8 +323,10 @@
 										<?php elseif($list['rfp_status'] == 3) : ?>
 											<span class="label label-info">Open</span>
 										<?php elseif($list['rfp_status'] == 4) : ?>
-											<span class="label label-warning">In-Progress</span>			
+											<span class="label label-warning">Waiting For Doctor Approval</span>	
 										<?php elseif($list['rfp_status'] == 5) : ?>
+											<span class="label label-dark-blue">In-Progress</span>			
+										<?php elseif($list['rfp_status'] == 6) : ?>
 											<span class="label label-success">Close</span>			
 										<?php endif; ?>
 									</td>
@@ -238,10 +416,93 @@
 <script>
 function refund_request(key){
 	var rfp_data = <?php echo json_encode($rfp_list); ?>;
-	console.log(rfp_data[key]);
 	$("#rfp_id").val(rfp_data[key]['rfp_id']);
 	$("#payment_id").val(rfp_data[key]['payment_id']);
 	$("#rfp_title").val(rfp_data[key]['rfp_title']);
 	$("#refund_amt").val(rfp_data[key]['paid_price']);
 }
+
+
+/* -------- Show/Hide Column ------- */
+$(".active_rfp .show_less").hide();
+$(".active_rfp .active_rfp_data").hide();
+$(".active_rfp .show_more").click(function(e) {
+	$(".active_rfp .active_rfp_data").show();
+	$(".active_rfp .show_more").hide();
+	$(".active_rfp .show_less").show();
+	$(".active_rfp .bid_data").hide(); // For Sub table hide
+	$(".active_rfp .hide_bid_data").hide();
+	$(".active_rfp .view_bid_data").show();
+});
+
+$(".active_rfp .show_less").click(function(e) {
+	$(".active_rfp .active_rfp_data").hide();
+	$(".active_rfp .show_more").show();
+	$(".active_rfp .show_less").hide();
+	$(".active_rfp .bid_data").hide(); // For Sub table hide
+	$(".active_rfp .hide_bid_data").hide();
+	$(".active_rfp .view_bid_data").show();
+});
+
+
+
+//------------------- Hide/Show Sub Table for Active RFP -----------------
+$(".active_rfp .bid_data").hide();
+$(".active_rfp .hide_bid_data").hide();
+
+$(".active_rfp .view_bid_data").click(function(e) {
+	var id = $(this).data('id');
+	$(".bid_data").hide();
+	$("#bid_data_"+id).show();
+	$(".active_rfp .hide_bid_data").hide();
+	$(".active_rfp .view_bid_data").show();
+	$(".active_rfp #view_bid_data_"+id).hide();
+	$(".active_rfp #hide_bid_data_"+id).show();
+
+});
+
+$(".active_rfp .hide_bid_data").click(function(e) {
+	var id = $(this).data('id');
+	$(".bid_data").hide();
+	$(".active_rfp #view_bid_data_"+id).show();
+	$(".active_rfp #hide_bid_data_"+id).hide();
+});
+//------------------- End Hide/Show Sub Table for Active RFP -----------------
+
+
+
+//-------------- For Winner Select & Cancel -------------------------
+$(".confirm_winner").click(function(e) {
+	e.preventDefault();
+	var lHref = $(this).attr('href');
+	bootbox.confirm('Are you sure to winner doctor for this rfp ?' ,function(res){
+		if(res){
+			window.location.href = lHref;
+		}
+	});	
+});
+	
+
+$(".cancel_winner").click(function(e) {
+	e.preventDefault();
+	var lHref = $(this).attr('href');
+	bootbox.confirm('Are you sure to cancel winner for this rfp ?' ,function(res){
+		if(res){
+			window.location.href = lHref;
+		}
+	});	
+});
+
+//-------------- End For Winner Select & Cancel -------------------------
+
+
+//---------------- Send Message ------------------
+function send_msg(rfp_key,bid_key){
+	var rfp_data = <?php echo json_encode($active_rfp_list); ?>;
+	$("#rfp_id").val(rfp_data[rfp_key]['id']);
+	$("#rfp_title").val(rfp_data[rfp_key]['title']);
+	$("#rfp_bid_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['id']);
+	$("#to_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['doctor_id']);
+}
+//---------------- End Send Message ------------------
 </script>

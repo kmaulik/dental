@@ -66,7 +66,7 @@
 							<?php elseif($record['status'] == 4) : ?>
 								<span class="label label-warning">Waiting For Doctor Approval</span>	
 							<?php elseif($record['status'] == 5) : ?>
-								<span class="label label-warning">In-Progress</span>			
+								<span class="label label-dark-blue">In-Progress</span>			
 							<?php elseif($record['status'] == 6) : ?>
 								<span class="label label-success">Close</span>			
 							<?php endif; ?>
@@ -77,7 +77,7 @@
 								<i class="fa fa-eye"></i><span>View</span>
 							</a>
 							<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit & delete option -->
-							<?php if($record['status'] == 0 || $record['status'] == 1 || $record['status'] == 2) : ?>
+							<?php if($record['status'] <= 2) : ?>
 								<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green">
 									<i class="fa fa-edit"></i><span>Edit</span>
 								</a>

@@ -35,6 +35,8 @@ class Dashboard extends CI_Controller {
 
             $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps
+            //qry(1);
+            //pr($data['rfp_data_fav'],1);die;
 
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
 
@@ -44,6 +46,8 @@ class Dashboard extends CI_Controller {
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
+            $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
+            //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
                 

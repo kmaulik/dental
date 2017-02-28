@@ -1,5 +1,12 @@
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/tables/datatables/datatables.min.js"; ?>"></script>
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/selects/select2.min.js"; ?>"></script>
+
+<style>
+.label-dark-blue{
+        background: #4765a0 !important;
+    }
+</style>
+
 <!-- Page header -->
 <div class="page-header page-header-default">
     <div class="page-header-content">
@@ -96,8 +103,10 @@ $(function () {
                    } else if (full.status == 3) {
                     status += '<span class="label label-info">Open</span>';
                    } else if (full.status == 4) {
-                    status += '<span class="label label-warning">In-Progress</span>';
+                    status += '<span class="label label-warning">Waiting For Doctor Approval</span>';
                    } else if (full.status == 5) {
+                    status += '<span class="label label-dark-blue">In-Progress</span>';
+                   }else if (full.status == 6) {
                     status += '<span class="label label-success">Close</span>';
                    }
                 return status;

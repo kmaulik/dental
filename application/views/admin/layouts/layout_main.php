@@ -132,12 +132,22 @@
                                         </li> 
                                     <?php } ?>  
 
-                                     <!-- Treatment Category Menu -->
+                                     <!-- Payment Transaction Menu -->
                                     <?php if($role_id != 3) { ?>
                                         <li class="<?php echo ($controller == 'payment_transaction') ? 'active' : ''; ?>">
                                             <a href="<?php echo base_url() . 'admin/payment_transaction'; ?>">
                                                 <i class="icon-coins"></i>
                                                 <span>Payment Transaction</span>
+                                            </a>
+                                        </li> 
+                                    <?php } ?>  
+
+                                      <!-- Payment Refund Menu -->
+                                    <?php if($role_id != 3) { ?>
+                                        <li class="<?php echo ($controller == 'refund') ? 'active' : ''; ?>">
+                                            <a href="<?php echo base_url() . 'admin/refund'; ?>">
+                                                <i class="icon-transmission"></i>
+                                                <span>Payment Refund</span>
                                             </a>
                                         </li> 
                                     <?php } ?>  
