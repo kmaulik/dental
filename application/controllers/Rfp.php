@@ -6,6 +6,7 @@ class Rfp extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
+		$this->load->helper(['paypal_helper']);	
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
 	}	
@@ -962,7 +963,7 @@ class Rfp extends CI_Controller {
     public function validate_zipcode($zipcode,$data=''){
         if($zipcode != '')
         {
-            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+            $str = 'https://maps.googleapis.com/maps/api/geocode/json?key='.GOOGLE_MAP_API.'&components=postal_code:'.$zipcode.'&sensor=false';
             $res = $this->unirest->get($str);
             $res_arr = json_decode($res->raw_body,true);
             // If $data is not null means return a longitude and latitude array ohter wise only status True/False
@@ -1014,11 +1015,57 @@ class Rfp extends CI_Controller {
 				$this->paypal_payment(); // Redirect to Paypal
 			}else{
 				redirect('rfp/complete_transaction'); // Skip paypal and follow next step after paypal
-			}
-			
+			}			
 			//------ End Calculate the discount based on coupan code ----
 		}
     }
+
+    public function make_doctor_payment(){
+    	
+    	$paymentAmount = 0;
+        $currencyCodeType = "USD";
+        $paymentType = "Sale";        
+        $returnURL = base_url().'rfp/make_doctor_payment_success';
+       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
+
+        //-------------------------------------------------
+        $resArray = CallShortcutExpressCheckout($paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL);
+
+        // pr($resArray,1);
+        $ack = strtoupper($resArray["ACK"]);
+    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+            RedirectToPayPal($resArray["TOKEN"]);
+        } else {
+        	pr('ERROR');
+        }
+    }	
+
+    public function make_doctor_payment_success(){
+    	$data = array();
+        $PayerID = $this->input->get('PayerID');
+        $data['back'] = base_url().'test';
+        $data['subscribe'] = base_url().'test/subscribe';
+
+        if (isset($_REQUEST['token'])) {
+        	$token = $_REQUEST['token'];            
+        	$ret_arr = CreateBillingAgreement($token);
+
+        	$all_details = get_detail_billing_agreement($ret_arr['BILLINGAGREEMENTID']);
+        	// $cancel_arr = cancel_billing_agreement();
+        	
+        	pr($all_details);
+            pr($ret_arr);
+        	// pr($cancel_arr);
+
+        }else{
+
+        }
+    }
+
+    public function make_doctor_payment_error(){
+    	
+    }
+
 
     //------------ Paypal Payment ---
     public function paypal_payment(){

@@ -48,9 +48,7 @@ class Test extends CI_Controller {
 
 	public function review() {
         $data = array();
-
         $PayerID = $this->input->get('PayerID');
-
         $data['back'] = base_url().'test';
         $data['subscribe'] = base_url().'test/subscribe';
 
@@ -71,44 +69,14 @@ class Test extends CI_Controller {
                 echo "RefrenceTransaction : <br>";
                 pr($retttt,1);
             }
-            
-            // $express_ret = DoExpressCheckoutPayment($PayerID,$token);            
-            //pr($retttt);
+
         }
 
-        // If the Request object contains the variable 'token' then it means that the user is coming from PayPal site.
-        if ($token != "") {
-            $resArray = GetShippingDetails($token);
-            $ack = strtoupper($resArray["ACK"]);
-            if ($ack == "SUCCESS" || $ack == "SUCESSWITHWARNING") {
-            	$data['confirm'] = base_url().'test/confirm';
-                $this->load->view('test/testreview', $data);
-            }else{
-            	echo "ELSE";
-            }
-        } // END of IF Condition for the $token
-
     }
-
-    public function confirm() {
-    	$data = array();
-        $data['back'] = base_url().'test';
-        $data['subscribe'] = base_url().'test/subscribe';
-        $finalPaymentAmount = $this->subscription_price;
-        $resArray1 = ConfirmPayment($finalPaymentAmount);
-        $resArray = CreateRecurringPaymentsProfile();        
-        $ack = strtoupper($resArray["ACK"]);
-        if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-	       pr($resArray);
-        }else{
-            pr('ERRROR');
-        }
-    }
-
+ 
     public function get_detail(){
         $res = GetRecurringPaymentsProfileDetails('B-0GP68457DN280314Y');
         pr($res);
-
     }
 
     public function new_test(){
@@ -122,17 +90,7 @@ class Test extends CI_Controller {
         $data=GetTransactionDetails($token);
         pr($data,1);
     }
-    
-    public function dhk_test(){
-        $test=DoReferenceTransaction("B-0GP68457DN280314Y");
-        pr($test,1);
-    }
-
-    /* ------- Cancel Billing Agreement ------------- */
-    public function BillAgreementUpdate($REFERENCEID='B-34X69770KM776381D'){
-        $cancel_bill=BillAgreementUpdate($REFERENCEID);
-        pr($cancel_bill,1);
-    }
+            
 }
 
 /* End of file Test.php */

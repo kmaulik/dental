@@ -35,11 +35,12 @@ class Dashboard extends CI_Controller {
 
             $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps
+            
+            // qry();
+            // pr($data['rfp_data_fav'],1);
 
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
 
-            // qry();
-            // pr($data['won_rfps'],1);
 
             $data['subview']="front/doctor_dashboard";
 
@@ -274,7 +275,7 @@ class Dashboard extends CI_Controller {
     public function validate_zipcode($zipcode,$data=''){
         if($zipcode != '')
         {
-            $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
+            $str = 'https://maps.googleapis.com/maps/api/geocode/json?key='.GOOGLE_MAP_API.'&components=postal_code:'.$zipcode.'&sensor=false';
             $res = $this->unirest->get($str);
             $res_arr = json_decode($res->raw_body,true);
             // If $data is not null means return a longitude and latitude array ohter wise only status True/False
@@ -306,7 +307,7 @@ class Dashboard extends CI_Controller {
         $this->load->view('front/layouts/layout_main',$data);
     }
 
-     /* @DHK Refund Payment Request
+    /* @DHK Refund Payment Request
     /* Param 1 : User Id
     */
     public function refund_request(){

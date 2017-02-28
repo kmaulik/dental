@@ -74,124 +74,30 @@
 	'		cancelURL:			the page where buyers return to when they cancel the payment review on PayPal
 	'--------------------------------------------------------------------------------------------------------------------------------------------	
 	*/
-	function CallShortcutExpressCheckout( $paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL) 
-	{
+	function CallShortcutExpressCheckout( $paymentAmount, $currencyCodeType, $paymentType,
+										  $returnURL, $cancelURL , $desc = 'Dental Payments'){
 		global $CI;	
 		//------------------------------------------------------------------------------------------------------------------------------------
 		// Construct the parameter string that describes the SetExpressCheckout API call in the shortcut implementation
 
 		$nvpstr="&AMT=". $paymentAmount;
 		$nvpstr = $nvpstr . "&PAYMENTACTION=" . $paymentType;
-		$nvpstr = $nvpstr . "&BILLINGAGREEMENTDESCRIPTION=".urlencode("Inventory Subscription($" . SUBSCRIPTION_PRICE . " monthly)");
+		$nvpstr = $nvpstr . "&BILLINGAGREEMENTDESCRIPTION=".urlencode($desc);
 		$nvpstr = $nvpstr . "&BILLINGTYPE=MerchantInitiatedBillingSingleAgreement";
 		$nvpstr = $nvpstr . "&RETURNURL=" . $returnURL;
 		$nvpstr = $nvpstr . "&CANCELURL=" . $cancelURL;
 		$nvpstr = $nvpstr . "&CURRENCYCODE=" . $currencyCodeType;
-		
-		//echo $nvpstr;exit;
-
-		$_SESSION["currencyCodeType"] = $currencyCodeType;	  
-		$_SESSION["PaymentType"] = $paymentType;
-		
-		$data = array(
-					'currencyCodeType' => $currencyCodeType,
-					'PaymentType' => $paymentType,
-				);
-		$CI->session->set_userdata($data);
-
+		$nvpstr = $nvpstr . "&NOSHIPPING=1";		
+				 
 		//'--------------------------------------------------------------------------------------------------------------- 
 		//' Make the API call to PayPal
 		//' If the API call succeded, then redirect the buyer to PayPal to begin to authorize payment.  
 		//' If an error occured, show the resulting errors
 		//'---------------------------------------------------------------------------------------------------------------
 		$resArray=hash_call("SetExpressCheckout", $nvpstr);
-		//echo $nvpstr;
-		//print_r($resArray);exit;
-		
-		$ack = strtoupper($resArray["ACK"]);
-		if($ack=="SUCCESS" || $ack=="SUCCESSWITHWARNING")
-		{
-			$token = urldecode($resArray["TOKEN"]);
-			$_SESSION['TOKEN']=$token;
-			$data = array(
-					'TOKEN' => $token,
-				);
-			$CI->session->set_userdata($data);
-		}
-
 	    return $resArray;
 	}
 
-	/*   
-	'-------------------------------------------------------------------------------------------------------------------------------------------
-	' Purpose: 	Prepares the parameters for the SetExpressCheckout API Call.
-	' Inputs:  
-	'		paymentAmount:  	Total value of the shopping cart
-	'		currencyCodeType: 	Currency code value the PayPal API
-	'		paymentType: 		paymentType has to be one of the following values: Sale or Order or Authorization
-	'		returnURL:			the page where buyers return to after they are done with the payment review on PayPal
-	'		cancelURL:			the page where buyers return to when they cancel the payment review on PayPal
-	'		shipToName:		the Ship to name entered on the merchant's site
-	'		shipToStreet:		the Ship to Street entered on the merchant's site
-	'		shipToCity:			the Ship to City entered on the merchant's site
-	'		shipToState:		the Ship to State entered on the merchant's site
-	'		shipToCountryCode:	the Code for Ship to Country entered on the merchant's site
-	'		shipToZip:			the Ship to ZipCode entered on the merchant's site
-	'		shipToStreet2:		the Ship to Street2 entered on the merchant's site
-	'		phoneNum:			the phoneNum  entered on the merchant's site
-	'--------------------------------------------------------------------------------------------------------------------------------------------	
-	*/
-	function CallMarkExpressCheckout( $paymentAmount, $currencyCodeType, $paymentType, $returnURL, 
-									  $cancelURL, $shipToName, $shipToStreet, $shipToCity, $shipToState,
-									  $shipToCountryCode, $shipToZip, $shipToStreet2, $phoneNum
-									) 
-	{
-		//------------------------------------------------------------------------------------------------------------------------------------
-		// Construct the parameter string that describes the SetExpressCheckout API call in the shortcut implementation
-		
-		$nvpstr="&PAYMENTREQUEST_0_AMT=". $paymentAmount;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_PAYMENTACTION=" . $paymentType;
-		$nvpstr = $nvpstr . "&RETURNURL=" . $returnURL;
-		$nvpstr = $nvpstr . "&CANCELURL=" . $cancelURL;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_CURRENCYCODE=" . $currencyCodeType;
-		$nvpstr = $nvpstr . "&ADDROVERRIDE=1";
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTONAME=" . $shipToName;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOSTREET=" . $shipToStreet;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOSTREET2=" . $shipToStreet2;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOCITY=" . $shipToCity;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOSTATE=" . $shipToState;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE=" . $shipToCountryCode;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOZIP=" . $shipToZip;
-		$nvpstr = $nvpstr . "&PAYMENTREQUEST_0_SHIPTOPHONENUM=" . $phoneNum;
-		
-		$_SESSION["currencyCodeType"] = $currencyCodeType;	  
-		$_SESSION["PaymentType"] = $paymentType;
-		$data = array(
-					'currencyCodeType' => $currencyCodeType,
-					'PaymentType' => $paymentType,
-				);
-		$this->session->set_userdata($data);
-
-		//'--------------------------------------------------------------------------------------------------------------- 
-		//' Make the API call to PayPal
-		//' If the API call succeded, then redirect the buyer to PayPal to begin to authorize payment.  
-		//' If an error occured, show the resulting errors
-		//'---------------------------------------------------------------------------------------------------------------
-	    $resArray=hash_call("SetExpressCheckout", $nvpstr);
-		$ack = strtoupper($resArray["ACK"]);
-		if($ack=="SUCCESS" || $ack=="SUCCESSWITHWARNING")
-		{
-			$token = urldecode($resArray["TOKEN"]);
-			$_SESSION['TOKEN']=$token;
-			$data = array(
-					'TOKEN' => $token,
-				);
-			$this->session->set_userdata($data);
-		}
-		   
-	    return $resArray;
-	}
-	
 	/*
 	'-------------------------------------------------------------------------------------------
 	' Purpose: 	Prepares the parameters for the GetExpressCheckoutDetails API Call.
@@ -660,21 +566,20 @@
 	}
 
 	//---------------- DoReferenceTransaction @DHK --------
-	function DoReferenceTransaction($bill_id){
+	function DoReferenceTransaction($bill_id,$amt='70'){
+		
 		$nvpstr ="&VERSION=86";
-		$nvpstr .="&AMT=400";
+		$nvpstr .="&AMT=".$amt;
 		$nvpstr .="&CURRENCYCODE=USD";		
 		$nvpstr .="&PAYMENTACTION=SALE";
-		$nvpstr .="&REFERENCEID=".$bill_id;
-		
-		//---------------------------------------------------------------------------
-		$resArray=hash_call("DoReferenceTransaction",$nvpstr);
-		//$ack = strtoupper($resArray["ACK"]);
+		$nvpstr .="&REFERENCEID=".$bill_id;		
+
+		$resArray=hash_call("DoReferenceTransaction",$nvpstr);		
 		return $resArray;
 	}
 
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
-	function BillAgreementUpdate($REFERENCEID,$STATUS=''){
+	function get_detail_billing_agreement($REFERENCEID,$STATUS=''){
 
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&REFERENCEID=".$REFERENCEID;
@@ -682,9 +587,18 @@
 		$nvpstr .="&BILLINGAGREEMENTSTATUS=".$STATUS;
 		$resArray=hash_call("BillAgreementUpdate",$nvpstr);
 		return $resArray;
-
 	}
 
+	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
+	function cancel_billing_agreement($REFERENCEID='B-34X69770KM776381D'){
 
+		$nvpstr ="&VERSION=86";
+		$nvpstr .="&REFERENCEID=".$REFERENCEID;
+		$nvpstr .="&BILLINGAGREEMENTSTATUS=Canceled";		
+		$resArray=hash_call("BillAgreementUpdate",$nvpstr);
+		return $resArray;
+	}
+
+	//B-34X69770KM776381D
 
 ?>

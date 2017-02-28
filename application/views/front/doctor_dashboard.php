@@ -139,16 +139,12 @@
 				?>
 					<div class="list-group success square no-side-border search_rfp">
 						<?php foreach($rfp_data_fav as $record) :?>
-							<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" 
+							<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" 
 							   class="list-group-item a_fav_rfp <?php if($i > 2){ echo 'hide'; }  ?> ">
-								<div class="rfp-left">
-									<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
-										<!-- Means Favorite RFP -->
-										<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>
-									<?php else : ?>
-										<!-- Means Not Favorite RFP -->
-										<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>
-									<?php endif; ?>
+								<div class="rfp-left">									
+									<!-- Means Favorite RFP -->
+									<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>																										
+									
 									<img src="<?php if($record['avatar'] != '') 
 			                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
 			                    	else 
@@ -190,7 +186,7 @@
 		
 		<!-- Doctor's All WON RFP -->
 		<div class="row">
-			<?php pr($won_rfps); ?>
+			<?php //pr($won_rfps); ?>
 			<div class="col-md-12">
 				<h4> Won RFPs </h4>
 				<hr/>
@@ -201,27 +197,63 @@
 						<thead>
 							<tr>
 								<th>RFP Title</th>
-								<th>Patient Name</th>
+								<!-- <th>Patient Name</th> -->
 								<th>Patient Email</th>
 								<th>Dentition Type</th>
-								<th>Price</th>
-								<th>Refund Status</th>
+								<th>Treatment Plan Amount</th>
+								<th>Bid Price</th>
+								<th>Status</th>
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php if(!empty($won_rfps)) { ?>
-								<?php foreach($won_rfps as $w_rfp) { ?>
+							<?php 
+								if(!empty($won_rfps)) { 
+									foreach($won_rfps as $w_rfp) {
+										
+										$amt = $w_rfp['amount']; // Bid price
+										
+										$percentage = 10; 
+										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
+										
+										$is_second_due = 1;										
+										$due_1 = 45;
+										$due_2 = 0;
+
+										if($payable_price > 45){
+											$due_1 = 45;
+											$due_2 = $payable_price - 45;
+											$is_second_due = 1;
+										}else{
+											$due_1 = 45;
+											$is_second_due = 0;
+										}
+							?>
 									<tr>
-										<td><?php echo $w_rfp['title']; ?></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
 										<td>
-											<a class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="modal">
-												<i class="fa fa-money"></i><span>Action</span>
+											<?php echo $w_rfp['title']; ?>
+										</td>
+										<!-- <td>
+											<?php echo ucfirst($w_rfp['fname']).' '.$w_rfp['lname']; ?>
+										</td> -->
+										<td>
+											<?php echo $w_rfp['email_id']; ?>
+										</td>
+										<td><?php echo ucfirst($w_rfp['dentition_type']); ?></td>
+										<td><?php echo ucfirst($w_rfp['treatment_plan_total']); ?></td>
+										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
+										<td>
+											
+										</td>
+										<td>
+											<a class="btn btn-3d btn-xs btn-reveal btn-green"
+											   data-is-second-due="<?php echo $is_second_due; ?>"
+											   data-due-one="<?php echo $due_1; ?>"
+											   data-due-two="<?php echo $due_2; ?>"
+											   data-mybid="<?php echo $amt; ?>"
+											   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
+											   onclick="show_modal_doctor(this)">
+												<i class="fa fa-money"></i><span>Proceed </span>
 											</a>
 										</td>
 									</tr>
@@ -420,9 +452,96 @@
 		</div>
 	</div>
 </div>
-<!-- ================== /Modal Popup For Refund Payment ========================= -->				
+<!-- ================== /Modal Popup For Refund Payment ========================= -->		
 
-<script>
+
+<!-- ==================== Modal Popup For Apply Promotional Code ========================= -->
+<div class="modal fade doctor_payment" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Proceed with your payment for won RFP</h4>
+			</div>
+			<form action="<?=base_url('rfp/make_doctor_payment')?>" method="POST" id="form_doctor_payment">							
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<h4>
+									Your Bid : $ <span class="my_bid"></span>
+								</h4>
+							</div>	
+						</div>
+
+						<div class="col-sm-8 margin-bottom-10">	
+														
+							<span class="clearfix due_1">
+								<span class="pull-right due_1_price">$0.00</span>
+								<span class="pull-left">Due payment 1 (will deduct instantly):</span>
+							</span>
+
+							<span class="clearfix due_2">
+								<span class="pull-right due_2_price">$0.00</span>
+								<span class="pull-left">Due payment 2 (will deduct after 45 days):</span>
+							</span>
+							
+							<hr>
+
+							<span class="clearfix">
+								<span class="pull-right size-20 total-price">									
+									
+								</span>
+								<strong class="pull-left">TOTAL:</strong>
+							</span>																	
+						</div>
+
+						<br/>
+						<br/>
+
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Coupan Code</label>
+								<div class="fancy-file-upload fancy-file-success">
+									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
+									<span class="button" id="apply-code">Apply Code</span>
+								</div>
+								<span class="coupan-msg"></span>	
+							</div>
+						</div>
+
+						<!-- <div class="col-sm-12">
+							<div class="form-group">
+								<h4>Final Price : $ <span class="final-prices"><?=config('patient_fees')?></span></h4>
+							</div>
+						</div>	 -->					
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="hidden" name="due_1" id="due_1_id">
+							<input type="hidden" name="due_2" id="due_2_id">
+							<input type="hidden" name="rfp_id" id="rfp_id_frm">
+							<input type="submit" name="submit" class="btn btn-info" value="Make Payment">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>	
+					</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+
+<!-- ================== /Modal Popup For Place a Bid ========================= -->		
+
+<script type="text/javascript">
+
 	function refund_request(key){
 		var rfp_data = <?php echo json_encode($rfp_list); ?>;
 		console.log(rfp_data[key]);
@@ -454,8 +573,8 @@
 			var data1=$(this);
 			if($.inArray('unfavorite_rfp',classNames) != '-1')
 			{
-				bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
-					if(res){
+				// bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
+				// 	if(res){
 						$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 							if(data){
 								data1.removeClass('unfavorite_rfp');
@@ -463,12 +582,12 @@
 								$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
 							}
 						});
-					}	
-				});
+				// 	}	
+				// });
 			}
 			else{
-				bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
-					if(res){	
+				// bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
+				// 	if(res){	
 						$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 							if(data){
 								data1.removeClass('favorite_rfp');
@@ -477,9 +596,98 @@
 							
 							}
 						});
-					}
-				});
+				// 	}
+				// });
 			}
 		return false;
 	});
+	
+	function show_modal_doctor(obj){
+
+		var is_second_due= $(obj).data('is-second-due');
+		var due_1= $(obj).data('due-one');
+		var due_2= $(obj).data('due-two');
+		var mybid= $(obj).data('mybid');
+		var rfp_id = $(obj).data('rfpid');
+
+		var total_payment = parseFloat(due_1) + parseFloat(due_2);
+
+		$('.my_bid').html(mybid);
+		$('.due_1_price').html('$ '+due_1);
+		$('.due_2_price').html('$ '+due_2);
+
+		$('#due_1_id').val(due_1);
+		$('#due_2_id').val(due_2);
+		$('#rfp_id_frm').val(rfp_id);
+
+		$('.total-price').html('$ '+total_payment);
+
+		$('.doctor_payment').modal('show');
+
+
+		console.log(is_second_due);
+		console.log(due_1);
+		console.log(due_2);
+		console.log(mybid);
+	}
+
+	$("#apply-code").click(function(){
+		$(".coupan-msg").html('');
+		var coupan_code = $("#coupan_code").val();
+		if(coupan_code != ''){
+			
+			var discount_amt=0;
+
+			$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
+
+				if(data != 0){
+
+					// If coupon code is limit is exceed than allowed no of times
+					if(data['per_user_limit'] > data['total_apply_code']){
+
+						var due_1 = $('#due_1_id').val();
+						var due_2 = $('#due_2_id').val();
+						var total = parseFloat(due_1) + parseFloat(due_2);
+
+						discount_amt = 	((total * data['discount'])/100);
+						var after_discount = total - discount_amt;
+
+						if(after_discount > 45){
+							due_1 = 45;
+							due_2 = after_discount - 45
+						}else{
+							due_1 = after_discount;
+							due_2 = 0
+						}			
+							
+						$('.due_1_price').html('$ '+due_1);
+						$('.due_2_price').html('$ '+due_2);
+
+						$('#due_1_id').val(due_1);
+						$('#due_2_id').val(due_2);
+
+						$('.total-price').html('$ '+after_discount);
+
+						console.log('Due=== '+ due_1);
+						console.log('Due=== '+ due_2);
+						console.log('final payment '+after_discount);
+
+						$(".coupan-msg").html("Coupon Code apply successfully");
+						$(".coupan-msg").css("color", "green");
+					}else{
+						$(".coupan-msg").html("Sorry, You've already applied this code.");
+						$(".coupan-msg").css("color", "red");
+					}
+				}else{
+					$(".coupan-msg").html("Invalid Coupon Code");
+					$(".coupan-msg").css("color", "red");
+				}
+
+			},"json");
+		}else{
+			$(".coupan-msg").html("Please Enter Coupon Code");
+			$(".coupan-msg").css("color", "red");	
+		}
+	});
+
 </script>

@@ -240,18 +240,15 @@ class Registration extends CI_Controller {
     /* Param 2 : for return array if null then return TRUE/FALSE(Optional)
     */
     public function validate_zipcode($zipcode,$data=''){
-        if($zipcode != '')
-        {
+        if($zipcode != ''){
             // $str = 'http://maps.googleapis.com/maps/api/geocode/json?components=postal_code:'.$zipcode.'&sensor=false';
-            $str = 'http://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw&components=postal_code:'.$zipcode.'&sensor=false';
+            $str = 'https://maps.googleapis.com/maps/api/geocode/json?key='.GOOGLE_MAP_API.'&components=postal_code:'.$zipcode.'&sensor=false';
             $res = $this->unirest->get($str);
-            $res_arr = json_decode($res->raw_body,true);
+            $res_arr = json_decode($res->raw_body,true);            
             // If $data is not null means return a longitude and latitude array ohter wise only status True/False
             if($data){
                 return $res_arr;
-            }
-            else
-            {
+            }else{
                 if($res_arr['status'] != 'OK' && !empty($zipcode)){
                     return FALSE;
                 }else if($res_arr['status'] == 'OK' && !empty($zipcode)) {

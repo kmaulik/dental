@@ -94,6 +94,8 @@ defined('TRAVEL_MIN_PRICE_PER_KM') OR define('TRAVEL_MIN_PRICE_PER_KM', 0.04); /
 
 defined('Asset_path') OR define('Asset_path', 'http://localhost/dental/');
 
+defined('GOOGLE_MAP_API') OR define('GOOGLE_MAP_API', 'AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw');
+
 defined('DEFAULT_IMAGE_PATH') OR define('DEFAULT_IMAGE_PATH', Asset_path . 'public/front/images/'); // highest automatically-assigned error code
 defined('DEFAULT_JS_PATH') OR define('DEFAULT_JS_PATH', Asset_path . 'public/front/js/'); // highest automatically-assigned error code
 defined('DEFAULT_CSS_PATH') OR define('DEFAULT_CSS_PATH', Asset_path . 'public/front/css/'); // highest automatically-assigned error code
