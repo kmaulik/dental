@@ -830,7 +830,7 @@ class Rfp extends CI_Controller {
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
         {
         	 //---------- Only Open RFP View By Doctor (Status = 3)-------
-        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status >= ' => '3'],'1');
+        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status = ' => '3'],'1');
         	 if(empty($data['record'])){
         	 	show_404();
         	 }
@@ -1342,6 +1342,26 @@ class Rfp extends CI_Controller {
         }else{
             echo 0;
         }
+    }
+
+    /**
+    * Extend RFP Validity for 7 Days by patient
+    **/
+    public function extend_rfp_validity($rfp_id){
+    	
+    	$rfp_data=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],1);
+    	$rfp_valid_date = date('Y-m-d', strtotime($rfp_data['rfp_valid_date']. ' + 7 days'));
+    	$rfp_array = [
+    					'rfp_valid_date'	=> $rfp_valid_date,
+    					'is_extended'		=>	1
+    				];
+    	$res=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$rfp_array);
+    	if($res){
+    		$this->session->set_flashdata('success', 'RFP Extended Successfully');
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Extend RFP, Please Try Again!');
+    	}
+    	redirect('rfp');
     }
 
 

@@ -91,10 +91,16 @@ class Rfp extends CI_Controller {
 
             $remarks = $this->input->post('remarks');
             $action = $this->input->post('action');
-            $message = $this->input->post('message');            
+            $message = $this->input->post('message'); 
+           //------ For Extend the RFP Date ------
+            $rfp_approve_date = NULL;
+            $rfp_valid_date = NULL;
+            //-------------------------------
             
             if($action == 'yes'){
                 $status='3'; 
+                $rfp_approve_date = date('Y-m-d');
+                $rfp_valid_date = date('Y-m-d', strtotime("+13 days"));
                 $noti_msg = $record['title'].' has been successfully approved. and it is live.';
             }else{ 
                 $status='2';
@@ -126,7 +132,7 @@ class Rfp extends CI_Controller {
             // pr($final_remark,1);
 
             $admin_remarks_str = json_encode($final_remark);
-            $this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>$status,'admin_remarks'=>$admin_remarks_str]);
+            $this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>$status,'admin_remarks'=>$admin_remarks_str,'rfp_approve_date'=>$rfp_approve_date,'rfp_valid_date' => $rfp_valid_date]);
             // ------------------------------------------------------------------------
             $noti_data = [
                             'from_id'=>$this->session->userdata('admin')['id'],

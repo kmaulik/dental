@@ -39,16 +39,14 @@
 						<?php endif; ?>
 						<!-- ====== End Check chat is started or not ====== -->
 						<!-- ====== For Check RFP status In-progress(Winner) or not ====== -->
-						<?php //if($record['status'] < 4 ) : ?> <!-- 4 Means In_Progress (Winner Doctor) For this RFP then hide bid button -->
-							<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="update_bid"><i class="fa fa-edit"></i> View Bid</a>
-						<?php //endif; ?>
+						<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="update_bid"><i class="fa fa-eye"></i> View Bid</a>
 						<!-- ====== End Check RFP status In-progress(Winner) or not ====== -->
 					<?php else : ?>
-						<!-- ====== For Check RFP status In-progress(Winner) or not ====== -->
-						<?php if($record['status'] < 4 ) : ?> <!-- 4 Means In_Progress (Winner Doctor) For this RFP then hide bid button -->
+						<!-- ====== For Check RFP status Open or not ====== -->
+						<?php if($record['status'] == 3 && $record['rfp_valid_date'] >= date("Y-m-d")) : ?> <!-- 3 Means Open RFP & rfp_valid_date >= date) For this RFP then show bid button -->
 							<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="place_bid"><i class="fa fa-plus"></i> Place Bid</a>
 						<?php endif; ?>
-						<!-- ====== End Check RFP status In-progress(Winner) or not ====== -->
+						<!-- ====== End Check RFP status Open or not ====== -->
 					<?php endif; ?>
 					<!-- ====== End Check Bid Already Placed Or Not  ====== -->
 					<a href="<?=base_url('rfp/search_rfp')?>" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back To RFP List</a>
