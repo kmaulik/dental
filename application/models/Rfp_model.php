@@ -188,7 +188,7 @@ class Rfp_model extends CI_Model {
         $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
-        $this->db->group_by('rb_bid.rfp_id');
+        $this->db->group_by('rfp.id');
         $res_data = $this->db->get()->num_rows();
         return $res_data;
     }
@@ -243,7 +243,7 @@ class Rfp_model extends CI_Model {
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
         $this->db->where('rfp.is_blocked','0');
-        $this->db->group_by('rb_bid.rfp_id');
+        $this->db->group_by('rfp.id');
         $this->db->order_by('rfp.id',$sort_data);
         $this->db->limit($limit,$offset);
         $query = $this->db->get();

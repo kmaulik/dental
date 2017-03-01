@@ -1,9 +1,3 @@
-<?php 	
-	$all_treatment_cat = [];
-	if(!empty($settings)){
-		$all_treatment_cat = $settings['treatment_cat'];
-	}	
-?>
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
@@ -39,90 +33,7 @@
 				<h1>WelCome To Dashboard</h1>	
 			</div>		
 		</div>
-		
-		<div class="row">
-
-			<div class="col-md-4">
-				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
-					<div class="front">
-						<div class="box1">
-							<div class="box-icon-title">
-								<i class="fa fa-tint"></i>
-								<h2>Fully Reposnive</h2>
-							</div>
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-						</div>
-					</div>
-
-					<div class="back">
-						<div class="box2">
-							<h4>BACK SIDE</h4>
-							<hr />
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-							<a href="#" class="btn btn-translucid btn-lg btn-block">PURCHASE NOW</a>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="col-md-4">
-
-				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
-					<div class="front">
-						<div class="box1">
-							<div class="box-icon-title">
-								<i class="fa fa-random"></i>
-								<h2>Clean Design</h2>
-							</div>
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-						</div>
-					</div>
-
-					<div class="back">
-						<div class="box2">
-							<h4>BACK SIDE</h4>
-							<hr />
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-							<a href="#" class="btn btn-translucid btn-lg btn-block">PURCHASE NOW</a>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="col-md-4">
-
-				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
-					<div class="front">
-						<div class="box1">
-							<div class="box-icon-title">
-								<i class="fa fa-cogs"></i>
-								<h2>Multipurpose</h2>
-							</div>
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-						</div>
-					</div>
-
-					<div class="back">
-						<div class="box2">
-							<h4>BACK SIDE</h4>
-							<hr />
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-							<a href="#" class="btn btn-translucid btn-lg btn-block">PURCHASE NOW</a>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-		
-
-		<div class="divider divider-color divider-center divider-short"><!-- divider -->
-			<i class="fa fa-cog"></i>
-		</div>
-
+						
 		<!-- Doctor's All favorite RFP -->
 		<div class="row">
 			
@@ -353,52 +264,6 @@
 		</div>	
 		<!-- Payment List -->
 
-		<div class="divider divider-color divider-center divider-short"><!-- divider -->
-			<i class="fa fa-cog"></i>
-		</div>
-		
-		<!-- Alert Doctor -->
-		<div class="row">
-			
-			<ul class="nav nav-tabs nav-top-border">
-				<li class="active">
-					<a href="#info" data-toggle="tab">
-						RFP Search Alert
-					</a>
-				</li>
-			</ul>
-			
-			<div class="tab-content margin-top-20">
-				<!-- PERSONAL INFO TAB -->
-				<div class="tab-pane fade in active" id="info">
-					<div class="form-group">
-						<label class="control-label">Treatment Category</label>							
-						<select name="treatment_cat[]" class="form-control select2" id="treatment_cat" multiple data-placeholder="Select Treatment Category">
-							<?php foreach($treatment_category as $t_cat) : ?>
-								<option value="<?=$t_cat['id']?>"<?php if(in_array($t_cat['id'], $all_treatment_cat)){ echo 'selected'; } ?>><?=$t_cat['title']?></option>
-							<?php endforeach; ?>
-						</select>	
-					</div>
-
-					<div class="margiv-top10">
-						<input type="hidden" name="test" value="" >
-						<a onclick="save_alert_data()" class="btn btn-primary"><i class="fa fa-check"></i> Save Changes </a>
-					</div>
-					
-					<hr/>
-					
-					<div class="form-group">
-						<label class="control-label">
-							<b> Note : </b> 
-						</label>
-						Save a RFp alert setting. Based on this setting you'll have notification in website and in email for yourselected search criteria.
-					</div>					
-				</div>
-				<!-- /PERSONAL INFO TAB -->				
-			</div>
-		</div>
-		<!-- EDNS here Alert -->
-
 	</div>
 </section>	
 
@@ -509,7 +374,7 @@
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 									<span class="button" id="apply-code">Apply Code</span>
 								</div>
-								<span class="coupan-msg"></span>	
+								<span class="coupan-msg"></span>
 							</div>
 						</div>
 

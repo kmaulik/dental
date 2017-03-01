@@ -816,8 +816,8 @@ class Rfp extends CI_Controller {
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
 		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data,$favorite_data);
-		//pr($data['rfp_data'],1);
-		//qry(1);
+		// pr($data['rfp_data']);
+		// qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
 	}
@@ -1022,44 +1022,109 @@ class Rfp extends CI_Controller {
 
     public function make_doctor_payment(){
     	
-    	$paymentAmount = 0;
-        $currencyCodeType = "USD";
-        $paymentType = "Sale";        
-        $returnURL = base_url().'rfp/make_doctor_payment_success';
-       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
+    	// pr($_POST,1);
+       	
+       	$user_data = $this->session->userdata('client');
+       	$user_id = $user_data['id'];
 
-        //-------------------------------------------------
-        $resArray = CallShortcutExpressCheckout($paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL);
+       	$rfp_id = $this->input->post('rfp_id');
+       	$coupan_code = $this->input->post('coupan_code');
+       	$due_1 = $this->input->post('due_1');
+       	$due_2 = $this->input->post('due_2');
 
-        // pr($resArray,1);
-        $ack = strtoupper($resArray["ACK"]);
-    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-            RedirectToPayPal($resArray["TOKEN"]);
-        } else {
-        	pr('ERROR');
-        }
+       	$this->session->unset_userdata('doc_payment_data');
+       	$this->session->set_userdata('doc_payment_data',
+       								['rfp_id'=>$rfp_id,'coupan_code'=>$coupan_code,
+       								 'due_1'=>$due_1,'due_2'=>$due_2]);
+
+       	// fetch data from billing agrrement table for user id
+    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1']); 
+
+    	// If empty create new agrrement with paypal
+    	if(empty($billing_data)){
+    		$returnURL = base_url().'rfp/make_doctor_payment_success';
+	       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
+	        //-------------------------------------------------
+	        $resArray = CallShortcutExpressCheckout($returnURL, $cancelURL);
+
+	        // pr($resArray,1);
+	        $ack = strtoupper($resArray["ACK"]);
+	    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+	        	RedirectToPayPal($resArray["TOKEN"]);
+	        } else {
+	        	pr('ERROR');
+	        }
+    	}else{
+
+    	}
+
+        
     }	
 
     public function make_doctor_payment_success(){
     	$data = array();
+
+    	$user_data = $this->session->userdata('client');
+    	$doc_payment_data = $this->session->userdata('doc_payment_data');
+    	
+    	$due_1 = $doc_payment_data['due_1'];
+    	$due_2 = $doc_payment_data['due_2'];
+
         $PayerID = $this->input->get('PayerID');
-        $data['back'] = base_url().'test';
-        $data['subscribe'] = base_url().'test/subscribe';
 
         if (isset($_REQUEST['token'])) {
-        	$token = $_REQUEST['token'];            
-        	$ret_arr = CreateBillingAgreement($token);
-
-        	$all_details = get_detail_billing_agreement($ret_arr['BILLINGAGREEMENTID']);
-        	// $cancel_arr = cancel_billing_agreement();
         	
-        	pr($all_details);
-            pr($ret_arr);
-        	// pr($cancel_arr);
+        	$token = $_REQUEST['token'];
+        	$ret_arr = CreateBillingAgreement($token); // Create Billing agreement return billing agreement ID        	
+        	$ack_agreement = strtoupper($ret_arr['ACK']);
 
+        	if ($ack_agreement == "SUCCESS" || $ack_agreement == "SUCCESSWITHWARNING") {
+        		$billing_id = $ret_arr['BILLINGAGREEMENTID'];				
+
+        		$all_details = get_detail_billing_agreement($billing_id);
+        		$all_details_json = json_encode($all_details);
+
+				$ins_data = array(
+        							'doctor_id'=>$user_data['id'],
+        							'billing_id'=>$billing_id,
+        							'rfp_id'=>decode($doc_payment_data['rfp_id']),
+        							'status'=>'1',
+        							'meta_arr'=>$all_details_json,
+        							'created_at'=>date('Y-m-d H:i:s')
+        						);
+	        	$this->Rfp_model->insert_record('billing_agreement',$ins_data);
+
+	        	$payment_due_1 = DoReferenceTransaction($billing_id,$due_1);
+
+	        	$this->session->set_flashdata('success','Agreement has been set successfully');
+
+	        	pr($payment_due_1);
+	        	pr($doc_payment_data);
+	        	pr($ins_data,1);	        	
+	        	// redirect();
+			}else{
+
+			}
         }else{
 
         }
+
+        	
+			
+
+        	// BILLINGAGREEMENTSTATUS
+
+        	// if(!empty($billing_data)){
+        	// 	// already make an agreement
+        	// }else{
+        	// 	// insert data into agreement
+        	
+        	// }
+        	
+
+        	        	
+            pr($ret_arr);        	
+        
     }
 
     public function make_doctor_payment_error(){

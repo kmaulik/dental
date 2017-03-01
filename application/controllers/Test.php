@@ -22,20 +22,14 @@ class Test extends CI_Controller {
 
 
 	public function subscribe(){
-
-       	$paymentAmount = $this->subscription_price;
         
-        $data = array('Payment_Amount' => $this->subscription_price );
-
-        $this->session->set_userdata($data);
-
         $currencyCodeType = "USD";
         $paymentType = "Sale";        
         $returnURL = base_url().'test/review';
         $cancelURL = base_url().'test/';
 
         //'-------------------------------------------------
-        $resArray = CallShortcutExpressCheckout($paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL);
+        $resArray = CallShortcutExpressCheckout($returnURL, $cancelURL);
 
         // pr($resArray,1);
         $ack = strtoupper($resArray["ACK"]);
@@ -86,11 +80,15 @@ class Test extends CI_Controller {
         pr($res,1);
     }
 
-    public function paypal_info($token='6GK839763R027910J'){
+    public function paypal_info($token='6XS994423T964234F'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }
-            
+    
+    public function mm(){
+        $all_details = get_detail_billing_agreement('B-19E41469TH776680D');
+        pr($all_details,1);
+    }           
 }
 
 /* End of file Test.php */

@@ -52,7 +52,7 @@
 
 	// 100$ 50$ x 2 
 	
-	define('SUBSCRIPTION_PRICE',80);
+	
 	//define('SUBSCRIPTION_PRICE', 1.35);
 
 	/* An express checkout transaction starts with a token, that
@@ -74,19 +74,18 @@
 	'		cancelURL:			the page where buyers return to when they cancel the payment review on PayPal
 	'--------------------------------------------------------------------------------------------------------------------------------------------	
 	*/
-	function CallShortcutExpressCheckout( $paymentAmount, $currencyCodeType, $paymentType,
-										  $returnURL, $cancelURL , $desc = 'Dental Payments'){
+	function CallShortcutExpressCheckout( $returnURL, $cancelURL , $desc = 'Dental Payments'){
 		global $CI;	
 		//------------------------------------------------------------------------------------------------------------------------------------
 		// Construct the parameter string that describes the SetExpressCheckout API call in the shortcut implementation
 
-		$nvpstr="&AMT=". $paymentAmount;
-		$nvpstr = $nvpstr . "&PAYMENTACTION=" . $paymentType;
+		$nvpstr="&AMT=0";
+		$nvpstr = $nvpstr . "&PAYMENTACTION=Sale";
 		$nvpstr = $nvpstr . "&BILLINGAGREEMENTDESCRIPTION=".urlencode($desc);
 		$nvpstr = $nvpstr . "&BILLINGTYPE=MerchantInitiatedBillingSingleAgreement";
 		$nvpstr = $nvpstr . "&RETURNURL=" . $returnURL;
 		$nvpstr = $nvpstr . "&CANCELURL=" . $cancelURL;
-		$nvpstr = $nvpstr . "&CURRENCYCODE=" . $currencyCodeType;
+		$nvpstr = $nvpstr . "&CURRENCYCODE=USD";
 		$nvpstr = $nvpstr . "&NOSHIPPING=1";		
 				 
 		//'--------------------------------------------------------------------------------------------------------------- 
@@ -453,9 +452,8 @@
 
 		//convrting NVPResponse to an Associative Array
 		$nvpResArray=deformatNVP($response);
-		$nvpReqArray=deformatNVP($nvpreq);
-		$_SESSION['nvpReqArray']=$nvpReqArray;
-
+		$nvpReqArray=deformatNVP($nvpreq);		
+		
 		if (curl_errno($ch)) 
 		{
 			// moving to display page to display curl errors
@@ -566,7 +564,7 @@
 	}
 
 	//---------------- DoReferenceTransaction @DHK --------
-	function DoReferenceTransaction($bill_id,$amt='70'){
+	function DoReferenceTransaction($bill_id,$amt='111'){
 		
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&AMT=".$amt;

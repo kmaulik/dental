@@ -12,39 +12,25 @@ class Dashboard extends CI_Controller {
     }	
 
     public function index() {
-        
-        
+                
         $data['rfp_list']=$this->Rfp_model->get_payment_list_user_wise();
-        
+
         $user_data = $this->session->userdata('client');
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
-
         
         // Means 4 Doctor Dashboard 
         if($this->session->userdata('client')['role_id'] == 4) {
-            
-            $all_settings = $data['db_data']['alert_search_setting'];
-            $data['settings'] = [];
-
-            if(!empty($all_settings)){
-                $data['settings'] = json_decode($all_settings,true);
-            }
-
+                        
             $where = 'is_deleted !=  1 and is_blocked != 1';
-
             $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps            
-            // qry();
-            // pr($data['rfp_data_fav'],1);
+            
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
-
-
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
-            $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
-            //pr($data['active_rfp_list'],1);
+            $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();            
             $data['subview']="front/patient_dashboard";
         }
                 
