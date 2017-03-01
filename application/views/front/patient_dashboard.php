@@ -207,7 +207,6 @@
 										<td colspan="8">
 											<table class="table table-hover table-bordered">
 												<thead>
-													<th>Avatar</th>
 													<th>Name</th>
 													<th>Rating</th>
 													<th>Bid Amount</th>
@@ -218,12 +217,6 @@
 												<tbody>
 													<?php foreach($active_rfp['bid_data'] as $k=>$bid_data) :?> 
 														<tr>
-															<td>
-																<img src="<?php if($bid_data['avatar'] != '') 
-									                    		{ echo base_url('uploads/avatars/'.$bid_data['avatar']); } 
-									                    	else 
-									                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar" width="40px" height="40px">		
-															</td>
 															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']))?>"><?=$bid_data['user_name']?></a></td>
 															<td>
 																<div class="star-rating">

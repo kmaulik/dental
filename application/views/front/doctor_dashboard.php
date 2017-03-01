@@ -369,7 +369,7 @@
 
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Coupan Code</label>
+								<label>Coupon Code</label>
 								<div class="fancy-file-upload fancy-file-success">
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 									<span class="button" id="apply-code">Apply Code</span>

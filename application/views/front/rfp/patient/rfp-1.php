@@ -261,7 +261,7 @@
 						slide: function(event, ui) {
 							$("#distance_travel").val(ui.value);
 							//------- For Tooltip -------
-							var curValue = ui.value || initialValue;
+							var curValue = ui.value;
 							var tooltip = '<div class="tooltip"><div class="tooltip-inner">' + curValue + '</div><div class="tooltip-arrow"></div></div>';
 							$('.ui-slider-handle').html(tooltip);
 							//-------------------------------

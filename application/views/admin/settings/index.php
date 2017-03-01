@@ -128,18 +128,27 @@
                            <hr/> 
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">Patient Fees:</label>
+                            <label class="col-lg-3 control-label">Patient Fees: ($)</label>
                             <div class="col-lg-6">
                                 <input type="text" name="patient_fees" id="patient_fees" placeholder="Enter Patient Fees" class="form-control NumbersAndDot" value="<?php echo (isset($record['patient_fees'])) ? $record['patient_fees'] : set_value('patient_fees'); ?>">
                             </div>
                         </div> 
 
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">Doctor Fees:</label>
+                            <label class="col-lg-3 control-label">Doctor Fees: (%)</label>
                             <div class="col-lg-6">
-                                <input type="text" name="doctor_fees" id="doctor_fees" placeholder="Enter Patient Fees" 
+                                <input type="text" name="doctor_fees" id="doctor_fees" placeholder="Enter Doctor Fees" 
                                      class="form-control NumbersAndDot" 
                                 value="<?php echo (isset($record['doctor_fees'])) ? $record['doctor_fees'] : set_value('doctor_fees'); ?>">
+                            </div>
+                        </div> 
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Doctor Initial Fees: ($)</label>
+                            <div class="col-lg-6">
+                                <input type="text" name="doctor_initial_fees" id="doctor_initial_fees" placeholder="Enter Initial Doctor Fees" 
+                                     class="form-control NumbersAndDot" 
+                                value="<?php echo (isset($record['doctor_initial_fees'])) ? $record['doctor_initial_fees'] : set_value('doctor_initial_fees'); ?>">
                             </div>
                         </div> 
                         <!-- ============== /Payment Setting Section ============ -->
@@ -239,6 +248,9 @@ $("#frmsettings").validate({
         },
         doctor_fees: {
             required: true,
+        },
+        doctor_initial_fees: {
+            required: true,
         }
 
     },
@@ -287,6 +299,9 @@ $("#frmsettings").validate({
         },
         doctor_fees: {
             required: "Please Provide Doctor Fees",
+        },
+        doctor_initial_fees: {
+            required: "Please Provide Doctor Initial Fees",
         }
     }
 });

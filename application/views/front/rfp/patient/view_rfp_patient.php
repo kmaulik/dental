@@ -137,7 +137,7 @@ $("#apply-code").click(function(){
 					discount_amt = 	((<?=config('patient_fees')?> * data['discount'])/100);
 					var final_price = <?=config('patient_fees')?> - discount_amt;
 					$(".final-prices").html(final_price);
-					$(".coupan-msg").html("Coupan Code Apply Successfully");
+					$(".coupan-msg").html("Coupon Code Apply Successfully");
 					$(".coupan-msg").css("color", "green");
 				}
 				else{
@@ -145,13 +145,13 @@ $("#apply-code").click(function(){
 					$(".coupan-msg").css("color", "red");
 				}
 			}else{
-				$(".coupan-msg").html("Invalid Coupan Code");
+				$(".coupan-msg").html("Invalid Coupon Code");
 				$(".coupan-msg").css("color", "red");
 			}
 
 		},"json");
 	}else{
-		$(".coupan-msg").html("Please Enter Coupan Code");
+		$(".coupan-msg").html("Please Enter Coupon Code");
 		$(".coupan-msg").css("color", "red");	
 	}
 });
