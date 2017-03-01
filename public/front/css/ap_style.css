@@ -614,7 +614,62 @@ span.time {
 }
 /********** End Range Picker Tooltip *********/
 
-
+.firrst_ul h4 {
+  display: inline-block;
+  margin-bottom: 0;
+  width: 100%;
+} 
+.firrst_ul .btn.btn-3d.btn-sm.btn-reveal.btn-info.pull-right {
+  display: inline-block;
+  margin-bottom: 0;
+}
+.rfp_table_layout .table-responsive {
+  background: #f1f5f8 none repeat scroll 0 0;
+}
+.rfp_table_layout table th {
+  background: #5bc0de none repeat scroll 0 0;
+  border-bottom: medium none !important;
+  color: #fff;
+  padding: 12px 10px !important;
+}
+.rfp_table_layout .table-responsive table tr td {
+  padding: 10px 8px;
+}
+.rfp_table_layout .show_more , .rfp_table_layout .show_less{
+  line-height: normal;
+  margin: 0;
+}
+.rfp_table_layout .table {
+  margin-bottom: 0;
+}
+.custom_btn_plus {
+  background: #5bc0de none repeat scroll 0 0;
+  color: #fff;
+  float: right;
+  font-size: 15px;
+  padding: 6px 10px;
+}
+.firrst_ul h4 {
+  color: #5bc0de;
+  display: inline-block;
+  font-size: 18px;
+  margin-bottom: 0;
+  width: 100%;
+}
+.custom_btn_plus i {
+  font-size: 14px;
+  margin-right: 10px;
+}
+.rfp_table_layout .table-responsive table tr.bid_data td table tr td span {
+  display: inline-block;
+  font-size: 12px;
+}
+.rfp_table_layout .table-responsive table tr.bid_data > td {
+  padding: 30px 0;
+}
+.bid_data {
+  border-top: 1px solid #ddd;
+}
 
 /*************** media start here 	*************/
 @media (min-width:768px) and (max-width:991px){

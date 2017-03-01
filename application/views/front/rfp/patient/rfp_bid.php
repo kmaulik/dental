@@ -51,14 +51,15 @@
 									<h4 class="media-heading">
 										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
 										<div class="pull-right msg-btn">
+											<?php $valid_rfp_date= date("Y-m-d",strtotime($bid_list['rfp_approve_date']. ' + 30 days')); ?>
 											<!-- For Choose Winner Doctor (Once Choose winner doctor then hide the button) -->
-											<?php if($bid_list['rfp_status'] == 3) : ?> <!-- 3 Means (Open)  Agent Approve RFP -->
+											<?php if($bid_list['rfp_status'] == 3 && $valid_rfp_date > date("Y-m-d")) : ?> <!-- 3 Means (Open)  Agent Approve && (approv_date + 30 days > curdate) RFP -->
 												<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_list['id']).'/'.encode($bid_list['rfp_bid_id']))?>" class="label label-info rfp-price confirm_winner" title="Choose Winner" ><i class="fa fa-trophy"></i></a> 
 											<?php endif; ?>	
 											<!-- End Choose Winner Doctor -->
 
 											<!-- Add Condition For Cancel Winner Doctor (RFP status waiting for approval (4) && bid status (2) winner then display)-->
-											<?php if($bid_list['rfp_status'] == 4 && $bid_list['bid_status'] == 2) :?>
+											<?php if($bid_list['rfp_status'] == 4 && $bid_list['bid_status'] == 2 && $valid_rfp_date > date("Y-m-d")) :?>
 												<a href="<?=base_url('rfp/cancel_winner_doctor/'.encode($bid_list['id']).'/'.encode($bid_list['rfp_bid_id']))?>" class="label label-danger rfp-price cancel_winner" title="Cancel Winner"><i class="fa fa-user-times"></i></a>
 											<?php endif; ?>
 

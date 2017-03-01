@@ -44,7 +44,7 @@ class Dashboard extends CI_Controller {
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
-            //pr($data['active_rfp_list'],1);
+            // pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
                 

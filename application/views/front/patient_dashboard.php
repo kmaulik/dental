@@ -116,15 +116,15 @@
 
 		<!-- Active RFP For this patient Table -->
 		<div class="row active_rfp">
-			<div class="col-md-12">
+			<div class="col-md-12 firrst_ul">
 				<h4>Active RFP
-				<a href="<?=base_url('rfp/add');?>" class="btn btn-3d btn-sm btn-reveal btn-info pull-right">
-					<i class="fa fa-plus"></i><span>Create RFP</span>
+				<a href="<?=base_url('rfp/add');?>" class="custom_btn_plus">
+					<i class="fa fa-plus"></i>Create RFP
 				</a>	
 				</h4>	
-				<hr/>
+			
 			</div>	
-			<div class="col-md-12">
+			<div class="col-md-12 rfp_table_layout">
 				<div class="table-responsive">
 					<table class="table table-hover">
 						<thead>
@@ -136,6 +136,9 @@
 								<th>RFP Status</th>
 								<th>Count Of Bid</th>
 								<th>% Saving of lowest bid</th>
+								<th>Expire Date</th>
+								<th>Extended</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -181,11 +184,27 @@
 												N/A
 											<?php endif; ?>
 										</td>
+										<td><?=isset($active_rfp['rfp_valid_date'])?date("m-d-Y",strtotime($active_rfp['rfp_valid_date'])):'N/A'?></td>
+										<td>
+											<?php if($active_rfp['is_extended'] == 1) :?>	
+											Yes
+											<?php else : ?>
+											No
+											<?php endif; ?>
+										</td>
+										<td>
+											<a href="<?=base_url('rfp/view_rfp/'.encode($active_rfp['id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
+											<!-- For Check valid date set and valid date >= today and patient validity not extend then display extend button--> 
+											<?php if($active_rfp['status'] == 3 &&  $active_rfp['rfp_valid_date'] != '' && $active_rfp['rfp_valid_date'] >= date("Y-m-d") && $active_rfp['is_extended'] == 0) :?>
+												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($active_rfp['id']))?>" class="label label-primary rfp-price btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days"><i class="fa fa-arrows"></i></a>
+											<?php endif; ?>
+											<!-- End Check Valid date -->
+										</td>
 									</tr>
 									<!-- ======= For Bid Details ========= -->
 									<tr id="bid_data_<?=$key?>" class="bid_data">
 										<td></td>
-										<td colspan="6">
+										<td colspan="8">
 											<table class="table table-hover table-bordered">
 												<thead>
 													<th>Avatar</th>
@@ -236,13 +255,14 @@
 															</td>
 															<td><?=round($bid_data['distance'],2)?></td>
 															<td>
-																<?php if($active_rfp['status'] == 3) : ?> <!-- 3 Means (Open)  Agent Approve RFP -->
-																	<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['id']))?>" class="label label-info rfp-price confirm_winner" title="Choose Winner" ><i class="fa fa-trophy"></i></a> 
+																<?php $valid_rfp_date= date("Y-m-d",strtotime($active_rfp['rfp_approve_date']. ' + 30 days')); ?>
+																<?php if($active_rfp['status'] == 3 && $valid_rfp_date > date("Y-m-d")) : ?> <!-- 3 Means (Open)  Agent Approve && (approv_date + 30 days > curdate) RFP -->
+																	<a href="<?=base_url('rfp/choose_winner_doctor/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['id']))?>" class="label label-info rfp-price confirm_winner" data-toggle="tooltip" data-placement="top" data-original-title="Choose Winner"><i class="fa fa-trophy"></i></a> 
 																<?php endif; ?>
 
 																<!-- Add Condition For Cancel Winner Doctor (RFP status waiting for approval (4) && bid status (2) winner then display)-->
-																<?php if($active_rfp['status'] == 4 && $bid_data['status'] == 2) :?>
-																	<a href="<?=base_url('rfp/cancel_winner_doctor/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['id']))?>" class="label label-danger rfp-price cancel_winner" title="Cancel Winner"><i class="fa fa-user-times"></i></a>
+																<?php if($active_rfp['status'] == 4 && $bid_data['status'] == 2 && $valid_rfp_date > date("Y-m-d")) :?>
+																	<a href="<?=base_url('rfp/cancel_winner_doctor/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['id']))?>" class="label label-danger rfp-price cancel_winner" data-toggle="tooltip" data-placement="top" data-original-title="Cancel Winner"><i class="fa fa-user-times"></i></a>
 																<?php endif; ?>
 
 																<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
@@ -250,7 +270,7 @@
 																	<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>,<?=$k?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
 																	<!-- Display all Message button (If Chat started b/w doctor & patient)-->
 																	<?php if($bid_data['is_chat_started'] == 1) :?>
-																		<a href="<?=base_url('messageboard/message/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['doctor_id']))?>" class="label label-info rfp-price" title="View Mail"><i class="fa fa-eye"></i></a> 	
+																		<a href="<?=base_url('messageboard/message/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['doctor_id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View Message"><i class="fa fa-eye"></i></a> 	
 																	<?php endif; ?>
 																	<!-- End all Message button-->
 																<?php endif; ?>
@@ -266,7 +286,7 @@
 									<!-- =======End For Bid Details ============ -->
 								<?php endforeach; ?>
 								<tr>
-									<td colspan="7">
+									<td colspan="10">
 										<a class="btn btn-3d btn-sm btn-reveal btn-success pull-right show_more">
 											<i class="fa fa-arrow-circle-down"></i><span>Show More</span>
 										</a>
@@ -277,7 +297,7 @@
 								</tr>	
 							<?php else :?>
 								<tr>
-									<td colspan="7">No Active RFP</td>
+									<td colspan="9">No Active RFP</td>
 								</tr>	
 							<?php endif; ?>	
 						</tbody>	
@@ -536,6 +556,15 @@ $(".cancel_winner").click(function(e) {
 	});	
 });
 
+$(".btn_extend").click(function(e){		
+	e.preventDefault();
+	var href = $(this).data('href');
+	bootbox.confirm('Are you sure to extend validity for this rfp?' ,function(res){ 	 		
+	    if(res) {
+	        window.location.href = href;
+	    }
+	});
+});
 //-------------- End For Winner Select & Cancel -------------------------
 
 
