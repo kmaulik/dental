@@ -118,7 +118,7 @@
 	</div>
 </section>	
 
-<!-- ==================== Modal Popup For Place a Bid ========================= -->
+<!-- ==================== Modal Popup For Send Message ========================= -->
 <div class="modal fade send_message" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
@@ -158,7 +158,7 @@
 		</div>
 	</div>
 </div>
-<!-- ================== /Modal Popup For Place a Bid ========================= -->		
+<!-- ================== /Modal Popup For Send Message ========================= -->		
 
 <!-- ==================== Modal Popup For Doctor Review  ========================= -->
 <div class="modal fade doctor_review" tabindex="-1" role="dialog" aria-hidden="true">

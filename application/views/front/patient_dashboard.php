@@ -411,8 +411,51 @@
 		</div>
 	</div>
 </div>
-<!-- ================== /Modal Popup For Refund Payment ========================= -->				
+<!-- ================== /Modal Popup For Refund Payment ========================= -->		
 
+<!-- ==================== Modal Popup For Send Message ========================= -->
+<div class="modal fade send_message" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Send Message</h4>
+			</div>
+			<form action="<?=base_url('rfp/send_message')?>" method="POST" id="frmmsg">
+				<input type="hidden" name="rfp_id" id="msg_rfp_id">
+				<input type="hidden" name="rfp_title" id="msg_rfp_title">
+				<input type="hidden" name="rfp_bid_id" id="msg_rfp_bid_id">
+				<input type="hidden" name="to_id" id="msg_to_id">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<label>Message</label>
+							<div class="form-group">
+								<textarea name="message" id="message" class="form-control" rows="5"></textarea>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+							<div class="form-group">
+								<input type="submit" name="submit" class="btn btn-info" value="Submit">
+								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+							</div>	
+						</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Send Message ========================= -->	
+
+<script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 <script>
 function refund_request(key){
 	var rfp_data = <?php echo json_encode($rfp_list); ?>;
@@ -499,10 +542,33 @@ $(".cancel_winner").click(function(e) {
 //---------------- Send Message ------------------
 function send_msg(rfp_key,bid_key){
 	var rfp_data = <?php echo json_encode($active_rfp_list); ?>;
-	$("#rfp_id").val(rfp_data[rfp_key]['id']);
-	$("#rfp_title").val(rfp_data[rfp_key]['title']);
-	$("#rfp_bid_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['id']);
-	$("#to_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['doctor_id']);
+	$("#msg_rfp_id").val(rfp_data[rfp_key]['id']);
+	$("#msg_rfp_title").val(rfp_data[rfp_key]['title']);
+	$("#msg_rfp_bid_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['id']);
+	$("#msg_to_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['doctor_id']);
 }
 //---------------- End Send Message ------------------
+
+//--------------- For Message Form Validation --------------
+$("#frmmsg").validate({
+    errorClass: 'validation-error-label',
+    successClass: 'validation-valid-label',
+    highlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    unhighlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    rules: {
+        message: {
+            required: true,
+        }
+    },
+    messages: {
+        message: {
+            required: "Please provide a Message"
+        }
+    }
+});
+
 </script>
