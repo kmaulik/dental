@@ -228,7 +228,7 @@
 															<td>
 																<div class="star-rating">
 																    <span class="display_rating_<?=$key.'_'.$k?>"></span>
-																	<span class="avg_rating"><?=isset($bid_data['avg_rating'])?$bid_data['avg_rating']:'0'?> / 5.0 (<?=$bid_data['total_rating']?>)</span>
+																	<span class="avg_rating"><?=isset($bid_data['avg_rating'])?$bid_data['avg_rating']:'0'?> / 5.0 (<?=$bid_data['total_rating']?> Reviews)</span>
 																</div>
 															</td>
 															<!-- For Display Star Rating -->
