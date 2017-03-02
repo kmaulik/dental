@@ -183,7 +183,7 @@ class Rfp_model extends CI_Model {
         }
 
 
-        //$this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
+        $this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
 
         $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
@@ -240,7 +240,7 @@ class Rfp_model extends CI_Model {
             }
         }
 
-        //$this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
+        $this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
 
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
