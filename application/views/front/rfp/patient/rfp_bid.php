@@ -49,7 +49,14 @@
 								<div class="media-body">
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
-										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong"><strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong></a> 
+										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong">
+											<strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong>
+											<!-- For Check who is winner -->	
+											<?php if($bid_list['rfp_status'] >= 5 && $bid_list['bid_status'] == 2) :?>
+												<span class="label label-success">Winner</span>
+											<?php endif;?>
+											<!-- End For Check who is winner -->	
+										</a> 
 										<div class="pull-right msg-btn">
 											<?php $valid_rfp_date= date("Y-m-d",strtotime($bid_list['rfp_approve_date']. ' + 30 days')); ?>
 											<!-- For Choose Winner Doctor (Once Choose winner doctor then hide the button) -->
@@ -218,9 +225,11 @@
 <script>
 
 $(function () {
- 
+ //------------- For Star Rating ----------------
+$("#rating").val('0.5'); 
 $(".star-rating #rateYo").rateYo({
     halfStar: true,
+    rating: 0.5,
      onSet: function (rating, rateYoInstance) {
 			$(".point").show();
 			$("#rating").val(rating);
@@ -233,7 +242,7 @@ $(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
 	$(".point").show();
 	$(".point").text(rating +" Star");
 });
-
+ //------------- End Star Rating ----------------
 });
 
 

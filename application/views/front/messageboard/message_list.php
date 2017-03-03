@@ -73,7 +73,7 @@
 									</div>	
 									<div class="message-right hidden-xs">
 										<!-- <span class="attachment"><i class="fa fa-paperclip"></i></span> -->
-										<span class="time"><?=date("Y-m-d",strtotime($record['bid_date']))?></span>
+										<span class="time"><?=date("m-d-Y",strtotime($record['bid_date']))?></span>
 									</div>
 								</a>
 							<?php endforeach; ?>	
