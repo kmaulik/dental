@@ -74,12 +74,12 @@
 	'		cancelURL:			the page where buyers return to when they cancel the payment review on PayPal
 	'--------------------------------------------------------------------------------------------------------------------------------------------	
 	*/
-	function CallShortcutExpressCheckout($returnURL, $cancelURL , $desc = 'Dental Payments'){
+	function CallShortcutExpressCheckout($amt,$returnURL, $cancelURL , $desc = 'Dental Payments'){
 		global $CI;	
 		//------------------------------------------------------------------------------------------------------------------------------------
 		// Construct the parameter string that describes the SetExpressCheckout API call in the shortcut implementation
 
-		$nvpstr="&AMT=5";
+		$nvpstr="&AMT=".$amt;
 		$nvpstr = $nvpstr . "&PAYMENTACTION=Sale";
 		$nvpstr = $nvpstr . "&BILLINGAGREEMENTDESCRIPTION=".urlencode($desc);
 		$nvpstr = $nvpstr . "&BILLINGTYPE=MerchantInitiatedBillingSingleAgreement";
@@ -548,11 +548,11 @@
 	}
 
 	 //---------------- DoExpressCheckoutPayment @DHK -------
-	function DoExpressCheckoutPayment($payer_id,$token){
+	function DoExpressCheckoutPayment($payer_id,$token,$amt){
 
 		$nvpstr ="&PAYERID=" . $payer_id;
 		$nvpstr .="&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
-		$nvpstr .="&PAYMENTREQUEST_0_AMT=2";
+		$nvpstr .="&PAYMENTREQUEST_0_AMT=".$amt;
 		$nvpstr .="&VERSION=86";
 		$nvpstr .="&TOKEN=".$token;
 		

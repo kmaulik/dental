@@ -1052,7 +1052,7 @@ class Rfp extends CI_Controller {
     		$returnURL = base_url().'rfp/make_doctor_payment_success';
 	       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
 	        //-------------------------------------------------
-	       	$resArray = CallShortcutExpressCheckout($returnURL, $cancelURL);
+	       	$resArray = CallShortcutExpressCheckout('45',$returnURL, $cancelURL);
 
 	        $ack = strtoupper($resArray["ACK"]);
 	    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
@@ -1067,6 +1067,7 @@ class Rfp extends CI_Controller {
 
     public function make_doctor_payment_success(){
     	
+    	// pr($_REQUEST,1);
     	$data = array();
 
     	$user_data = $this->session->userdata('client');
@@ -1086,6 +1087,8 @@ class Rfp extends CI_Controller {
         if (isset($_REQUEST['token'])) {
         	
         	$token = $_REQUEST['token'];
+        	$payer_id = $_REQUEST['PayerID'];
+
         	$ret_arr = CreateBillingAgreement($token); // Create Billing agreement return billing agreement ID        	
         	$ack_agreement = strtoupper($ret_arr['ACK']);
 
@@ -1098,7 +1101,8 @@ class Rfp extends CI_Controller {
         		// ------------------------------------------------------------------------
         		// billing_schedule Make Initial payment
 	        	// ------------------------------------------------------------------------
-	        	$payment_due_1 = DoReferenceTransaction($billing_id,$due_1);
+	        	$payment_due_1 = DoExpressCheckoutPayment($payer_id,$token,$due_1);
+	        	// pr($payment_due_1,1);
 	        	$payment_meta_arr = json_encode($payment_due_1);
 
         		// ------------------------------------------------------------------------
@@ -1121,7 +1125,7 @@ class Rfp extends CI_Controller {
 	        						'doctor_id'=>$user_data['id'],
 	        						'rfp_id'=>$doc_payment_data['rfp_id'],
 	        						'next_billing_date'=>date('Y-m-d'),
-	        						'transaction_id'=>$payment_due_1['TRANSACTIONID'],
+	        						'transaction_id'=>$payment_due_1['PAYMENTINFO_0_TRANSACTIONID'],
 	        						'price'=>$due_1,
 	        						'created_at'=>date('Y-m-d H:i')
 	        						);

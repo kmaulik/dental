@@ -59,8 +59,8 @@ class Test extends CI_Controller {
                 echo "Billing Agreement : <br>";
                 pr($ret_arr);
                 echo "Payment Transaction : <br>";
-                pr($res1);
-                $retttt = DoReferenceTransaction($ret_arr['BILLINGAGREEMENTID']);
+                // pr($res1);
+                // $retttt = DoReferenceTransaction($ret_arr['BILLINGAGREEMENTID']);
                 echo "RefrenceTransaction : <br>";
                 pr($retttt,1);
             }
@@ -81,7 +81,7 @@ class Test extends CI_Controller {
         pr($res,1);
     }
 
-    public function paypal_info($token='10X30653FK553411E'){
+    public function paypal_info($token='97H5001232975174V'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }
