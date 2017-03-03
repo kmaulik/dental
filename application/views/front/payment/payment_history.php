@@ -72,7 +72,7 @@
 										<td><?=$record['actual_price']?></td>
 										<td><?=$record['payable_price']?></td>
 										<td><?=$record['discount']?></td>
-										<td><?=date("Y-m-d",strtotime($record['created_at']))?></td>
+										<td><?=date("m-d-Y",strtotime($record['created_at']))?></td>
 									</tr>
 								<?php endforeach; ?>
 							<?php else : ?>

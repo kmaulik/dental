@@ -111,13 +111,17 @@ class Promotional_code_model extends CI_Model {
      * @uses : This function is used to Fetch Promotional Code Data
      * @author : DHK
      */
-    public function fetch_coupan_data(){
+    public function fetch_coupan_data($coupon_code = ''){
+
+        if($coupon_code == ''){
+            $coupon_code = $this->input->post('coupan_code');
+        }
 
         $this->db->select('p.*,count(pt.id) as total_apply_code');
         $this->db->join('payment_transaction pt','p.id = pt.promotional_code_id and pt.user_id ='.$this->session->userdata('client')['id'],'left');
         $this->db->where('p.start_date <=', date("Y-m-d"));
         $this->db->where('p.end_date >=', date("Y-m-d"));
-        $this->db->where('p.code', $this->input->post('coupan_code'));
+        $this->db->where('p.code', $coupon_code);
         $this->db->where('p.is_deleted', 0);
         $this->db->where('p.is_blocked', 0);
         $query= $this->db->get('promotional_code p');
@@ -128,5 +132,4 @@ class Promotional_code_model extends CI_Model {
 
 
 }
-
 ?>

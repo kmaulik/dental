@@ -118,6 +118,13 @@
 											<?php //echo character_limiter(strip_tags($review['feedback']), 200);?>
 											<?php echo $review['feedback']; ?>
 										</p>
+										<!-- ========== Doctor Comment (Thank you note) ===== -->
+										<?php if($review['doctor_comment'] != '') :?>
+											<p class="review-doc-comment">
+												<?php echo $review['doctor_comment']; ?>
+											</p>	
+										<?php endif; ?>	
+										<!-- ========== End Doctor Comment (Thank you note) ===== -->
 									</div><!-- /.media-body -->
 								</div><!-- /.media -->
 							</div><!-- /.the-box no-border -->

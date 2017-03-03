@@ -19,7 +19,7 @@ class Dashboard extends CI_Controller {
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         
-        // Means 4 Doctor Dashboard 
+        // Means 4 Doctor Dashboard
         if($this->session->userdata('client')['role_id'] == 4) {
                         
             $where = 'is_deleted !=  1 and is_blocked != 1';
@@ -30,9 +30,9 @@ class Dashboard extends CI_Controller {
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
-
+            
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
-            // pr($data['active_rfp_list'],1);
+            //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
                 
@@ -51,8 +51,6 @@ class Dashboard extends CI_Controller {
 
         if($get_tab == 'office_map'){
             $data['tab'] = 'office_map';
-            // echo decode($this->input->get('address'));
-            // die();
         }else{
             $data['tab'] = 'info';
         }
@@ -79,8 +77,7 @@ class Dashboard extends CI_Controller {
         $this->googlemaps->add_marker($marker);
 
         $data['map'] = $this->googlemaps->create_map();
-
-        // pr($data['map'],1);
+                
         // ------------------------------------------------------------------------
 
         if($_POST){
@@ -290,7 +287,7 @@ class Dashboard extends CI_Controller {
         $data['db_data'] = $this->Users_model->get_data(['id'=>decode($user_id)],true);
         $data['review_data'] = $this->Rfp_model->get_user_rating(decode($user_id));
         $data['overall_review']=$this->Rfp_model->get_overall_rating(decode($user_id));
-        //pr($data['overall_review'],1);
+        //pr($data['review_data'],1);
         $data['subview']="front/profile/view_profile";
         $this->load->view('front/layouts/layout_main',$data);
     }

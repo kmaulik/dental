@@ -187,7 +187,9 @@ span.time {
 									<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
 									<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
 								</span>
-								<!-- <span class="distance">(<?=round($record['distance'],2)." Miles"?>)</span> -->
+								<!-- Distance -->
+								<span class="distance">(<?=round($record['distance'],2)." Miles"?>)</span>
+								<!-- /Distance -->
 								<?php if($record['bid_amt'] != '') :?>
 									<span class="bid_amt label label-info">$ <?=$record['bid_amt']?></span>
 								<?php endif;?>
@@ -197,7 +199,7 @@ span.time {
 								<?php if($record['img_path'] != '') :?>
 									<span class="attachment"><i class="fa fa-paperclip"></i></span>
 								<?php endif; ?>
-								<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
+								<span class="time"><?=date("m-d-Y H:i a",strtotime($record['created_at']));?></span>
 							</div>
 							</a>
 						<?php endforeach; ?>	
