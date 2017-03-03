@@ -124,7 +124,7 @@
 										
 										$amt = $w_rfp['amount']; // Bid price
 										
-										$percentage = 10; 
+										$percentage = config('doctor_fees'); 
 										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
 										
 										$is_second_due = 1;										
