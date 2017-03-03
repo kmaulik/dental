@@ -1028,20 +1028,20 @@ class Rfp extends CI_Controller {
        	$rfp_id = decode($this->input->post('rfp_id'));
        	$coupan_code = $this->input->post('coupan_code');
        	$due_1 = $this->input->post('due_1');
-       	$due_2 = $this->input->post('due_2');
+       	$due_2 = $this->input->post('due_2');       	
+       	$actual_price = $this->input->post('total_due_modal');
+       	$orignal_price = $this->input->post('orignal_price');
        	$total_per_discount = 0;
 
        	if($coupan_code != ''){
        		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);	       	
-	       	$total_per_discount = (int)$coupon_data['discount'];
+	       	$total_per_discount = (float)$coupon_data['discount'];
        	}
-
-    	pr($_POST);
-       	pr($coupon_data,1);
 
        	$this->session->set_userdata('doc_payment_data',
        								['rfp_id'=>$rfp_id,'coupan_code'=>$coupan_code,
-       								 'due_1'=>$due_1,'due_2'=>$due_2]);
+       								 'due_1'=>$due_1,'due_2'=>$due_2,'orignal_price'=>$orignal_price,
+       								 'actual_price'=>$actual_price]);
 
        	// fetch data from billing agrrement table for user id
     	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1']);
@@ -1066,16 +1066,23 @@ class Rfp extends CI_Controller {
     }	
 
     public function make_doctor_payment_success(){
+    	
     	$data = array();
 
     	$user_data = $this->session->userdata('client');
     	$doc_payment_data = $this->session->userdata('doc_payment_data');
-    	
+
     	$due_1 = $doc_payment_data['due_1'];
     	$due_2 = $doc_payment_data['due_2'];
+    	$orignal_price = $doc_payment_data['orignal_price'];
+    	$actual_price = $doc_payment_data['actual_price'];
+    	$coupan_code = $doc_payment_data['coupan_code'];
+    	$coupon_data = [];
 
-        $PayerID = $this->input->get('PayerID');
-
+    	if($coupan_code != ''){
+       		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);
+       	}
+       
         if (isset($_REQUEST['token'])) {
         	
         	$token = $_REQUEST['token'];
@@ -1089,6 +1096,12 @@ class Rfp extends CI_Controller {
         		$all_details_json = json_encode($all_details);
 
         		// ------------------------------------------------------------------------
+        		// billing_schedule Make Initial payment
+	        	// ------------------------------------------------------------------------
+	        	$payment_due_1 = DoReferenceTransaction($billing_id,$due_1);
+	        	$payment_meta_arr = json_encode($payment_due_1);
+
+        		// ------------------------------------------------------------------------
         		// Insert into Billing Agreement
         		// ------------------------------------------------------------------------
 				$ins_data = array(
@@ -1100,65 +1113,67 @@ class Rfp extends CI_Controller {
         							'created_at'=>date('Y-m-d H:i:s')
         						);
 	        	$this->Rfp_model->insert_record('billing_agreement',$ins_data);
-	        	// ------------------------------------------------------------------------
 	        	
+	        	// ------------------------------------------------------------------------
+        		// Insert into Next Schdule payment (billing_schedule)
+	        	// ------------------------------------------------------------------------
 	        	$due_1_arr = array(
 	        						'doctor_id'=>$user_data['id'],
 	        						'rfp_id'=>$doc_payment_data['rfp_id'],
 	        						'next_billing_date'=>date('Y-m-d'),
-	        						'status'=>'0',
+	        						'transaction_id'=>$payment_due_1['TRANSACTIONID'],
 	        						'price'=>$due_1,
 	        						'created_at'=>date('Y-m-d H:i')
 	        						);
 	        	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
-
+	        	
 	        	$due_2_arr =  array(
 	        						'doctor_id'=>$user_data['id'],
 	        						'rfp_id'=>$doc_payment_data['rfp_id'],
-	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
-	        						'status'=>'0',
+	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),	        						
 	        						'price'=>$due_2,
 	        						'created_at'=>date('Y-m-d H:i')
 	        						);
 	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
 
-	        	// billing_schedule
+	        	// ------------------------------------------------------------------------
+        		// Insert into Next Schdule payment (billing_schedule)
+	        	// ------------------------------------------------------------------------
+
+	        	$transaction_arr =  array(
+	        							'user_id'=>$user_data['id'],
+	        							'rfp_id'=>$doc_payment_data['rfp_id'],
+	        							'actual_price'=>$orignal_price,
+	        							'payable_price'=>$due_1,
+	        							'discount'=>(isset($coupon_data['discount'])) ? $coupon_data['discount']:0,
+	        							'promotional_code_id'=>(isset($coupon_data['id'])) ? $coupon_data['id']:0,
+	        							'paypal_token'=>$payment_due_1['TRANSACTIONID'],
+	        							'meta_arr'=>$payment_meta_arr,
+	        							'status'=>'0',
+	        							'created_at'=>date('Y-m-d H:i:s')
+	        						);	        	
+	        	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
 
 	        	// ------------------------------------------------------------------------
-	        	$payment_due_1 = DoReferenceTransaction($billing_id,$due_1);
 
 	        	$this->session->set_flashdata('success','Agreement has been set successfully');
-
+	        	
 	        	pr($payment_due_1);
 	        	pr($doc_payment_data);
 	        	pr($ins_data,1);
+	        		        		        		        		        	
 			}else{
 
 			}
         }else{
 
         }
-
-        	
-			
-
-        	// BILLINGAGREEMENTSTATUS
-
-        	// if(!empty($billing_data)){
-        	// 	// already make an agreement
-        	// }else{
-        	// 	// insert data into agreement
-        	
-        	// }
-        	
-
-        	        	
-            pr($ret_arr);        	
-        
     }
 
     public function make_doctor_payment_error(){
-    	
+    		
+
+
     }
 
 

@@ -74,12 +74,12 @@
 	'		cancelURL:			the page where buyers return to when they cancel the payment review on PayPal
 	'--------------------------------------------------------------------------------------------------------------------------------------------	
 	*/
-	function CallShortcutExpressCheckout( $returnURL, $cancelURL , $desc = 'Dental Payments'){
+	function CallShortcutExpressCheckout($returnURL, $cancelURL , $desc = 'Dental Payments'){
 		global $CI;	
 		//------------------------------------------------------------------------------------------------------------------------------------
 		// Construct the parameter string that describes the SetExpressCheckout API call in the shortcut implementation
 
-		$nvpstr="&AMT=0";
+		$nvpstr="&AMT=5";
 		$nvpstr = $nvpstr . "&PAYMENTACTION=Sale";
 		$nvpstr = $nvpstr . "&BILLINGAGREEMENTDESCRIPTION=".urlencode($desc);
 		$nvpstr = $nvpstr . "&BILLINGTYPE=MerchantInitiatedBillingSingleAgreement";
@@ -335,11 +335,10 @@
 		return $resArray;
 	}
 
+	// v! do not make changes into below function 
 	/*------------- Get Transaction Details based on transaction Id ------------ */
-	function GetTransactionDetails($token)
-	{
-		$nvpstr="&TRANSACTIONID=" . $token;
-		
+	function GetTransactionDetails($token){
+		$nvpstr="&TRANSACTIONID=" . $token;		
 		//'---------------------------------------------------------------------------
 		$resArray=hash_call("GetTransactionDetails",$nvpstr);
 		//$ack = strtoupper($resArray["ACK"]);
@@ -564,7 +563,7 @@
 	}
 
 	//---------------- DoReferenceTransaction @DHK --------
-	function DoReferenceTransaction($bill_id,$amt='111'){
+	function DoReferenceTransaction($bill_id,$amt='42'){
 		
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&AMT=".$amt;
@@ -588,7 +587,7 @@
 	}
 
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
-	function cancel_billing_agreement($REFERENCEID='B-34X69770KM776381D'){
+	function cancel_billing_agreement($REFERENCEID='B-039652215T6598427'){
 
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&REFERENCEID=".$REFERENCEID;

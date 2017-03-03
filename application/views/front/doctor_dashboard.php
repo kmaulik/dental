@@ -394,6 +394,8 @@
 							<input type="hidden" name="due_2" id="due_2_id">							
 							<input type="hidden" name="rfp_id" id="rfp_id_frm">
 							<input type="hidden" name="total_due_modal" id="total_due_modal">
+							<input type="hidden" name="orignal_price" id="orignal_price">
+							<input type="hidden" name="is_coupon_applied" id="is_coupon_applied" value="0" >
 							<input type="submit" name="submit" class="btn btn-info" value="Make Payment">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>	
@@ -479,15 +481,11 @@
 		$('#total_due_modal').val(total_due);
 
 		$('.total-price').html('$ '+total_payment);
-
+		
 		$(".coupan-msg").html("");
 		$('#coupan_code').val('');
-		$('.doctor_payment').modal('show');
-
-		// console.log(is_second_due);
-		console.log(due_1);
-		console.log(due_2);
-		// console.log(mybid);
+		$('#is_coupon_applied').val('0');
+		$('.doctor_payment').modal('show');			
 	}
 
 	$("#apply-code").click(function(){
@@ -500,25 +498,20 @@
 			$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
 
 				if(data != 0){
-
+					var is_coupon_appiled = $('#is_coupon_applied').val();
 					// If coupon code is limit is exceed than allowed no of times
-					if(data['per_user_limit'] > data['total_apply_code']){
+					if(data['per_user_limit'] > data['total_apply_code'] && is_coupon_appiled == '0'){
 							
 						var total = parseFloat($('#total_due_modal').val());
 						var intial_payment = '<?php echo config("doctor_initial_fees"); ?>'; // fetch initial value from db
-						
-						console.log('total '+total);
-						console.log('intial_payment '+intial_payment);
 
 						discount_amt = 	((total * data['discount'])/100);
-						var after_discount = total - discount_amt;
-						
+						var after_discount = total - discount_amt;						
+					 	
 						if(after_discount > parseFloat(intial_payment)){
-							console.log('IFF');
 							due_1 = parseFloat(intial_payment);
-							due_2 = after_discount - due_1
+							due_2 = after_discount - due_1;
 						}else{
-							console.log('ELSE');
 							due_1 = after_discount;
 							due_2 = 0
 						}
@@ -528,14 +521,12 @@
 
 						$('#due_1_id').val(due_1);
 						$('#due_2_id').val(due_2);
-						$('#total_due_modal').val(due_1+due_2);
 
-						$('.total-price').html('$ '+after_discount);
+						$('#orignal_price').val(total); // orignal price
+						$('#total_due_modal').val(after_discount); // after discount price						
+						$('.total-price').html('$ '+ after_discount);
 
-						// console.log('Due1 === '+ due_1);
-						// console.log('Due2 === '+ due_2);
-						// console.log('intial_payment ==  '+intial_payment);
-
+						$('#is_coupon_applied').val('1');
 						$(".coupan-msg").html("Coupon Code apply successfully");
 						$(".coupan-msg").css("color", "green");
 					}else{

@@ -19,8 +19,7 @@ class Dashboard extends CI_Controller {
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         
-        //pr($data['rfp_list'],1);
-        // Means 4 Doctor Dashboard 
+        // Means 4 Doctor Dashboard
         if($this->session->userdata('client')['role_id'] == 4) {
                         
             $where = 'is_deleted !=  1 and is_blocked != 1';
