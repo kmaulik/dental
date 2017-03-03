@@ -134,7 +134,7 @@
 								<th>RFP Title</th>
 								<th>User Name</th>
 								<th>RFP Status</th>
-								<th>Count Of Bid</th>
+								<th>Total Bid</th>
 								<th>% Saving of lowest bid</th>
 								<th>Expire Date</th>
 								<th>Extended</th>
@@ -217,7 +217,15 @@
 												<tbody>
 													<?php foreach($active_rfp['bid_data'] as $k=>$bid_data) :?> 
 														<tr>
-															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']))?>"><?=$bid_data['user_name']?></a></td>
+															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']))?>">
+																	<?=$bid_data['user_name']?>
+																	<!-- For Check who is winner -->	
+																	<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
+																		<span class="label label-success">Winner</span>
+																	<?php endif;?>
+																	<!-- End For Check who is winner -->	
+																</a>
+															</td>
 															<td>
 																<div class="star-rating">
 																    <span class="display_rating_<?=$key.'_'.$k?>"></span>
@@ -260,6 +268,11 @@
 
 																<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
 																<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
+																	<!-- If Review not given for this RFP then display the review button -->
+																	<?php if($active_rfp['is_rated'] == '') : ?>
+																		<a class="label label-info rfp-price" onclick="send_review(<?=$key?>,<?=$k?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+																	<?php endif; ?>
+																	<!-- End Review -->
 																	<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>,<?=$k?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
 																	<!-- Display all Message button (If Chat started b/w doctor & patient)-->
 																	<?php if($bid_data['is_chat_started'] == 1) :?>
@@ -302,7 +315,7 @@
 
 
 		<!-- Payment Table -->
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col-md-12">
 				<h4>Payment History</h4>	
 				<hr/>
@@ -369,7 +382,7 @@
 					</table>
 				</div>			
 			</div>	
-		</div>	
+		</div>	 -->
 		<!-- Payment List -->
 	</div>
 </section>	
@@ -468,8 +481,81 @@
 </div>
 <!-- ================== /Modal Popup For Send Message ========================= -->	
 
+<!-- ==================== Modal Popup For Doctor Review  ========================= -->
+<div class="modal fade doctor_review" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Review</h4>
+			</div>
+			<form action="<?=base_url('rfp/doctor_review')?>" method="POST" id="frmreview">
+				<input type="hidden" name="rfp_id" id="review_rfp_id">
+				<!-- <input type="hidden" name="rfp_title" id="rfp_title"> -->
+				<input type="hidden" name="doctor_id" id="doctor_id">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<label>Rating</label>	
+						    <div class="star-rating">
+							    <span id="rateYo"></span>
+							    <span class="point" style="display:none">0</span>
+							</div>
+						</div>
+						<div class="col-sm-12">	
+							<input type="hidden" name="rating" id="rating"/>
+						</div>	
+						<div class="col-sm-12">
+							<label>Comment (Optional)</label>
+							<div class="form-group">
+								<textarea name="description" id="description" class="form-control" rows="5"></textarea>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-info" value="Submit Review">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+						</div>	
+					</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Doctor Review ========================= -->
+
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 <script>
+
+$(function () {
+ //------------- For Star Rating ----------------
+$("#rating").val('0.5'); 
+$(".star-rating #rateYo").rateYo({
+    halfStar: true,
+    rating: 0.5,
+     onSet: function (rating, rateYoInstance) {
+			$(".point").show();
+			$("#rating").val(rating);
+		}
+  });
+
+$(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
+
+	var rating = data.rating;
+	$(".point").show();
+	$(".point").text(rating +" Star");
+});
+ //------------- End Star Rating ----------------
+});
+
 function refund_request(key){
 	var rfp_data = <?php echo json_encode($rfp_list); ?>;
 	$("#rfp_id").val(rfp_data[key]['rfp_id']);
@@ -551,10 +637,10 @@ $(".cancel_winner").click(function(e) {
 
 $(".btn_extend").click(function(e){		
 	e.preventDefault();
-	var href = $(this).data('href');
+	var lHref = $(this).attr('href');
 	bootbox.confirm('Are you sure to extend validity for this rfp?' ,function(res){ 	 		
 	    if(res) {
-	        window.location.href = href;
+	        window.location.href = lHref;
 	    }
 	});
 });
@@ -570,6 +656,15 @@ function send_msg(rfp_key,bid_key){
 	$("#msg_to_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['doctor_id']);
 }
 //---------------- End Send Message ------------------
+
+//--------------- Send Review -------------------
+function send_review(rfp_key,bid_key){
+	var rfp_data = <?php echo json_encode($active_rfp_list); ?>;
+	$("#review_rfp_id").val(rfp_data[rfp_key]['id']);
+	//$("#rfp_title").val(rfp_data[key]['title']);
+	$("#doctor_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['doctor_id']);
+}
+//--------------- Send Review ----------------------
 
 //--------------- For Message Form Validation --------------
 $("#frmmsg").validate({

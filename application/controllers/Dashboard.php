@@ -19,6 +19,7 @@ class Dashboard extends CI_Controller {
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         
+        //pr($data['rfp_list'],1);
         // Means 4 Doctor Dashboard 
         if($this->session->userdata('client')['role_id'] == 4) {
                         
@@ -32,6 +33,7 @@ class Dashboard extends CI_Controller {
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
+            //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
                 
@@ -286,7 +288,7 @@ class Dashboard extends CI_Controller {
         $data['db_data'] = $this->Users_model->get_data(['id'=>decode($user_id)],true);
         $data['review_data'] = $this->Rfp_model->get_user_rating(decode($user_id));
         $data['overall_review']=$this->Rfp_model->get_overall_rating(decode($user_id));
-        //pr($data['overall_review'],1);
+        //pr($data['review_data'],1);
         $data['subview']="front/profile/view_profile";
         $this->load->view('front/layouts/layout_main',$data);
     }

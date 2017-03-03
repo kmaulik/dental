@@ -329,7 +329,7 @@ class Rfp_model extends CI_Model {
 
     /* --------------- For User Rating --------- */
     public function get_user_rating($user_id){
-        $this->db->select('rr.id as rating_id,rr.rating,rr.description as feedback,rr.created_at,rfp.id as rfp_id,rfp.title as rfp_title,u.id as user_id,CONCAT(u.fname," ",u.lname) as user_name,u.avatar');
+        $this->db->select('rr.id as rating_id,rr.rating,rr.description as feedback,rr.doctor_comment,rr.doctor_id,rr.created_at,rfp.id as rfp_id,rfp.title as rfp_title,u.id as user_id,CONCAT(u.fname," ",u.lname) as user_name,u.avatar');
         $this->db->from('rfp_rating rr');
         $this->db->join('rfp','rr.rfp_id = rfp.id');
         $this->db->join('users u','rfp.patient_id = u.id');
@@ -354,14 +354,14 @@ class Rfp_model extends CI_Model {
     } 
 
     /*-------------- Payment list with payment details ----------- 
-    /* Get RFP data with status (3 - open, 4 - In-progress) and payment history For Dashboard Refund
+    /* Get RFP data with status (3 - open, 4 - Waiting for approval,5 - In-progress) and payment history For Dashboard Refund
     */
     public function get_payment_list_user_wise(){
         $this->db->select('rfp.id as rfp_id,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as user_name,rfp.status as rfp_status,rfp.dentition_type as dentition_type,pt.id as payment_id,pt.payable_price as paid_price,pt.paypal_token as paypal_token,r.id as refund_id,r.status as refund_status');
         $this->db->from('payment_transaction pt');
         $this->db->join('rfp','pt.rfp_id = rfp.id');
         $this->db->join('refund r','pt.id = r.payment_id','left');
-        $this->db->where_in('rfp.status',[3,4]); // 3 & 4 Means Open & Pending (Winner) RFP
+        $this->db->where_in('rfp.status',[3,4,5]); // 3,4 & 5 Means Open & Waiting for doctor approval & Pending (Winner) &  RFP
         $this->db->where('pt.user_id',$this->session->userdata['client']['id']);
         $this->db->order_by('pt.created_at','desc');
         $query = $this->db->get();
@@ -395,8 +395,9 @@ class Rfp_model extends CI_Model {
 
     /* -------------- For Display Active RFP In Dashboard @DHK------------------- */
     public function get_active_rfp_patient_wise(){
-        $this->db->select('rfp.*,count(rb.rfp_id) as total_bid,min(rb.amount) as min_bid_amt');
+        $this->db->select('rfp.*,count(rb.rfp_id) as total_bid,min(rb.amount) as min_bid_amt,rr.rfp_id as is_rated');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.is_deleted=0','left');
+        $this->db->join('rfp_rating rr','rfp.id = rr.rfp_id','left');
         $this->db->where_in('rfp.status',['3','4','5']); // Rfp Status 3,4,5 then display
         $this->db->where('rfp.patient_id',$this->session->userdata['client']['id']);
         $this->db->where('rfp.is_deleted',0);

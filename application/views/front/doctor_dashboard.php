@@ -189,7 +189,7 @@
 		</div>
 		
 		<!-- Payment Table -->
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col-md-12">
 				<h4>Payment History</h4>	
 				<hr/>
@@ -262,7 +262,7 @@
 					</table>
 				</div>			
 			</div>	
-		</div>	
+		</div> -->	
 		<!-- Payment List -->
 
 	</div>

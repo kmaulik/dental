@@ -135,10 +135,10 @@ $(".btn_delete").click(function(e){
 
 $(".btn_extend").click(function(e){		
 	e.preventDefault();
-	var href = $(this).data('href');
+	var lHref = $(this).attr('href');
 	bootbox.confirm('Are you sure to extend validity for this rfp?' ,function(res){ 	 		
 	    if(res) {
-	        window.location.href = href;
+	        window.location.href = lHref;
 	    }
 	});
 });
