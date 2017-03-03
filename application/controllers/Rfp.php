@@ -1021,44 +1021,48 @@ class Rfp extends CI_Controller {
     }
 
     public function make_doctor_payment(){
-    	
-    	// pr($_POST,1);
-       	
+    	       	
        	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
 
-       	$rfp_id = $this->input->post('rfp_id');
+       	$rfp_id = decode($this->input->post('rfp_id'));
        	$coupan_code = $this->input->post('coupan_code');
        	$due_1 = $this->input->post('due_1');
        	$due_2 = $this->input->post('due_2');
+       	$total_per_discount = 0;
 
-       	$this->session->unset_userdata('doc_payment_data');
+       	if($coupan_code != ''){
+       		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);	       	
+	       	$total_per_discount = (int)$coupon_data['discount'];
+       	}
+
+    	pr($_POST);
+       	pr($coupon_data,1);
+
        	$this->session->set_userdata('doc_payment_data',
        								['rfp_id'=>$rfp_id,'coupan_code'=>$coupan_code,
        								 'due_1'=>$due_1,'due_2'=>$due_2]);
 
        	// fetch data from billing agrrement table for user id
-    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1']); 
+    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1']);
 
     	// If empty create new agrrement with paypal
     	if(empty($billing_data)){
+    		
     		$returnURL = base_url().'rfp/make_doctor_payment_success';
 	       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
 	        //-------------------------------------------------
-	        $resArray = CallShortcutExpressCheckout($returnURL, $cancelURL);
+	       	$resArray = CallShortcutExpressCheckout($returnURL, $cancelURL);
 
-	        // pr($resArray,1);
 	        $ack = strtoupper($resArray["ACK"]);
 	    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 	        	RedirectToPayPal($resArray["TOKEN"]);
-	        } else {
+	    	} else {
 	        	pr('ERROR');
 	        }
     	}else{
-
+    		pr('WARNING -- billing agreement already exists');
     	}
-
-        
     }	
 
     public function make_doctor_payment_success(){
@@ -1084,24 +1088,50 @@ class Rfp extends CI_Controller {
         		$all_details = get_detail_billing_agreement($billing_id);
         		$all_details_json = json_encode($all_details);
 
+        		// ------------------------------------------------------------------------
+        		// Insert into Billing Agreement
+        		// ------------------------------------------------------------------------
 				$ins_data = array(
         							'doctor_id'=>$user_data['id'],
         							'billing_id'=>$billing_id,
-        							'rfp_id'=>decode($doc_payment_data['rfp_id']),
+        							'rfp_id'=>$doc_payment_data['rfp_id'],
         							'status'=>'1',
         							'meta_arr'=>$all_details_json,
         							'created_at'=>date('Y-m-d H:i:s')
         						);
 	        	$this->Rfp_model->insert_record('billing_agreement',$ins_data);
+	        	// ------------------------------------------------------------------------
+	        	
+	        	$due_1_arr = array(
+	        						'doctor_id'=>$user_data['id'],
+	        						'rfp_id'=>$doc_payment_data['rfp_id'],
+	        						'next_billing_date'=>date('Y-m-d'),
+	        						'status'=>'0',
+	        						'price'=>$due_1,
+	        						'created_at'=>date('Y-m-d H:i')
+	        						);
+	        	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
 
+	        	$due_2_arr =  array(
+	        						'doctor_id'=>$user_data['id'],
+	        						'rfp_id'=>$doc_payment_data['rfp_id'],
+	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+	        						'status'=>'0',
+	        						'price'=>$due_2,
+	        						'created_at'=>date('Y-m-d H:i')
+	        						);
+	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
+
+	        	// billing_schedule
+
+	        	// ------------------------------------------------------------------------
 	        	$payment_due_1 = DoReferenceTransaction($billing_id,$due_1);
 
 	        	$this->session->set_flashdata('success','Agreement has been set successfully');
 
 	        	pr($payment_due_1);
 	        	pr($doc_payment_data);
-	        	pr($ins_data,1);	        	
-	        	// redirect();
+	        	pr($ins_data,1);
 			}else{
 
 			}
