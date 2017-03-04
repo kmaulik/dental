@@ -187,6 +187,73 @@
 			<!-- divider -->
 			<i class="fa fa-cog"></i>
 		</div>
+
+
+		<!-- Doctor's All Review -->
+		<div class="row review-list">
+			<?php //pr($won_rfps); ?>
+			<div class="col-md-12">
+				<h4> Your Review </h4>
+				<hr/>
+			</div>	
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Patient Name</th>
+								<th>RFP Title</th>
+								<th>Rating</th>
+								<th>Review Date</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(!empty($review_list)) { ?>
+								<?php foreach($review_list as $key=>$review) :?>	
+									<tr>
+										<td><?=$review['user_name'];?></td>
+										<td><?=$review['rfp_title']; ?></td>
+										<td class="doctor_rating">
+											<div class="star-rating">
+											    <span class="display_rating_<?=$key?>"></span>
+												<span class="avg_rating"><?=$review['rating']?> / 5.0</span>
+											</div>
+										</td>
+										<!-- For Display Star Rating -->
+										<script>
+											$(".star-rating .display_rating_<?=$key?>").rateYo({
+												rating: <?=$review['rating']?>,
+												starWidth : "20px",
+												readOnly: true
+											});
+										</script>
+										<!-- End Display Star Rating -->	
+										<td><?=date("m-d-Y",strtotime($review['created_at'])); ?></td>
+										<td>
+											<!-- === If Thank you note not submitted then enable send note button otherwise only view == -->
+											<?php if($review['doctor_comment'] == '') :?>
+												<a class="label label-success" title="Send Thank you note" data-toggle="modal" data-target=".thankyou_note" onclick="send_reply(<?=$key?>)"><i class="fa fa-reply"></i></a>
+											<?php else : ?>
+												<a class="label label-info" title="View Review" data-toggle="modal" data-target=".thankyou_note" onclick="view_review(<?=$key?>)"><i class="fa fa-eye"></i></a>
+											<?php endif;?>
+											<!-- == End == -->
+										</td>
+									</tr>
+								<?php endforeach; ?>	
+							<?php }else{ ?>
+								<tr>
+									<td colspan="6" class="text-center">
+										<b>No data Found</b>
+									</td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>	
+			</div>	
+		</div>	
+		<!-- // ENDS here Review -->
 		
 		<!-- Payment Table -->
 		<!-- <div class="row">
@@ -407,9 +474,103 @@
 	</div>
 </div>
 
+<!-- ==================== Modal Popup For Thank You Note ========================= -->
+<div class="modal fade thankyou_note" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel"></h4>
+			</div>
+			<form action="<?=base_url('dashboard/thankyou_note')?>" method="POST" id="frmreviewreply">
+				<input type="hidden" name="rfp_rating_id" id="rfp_rating_id">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Patient Name : <span id="review_user_name"></span></label>
+							</div>
+						</div>	
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Rating : <span id="rating_num"></span> / 5.0</label>
+								<div class="star-rating">
+								    <span class="view_display_rating"></span>
+								</div>
+							</div>
+						</div>	
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Review Description :</label>
+								<span id="review_description"></span>
+							</div>
+						</div>	
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Your Comment :</label>
+								<textarea name="doctor_comment" id="text_doctor_comment" class="form-control" rows="5" required></textarea>
+								<span id="label_doctor_comment"></span>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+						</div>	
+					</div>	
+				</div>	
+			</form>
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Thank You Note ========================= -->		
+
 <!-- ================== /Modal Popup For Place a Bid ========================= -->		
 
 <script type="text/javascript">
+
+	function send_reply(key){
+		var review_data = <?php echo json_encode($review_list); ?>;
+		$("#rfp_rating_id").val(review_data[key]['rating_id']);
+		$("#review_user_name").html(review_data[key]['user_name']);
+		$("#rating_num").html(review_data[key]['rating']);
+		$("#label_doctor_comment").hide();
+		$("#text_doctor_comment").show();
+		$("#review_description").html(review_data[key]['feedback']);
+		$(".thankyou_note .modal-title").html("Send Thank you note");
+		$(".thankyou_note .submit_btn").show();
+		star_rating(review_data[key]['rating']);
+
+	}
+
+	function view_review(key){
+		var review_data = <?php echo json_encode($review_list); ?>;
+		$("#review_user_name").html(review_data[key]['user_name']);
+		$("#rating_num").html(review_data[key]['rating']);
+		$("#review_description").html(review_data[key]['feedback']);
+		$("#label_doctor_comment").html(review_data[key]['doctor_comment']);
+		$("#text_doctor_comment").hide();
+		$("#label_doctor_comment").show();
+		$(".thankyou_note .modal-title").html("View Review Details");
+		$(".thankyou_note .submit_btn").hide();
+		star_rating(review_data[key]['rating']);
+		
+	}
+
+	function star_rating(rate){
+		$(".star-rating .view_display_rating").rateYo({
+			rating: rate,
+			starWidth : "25px",
+			readOnly: true
+		});
+	}
 
 	function refund_request(key){
 		var rfp_data = <?php echo json_encode($rfp_list); ?>;

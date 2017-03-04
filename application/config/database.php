@@ -77,9 +77,9 @@ $query_builder = TRUE;
 $db['default'] = array(
     'dsn' => '',
 
-    'hostname' => 'localhost',
-    'username' => 'root',
-    'password' => '',
+    'hostname' => '192.168.1.201',
+    'username' => 'dental_proj',
+    'password' => 'sCmOZ449lAcI2IK',
     // 'username' => 'root',
     // 'password' => '',
     'database' => 'dental_proj',

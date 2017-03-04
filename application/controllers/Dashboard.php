@@ -27,6 +27,7 @@ class Dashboard extends CI_Controller {
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps            
             
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
+            $data['review_list']=$this->Rfp_model->get_user_rating($user_id);
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
