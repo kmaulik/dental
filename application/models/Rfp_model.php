@@ -336,6 +336,7 @@ class Rfp_model extends CI_Model {
         $this->db->where('rr.doctor_id',$user_id);
         $this->db->where('rr.is_deleted',0);
         $this->db->where('rr.is_blocked',0);
+        $this->db->order_by('rr.id','desc');
         $query = $this->db->get();
         return $query->result_array();
     }

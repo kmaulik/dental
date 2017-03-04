@@ -94,6 +94,9 @@
 												<!-- <span class="label label-success rfp-price">&#36;<?=$review['bid_amount']?></span> -->
 											</div>	
 										</h4>
+										<!-- ========= RFP Title ======== -->
+										<p class="review-rfp_title">RFP Title : <?php echo $review['rfp_title']; ?></p>
+										<!-- ========= End RFP Title ======== -->	
 										<ul class="list-inline">
 											<li>
 												<?php $rate=number_format(($review['rating']),2);?>
@@ -121,7 +124,7 @@
 										<!-- ========== Doctor Comment (Thank you note) ===== -->
 										<?php if($review['doctor_comment'] != '') :?>
 											<p class="review-doc-comment">
-												<?php echo $review['doctor_comment']; ?>
+												<blockquote><?php echo $review['doctor_comment']; ?></blockquote>
 											</p>	
 										<?php endif; ?>	
 										<!-- ========== End Doctor Comment (Thank you note) ===== -->
