@@ -124,20 +124,19 @@
 										
 										$amt = $w_rfp['amount']; // Bid price
 										
-										$percentage = 10; 
+										$percentage = config('doctor_fees');
 										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
-										
-										$is_second_due = 1;										
-										$due_1 = 45;
-										$due_2 = 0;
 
-										if($payable_price > 45){
-											$due_1 = 45;
-											$due_2 = $payable_price - 45;
+										$is_second_due = 1;
+										$due_1 = config('doctor_initial_fees');
+										$due_2 = 0;
+										$is_second_due = 0;
+
+										if($payable_price > $due_1){
+											$due_2 = $payable_price - $due_1;
 											$is_second_due = 1;
 										}else{
-											$due_1 = 45;
-											$is_second_due = 0;
+											$payable_price = $due_1;
 										}
 							?>
 									<tr>
@@ -154,16 +153,17 @@
 										<td><?php echo ucfirst($w_rfp['treatment_plan_total']); ?></td>
 										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
 										<td>
-											
+
 										</td>
 										<td>
 											<a class="btn btn-3d btn-xs btn-reveal btn-green"
 											   data-is-second-due="<?php echo $is_second_due; ?>"
 											   data-due-one="<?php echo $due_1; ?>"
 											   data-due-two="<?php echo $due_2; ?>"
+											   data-total-due="<?php echo $payable_price; ?>"
 											   data-mybid="<?php echo $amt; ?>"
 											   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
-											   onclick="show_modal_doctor(this)">
+											   onclick="show_modal_doctor(this)" >
 												<i class="fa fa-money"></i><span>Proceed </span>
 											</a>
 										</td>
@@ -183,7 +183,8 @@
 		</div>	
 		<!-- // ENDS here WON RFP -->
 
-		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+		<div class="divider divider-color divider-center divider-short">
+			<!-- divider -->
 			<i class="fa fa-cog"></i>
 		</div>
 		
@@ -390,8 +391,11 @@
 					<div class="col-sm-12">
 						<div class="form-group">
 							<input type="hidden" name="due_1" id="due_1_id">
-							<input type="hidden" name="due_2" id="due_2_id">
+							<input type="hidden" name="due_2" id="due_2_id">							
 							<input type="hidden" name="rfp_id" id="rfp_id_frm">
+							<input type="hidden" name="total_due_modal" id="total_due_modal">
+							<input type="hidden" name="orignal_price" id="orignal_price">
+							<input type="hidden" name="is_coupon_applied" id="is_coupon_applied" value="0" >
 							<input type="submit" name="submit" class="btn btn-info" value="Make Payment">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>	
@@ -431,39 +435,28 @@
 	}
 
 	//----------------- For Add To favorite & Remove Favorite RFP ------------------
-	$(".favorite").on( "click", function() {	
-		
-			var rfp_id= $(this).attr('data-id');
-			var classNames = $(this).attr('class').split(' ');
-			var data1=$(this);
-			if($.inArray('unfavorite_rfp',classNames) != '-1')
-			{
-				// bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
-				// 	if(res){
-						$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
-							if(data){
-								data1.removeClass('unfavorite_rfp');
-								data1.addClass('favorite_rfp');
-								$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
-							}
-						});
-				// 	}	
-				// });
-			}
-			else{
-				// bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
-				// 	if(res){	
-						$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
-							if(data){
-								data1.removeClass('favorite_rfp');
-								data1.addClass('unfavorite_rfp');
-								$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP removed to your favorite list successfully. </div>');
-							
-							}
-						});
-				// 	}
-				// });
-			}
+	$(".favorite").on( "click", function() {		
+		var rfp_id= $(this).attr('data-id');
+		var classNames = $(this).attr('class').split(' ');
+		var data1=$(this);
+		if($.inArray('unfavorite_rfp',classNames) != '-1'){				
+			$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
+				if(data){
+					data1.removeClass('unfavorite_rfp');
+					data1.addClass('favorite_rfp');
+					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
+				}
+			});
+		} else {
+			$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
+				if(data){
+					data1.removeClass('favorite_rfp');
+					data1.addClass('unfavorite_rfp');
+					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP removed to your favorite list successfully. </div>');
+				
+				}
+			});
+		}
 		return false;
 	});
 	
@@ -474,6 +467,7 @@
 		var due_2= $(obj).data('due-two');
 		var mybid= $(obj).data('mybid');
 		var rfp_id = $(obj).data('rfpid');
+		var total_due = $(obj).data('total-due');
 
 		var total_payment = parseFloat(due_1) + parseFloat(due_2);
 
@@ -484,16 +478,14 @@
 		$('#due_1_id').val(due_1);
 		$('#due_2_id').val(due_2);
 		$('#rfp_id_frm').val(rfp_id);
+		$('#total_due_modal').val(total_due);
 
 		$('.total-price').html('$ '+total_payment);
-
-		$('.doctor_payment').modal('show');
-
-
-		console.log(is_second_due);
-		console.log(due_1);
-		console.log(due_2);
-		console.log(mybid);
+		
+		$(".coupan-msg").html("");
+		$('#coupan_code').val('');
+		$('#is_coupon_applied').val('0');
+		$('.doctor_payment').modal('show');			
 	}
 
 	$("#apply-code").click(function(){
@@ -506,24 +498,23 @@
 			$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
 
 				if(data != 0){
-
+					var is_coupon_appiled = $('#is_coupon_applied').val();
 					// If coupon code is limit is exceed than allowed no of times
-					if(data['per_user_limit'] > data['total_apply_code']){
-
-						var due_1 = $('#due_1_id').val();
-						var due_2 = $('#due_2_id').val();
-						var total = parseFloat(due_1) + parseFloat(due_2);
+					if(data['per_user_limit'] > data['total_apply_code'] && is_coupon_appiled == '0'){
+							
+						var total = parseFloat($('#total_due_modal').val());
+						var intial_payment = '<?php echo config("doctor_initial_fees"); ?>'; // fetch initial value from db
 
 						discount_amt = 	((total * data['discount'])/100);
-						var after_discount = total - discount_amt;
-
-						if(after_discount > 45){
-							due_1 = 45;
-							due_2 = after_discount - 45
+						var after_discount = total - discount_amt;						
+					 	
+						if(after_discount > parseFloat(intial_payment)){
+							due_1 = parseFloat(intial_payment);
+							due_2 = after_discount - due_1;
 						}else{
 							due_1 = after_discount;
 							due_2 = 0
-						}			
+						}
 							
 						$('.due_1_price').html('$ '+due_1);
 						$('.due_2_price').html('$ '+due_2);
@@ -531,12 +522,11 @@
 						$('#due_1_id').val(due_1);
 						$('#due_2_id').val(due_2);
 
-						$('.total-price').html('$ '+after_discount);
+						$('#orignal_price').val(total); // orignal price
+						$('#total_due_modal').val(after_discount); // after discount price						
+						$('.total-price').html('$ '+ after_discount);
 
-						console.log('Due=== '+ due_1);
-						console.log('Due=== '+ due_2);
-						console.log('final payment '+after_discount);
-
+						$('#is_coupon_applied').val('1');
 						$(".coupan-msg").html("Coupon Code apply successfully");
 						$(".coupan-msg").css("color", "green");
 					}else{

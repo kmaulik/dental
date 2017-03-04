@@ -19,8 +19,7 @@ class Dashboard extends CI_Controller {
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
         
-        //pr($data['rfp_list'],1);
-        // Means 4 Doctor Dashboard 
+        // Means 4 Doctor Dashboard
         if($this->session->userdata('client')['role_id'] == 4) {
                         
             $where = 'is_deleted !=  1 and is_blocked != 1';
@@ -35,7 +34,7 @@ class Dashboard extends CI_Controller {
             //$data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
-
+            
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
             //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
@@ -56,8 +55,6 @@ class Dashboard extends CI_Controller {
 
         if($get_tab == 'office_map'){
             $data['tab'] = 'office_map';
-            // echo decode($this->input->get('address'));
-            // die();
         }else{
             $data['tab'] = 'info';
         }
@@ -84,8 +81,7 @@ class Dashboard extends CI_Controller {
         $this->googlemaps->add_marker($marker);
 
         $data['map'] = $this->googlemaps->create_map();
-
-        // pr($data['map'],1);
+                
         // ------------------------------------------------------------------------
 
         if($_POST){

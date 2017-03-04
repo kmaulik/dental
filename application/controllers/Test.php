@@ -29,7 +29,7 @@ class Test extends CI_Controller {
         $cancelURL = base_url().'test/';
 
         //'-------------------------------------------------
-        $resArray = CallShortcutExpressCheckout($returnURL, $cancelURL);
+        $resArray = CallShortcutExpressCheckout('37',$returnURL, $cancelURL);
 
         // pr($resArray,1);
         $ack = strtoupper($resArray["ACK"]);
@@ -44,13 +44,14 @@ class Test extends CI_Controller {
         $data = array();
         $PayerID = $this->input->get('PayerID');
         $data['back'] = base_url().'test';
-        $data['subscribe'] = base_url().'test/subscribe';
-
+        $data['subscribe'] = base_url().'test/subscribe';        
 
         if (isset($_REQUEST['token'])) {
             $token = $_REQUEST['token'];
             
             $ret_arr = CreateBillingAgreement($token);
+
+            // pr($ret_arr,1);
             if($ret_arr != ''){
                 $payer_id = $_REQUEST['PayerID'];
                 $token= $_REQUEST['token'];
@@ -58,8 +59,8 @@ class Test extends CI_Controller {
                 echo "Billing Agreement : <br>";
                 pr($ret_arr);
                 echo "Payment Transaction : <br>";
-                pr($res1);
-                $retttt = DoReferenceTransaction($ret_arr['BILLINGAGREEMENTID']);
+                // pr($res1);
+                // $retttt = DoReferenceTransaction($ret_arr['BILLINGAGREEMENTID']);
                 echo "RefrenceTransaction : <br>";
                 pr($retttt,1);
             }
@@ -80,7 +81,7 @@ class Test extends CI_Controller {
         pr($res,1);
     }
 
-    public function paypal_info($token='6XS994423T964234F'){
+    public function paypal_info($token='97H5001232975174V'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }
@@ -89,6 +90,12 @@ class Test extends CI_Controller {
         $all_details = get_detail_billing_agreement('B-19E41469TH776680D');
         pr($all_details,1);
     }           
+
+    public function cancel_agreement(){
+         // B-039652215T6598427
+        $res = cancel_billing_agreement();
+        pr($res,1);
+    }
 }
 
 /* End of file Test.php */

@@ -265,7 +265,6 @@
 		
 	</div>
 </section>
-<?php echo $map['html']; ?>
 <!-- / -->
 
 <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw"></script> -->
