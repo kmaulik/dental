@@ -378,6 +378,9 @@ section.page-header .breadcrumb a:hover {
   color: #fff;
   border-radius: 5px;
 }
+.store-list .review-rfp_title{
+  margin-bottom: 0px;
+}
 /************* End RFP BId & Review List ************/
 
 /************* View Profile **************/
@@ -669,6 +672,11 @@ span.time {
 }
 .bid_data {
   border-top: 1px solid #ddd;
+}
+
+.review-list .doctor_rating span{
+  display: inline-block;
+  font-size: 12px;
 }
 
 /*************** media start here 	*************/

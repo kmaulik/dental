@@ -28,7 +28,11 @@ class Dashboard extends CI_Controller {
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps            
             
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
-            $data['subview']="front/doctor_dashboard";
+            // Fetch All Review Doctor Wise
+            $data['review_list']=$this->Rfp_model->get_user_rating($this->session->userdata('client')['id']);
+            //pr($data['review_list'],1);
+            $data['subview']="front/doctor_review_dashboard";
+            //$data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
 
@@ -324,6 +328,25 @@ class Dashboard extends CI_Controller {
         $res_str = json_encode($res_arr);
         $this->Users_model->update_user_data($user_id,['alert_search_setting'=>$res_str]);
         echo json_encode(['success'=>true]);
+    }
+
+    /* 
+    * For Doctor Submit the Thank you note on particular review
+    */
+    public function thankyou_note(){
+
+        if($this->input->post('submit')){
+            $review_data = [
+                          'doctor_comment'  => $this->input->post('doctor_comment'), 
+                        ];
+            $res=$this->Rfp_model->update_record('rfp_rating',['id' => $this->input->post('rfp_rating_id')],$review_data);
+            if($res){
+                $this->session->set_flashdata('success','Thank You Note Successfully Submitted');
+            }else{
+                $this->session->set_flashdata('error','Error Into Submit Thank You Note');
+            }
+        }
+        redirect('dashboard');
     }
 
 }
