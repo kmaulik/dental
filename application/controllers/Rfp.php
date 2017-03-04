@@ -1134,7 +1134,7 @@ class Rfp extends CI_Controller {
 	        	$due_2_arr =  array(
 	        						'doctor_id'=>$user_data['id'],
 	        						'rfp_id'=>$doc_payment_data['rfp_id'],
-	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),	        						
+	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
 	        						'price'=>$due_2,
 	        						'created_at'=>date('Y-m-d H:i')
 	        						);
@@ -1151,21 +1151,20 @@ class Rfp extends CI_Controller {
 	        							'payable_price'=>$due_1,
 	        							'discount'=>(isset($coupon_data['discount'])) ? $coupon_data['discount']:0,
 	        							'promotional_code_id'=>(isset($coupon_data['id'])) ? $coupon_data['id']:0,
-	        							'paypal_token'=>$payment_due_1['TRANSACTIONID'],
+	        							'paypal_token'=>$payment_due_1['PAYMENTINFO_0_TRANSACTIONID'],
 	        							'meta_arr'=>$payment_meta_arr,
 	        							'status'=>'0',
 	        							'created_at'=>date('Y-m-d H:i:s')
-	        						);	        	
+	        						);
 	        	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
 
 	        	// ------------------------------------------------------------------------
 
 	        	$this->session->set_flashdata('success','Agreement has been set successfully');
-	        	
+
 	        	pr($payment_due_1);
 	        	pr($doc_payment_data);
 	        	pr($ins_data,1);
-	        		        		        		        		        	
 			}else{
 
 			}

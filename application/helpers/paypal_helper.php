@@ -562,9 +562,10 @@
 		return $resArray;
 	}
 
+	// v! Do not make any changes into this function
 	//---------------- DoReferenceTransaction @DHK --------
 	function DoReferenceTransaction($bill_id,$amt='42'){
-		
+
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&AMT=".$amt;
 		$nvpstr .="&CURRENCYCODE=USD";		
@@ -587,7 +588,7 @@
 	}
 
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
-	function cancel_billing_agreement($REFERENCEID='B-039652215T6598427'){
+	function cancel_billing_agreement($REFERENCEID='B-4JG22401JU920743V'){
 
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&REFERENCEID=".$REFERENCEID;

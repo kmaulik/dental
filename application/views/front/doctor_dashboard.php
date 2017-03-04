@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
+<script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
