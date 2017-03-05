@@ -126,7 +126,7 @@
 		jQuery(window).load(function() {
 			
 			jQuery('#preloader').fadeOut(1000, function() {
-				jQuery('#preloader').remove();
+				// jQuery('#preloader').remove();
 			});
 
 			// setTimeout(function() {}, 1000); 

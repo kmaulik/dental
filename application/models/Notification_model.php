@@ -34,7 +34,7 @@ class Notification_model extends CI_Model {
 		return $last_id;
 	}
 
-	public function get_all_notifications($user_id){
+	public function get_all_notifications($user_id,$limit,$offset){
 		$this->db->order_by('created_at','desc');
 		$this->db->select('notifications.*,u1.fname as from_fname,u1.lname as from_lname,u2.fname as to_fname,u2.lname as to_lname,rfp.title');
 		
@@ -44,8 +44,26 @@ class Notification_model extends CI_Model {
 		$this->db->join('rfp','notifications.rfp_id = rfp.id','left');
 
 		$this->db->where(['notifications.to_id'=>$user_id]);
+
+		if(!empty($limit) && !empty($offset)){
+			$this->db->limit($limit,$offset);
+		}else{
+			$this->db->limit($limit);
+		}
+
 		$res_array = $this->db->get('notifications')->result_array();
 		
+		return $res_array;
+	}
+
+	public function get_all_notifications_count($user_id){
+		$this->db->order_by('created_at','desc');
+		$this->db->select('notifications.*,u1.fname as from_fname,u1.lname as from_lname,u2.fname as to_fname,u2.lname as to_lname,rfp.title');
+		$this->db->join('users as u1','notifications.from_id = u1.id');
+		$this->db->join('users as u2','notifications.to_id = u2.id');
+		$this->db->join('rfp','notifications.rfp_id = rfp.id','left');
+		$this->db->where(['notifications.to_id'=>$user_id]);
+		$res_array = $this->db->get('notifications')->num_rows();
 		return $res_array;
 	}
 

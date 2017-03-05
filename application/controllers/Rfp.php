@@ -1021,7 +1021,7 @@ class Rfp extends CI_Controller {
     }
 
     public function make_doctor_payment(){
-    	       	
+    	
        	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
 
@@ -1044,9 +1044,9 @@ class Rfp extends CI_Controller {
        								 'actual_price'=>$actual_price]);
 
        	// fetch data from billing agrrement table for user id
-    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1']);
+    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1'],true);
 
-    	// If empty create new agrrement with paypal
+    	// If empty create new agrrement with paypal ( Redirect to paypal if no agreement created )
     	if(empty($billing_data)){
     		
     		$returnURL = base_url().'rfp/make_doctor_payment_success';
@@ -1061,6 +1061,68 @@ class Rfp extends CI_Controller {
 	        	pr('ERROR');
 	        }
     	}else{
+
+    		$billing_id = $billing_data['billing_id'];
+    		$bill_api_data = get_detail_billing_agreement($billing_id);
+    		
+    		$ack_bill_data = strtoupper($bill_api_data['ACK']);
+    		if ($ack_bill_data == "FAILURE") {
+    			// Billing agreement somehow cancelled by the user
+    			//Check status update in billing schedule
+				$this->Rfp_model->update_record('billing_agreement',['billing_id'=>$billing_id],['status'=>'0']);
+    			$this->session->set_flashdata('error', 'Billing agreement was being cancelled. Please try again.');
+    			redirect('dashboard');
+    		}
+
+    		$payment_arr = DoReferenceTransaction($billing_id,$due_1);
+    		$payment_arr_json = json_encode($payment_arr);
+    		// pr($ret_arr);
+    		// pr($bill_api_data,1);
+
+
+    		// ------------------------------------------------------------------------
+    		// Insert into Next Schdule payment (billing_schedule)
+        	// ------------------------------------------------------------------------
+        	$due_1_arr = array(
+        						'doctor_id'=>$user_data['id'],
+        						'rfp_id'=>$rfp_id,
+        						'next_billing_date'=>date('Y-m-d'),
+        						'transaction_id'=>$payment_arr['TRANSACTIONID'],
+        						'price'=>$due_1,
+        						'created_at'=>date('Y-m-d H:i')
+        						);
+        	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
+        
+        	if($due_2 > 0){
+	        	$due_2_arr =  array(
+	        						'doctor_id'=>$user_data['id'],
+	        						'rfp_id'=>$rfp_id,
+	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+	        						'price'=>$due_2,
+	        						'created_at'=>date('Y-m-d H:i')
+	        						);
+	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
+	        }
+
+	        // ------------------------------------------------------------------------
+    		// Insert into Next Schdule payment (billing_schedule)
+        	// ------------------------------------------------------------------------
+
+        	$transaction_arr =  array(
+        							'user_id'=>$user_data['id'],
+        							'rfp_id'=>$rfp_id,
+        							'actual_price'=>$orignal_price,
+        							'payable_price'=>$due_1,
+        							'discount'=>(isset($coupon_data['discount'])) ? $coupon_data['discount']:0,
+        							'promotional_code_id'=>(isset($coupon_data['id'])) ? $coupon_data['id']:0,
+        							'paypal_token'=>$payment_arr['TRANSACTIONID'],
+        							'meta_arr'=>$payment_arr_json,
+        							'status'=>'0',
+        							'created_at'=>date('Y-m-d H:i:s')
+        						);
+        	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+
+
     		pr('WARNING -- billing agreement already exists');
     	}
     }	
@@ -1102,12 +1164,12 @@ class Rfp extends CI_Controller {
         		// billing_schedule Make Initial payment
 	        	// ------------------------------------------------------------------------
 	        	$payment_due_1 = DoExpressCheckoutPayment($payer_id,$token,$due_1);
-	        	// pr($payment_due_1,1);
 	        	$payment_meta_arr = json_encode($payment_due_1);
 
         		// ------------------------------------------------------------------------
         		// Insert into Billing Agreement
         		// ------------------------------------------------------------------------
+        		$this->Rfp_model->delete_record('billing_agreement',['doctor_id'=>$user_data['id']]);
 				$ins_data = array(
         							'doctor_id'=>$user_data['id'],
         							'billing_id'=>$billing_id,
@@ -1131,14 +1193,16 @@ class Rfp extends CI_Controller {
 	        						);
 	        	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
 	        	
-	        	$due_2_arr =  array(
-	        						'doctor_id'=>$user_data['id'],
-	        						'rfp_id'=>$doc_payment_data['rfp_id'],
-	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
-	        						'price'=>$due_2,
-	        						'created_at'=>date('Y-m-d H:i')
-	        						);
-	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
+	        	if($due_2 > 0){
+		        	$due_2_arr =  array(
+		        						'doctor_id'=>$user_data['id'],
+		        						'rfp_id'=>$doc_payment_data['rfp_id'],
+		        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+		        						'price'=>$due_2,
+		        						'created_at'=>date('Y-m-d H:i')
+		        						);
+		        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
+	        	}
 
 	        	// ------------------------------------------------------------------------
         		// Insert into Next Schdule payment (billing_schedule)

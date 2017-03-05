@@ -32,7 +32,7 @@ class Cron extends CI_Controller {
 
 						$this->Rfp_model->update_record('payment_transaction',
 														['paypal_token'=>$res['transaction_id']],
-														['status'=>'1','meta_arr'=>$return_json]);
+														['status'=>'1']);
 
 					}
 				} // END of IF condition

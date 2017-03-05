@@ -32,6 +32,21 @@ class Home extends CI_Controller {
 		echo json_encode($ret_arr);
 	}
 
+	public function fetch_notification(){
+		$limit = $this->input->post('limit');
+		$offset = $this->input->post('offset');
+
+		$ret = get_notifications($limit,$offset);
+		$new_str = '';
+
+		// if(!empty($ret)){
+		// 	foreach(){
+				
+		// 	}
+		// }
+
+		echo json_encode('success');	
+	}
 
 	// ------------------------------------------------------------------------
 	// v! - Reminders Module

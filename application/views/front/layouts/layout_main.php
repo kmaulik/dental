@@ -1,7 +1,9 @@
 <?php 
     $client_login = $this->session->userdata('client');    
     $all_notifications = get_notifications(); 
-
+    $all_noti_cnt = get_total_noti_count();
+    // pr($all_notifications,1);
+    // die;
     if(!empty($client_login)) { 
         $unread_cnt = get_notifications_unread_count();
     }
@@ -212,7 +214,8 @@
         <div class="inner">
             <span class="loader"></span>
         </div>
-    </div><!-- /PRELOADER -->
+    </div>
+    <!-- /PRELOADER -->
     
     <!-- 
             SIDE PANEL 
@@ -273,6 +276,11 @@
                         </a>
                     </li>
                     <?php } } ?>                    
+                    <!-- <li>
+                        <a onclick="fetch_ajax_notification(this)" data-limit="3" data-offset="3" id="load_more">
+                            Load More
+                        </a>
+                    </li> -->
                 </ul>
 
             </div>
@@ -334,6 +342,22 @@
 
             }
         });
+    }
+
+    function fetch_ajax_notification(obj){
+        var limit = $(obj).data('limit');
+        var offset = $(obj).attr('data-offset');
+
+        $.ajax({
+            type:"POST",
+            url:"<?php echo base_url().'home/fetch_notification'; ?>",
+            data:{limit:limit,offset:offset},
+            dataType:"json",
+            success:function(data){
+                offset = parseInt(offset) + 3;
+                $('#load_more').attr('data-offset',offset);
+            }
+        }); 
     }
 
 </script>
