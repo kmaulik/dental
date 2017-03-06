@@ -678,8 +678,26 @@ span.time {
   display: inline-block;
   font-size: 12px;
 }
+.review-doc-comment::after {
+  border-bottom: 12px solid #fff;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  content: " ";
+  height: 0;
+  left: 10px;
+  position: absolute;
+  top: -12px;
+  width: 0;
+}
+.review-doc-comment {
+  background: #fff none repeat scroll 0 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+  padding: 15px;
+  position: relative;
+}
 
-/*************** media start here 	*************/
+/*************** ` start here 	*************/
 @media (min-width:768px) and (max-width:991px){
   .wrapper_inner_box {
   padding-right: 20px;

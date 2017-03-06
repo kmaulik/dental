@@ -130,10 +130,10 @@ $("#apply-code").click(function(){
 	if(coupan_code != ''){
 		var discount_amt=0;
 		$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
-			
-			if(data != 0){
+			console.log(data);
+			if(data != '' && data['id'] != null){
 				//---------- Check apply code limit for per user ----------
-				if(data['per_user_limit'] > data['total_apply_code']){
+				if(data['per_user_limit'] >= data['total_apply_code']){
 					discount_amt = 	((<?=config('patient_fees')?> * data['discount'])/100);
 					var final_price = <?=config('patient_fees')?> - discount_amt;
 					$(".final-prices").html(final_price);
@@ -141,16 +141,22 @@ $("#apply-code").click(function(){
 					$(".coupan-msg").css("color", "green");
 				}
 				else{
+					var final_price = <?=config('patient_fees')?>;
+					$(".final-prices").html(final_price);
 					$(".coupan-msg").html("Sorry, You Already applied this code");
 					$(".coupan-msg").css("color", "red");
 				}
 			}else{
+				var final_price = <?=config('patient_fees')?>;
+				$(".final-prices").html(final_price);
 				$(".coupan-msg").html("Invalid Coupon Code");
 				$(".coupan-msg").css("color", "red");
 			}
 
 		},"json");
 	}else{
+		var final_price = <?=config('patient_fees')?>;
+		$(".final-prices").html(final_price);
 		$(".coupan-msg").html("Please Enter Coupon Code");
 		$(".coupan-msg").css("color", "red");	
 	}

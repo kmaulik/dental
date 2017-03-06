@@ -55,7 +55,9 @@
 				<li class="<?php if($tab == 'info'){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>
 				<li class="<?php if($tab == 'avatar'){ echo 'active'; }?>"><a href="#avatar" data-toggle="tab">Avatar</a></li>
 				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>			
-				<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>"><a href="#office_map" data-toggle="tab">Office Map</a></li>
+				<?php if($this->session->userdata('client')['role_id'] == 4) :?> <!-- If Role (4) Dcotor Then display this map option-->
+					<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>"><a href="#office_map" data-toggle="tab">Office Map</a></li>
+				<?php endif; ?>
 			</ul>
 			
 			<div class="tab-content margin-top-20">
@@ -116,7 +118,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Phone No</label>
-							<input type="text" placeholder="zipcode" name="phone" class="form-control" value="<?php echo $db_data['phone']; ?>">
+							<input type="text" placeholder="Phone no" name="phone" class="form-control" value="<?php echo $db_data['phone']; ?>">
 						</div>
 
 						<div class="form-group">
@@ -129,6 +131,18 @@
 							<label class="control-label">Address</label>
 							<textarea name="address" id="address" class="form-control"><?php echo $db_data['address']; ?></textarea>
 						</div> -->
+
+						<!-- If Role (4) Dcotor Then display office email & description-->
+						<?php if($this->session->userdata('client')['role_id'] == 4) :?> 
+							<div class="form-group">
+								<label class="control-label">Public Email</label>
+								<input type="text" placeholder="Public Email" name="public_email" class="form-control" value="<?php echo $db_data['public_email']; ?>">
+							</div>
+							<div class="form-group">
+								<label class="control-label">Office Description</label>
+								<textarea placeholder="Office Description" name="office_description" class="form-control"><?php echo $db_data['office_description']; ?></textarea>
+							</div>
+						<?php endif;?>
 
 						<div class="margiv-top10">
 							<input type="hidden" name="tab" value="info">

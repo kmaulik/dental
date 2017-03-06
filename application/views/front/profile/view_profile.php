@@ -124,7 +124,7 @@
 										<!-- ========== Doctor Comment (Thank you note) ===== -->
 										<?php if($review['doctor_comment'] != '') :?>
 											<p class="review-doc-comment">
-												<blockquote><?php echo $review['doctor_comment']; ?></blockquote>
+												<?php echo $review['doctor_comment']; ?>
 											</p>	
 										<?php endif; ?>	
 										<!-- ========== End Doctor Comment (Thank you note) ===== -->

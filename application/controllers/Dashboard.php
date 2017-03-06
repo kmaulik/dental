@@ -27,10 +27,13 @@ class Dashboard extends CI_Controller {
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps                    
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
+            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
+            //pr($data['appointment_list'],1);
             $data['subview']="front/doctor_dashboard";
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
+            $data['appointment_list']=$this->Rfp_model->get_patient_appointment_rfp($user_id); // Fetch RFP For Appointment
             //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
@@ -93,6 +96,7 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
                                                  ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+                $this->form_validation->set_rules('public_email', 'Public Email', 'valid_email');
             }
 
             if($tab == 'avatar'){
@@ -140,6 +144,8 @@ class Dashboard extends CI_Controller {
                 $zipcode = $this->input->post('zipcode');
                 $gender = $this->input->post('gender');
                 $phone = $this->input->post('phone');
+                $public_email = $this->input->post('public_email');
+                $office_description = $this->input->post('office_description');
 
                 $a = explode('-',$this->input->post('birth_date'));
                 $birth_date = $a[2].'-'.$a[0].'-'.$a[1];
@@ -157,7 +163,10 @@ class Dashboard extends CI_Controller {
                                     'phone'=>$phone,
                                     'latitude' => $latitude,
                                     'longitude' => $longitude,
-                                    'birth_date'=>$birth_date
+                                    'birth_date'=>$birth_date,
+                                    'public_email'=>$public_email,
+                                    'office_description'=>$office_description,
+
                                 );
 
                 $this->Users_model->update_user_data($user_id,$upd_data);
@@ -335,6 +344,38 @@ class Dashboard extends CI_Controller {
                 $this->session->set_flashdata('success','Thank You Note Successfully Submitted');
             }else{
                 $this->session->set_flashdata('error','Error Into Submit Thank You Note');
+            }
+        }
+        redirect('dashboard');
+    }
+
+    /* 
+    * Manage Doctor Appointment
+    */  
+    public function manage_appointment(){
+
+        if($this->input->post('submit')){
+
+            $date= explode('-',$this->input->post('appointment_date'));
+            $appointment_date= $date[2]."-".$date[0]."-".$date[1];
+
+            $time = explode(':',$this->input->post('appointment_time'));
+            $appointment_time = trim($time[0]).':'.trim($time[1]).':00';
+            
+            $appointment_data = [
+                          'rfp_id'  => $this->input->post('rfp_id'), 
+                          'doc_id'  => $this->session->userdata('client')['id'], 
+                          'appointment_date'  => $appointment_date, 
+                          'appointment_time'  => $appointment_time, 
+                          'doc_comments'  => $this->input->post('doc_comments'), 
+                          'created_at'  => date("Y-m-d H:i:s"),
+                        ];
+
+            $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+            if($res){
+                $this->session->set_flashdata('success','Appointment Successfully Submitted');
+            }else{
+                $this->session->set_flashdata('error','Error Into Submit Appointment');
             }
         }
         redirect('dashboard');

@@ -420,4 +420,39 @@ class Rfp_model extends CI_Model {
         return $result;
     } 
 
+    /* ----------------------- Fetch RFP For Doctor Appointment (With RFP Status [5] & RFP Bid status [2]) ----------------------- */
+    function get_doctor_appointment_rfp($user_id){
+        
+        $this->db->select('rfp.*,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.appointment_date,a.appointment_time,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
+        $this->db->join('appointments a','rfp.id = a.rfp_id and a.is_cancelled = 0','left');
+        $this->db->where('rb.doctor_id',$user_id);
+        $this->db->where('rb.status','2'); // RFP BID Status 2 means winner for this rfp
+        $this->db->where('rb.is_deleted',0);
+        $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
+        $this->db->where('rfp.is_deleted',0);
+        $this->db->where('rfp.is_blocked',0);
+        $this->db->where('u.is_deleted',0);
+        $this->db->where('u.is_blocked',0);
+        $data=$this->db->get('rfp')->result_array();
+        return $data;
+    }
+
+     /* ----------------------- Fetch RFP For Patient Appointment (With RFP Status [5]) ----------------------- */
+    function get_patient_appointment_rfp($user_id){
+        $this->db->select('rfp.*,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.appointment_date,a.appointment_time,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->join('appointments a','rfp.id = a.rfp_id');
+        $this->db->join('users u','a.doc_id = u.id');
+        $this->db->where('rfp.patient_id',$user_id);
+        $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
+        $this->db->where('rfp.is_deleted',0);
+        $this->db->where('rfp.is_blocked',0);
+        $this->db->where('a.is_cancelled',0);
+        $this->db->where('u.is_deleted',0);
+        $this->db->where('u.is_blocked',0);
+        $data=$this->db->get('rfp')->result_array();
+        return $data;
+    }
+
 }    
