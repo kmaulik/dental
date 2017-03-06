@@ -547,7 +547,8 @@
 		return $resArray;
 	}
 
-	 //---------------- DoExpressCheckoutPayment @DHK -------
+	// v! Do not make any changes into this function
+	//---------------- DoExpressCheckoutPayment @DHK -------
 	function DoExpressCheckoutPayment($payer_id,$token,$amt){
 
 		$nvpstr ="&PAYERID=" . $payer_id;
@@ -562,9 +563,10 @@
 		return $resArray;
 	}
 
+	// v! Do not make any changes into this function
 	//---------------- DoReferenceTransaction @DHK --------
 	function DoReferenceTransaction($bill_id,$amt='42'){
-		
+
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&AMT=".$amt;
 		$nvpstr .="&CURRENCYCODE=USD";		
@@ -575,6 +577,7 @@
 		return $resArray;
 	}
 
+	// v! Do not make any changes into this function
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
 	function get_detail_billing_agreement($REFERENCEID,$STATUS=''){
 
@@ -586,8 +589,9 @@
 		return $resArray;
 	}
 
+	// v! Do not make any changes into this function
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
-	function cancel_billing_agreement($REFERENCEID='B-039652215T6598427'){
+	function cancel_billing_agreement($REFERENCEID='B-05939809V06827202'){
 
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&REFERENCEID=".$REFERENCEID;

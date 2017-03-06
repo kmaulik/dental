@@ -313,13 +313,26 @@
         }
     }
 
-    function get_notifications(){
+    function get_notifications($limit="3",$offset="0"){
         $CI =& get_instance();
         $CI->load->model('Notification_model');
         $userdata = $CI->session->userdata('client');
         if(!empty($userdata)){
             $u_id = $userdata['id'];
-            $all_notifications = $CI->Notification_model->get_all_notifications($u_id);
+            $all_notifications = $CI->Notification_model->get_all_notifications($u_id,$limit,$offset);
+            return $all_notifications;
+        }else{
+            return false;
+        }
+    }
+
+    function get_total_noti_count(){
+        $CI =& get_instance();
+        $CI->load->model('Notification_model');
+        $userdata = $CI->session->userdata('client');
+        if(!empty($userdata)){
+            $u_id = $userdata['id'];
+            $all_notifications = $CI->Notification_model->get_all_notifications_count($u_id);
             return $all_notifications;
         }else{
             return false;

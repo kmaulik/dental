@@ -81,7 +81,7 @@ class Test extends CI_Controller {
         pr($res,1);
     }
 
-    public function paypal_info($token='97H5001232975174V'){
+    public function paypal_info($token='9DG17041LN959315D'){
         $data=GetTransactionDetails($token);
         pr($data,1);
     }

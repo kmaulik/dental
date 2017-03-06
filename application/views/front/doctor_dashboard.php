@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
@@ -462,7 +463,8 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myLargeModalLabel">Proceed with your payment for won RFP</h4>
 			</div>
-			<form action="<?=base_url('rfp/make_doctor_payment')?>" method="POST" id="form_doctor_payment">							
+			<form action="<?=base_url('rfp/make_doctor_payment')?>" method="POST" id="form_doctor_payment"
+				onsubmit="$('#preloader').show();">							
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
