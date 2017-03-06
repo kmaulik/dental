@@ -21,21 +21,25 @@ class Cron extends CI_Controller {
 			$return_arr = [];
 
 			foreach($res_data as $res){
-				$return_arr = GetTransactionDetails($res['transaction_id']);
-				$return_json = json_encode($return_arr);
-				$ack_transaction = strtoupper($return_arr['ACK']);
-				
-				if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
-					if($return_arr['PAYMENTSTATUS'] == 'Completed'){
-						
-						$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
 
-						$this->Rfp_model->update_record('payment_transaction',
-														['paypal_token'=>$res['transaction_id']],
-														['status'=>'1']);
+				if(!empty($res['transaction_id'])){
 
-					}
-				} // END of IF condition
+					$return_arr = GetTransactionDetails($res['transaction_id']);
+					$return_json = json_encode($return_arr);
+					$ack_transaction = strtoupper($return_arr['ACK']);
+					
+					if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
+						if($return_arr['PAYMENTSTATUS'] == 'Completed'){
+							
+							$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
+
+							$this->Rfp_model->update_record('payment_transaction',
+															['paypal_token'=>$res['transaction_id']],
+															['status'=>'1']);
+
+						}
+					} // END of IF condition
+				}
 
 			}
 		}
@@ -46,7 +50,7 @@ class Cron extends CI_Controller {
 
 		// get_detail_billing_agreement
 		$res_data = $this->Rfp_model->get_result('billing_agreement',['status'=>'1']);		
-		// pr($res_data,1);
+		pr($res_data,1);
 
 		if(!empty($res_data)){
 			foreach($res_data as $res){
@@ -62,7 +66,7 @@ class Cron extends CI_Controller {
 					if($billing_status != 'Active'){
 						$billing_detail_json;
 						$this->Rfp_model->update_record('billing_agreement',['id'=>$res['id']],
-																			['status'=>'0','cancel_arr'=>$billing_detail_json]);
+																			['status'=>'0']);
 					}					
 				}
 
@@ -72,61 +76,89 @@ class Cron extends CI_Controller {
 	}
 
 	public function get_payments(){
+		
 		$all_data = $this->Rfp_model->get_result('billing_schedule',['next_billing_date'=>date('Y-m-d'),'transaction_id is null'=>null]);
-		// qry();
-		// pr($all_data,1);
+
 		if(!empty($all_data)){
+
 			foreach($all_data as $a_data){
-				
+
 				$due_amt = $a_data['price'];
+				
+				if($a_data['price'] > 0){
 
-				//fetch agreement data for doctor (only active agreements)
-				$res_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$a_data['doctor_id'],'status'=>'1'],true);
-				if(!empty($res_data)){
-					$billing_id = $res_data['billing_id'];
-					
-					$ret_arr = DoReferenceTransaction($billing_id,$due_amt);
-					$ret_arr_json = json_encode($ret_arr);
+					//fetch agreement data for doctor (only active agreements)
+					$res_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$a_data['doctor_id'],'status'=>'1'],true);
 
-					$ack_reference = strtoupper($ret_arr['ACK']);
+					// prev transaction data
+					$last_transaction = $this->Rfp_model->get_result('payment_transaction',['user_id'=>$a_data['doctor_id'],'rfp_id'=>$a_data['rfp_id']],true);
 
-					if($ack_reference == "SUCCESS" || $ack_reference == "SUCCESSWITHWARNING") {
-						$payment_status = strtoupper($ret_arr['PAYMENTSTATUS']);
+					if(!empty($res_data)){
+
+						$billing_id = $res_data['billing_id']; // Active Billing Agreement
+
+						$ret_arr = DoReferenceTransaction($billing_id,$due_amt);
+
+						$ret_arr_json = json_encode($ret_arr);
+						$ack_reference = strtoupper($ret_arr['ACK']);
+
+						if($ack_reference == "SUCCESS" || $ack_reference == "SUCCESSWITHWARNING") {
+							$payment_status = strtoupper($ret_arr['PAYMENTSTATUS']);
+							
+							$db_status = '0';
+							if($payment_status == 'COMPLETED'){
+								$db_status = '1';
+							}
+
+							//Check status update in billing schedule
+							$this->Rfp_model->update_record('billing_schedule',['id'=>$a_data['id']],
+																			   ['status'=>$db_status,
+																			   'transaction_id'=>$ret_arr['TRANSACTIONID']]);
+
+							// ------------------------------------------------------------------------
+							$transaction_arr =  array(
+		        							'user_id'=>$a_data['doctor_id'],
+		        							'rfp_id'=>$a_data['rfp_id'],
+		        							'actual_price'=>$last_transaction['actual_price'],
+		        							'payable_price'=>$due_amt,
+		        							'discount'=>$last_transaction['discount'],
+		        							'promotional_code_id'=>$last_transaction['promotional_code_id'],
+		        							'paypal_token'=>$ret_arr['TRANSACTIONID'],
+		        							'meta_arr'=>$ret_arr_json,
+		        							'status'=>$db_status,
+		        							'created_at'=>date('Y-m-d H:i:s')
+		        						);
+		        			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+		        			// ------------------------------------------------------------------------
 						
-						$db_status = '0';
-						if($payment_status == 'COMPLETED'){
-							$db_status = '1';
+						}else{
+
+							// ### IF Agreemet was being cacelled by user
+							$this->Rfp_model->update_record('billing_schedule',['id'=>$a_data['id']],
+																				['status'=>'0','transaction_id'=>'DOCTOR_PAYMENT_ERROR']);
+
+							// Check status update in billing schedule
+							$this->Rfp_model->update_record('billing_agreement',['doctor_id'=>$a_data['doctor_id']],
+																			  	['status'=>'0']);
+													
+							// ------------------------------------------------------------------------
+							$transaction_arr =  array(
+		        							'user_id'=>$a_data['doctor_id'],
+		        							'rfp_id'=>$a_data['rfp_id'],
+		        							'actual_price'=>$last_transaction['actual_price'],
+		        							'payable_price'=>$a_data['price'],
+		        							'discount'=>$last_transaction['discount'],
+		        							'promotional_code_id'=>$last_transaction['promotional_code_id'],
+		        							'paypal_token'=>'DOCTOR_PAYMENT_ERROR',
+		        							'meta_arr'=>$ret_arr_json,
+		        							'status'=>'0',
+		        							'created_at'=>date('Y-m-d H:i:s')
+		        						);
+		        			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+		        			// ------------------------------------------------------------------------
 						}
-
-						//Check status update in billing schedule
-						$this->Rfp_model->update_record('billing_schedule',['id'=>$a_data['id']],
-																		   ['status'=>$db_status,
-																		   'transaction_id'=>$ret_arr['TRANSACTIONID']]);
-
-						// ------------------------------------------------------------------------
-						$transaction_arr =  array(
-	        							'user_id'=>$a_data['doctor_id'],
-	        							'rfp_id'=>$a_data['rfp_id'],
-	        							'actual_price'=>'',
-	        							'payable_price'=>$due_amt,
-	        							'discount'=>'',
-	        							'promotional_code_id'=>'',
-	        							'paypal_token'=>$ret_arr['TRANSACTIONID'],
-	        							'meta_arr'=>$ret_arr_json,
-	        							'status'=>$db_status,
-	        							'created_at'=>date('Y-m-d H:i:s')
-	        						);
-	        			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
-	        			// ------------------------------------------------------------------------
-
-					}else{
-
-
 					}
 
-					pr($ret_arr);
-					pr($a_data);
-					// pr($res_data);
 				}
 
 			} // ForEACH ENs here
