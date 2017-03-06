@@ -26,6 +26,9 @@
 					<span class="title">Dentition Type : </span> <span><?=$record['dentition_type']?></span>
 				</div>
 				<div class="col-sm-6">
+					<span class="title">Zip Code : </span> <span><?=$record['zipcode']?></span>
+				</div>
+				<div class="col-sm-6">
 					<span class="title">Travel Distance : </span> <span><?=$record['distance_travel']." Miles"?></span>
 				</div>
 			</div>	
