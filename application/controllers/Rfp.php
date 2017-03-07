@@ -793,6 +793,13 @@ class Rfp extends CI_Controller {
 		
 		$where = 'is_deleted !=  1 and is_blocked != 1';
 		$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
+
+		//------------ Fetch Filter Data using session id ----------
+		$where_filter=[	
+						'user_id'	=> $this->session->userdata('client')['id']
+					 ];
+		$data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$where_filter);
+		//------------------------------------------------------------
 		//pr($_GET,1);
 		//------- Filter RFP ----
 		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
@@ -800,6 +807,7 @@ class Rfp extends CI_Controller {
 		$cat_data =  $this->input->get('treatment_cat_id') ? $this->input->get('treatment_cat_id') :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
 		$favorite_data= $this->input->get('favorite_search') ? $this->input->get('favorite_search') :'All';
+		$saved_filter= $this->input->get('saved_filter') ? $this->input->get('saved_filter') :'';
 		//------- /Filter RFP ----
 		$category_data='';
 		if($cat_data != ''){
@@ -808,7 +816,7 @@ class Rfp extends CI_Controller {
 			}
 		}
 			
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data;
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data.'&saved_filter='.$saved_filter;
 		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data,$favorite_data);
 		//qry(1);
 		$config['per_page'] = 10;
@@ -1474,5 +1482,82 @@ class Rfp extends CI_Controller {
     	redirect('rfp');
     }
 
+    /**
+    * Save Filter data from search rfp doctor side 
+    **/
+    public function save_filter_data(){
+
+    	$filter_array = [
+    					'user_id'					=>  $this->session->userdata('client')['id'],
+    					'filter_name'				=>	$this->input->post('filter_name'),
+    					'search_data'				=>	$this->input->post('search_data'),
+    					'search_date'				=>	$this->input->post('search_date'),
+    					'search_sort'				=>	$this->input->post('search_sort'),
+    					'search_favorite'			=>	$this->input->post('search_favorite'),
+    					'search_treatment_cat_id'	=>	$this->input->post('search_treatment_cat_id'),
+    					'created_at'				=>	date("Y-m-d H:i:s"),
+    				];
+
+    	$res=$this->Rfp_model->insert_record('custom_search_filter',$filter_array);
+    	if($res){
+    		$this->session->set_flashdata('success', 'Search Filter Saved Successfully');
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Save Search Filter, Please Try Again!');
+    	}
+    	redirect('rfp/search_rfp');
+    }
+
+
+    /**
+    * Edit Filter data from search rfp doctor side 
+    **/
+    public function update_filter_data(){
+
+    	$filter_array = [
+    					'filter_name'				=>	$this->input->post('filter_name'),
+    					'search_data'				=>	$this->input->post('search_data'),
+    					'search_date'				=>	$this->input->post('search_date'),
+    					'search_sort'				=>	$this->input->post('search_sort'),
+    					'search_favorite'			=>	$this->input->post('search_favorite'),
+    					'search_treatment_cat_id'	=>	$this->input->post('search_treatment_cat_id'),
+    				];
+
+    	$res=$this->Rfp_model->update_record('custom_search_filter',['id' => $this->input->post('search_filter_id')],$filter_array);
+    	if($res){
+    		$this->session->set_flashdata('success', 'Search Filter Updated Successfully');
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Update Search Filter, Please Try Again!');
+    	}
+    	redirect('rfp/search_rfp');
+    }
+
+
+    /**
+    * Fetch Filter data filter id wise
+    **/
+    public function fetch_filter_data(){
+    	$data=$this->Rfp_model->get_result('custom_search_filter',['id' => $this->input->post('filter_id')],1);
+    	echo json_encode($data);
+    }
+
+    /**
+    *	Count Total Filter stored for particular doctor
+    **/
+    public function count_filter_data(){
+    	$where_filter=[	
+						'user_id'	=> $this->session->userdata('client')['id']
+					 ];
+		$search_filter_list=$this->Rfp_model->get_result('custom_search_filter',$where_filter);
+		echo count($search_filter_list);
+    }
+
+
+    /**
+    *	when select filter from dashboard by doctor for view particular filter data
+    **/
+    public function view_filter_data($filter_id=''){
+    	$this->session->set_flashdata('filter_id', decode($filter_id));
+    	redirect('rfp/search_rfp');
+    }
 
 }

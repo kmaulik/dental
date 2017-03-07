@@ -361,6 +361,26 @@
     }
 
 
+    function rfp_status_label($rfp_status){
+        if($rfp_status == 0) {
+            $status ='<span class="label label-default">Draft</span>';
+        }elseif($rfp_status == 1) {
+             $status ='<span class="label label-primary">Pending</span>';
+        }elseif($rfp_status == 2) {
+             $status ='<span class="label label-danger">Submit Pending</span>';
+        }elseif($rfp_status == 3) {
+             $status ='<span class="label label-info">Open</span>';
+        }elseif($rfp_status == 4) {
+             $status ='<span class="label label-warning">Waiting For Doctor Approval</span>';
+        }elseif($rfp_status == 5) {
+             $status ='<span class="label label-dark-blue">In-Progress</span>';
+        }elseif($rfp_status == 6) {
+            $status ='<span class="label label-success">Close</span>';         
+        } 
+        return $status;
+    }
+
+
 
 
 
