@@ -15,38 +15,43 @@ class Cron extends CI_Controller {
 
 	public function check_status(){
 
-		$res_data = $this->Rfp_model->get_result('billing_schedule',['status'=>'0']);
-		// pr($res_data,1);
+		$res_data = $this->Rfp_model->get_result('billing_schedule',['status'=>'0','transaction_id is not null'=>null]);
+
 		if(!empty($res_data)){
 			$return_arr = [];
 
 			foreach($res_data as $res){
 
-				if(!empty($res['transaction_id'])){
+				pr($res);
 
-					$return_arr = GetTransactionDetails($res['transaction_id']);
-					$return_json = json_encode($return_arr);
-					$ack_transaction = strtoupper($return_arr['ACK']);
-					
-					if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
-						if($return_arr['PAYMENTSTATUS'] == 'Completed'){
-							
-							$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
+				$return_arr = GetTransactionDetails($res['transaction_id']);
+				$return_json = json_encode($return_arr);
+				$ack_transaction = strtoupper($return_arr['ACK']);
+				
+				if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
+					if($return_arr['PAYMENTSTATUS'] == 'Completed'){
+						
+						$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$res['rfp_id']],true);							
 
-							$this->Rfp_model->update_record('payment_transaction',
-															['paypal_token'=>$res['transaction_id']],
-															['status'=>'1']);
+						if($rfp_data['status'] == '5'){
+							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'6']); // status : 6 - change waiting for doctor approval to close
+						}else{
+							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'5']); // status : 5 - chnage pending  to waiting for doctor approval
+						}							
 
-						}
-					} // END of IF condition
-				}
+						$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
 
+						$this->Rfp_model->update_record('payment_transaction',
+														['paypal_token'=>$res['transaction_id']],
+														['status'=>'1']);
+
+					}
+				} // END of IF condition				
 			}
 		}
 	}
 
 	public function check_agreement_status(){
-		// B-4JG22401JU920743V
 
 		// get_detail_billing_agreement
 		$res_data = $this->Rfp_model->get_result('billing_agreement',['status'=>'1']);		
@@ -72,19 +77,23 @@ class Cron extends CI_Controller {
 
 			} // End of Foreach Loop
 		}
-
 	}
 
 	public function get_payments(){
-		
+
 		$all_data = $this->Rfp_model->get_result('billing_schedule',['next_billing_date'=>date('Y-m-d'),'transaction_id is null'=>null]);
+		
+		// pr($all_data,1);
 
 		if(!empty($all_data)){
 
 			foreach($all_data as $a_data){
 
-				$due_amt = $a_data['price'];
+				pr($a_data);
 				
+				$due_amt = $a_data['price'];
+
+				// make sure the price is greater than 0
 				if($a_data['price'] > 0){
 
 					//fetch agreement data for doctor (only active agreements)
@@ -102,6 +111,7 @@ class Cron extends CI_Controller {
 						$ret_arr_json = json_encode($ret_arr);
 						$ack_reference = strtoupper($ret_arr['ACK']);
 
+						//  v! IF Acknoledgement is success means payment has beed successed by doctor
 						if($ack_reference == "SUCCESS" || $ack_reference == "SUCCESSWITHWARNING") {
 							$payment_status = strtoupper($ret_arr['PAYMENTSTATUS']);
 							
@@ -116,6 +126,8 @@ class Cron extends CI_Controller {
 																			   'transaction_id'=>$ret_arr['TRANSACTIONID']]);
 
 							// ------------------------------------------------------------------------
+							// Insert datainto transaction for pending transaction
+							// ------------------------------------------------------------------------
 							$transaction_arr =  array(
 		        							'user_id'=>$a_data['doctor_id'],
 		        							'rfp_id'=>$a_data['rfp_id'],
@@ -129,7 +141,7 @@ class Cron extends CI_Controller {
 		        							'created_at'=>date('Y-m-d H:i:s')
 		        						);
 		        			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
-		        			// ------------------------------------------------------------------------
+		        			// ------------------------------------------------------------------------		        			
 						
 						}else{
 
@@ -159,11 +171,14 @@ class Cron extends CI_Controller {
 						}
 					}
 
+				}else{
+					// IF price is ZERO means there is only one due payment enter
+					$this->Rfp_model->update_record('rfp',['id'=>$a_data['rfp_id']],['status'=>'6']); // Close RFP after 45 days
+					$this->Rfp_model->update_record('billing_schedule',['rfp_id'=>$a_data['rfp_id'],'price'=>'0'],['status'=>'1']);
 				}
 
 			} // ForEACH ENs here
 		}
-
 	}
 
 }

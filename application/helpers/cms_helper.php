@@ -341,7 +341,7 @@
 
     function get_notifications_unread_count(){
         $CI =& get_instance();
-        $CI->load->model('Notification_model');        
+        $CI->load->model('Notification_model');
         $userdata = $CI->session->userdata('client');
         $u_id = $userdata['id'];
         $all_notifications = $CI->Notification_model->get_unread_cnt($u_id);
@@ -358,8 +358,7 @@
         $numberDays = $timeDiff/86400;  // 86400 seconds in one day
         // and you might want to convert to integer
         return $numberDays = intval($numberDays);
-    }
-
+    }    
 
 
 

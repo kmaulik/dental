@@ -421,7 +421,7 @@ class Rfp_model extends CI_Model {
     } 
 
     /* ----------------------- Fetch RFP For Doctor Appointment (With RFP Status [5] & RFP Bid status [2]) ----------------------- */
-    function get_doctor_appointment_rfp($user_id){
+    public function get_doctor_appointment_rfp($user_id){
         
         $this->db->select('rfp.*,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.appointment_date,a.appointment_time,a.doc_comments,a.is_cancelled,a.created_at');
         $this->db->join('users u','rfp.patient_id = u.id');
@@ -440,7 +440,7 @@ class Rfp_model extends CI_Model {
     }
 
      /* ----------------------- Fetch RFP For Patient Appointment (With RFP Status [5]) ----------------------- */
-    function get_patient_appointment_rfp($user_id){
+    public function get_patient_appointment_rfp($user_id){
         $this->db->select('rfp.*,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.appointment_date,a.appointment_time,a.doc_comments,a.is_cancelled,a.created_at');
         $this->db->join('appointments a','rfp.id = a.rfp_id');
         $this->db->join('users u','a.doc_id = u.id');
@@ -453,6 +453,19 @@ class Rfp_model extends CI_Model {
         $this->db->where('u.is_blocked',0);
         $data=$this->db->get('rfp')->result_array();
         return $data;
+    }
+
+    public function  return_status($rfp_id){
+
+        $all_data = $this->db->get_where('billing_schedule',['rfp_id'=>$rfp_id])->result_array();
+
+        
+        if(!empty($all_data)){
+            foreach($all_data as $a_data){
+
+            }
+        }
+        return $all_data;
     }
 
 }    

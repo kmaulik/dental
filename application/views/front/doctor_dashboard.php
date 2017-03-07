@@ -110,11 +110,8 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>RFP Title</th>
-								<!-- <th>Patient Name</th> -->
-								<th>Patient Email</th>
-								<th>Dentition Type</th>
-								<th>Treatment Plan Amount</th>
+								<th>RFP Title</th>								
+								<th>Dentition Type</th>								
 								<th>Bid Price</th>
 								<th>Status</th>
 								<th>Action</th>
@@ -122,11 +119,14 @@
 						</thead>
 						<tbody>
 							<?php 
-								if(!empty($won_rfps)) { 
-									foreach($won_rfps as $w_rfp) {
+								if(!empty($won_rfps)) {
+									foreach($won_rfps as $w_rfp) {										
 										
+										$rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
+										pr($rfp_status_data);
+
 										$amt = $w_rfp['amount']; // Bid price
-										
+											
 										$percentage = config('doctor_fees');
 										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
 
@@ -146,29 +146,27 @@
 										<td>
 											<?php echo $w_rfp['title']; ?>
 										</td>
-										<!-- <td>
-											<?php echo ucfirst($w_rfp['fname']).' '.$w_rfp['lname']; ?>
-										</td> -->
-										<td>
-											<?php echo $w_rfp['email_id']; ?>
-										</td>
-										<td><?php echo ucfirst($w_rfp['dentition_type']); ?></td>
-										<td><?php echo ucfirst($w_rfp['treatment_plan_total']); ?></td>
+										<td><?php echo ucfirst($w_rfp['dentition_type']); ?></td>										
 										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
 										<td>
-
+											<?php
+												echo $rfp_status = $w_rfp['rfp_status'];
+												// $this->Rfp_model->get_result('');
+											?>
 										</td>
 										<td>
-											<a class="btn btn-3d btn-xs btn-reveal btn-green"
-											   data-is-second-due="<?php echo $is_second_due; ?>"
-											   data-due-one="<?php echo $due_1; ?>"
-											   data-due-two="<?php echo $due_2; ?>"
-											   data-total-due="<?php echo $payable_price; ?>"
-											   data-mybid="<?php echo $amt; ?>"
-											   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
-											   onclick="show_modal_doctor(this)" >
-												<i class="fa fa-money"></i><span>Proceed </span>
-											</a>
+											<?php if($w_rfp['rfp_status'] == '4') { ?>
+												<a class="btn btn-3d btn-xs btn-reveal btn-green"
+												   data-is-second-due="<?php echo $is_second_due; ?>"
+												   data-due-one="<?php echo $due_1; ?>"
+												   data-due-two="<?php echo $due_2; ?>"
+												   data-total-due="<?php echo $payable_price; ?>"
+												   data-mybid="<?php echo $amt; ?>"
+												   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
+												   onclick="show_modal_doctor(this)" >
+													<i class="fa fa-money"></i><span>Proceed</span>
+												</a>
+											<?php } ?>
 										</td>
 									</tr>
 								<?php } ?>
@@ -760,6 +758,8 @@
 
 		var total_payment = parseFloat(due_1) + parseFloat(due_2);
 
+		// console.log('total_payment '+total_payment);
+
 		$('.my_bid').html(mybid);
 		$('.due_1_price').html('$ '+due_1);
 		$('.due_2_price').html('$ '+due_2);
@@ -770,6 +770,7 @@
 		$('#total_due_modal').val(total_due);
 
 		$('.total-price').html('$ '+total_payment);
+		$('#orignal_price').val(total_payment);
 		
 		$(".coupan-msg").html("");
 		$('#coupan_code').val('');

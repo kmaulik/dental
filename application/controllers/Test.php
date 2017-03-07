@@ -96,6 +96,13 @@ class Test extends CI_Controller {
         $res = cancel_billing_agreement();
         pr($res,1);
     }
+
+    public function mycall(){
+        $this->load->library('unirest');
+        $url = base_url().'cron/check_status';
+        $res = $this->unirest->get($url);   
+                                
+    }
 }
 
 /* End of file Test.php */
