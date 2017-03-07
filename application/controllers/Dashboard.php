@@ -27,6 +27,11 @@ class Dashboard extends CI_Controller {
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps                    
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
+
+            $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
+            $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
+
+            //pr($data['search_filter_list'],1);
             $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
             //pr($data['appointment_list'],1);
             $data['subview']="front/doctor_dashboard";
@@ -381,4 +386,25 @@ class Dashboard extends CI_Controller {
         redirect('dashboard');
     }
 
+
+    /*
+    *   Change Filter Notification Status (Doctor Dashboard)
+    */
+    public function change_filter_notify_status(){
+
+        $where=['id' => $this->input->post('filter_id')];
+        $data_array=['notification_status'  => $this->input->post('notification_status')];
+        $res=$this->Rfp_model->update_record('custom_search_filter',$where,$data_array);
+        echo $res;
+    }
+
+    /*
+    *   Delete Search Filter (Doctor Dashboard)
+    */
+    public function delete_search_filter(){
+
+        $where=['id' => $this->input->post('filter_id')];
+        $res=$this->Rfp_model->delete_record('custom_search_filter',$where);
+        echo $res;
+    }
 }

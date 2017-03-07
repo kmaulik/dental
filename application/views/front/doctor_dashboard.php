@@ -190,6 +190,74 @@
 		</div>
 
 
+		<!-- Doctor's Filter For Search RFP -->
+		<div class="row rfp_radar_filter">
+			<?php //pr($won_rfps); ?>
+			<div class="col-md-12">
+				<h4> RFP Radar </h4>
+				<hr/>
+			</div>	
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Filter Name</th>
+								<th>Notification</th>
+								<th>Created On</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(count($search_filter_list) > 0) :?>
+							<?php foreach($search_filter_list as $key=>$search_filter) :?>
+							<tr class="search_filter_row_<?=$key?>">
+								<td><a href="<?=base_url('rfp/view_filter_data/'.encode($search_filter['id']))?>"><?=$search_filter['filter_name']?></a></td>
+								<td>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="0" <?php if($search_filter['notification_status'] == '0') { echo "checked"; }?>>
+										<i title="None"></i> None
+									</label>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="1" <?php if($search_filter['notification_status'] == '1') { echo "checked"; }?>>
+										<i title="Daily"></i> Daily
+									</label>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="2" <?php if($search_filter['notification_status'] == '2') { echo "checked"; }?>>
+										<i title="Weekly"></i> Weekly
+									</label>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="3" <?php if($search_filter['notification_status'] == '3') { echo "checked"; }?>>
+										<i title="Biweekly"></i> Biweekly
+									</label>
+								</td>
+								<td><?=date("m-d-Y",strtotime($search_filter['created_at']))?></td>
+								<td>
+									<a href="<?=base_url('rfp/view_filter_data/'.encode($search_filter['id']))?>" class="label label-info" title="Edit Filter"><i class="fa fa-edit"></i></a>
+									<a onclick="delete_search_filter(<?=$search_filter['id']?>,<?=$key?>)" class="label label-danger" title="Delete Filter"><i class="fa fa-trash"></i></a>
+								</td>
+							</tr>	
+							<?php endforeach; ?>
+							<?php else :?>
+								<tr>
+									<td colspan="2" class="text-center">
+										<b>No Filter Data Found</b>
+									</td>
+								</tr>
+							<?php endif;?>
+						</tbody>
+					</table>
+				</div>	
+			</div>	
+		</div>	
+		<!-- // ENDS Doctor's Filter For Search RFP -->
+
+		<div class="divider divider-color divider-center divider-short">
+			<!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+
+
 		<!-- Doctor's All Review -->
 		<div class="row review-list">
 			<div class="col-md-12">
@@ -344,21 +412,7 @@
 									<tr>
 										<td><?=$list['rfp_title']?></td>
 										<td><?=$list['user_name']?></td>
-										<td>
-											<?php if($list['rfp_status'] == 0) :?>
-												<span class="label label-default">Draft</span>
-											<?php elseif($list['rfp_status'] == 1) : ?>
-												<span class="label label-primary">Pending</span>
-											<?php elseif($list['rfp_status'] == 2) : ?>
-												<span class="label label-danger">Submit Pending</span>
-											<?php elseif($list['rfp_status'] == 3) : ?>
-												<span class="label label-info">Open</span>
-											<?php elseif($list['rfp_status'] == 4) : ?>
-												<span class="label label-warning">In-Progress</span>			
-											<?php elseif($list['rfp_status'] == 5) : ?>
-												<span class="label label-success">Close</span>			
-											<?php endif; ?>
-										</td>
+										<td><?= rfp_status_label($list['rfp_status'])?></td>
 										<td><?=$list['dentition_type']?></td>
 										<td><?=$list['paid_price']?></td>
 										<td>
@@ -619,7 +673,6 @@
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
-								
 							</div>
 						</div>	
 						<div class="col-sm-6">
@@ -634,6 +687,30 @@
 								<input type="text" id="appointment_time" name="appointment_time" class="form-control timepicker" readonly>
 							</div>
 						</div>
+						<!-- <div class="col-sm-6">
+							<div class="form-group">
+								<label>Appointment Date 2 :</label>
+								<input type="text" id="appointment_date" name="appointment_date" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+							</div>
+						</div>	
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Appointment Time 2 :</label>
+								<input type="text" id="appointment_time" name="appointment_time" class="form-control timepicker" readonly>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Appointment Date 3 :</label>
+								<input type="text" id="appointment_date" name="appointment_date" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+							</div>
+						</div>	
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Appointment Time 3 :</label>
+								<input type="text" id="appointment_time" name="appointment_time" class="form-control timepicker" readonly>
+							</div>
+						</div> -->
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Your Comment :</label>
@@ -873,6 +950,36 @@ function view_appointment(key){
 	$(".validation-error-label").remove();
 }
 // ----------- End For manage Appointment  -----------
+
+
+//---------------- Chnage Notification status for rfp search --------------
+$(".notify_status").click(function(e){
+	var filter_id=$(this).data('id');
+	var notify_status= $(this).val();
+	$.post("<?=base_url('dashboard/change_filter_notify_status/')?>",{	'filter_id' : filter_id , 'notification_status' : notify_status},function(data){
+
+	});
+});
+
+//-----------------End Notification status for rfp search -----------------
+
+//------------------------ Delete RFP Filter -------------------
+function delete_search_filter(filter_id,key){
+	bootbox.confirm('Are you sure to delete rfp filter ?' ,function(res){
+		if(res){
+			$.post("<?=base_url('dashboard/delete_search_filter/')?>",{	'filter_id' : filter_id },function(data){
+				if(data){
+					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP Filter Deleted Successfully.</div>');
+					$(".search_filter_row_"+key).hide();
+				}
+				else{
+					$(".alert-message").html('<div class="alert alert-danger margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error Into Delete RFP Filter.</div>');
+				}
+			});
+		}
+	});	
+}
+//----------------------- End Delete RFP Filter ----------------
 
 //--------------- For manage Appointment Form Validation --------------
 $("#frm_manage_appointment").validate({

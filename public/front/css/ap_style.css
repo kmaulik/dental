@@ -697,6 +697,10 @@ span.time {
   position: relative;
 }
 
+.rfp_radar_filter .checkbox+.checkbox, .radio+.radio {
+    margin-top: 0;
+}
+
 /*************** ` start here 	*************/
 @media (min-width:768px) and (max-width:991px){
   .wrapper_inner_box {

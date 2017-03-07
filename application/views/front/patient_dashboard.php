@@ -154,23 +154,7 @@
 										<td><?=$key+1?></td>
 										<td><?=$active_rfp['title']?></td>
 										<td><?=$active_rfp['fname']." ".$active_rfp['lname']?></td>
-										<td>
-											<?php if($active_rfp['status'] == 0) :?>
-											<span class="label label-default">Draft</span>
-											<?php elseif($active_rfp['status'] == 1) : ?>
-												<span class="label label-primary">Pending</span>
-											<?php elseif($active_rfp['status'] == 2) : ?>
-												<span class="label label-danger">Submit Pending</span>
-											<?php elseif($active_rfp['status'] == 3) : ?>
-												<span class="label label-info">Open</span>
-											<?php elseif($active_rfp['status'] == 4) : ?>
-												<span class="label label-warning">Waiting For Doctor Approval</span>	
-											<?php elseif($active_rfp['status'] == 5) : ?>
-												<span class="label label-dark-blue">In-Progress</span>			
-											<?php elseif($active_rfp['status'] == 6) : ?>
-												<span class="label label-success">Close</span>			
-											<?php endif; ?>
-										</td>
+										<td><?=rfp_status_label($active_rfp['status']); ?></td>
 										<td><?=$active_rfp['total_bid']?></td>
 										<td>
 											<?php if($active_rfp['treatment_plan_total'] != '' && $active_rfp['min_bid_amt'] != '') :?>
@@ -396,23 +380,7 @@
 								<tr>
 									<td><?=$list['rfp_title']?></td>
 									<td><?=$list['user_name']?></td>
-									<td>
-										<?php if($list['rfp_status'] == 0) :?>
-											<span class="label label-default">Draft</span>
-										<?php elseif($list['rfp_status'] == 1) : ?>
-											<span class="label label-primary">Pending</span>
-										<?php elseif($list['rfp_status'] == 2) : ?>
-											<span class="label label-danger">Submit Pending</span>
-										<?php elseif($list['rfp_status'] == 3) : ?>
-											<span class="label label-info">Open</span>
-										<?php elseif($list['rfp_status'] == 4) : ?>
-											<span class="label label-warning">Waiting For Doctor Approval</span>	
-										<?php elseif($list['rfp_status'] == 5) : ?>
-											<span class="label label-dark-blue">In-Progress</span>			
-										<?php elseif($list['rfp_status'] == 6) : ?>
-											<span class="label label-success">Close</span>			
-										<?php endif; ?>
-									</td>
+									<td><?= rfp_status_label($list['rfp_status'])?></td>
 									<td><?=$list['dentition_type']?></td>
 									<td><?=$list['paid_price']?></td>
 									<td>
@@ -613,7 +581,6 @@
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
-								
 							</div>
 						</div>	
 						<div class="col-sm-12">
