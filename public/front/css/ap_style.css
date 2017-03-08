@@ -491,6 +491,9 @@ padding: 20px;
 }
 span.favorite {
     margin: 0 5px;
+    line-height: 35px;
+    width: 30px;
+    text-align: center;
 }
 span.favorite_rfp{
   color: #1980B6;
@@ -678,8 +681,46 @@ span.time {
   display: inline-block;
   font-size: 12px;
 }
+.review-doc-comment::after {
+  border-bottom: 12px solid #fff;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  content: " ";
+  height: 0;
+  left: 10px;
+  position: absolute;
+  top: -12px;
+  width: 0;
+}
+.review-doc-comment {
+  background: #fff none repeat scroll 0 0;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
+  padding: 15px;
+  position: relative;
+}
 
-/*************** media start here 	*************/
+.rfp_radar_filter .checkbox+.checkbox, .radio+.radio {
+    margin-top: 0;
+}
+
+.rfp_doctor_search .avatar.img-circle{
+  height: 40px;
+  width: 40px;
+}
+.rfp_doctor_search .search_rfp_info{
+  cursor: pointer;
+}
+.rfp_doctor_search .favorite{
+  cursor: pointer;
+}
+.rfp_doctor_search table th {
+    background: #5bc0de;
+    border-bottom: medium none !important;
+    color: #fff;
+    padding: 12px 10px !important;
+}
+/*************** ` start here 	*************/
 @media (min-width:768px) and (max-width:991px){
   .wrapper_inner_box {
   padding-right: 20px;
@@ -734,6 +775,7 @@ span.time {
 .message {
   font-size: 13px;
 }
+label.space{display: none;}
 }
 
 @media (min-width:481px) and (max-width:767px){

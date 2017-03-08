@@ -56,23 +56,7 @@
 						<td><?=$record['title']?></td>
 						<td><?=$record['fname']?></td>
 						<td><?=$record['lname']?></td>
-						<td>
-							<?php if($record['status'] == 0) :?>
-								<span class="label label-default">Draft</span>
-							<?php elseif($record['status'] == 1) : ?>
-								<span class="label label-primary">Pending</span>
-							<?php elseif($record['status'] == 2) : ?>
-								<span class="label label-danger">Submit Pending</span>
-							<?php elseif($record['status'] == 3) : ?>
-								<span class="label label-info">Open</span>
-							<?php elseif($record['status'] == 4) : ?>
-								<span class="label label-warning">Waiting For Doctor Approval</span>	
-							<?php elseif($record['status'] == 5) : ?>
-								<span class="label label-dark-blue">In-Progress</span>			
-							<?php elseif($record['status'] == 6) : ?>
-								<span class="label label-success">Close</span>			
-							<?php endif; ?>
-						</td>
+						<td><?=rfp_status_label($record['status'])?></td>
 						<td><?=isset($record['rfp_valid_date'])?date("m-d-Y",strtotime($record['rfp_valid_date'])):'N/A'?></td>
 						<td>
 							<?php if($record['is_extended'] == 1) :?>	

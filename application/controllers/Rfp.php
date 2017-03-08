@@ -9,8 +9,8 @@ class Rfp extends CI_Controller {
 		$this->load->helper(['paypal_helper']);	
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
-	}	
-
+	}
+	
 	public function index(){
 		
 		//-------------- If Role Id (4 Means doctor then redirect to search rfp)
@@ -793,6 +793,13 @@ class Rfp extends CI_Controller {
 		
 		$where = 'is_deleted !=  1 and is_blocked != 1';
 		$data['treatment_category']=$this->Treatment_category_model->get_result('treatment_category',$where);
+
+		//------------ Fetch Filter Data using session id ----------
+		$where_filter=[	
+						'user_id'	=> $this->session->userdata('client')['id']
+					 ];
+		$data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$where_filter);
+		//------------------------------------------------------------
 		//pr($_GET,1);
 		//------- Filter RFP ----
 		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
@@ -800,6 +807,7 @@ class Rfp extends CI_Controller {
 		$cat_data =  $this->input->get('treatment_cat_id') ? $this->input->get('treatment_cat_id') :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
 		$favorite_data= $this->input->get('favorite_search') ? $this->input->get('favorite_search') :'All';
+		$saved_filter= $this->input->get('saved_filter') ? $this->input->get('saved_filter') :'';
 		//------- /Filter RFP ----
 		$category_data='';
 		if($cat_data != ''){
@@ -808,7 +816,7 @@ class Rfp extends CI_Controller {
 			}
 		}
 			
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data;
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data.'&saved_filter='.$saved_filter;
 		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data,$favorite_data);
 		//qry(1);
 		$config['per_page'] = 10;
@@ -816,7 +824,7 @@ class Rfp extends CI_Controller {
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
 		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data,$favorite_data);
-		// pr($data['rfp_data']);
+		//pr($data['rfp_data']);
 		// qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
@@ -994,7 +1002,7 @@ class Rfp extends CI_Controller {
 			if($this->input->post('coupan_code') != ''){
 				$data=$this->Promotional_code_model->fetch_coupan_data();
 				//--- Check code is valid and apply code limit for per user
-				if(isset($data['discount']) && $data['discount'] != '' && $data['per_user_limit'] > $data['total_apply_code']) {
+				if(isset($data['discount']) && $data['discount'] != '' && $data['per_user_limit'] >= $data['total_apply_code']) {
 					$promotinal_code_id = $data['id'];
 					$discount = $data['discount'];
 					$final_price = $final_price - (($final_price * $discount) /100);
@@ -1021,10 +1029,64 @@ class Rfp extends CI_Controller {
     }
 
     // ------------------------------------------------------------------------
-    // Doctor payments
-    // ------------------------------------------------------------------------
+
+    public function doctor_discount_100($rfp_id,$coupan_code,$actual_price){
+    	
+    	$user_data = $this->session->userdata('client');
+       	$user_id = $user_data['id'];
+
+    	// ------------------------------------------------------------------------
+		// Insert into Next Schdule payment (billing_schedule)
+    	// ------------------------------------------------------------------------
+    	$due_1_arr = array(
+    						'doctor_id'=>$user_data['id'],
+    						'rfp_id'=>$rfp_id,
+    						'next_billing_date'=>date('Y-m-d'),
+    						'price'=>'0',
+    						'status'=>'1',
+    						'created_at'=>date('Y-m-d H:i:s')
+    					);
+    	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
+        
+        $this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>'5']); // status : 5 - chnage pending  to waiting for doctor approval
+
+    	$due_2_arr =  array(
+    						'doctor_id'=>$user_data['id'],
+    						'rfp_id'=>$rfp_id,
+    						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+    						'price'=>'0',
+    						'created_at'=>date('Y-m-d H:i:s')
+    						);
+    	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
+
+    	// ------------------------------------------------------------------------
+		// Insert into Next Schdule payment (billing_schedule)
+    	// ------------------------------------------------------------------------
+
+    	$transaction_arr =  array(
+    							'user_id'=>$user_data['id'],
+    							'rfp_id'=>$rfp_id,
+    							'actual_price'=>$actual_price,
+    							'payable_price'=>'0',
+    							'discount'=>'100',
+    							'promotional_code_id'=>$coupan_code,
+    							'paypal_token'=>'',
+    							'meta_arr'=>'',
+    							'status'=>'1',
+    							'created_at'=>date('Y-m-d H:i:s')
+    						);
+    	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+
+    	// Need to redirect after this Step
+    	$this->session->set_flashdata('success','Your Payment was successful.');
+	    redirect('dashboard');
+    	die('Successfull.');
+    }
+
     public function make_doctor_payment(){
     	
+    	// pr($_POST,1);		
+
        	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
 
@@ -1036,9 +1098,13 @@ class Rfp extends CI_Controller {
        	$orignal_price = $this->input->post('orignal_price');
        	$total_per_discount = 0;
 
+       	if($due_1 == 0 && $due_2 == 0){
+       		$this->doctor_discount_100($rfp_id,$coupan_code,$orignal_price);
+       	}
+
        	if($coupan_code != ''){
-       		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);	       	
-	       	$total_per_discount = (float)$coupon_data['discount'];
+       		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);
+	    	$total_per_discount = (float)$coupon_data['discount'];
        	}
 
        	$this->session->set_userdata('doc_payment_data',
@@ -1051,17 +1117,19 @@ class Rfp extends CI_Controller {
 
     	// If empty create new agrrement with paypal ( Redirect to paypal if no agreement created )
     	if(empty($billing_data)){
-    		
+
     		$returnURL = base_url().'rfp/make_doctor_payment_success';
 	       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
 	        //-------------------------------------------------
 	       	$resArray = CallShortcutExpressCheckout('45',$returnURL, $cancelURL);
 
 	        $ack = strtoupper($resArray["ACK"]);
+
 	    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
 	        	RedirectToPayPal($resArray["TOKEN"]);
 	    	} else {
-	        	pr('ERROR');
+	        	$this->session->set_flashdata('error','Something goes wrong. Please try again');
+	        	redirect('dashboard');
 	        }
     	}else{
 
@@ -1070,18 +1138,30 @@ class Rfp extends CI_Controller {
     		
     		$ack_bill_data = strtoupper($bill_api_data['ACK']);
     		if ($ack_bill_data == "FAILURE") {
+
     			// Billing agreement somehow cancelled by the user
-    			//Check status update in billing schedule
+    			// Check status update in billing schedule
+
 				$this->Rfp_model->update_record('billing_agreement',['billing_id'=>$billing_id],['status'=>'0']);
-    			$this->session->set_flashdata('error', 'Billing agreement was being cancelled. Please try again.');
-    			redirect('dashboard');
+
+    			$returnURL = base_url().'rfp/make_doctor_payment_success';
+		       	$cancelURL = base_url().'rfp/make_doctor_payment_error';
+		        //-------------------------------------------------
+		       	$resArray = CallShortcutExpressCheckout('45',$returnURL, $cancelURL);
+
+		        $ack = strtoupper($resArray["ACK"]);
+
+		    	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+		        	RedirectToPayPal($resArray["TOKEN"]);
+		    	} else {
+		        	$this->session->set_flashdata('error','Something goes wrong. Please try again');
+		        	redirect('dashboard');
+		        }	
     		}
 
+    		// Create referemce tramsactoin by below function    		
     		$payment_arr = DoReferenceTransaction($billing_id,$due_1);
-    		$payment_arr_json = json_encode($payment_arr);
-    		// pr($ret_arr);
-    		// pr($bill_api_data,1);
-
+    		$payment_arr_json = json_encode($payment_arr);    		
 
     		// ------------------------------------------------------------------------
     		// Insert into Next Schdule payment (billing_schedule)
@@ -1092,25 +1172,22 @@ class Rfp extends CI_Controller {
         						'next_billing_date'=>date('Y-m-d'),
         						'transaction_id'=>$payment_arr['TRANSACTIONID'],
         						'price'=>$due_1,
-        						'created_at'=>date('Y-m-d H:i')
+        						'created_at'=>date('Y-m-d H:i:s')
         						);
         	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
-        
-        	if($due_2 > 0){
-	        	$due_2_arr =  array(
-	        						'doctor_id'=>$user_data['id'],
-	        						'rfp_id'=>$rfp_id,
-	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
-	        						'price'=>$due_2,
-	        						'created_at'=>date('Y-m-d H:i')
-	        						);
-	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
-	        }
+                	
+        	$due_2_arr =  array(
+        						'doctor_id'=>$user_data['id'],
+        						'rfp_id'=>$rfp_id,
+        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+        						'price'=>$due_2,
+        						'created_at'=>date('Y-m-d H:i:s')
+        						);
+        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
 
 	        // ------------------------------------------------------------------------
-    		// Insert into Next Schdule payment (billing_schedule)
+    		// Insert into transaction paylemt list (payment_transaction)
         	// ------------------------------------------------------------------------
-
         	$transaction_arr =  array(
         							'user_id'=>$user_data['id'],
         							'rfp_id'=>$rfp_id,
@@ -1123,16 +1200,15 @@ class Rfp extends CI_Controller {
         							'status'=>'0',
         							'created_at'=>date('Y-m-d H:i:s')
         						);
-        	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
 
-
-    		pr('WARNING -- billing agreement already exists');
+			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+       		$this->session->set_flashdata('success','Thank you for your transaction. It\'ll take some time to review it.');
+	    	redirect('dashboard');
     	}
     }	
 
     public function make_doctor_payment_success(){
-    	
-    	// pr($_REQUEST,1);
+        	
     	$data = array();
 
     	$user_data = $this->session->userdata('client');
@@ -1192,20 +1268,18 @@ class Rfp extends CI_Controller {
 	        						'next_billing_date'=>date('Y-m-d'),
 	        						'transaction_id'=>$payment_due_1['PAYMENTINFO_0_TRANSACTIONID'],
 	        						'price'=>$due_1,
-	        						'created_at'=>date('Y-m-d H:i')
+	        						'created_at'=>date('Y-m-d H:i:s')
 	        						);
 	        	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
-	        	
-	        	if($due_2 > 0){
-		        	$due_2_arr =  array(
-		        						'doctor_id'=>$user_data['id'],
-		        						'rfp_id'=>$doc_payment_data['rfp_id'],
-		        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
-		        						'price'=>$due_2,
-		        						'created_at'=>date('Y-m-d H:i')
-		        						);
-		        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
-	        	}
+	        		        	
+	        	$due_2_arr =  array(
+	        						'doctor_id'=>$user_data['id'],
+	        						'rfp_id'=>$doc_payment_data['rfp_id'],
+	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+	        						'price'=>$due_2,
+	        						'created_at'=>date('Y-m-d H:i:s')
+	        						);
+	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);	        	
 
 	        	// ------------------------------------------------------------------------
         		// Insert into Next Schdule payment (billing_schedule)
@@ -1227,25 +1301,23 @@ class Rfp extends CI_Controller {
 
 	        	// ------------------------------------------------------------------------
 
-	        	$this->session->set_flashdata('success','Agreement has been set successfully');
-
-	        	pr($payment_due_1);
-	        	pr($doc_payment_data);
-	        	pr($ins_data,1);
+	        	$this->session->set_flashdata('success','Agreement has been set successfully.');
+	        	redirect('dashboard');
+	        	// pr($payment_due_1);
+	        	// pr($doc_payment_data);
+	        	// pr($ins_data,1);
 			}else{
-
+				$this->session->set_flashdata('error','Something goes wrong. Please try again');
+	        	redirect('dashboard');
 			}
-        }else{
-
         }
     }
 
     public function make_doctor_payment_error(){
-    	
+    	$this->session->set_flashdata('error','Something goes wrong. Please try again');
+	    redirect('dashboard');
     }
 
-    // ------------------------------------------------------------------------	
-    // ENDS here 
     // ------------------------------------------------------------------------
 
     //------------ Paypal Payment ---
@@ -1388,11 +1460,20 @@ class Rfp extends CI_Controller {
     */
     public function choose_winner_doctor($rfp_id,$rfp_bid_id){
     	
+    	$appointment_schedule='';
+    	if($this->input->post('appointment_schedule') != ''){
+    		$appointment_schedule=implode(",",$this->input->post('appointment_schedule'));
+    	}
+    	
     	// Update RFP Status 
 	    $rfp_bid_fetch = $this->Rfp_model->get_result('rfp_bid',['id'=>decode($rfp_bid_id)],true);
 	    $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>decode($rfp_id)],true);
 	    
-    	$upd_rfp_status = ['status' => '4']; // 4 Means Waiting for doctor approval For this RFP
+    	$upd_rfp_status = [
+    					'status'			    => '4', // 4 Means Waiting for doctor approval For this RFP
+    					'appointment_schedule' 		=> $appointment_schedule,
+    					'appointment_comment'	=> $this->input->post('appointment_comment'),
+    					]; 
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
     	
     	if($res_rfp){
@@ -1430,7 +1511,11 @@ class Rfp extends CI_Controller {
     */
     public function cancel_winner_doctor($rfp_id,$rfp_bid_id){
 
-    	$upd_rfp_status = ['status' => '3']; // 3 Means Open Status For this RFP
+    	$upd_rfp_status = [
+    					'status' => '3',
+    					'appointment_schedule' 		=> '', // 3 Means Open Status For this RFP
+    					'appointment_comment'	=> '',
+    					]; 
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
     	if($res_rfp){
 	    	// Update RFP Bid Status 
@@ -1452,7 +1537,7 @@ class Rfp extends CI_Controller {
      * */
     public function fetch_coupan_data(){
 
-        $data=$this->Promotional_code_model->fetch_coupan_data();
+        $data=$this->Promotional_code_model->fetch_coupan_data();        
         if(!empty($data)){    
             echo json_encode($data);
         }else{
@@ -1480,5 +1565,82 @@ class Rfp extends CI_Controller {
     	redirect('rfp');
     }
 
+    /**
+    * Save Filter data from search rfp doctor side 
+    **/
+    public function save_filter_data(){
+
+    	$filter_array = [
+    					'user_id'					=>  $this->session->userdata('client')['id'],
+    					'filter_name'				=>	$this->input->post('filter_name'),
+    					'search_data'				=>	$this->input->post('search_data'),
+    					'search_date'				=>	$this->input->post('search_date'),
+    					'search_sort'				=>	$this->input->post('search_sort'),
+    					'search_favorite'			=>	$this->input->post('search_favorite'),
+    					'search_treatment_cat_id'	=>	$this->input->post('search_treatment_cat_id'),
+    					'created_at'				=>	date("Y-m-d H:i:s"),
+    				];
+
+    	$res=$this->Rfp_model->insert_record('custom_search_filter',$filter_array);
+    	if($res){
+    		$this->session->set_flashdata('success', 'Search Filter Saved Successfully');
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Save Search Filter, Please Try Again!');
+    	}
+    	redirect('rfp/search_rfp');
+    }
+
+
+    /**
+    * Edit Filter data from search rfp doctor side 
+    **/
+    public function update_filter_data(){
+
+    	$filter_array = [
+    					'filter_name'				=>	$this->input->post('filter_name'),
+    					'search_data'				=>	$this->input->post('search_data'),
+    					'search_date'				=>	$this->input->post('search_date'),
+    					'search_sort'				=>	$this->input->post('search_sort'),
+    					'search_favorite'			=>	$this->input->post('search_favorite'),
+    					'search_treatment_cat_id'	=>	$this->input->post('search_treatment_cat_id'),
+    				];
+
+    	$res=$this->Rfp_model->update_record('custom_search_filter',['id' => $this->input->post('search_filter_id')],$filter_array);
+    	if($res){
+    		$this->session->set_flashdata('success', 'Search Filter Updated Successfully');
+    	}else{
+    		$this->session->set_flashdata('error', 'Error Into Update Search Filter, Please Try Again!');
+    	}
+    	redirect('rfp/search_rfp');
+    }
+
+
+    /**
+    * Fetch Filter data filter id wise
+    **/
+    public function fetch_filter_data(){
+    	$data=$this->Rfp_model->get_result('custom_search_filter',['id' => $this->input->post('filter_id')],1);
+    	echo json_encode($data);
+    }
+
+    /**
+    *	Count Total Filter stored for particular doctor
+    **/
+    public function count_filter_data(){
+    	$where_filter=[	
+						'user_id'	=> $this->session->userdata('client')['id']
+					 ];
+		$search_filter_list=$this->Rfp_model->get_result('custom_search_filter',$where_filter);
+		echo count($search_filter_list);
+    }
+
+
+    /**
+    *	when select filter from dashboard by doctor for view particular filter data
+    **/
+    public function view_filter_data($filter_id=''){
+    	$this->session->set_flashdata('filter_id', decode($filter_id));
+    	redirect('rfp/search_rfp');
+    }
 
 }

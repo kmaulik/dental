@@ -27,10 +27,18 @@ class Dashboard extends CI_Controller {
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps                    
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
+
+            $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
+            $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
+
+            //pr($data['search_filter_list'],1);
+            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
+            //pr($data['appointment_list'],1);
             $data['subview']="front/doctor_dashboard";
         } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
+            $data['appointment_list']=$this->Rfp_model->get_patient_appointment_rfp($user_id); // Fetch RFP For Appointment
             //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
@@ -93,6 +101,7 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
                                                  ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+                $this->form_validation->set_rules('public_email', 'Public Email', 'valid_email');
             }
 
             if($tab == 'avatar'){
@@ -140,6 +149,8 @@ class Dashboard extends CI_Controller {
                 $zipcode = $this->input->post('zipcode');
                 $gender = $this->input->post('gender');
                 $phone = $this->input->post('phone');
+                $public_email = $this->input->post('public_email');
+                $office_description = $this->input->post('office_description');
 
                 $a = explode('-',$this->input->post('birth_date'));
                 $birth_date = $a[2].'-'.$a[0].'-'.$a[1];
@@ -157,7 +168,10 @@ class Dashboard extends CI_Controller {
                                     'phone'=>$phone,
                                     'latitude' => $latitude,
                                     'longitude' => $longitude,
-                                    'birth_date'=>$birth_date
+                                    'birth_date'=>$birth_date,
+                                    'public_email'=>$public_email,
+                                    'office_description'=>$office_description,
+
                                 );
 
                 $this->Users_model->update_user_data($user_id,$upd_data);
@@ -340,4 +354,75 @@ class Dashboard extends CI_Controller {
         redirect('dashboard');
     }
 
+    /* 
+    * Manage Doctor Appointment
+    */  
+    public function manage_appointment(){
+
+        if($this->input->post('submit')){
+           
+            $appointment_data = [
+                          'rfp_id'  => $this->input->post('rfp_id'), 
+                          'doc_id'  => $this->session->userdata('client')['id'], 
+                          'doc_comments'  => $this->input->post('doc_comments'), 
+                          'created_at'  => date("Y-m-d H:i:s"),
+                        ];
+
+            $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+            
+            if($res){
+                $schedule_data='';
+                $i=0;
+                //------------ For Insert Data into appointment schedule table---------------
+                $app_id= $this->db->insert_id();
+                $app_date = $this->input->post('appointment_date');
+                $app_time = $this->input->post('appointment_time');            
+                foreach($app_date as $key=>$data){
+                    if($app_date[$key] != '' && $app_time[$key] != ''){
+
+                        $date= explode('-',$app_date[$key]);
+                        $appointment_date= $date[2]."-".$date[0]."-".$date[1];
+
+                        $time = explode(':',$app_time[$key]);
+                        $appointment_time = trim($time[0]).':'.trim($time[1]).':00';
+
+                        $schedule_data[$i]['appointment_id'] = $app_id;
+                        $schedule_data[$i]['appointment_date'] = $appointment_date;
+                        $schedule_data[$i]['appointment_time'] = $appointment_time;
+                        $i++;
+                    }
+                }
+                if($schedule_data != ''){
+                    $this->db->insert_batch('appointment_schedule',$schedule_data);
+                }
+                //-----------------End For Insert Data into appointment schedule table----------
+
+                $this->session->set_flashdata('success','Appointment Successfully Submitted');
+            }else{
+                $this->session->set_flashdata('error','Error Into Submit Appointment');
+            }
+        }
+        redirect('dashboard');
+    }
+
+    /*
+    *   Change Filter Notification Status (Doctor Dashboard)
+    */
+    public function change_filter_notify_status(){
+
+        $where=['id' => $this->input->post('filter_id')];
+        $data_array=['notification_status'  => $this->input->post('notification_status')];
+        $res=$this->Rfp_model->update_record('custom_search_filter',$where,$data_array);
+        echo $res;
+    }
+
+    /*
+    *   Delete Search Filter (Doctor Dashboard)
+    */
+    public function delete_search_filter(){
+
+        $where=['id' => $this->input->post('filter_id')];
+        $res=$this->Rfp_model->delete_record('custom_search_filter',$where);
+        echo $res;
+    }
 }

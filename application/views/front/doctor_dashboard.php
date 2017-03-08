@@ -42,10 +42,131 @@
 			
 			<div class="alert-message"></div>
 
+			<ul class="nav nav-tabs nav-top-border">
+				<li class="active"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
+				<li><a href="#schedule_rfps" data-toggle="tab">Schedule RFPs</a></li>
+				<li><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="won_rfps">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>RFP Title</th>
+								<th>Bid Price</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+								if(!empty($won_rfps)) {
+									foreach($won_rfps as $w_rfp) {										
+										
+
+
+										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
+										// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
+										
+
+										$amt = $w_rfp['amount']; // Bid price
+											
+										$percentage = config('doctor_fees');
+										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
+										$total_transaction_cnt = 0;
+
+										$is_second_due = 1;
+										$due_1 = config('doctor_initial_fees');
+										$due_2 = 0;
+										$is_second_due = 0;
+
+										if($payable_price > $due_1){
+											$due_2 = $payable_price - $due_1;
+											$is_second_due = 1;
+										}else{
+											$payable_price = $due_1;
+										}
+							?>
+									<tr>
+										<td>
+											<?php echo $w_rfp['title']; ?>
+										</td>										
+										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
+										<td>
+											<?php
+												if(empty($all_billing_data)){
+													echo rfp_status_label($w_rfp['rfp_status']);
+												}else{
+													$check_transactions = array_column($all_billing_data,'transaction_id');													
+													$total_transaction_cnt = count(array_filter($check_transactions, function($x) {return !is_null($x); }));
+													// Check if there are any payment Errors in case of cancellation of agreement													
+
+													if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
+														echo '<span class="label label-danger">Payment Error</span>';
+													}else{
+														echo '<span class="label label-primary">In-progress</span>';
+													}
+												}
+											?>
+										</td>
+										<td>										
+											<?php if($w_rfp['rfp_status'] == '4' && empty($all_billing_data)) { ?>
+												<a class="btn btn-3d btn-xs btn-reveal btn-green"
+												   data-is-second-due="<?php echo $is_second_due; ?>"
+												   data-due-one="<?php echo $due_1; ?>"
+												   data-due-two="<?php echo $due_2; ?>"
+												   data-total-due="<?php echo $payable_price; ?>"
+												   data-mybid="<?php echo $amt; ?>"
+												   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
+												   onclick="show_modal_doctor(this)" >
+													<i class="fa fa-money"></i><span>Proceed</span>
+												</a>
+											<?php }else{ 												
+												
+													$show_pending_payment = 0;
+													foreach($all_billing_data as $bill_data){
+														if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
+															$show_pending_payment++;
+														}
+													}
+
+													if($show_pending_payment != 0){
+														echo '<span class="label label-warning">Payment is under review</span>';
+													}
+												} 
+											?>
+										</td>
+									</tr>
+								<?php } ?>
+							<?php }else{ ?>
+								<tr>
+									<td colspan="7" class="text-center">
+										<b>No data Found</b>
+									</td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+				<div class="tab-pane fade" id="schedule_rfps">
+					<p> Schedule RFPs </p>
+				</div>
+				<div class="tab-pane fade" id="rfp_bids">
+					<p> Bids of RFPs </p>
+				</div>
+			</div>
+			
+			<div class="divider divider-color divider-center divider-short"><!-- divider -->
+				<i class="fa fa-cog"></i>
+			</div>
+
 			<div class="col-md-12">
 				<h4> Favorite RFP </h4>
 				<hr/>
 			</div>	
+
+
 			<div class="col-md-12">
 				<?php 
 					$i = 0;
@@ -89,20 +210,25 @@
 					</div>					
 				<?php else : ?>
 					<h3>No RFP Available</h3>
-				<?php endif; ?>	
+				<?php endif; ?>
 			</div>	
 		</div>	
 		<!-- // ENDS here FAV RFPs -->
 
 		<div class="divider divider-color divider-center divider-short"><!-- divider -->
 			<i class="fa fa-cog"></i>
+		</div>		
+
+		<div class="divider divider-color divider-center divider-short">
+			<!-- divider -->
+			<i class="fa fa-cog"></i>
 		</div>
-		
-		<!-- Doctor's All WON RFP -->
-		<div class="row">
-			<?php //pr($won_rfps); ?>
+
+
+		<!-- Doctor's Filter For Search RFP -->
+		<div class="row rfp_radar_filter">			
 			<div class="col-md-12">
-				<h4> Won RFPs </h4>
+				<h4> RFP Radar </h4>
 				<hr/>
 			</div>	
 			<div class="col-md-12">
@@ -110,81 +236,55 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>RFP Title</th>
-								<!-- <th>Patient Name</th> -->
-								<th>Patient Email</th>
-								<th>Dentition Type</th>
-								<th>Treatment Plan Amount</th>
-								<th>Bid Price</th>
-								<th>Status</th>
+								<th>Filter Name</th>
+								<th>Notification</th>
+								<th>Created On</th>
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php 
-								if(!empty($won_rfps)) { 
-									foreach($won_rfps as $w_rfp) {
-										
-										$amt = $w_rfp['amount']; // Bid price
-										
-										$percentage = config('doctor_fees');
-										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
-
-										$is_second_due = 1;
-										$due_1 = config('doctor_initial_fees');
-										$due_2 = 0;
-										$is_second_due = 0;
-
-										if($payable_price > $due_1){
-											$due_2 = $payable_price - $due_1;
-											$is_second_due = 1;
-										}else{
-											$payable_price = $due_1;
-										}
-							?>
-									<tr>
-										<td>
-											<?php echo $w_rfp['title']; ?>
-										</td>
-										<!-- <td>
-											<?php echo ucfirst($w_rfp['fname']).' '.$w_rfp['lname']; ?>
-										</td> -->
-										<td>
-											<?php echo $w_rfp['email_id']; ?>
-										</td>
-										<td><?php echo ucfirst($w_rfp['dentition_type']); ?></td>
-										<td><?php echo ucfirst($w_rfp['treatment_plan_total']); ?></td>
-										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
-										<td>
-
-										</td>
-										<td>
-											<a class="btn btn-3d btn-xs btn-reveal btn-green"
-											   data-is-second-due="<?php echo $is_second_due; ?>"
-											   data-due-one="<?php echo $due_1; ?>"
-											   data-due-two="<?php echo $due_2; ?>"
-											   data-total-due="<?php echo $payable_price; ?>"
-											   data-mybid="<?php echo $amt; ?>"
-											   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
-											   onclick="show_modal_doctor(this)" >
-												<i class="fa fa-money"></i><span>Proceed </span>
-											</a>
-										</td>
-									</tr>
-								<?php } ?>
-							<?php }else{ ?>
+							<?php if(count($search_filter_list) > 0) :?>
+							<?php foreach($search_filter_list as $key=>$search_filter) :?>
+							<tr class="search_filter_row_<?=$key?>">
+								<td><a href="<?=base_url('rfp/view_filter_data/'.encode($search_filter['id']))?>"><?=$search_filter['filter_name']?></a></td>
+								<td>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="0" <?php if($search_filter['notification_status'] == '0') { echo "checked"; }?>>
+										<i title="None"></i> None
+									</label>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="1" <?php if($search_filter['notification_status'] == '1') { echo "checked"; }?>>
+										<i title="Daily"></i> Daily
+									</label>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="2" <?php if($search_filter['notification_status'] == '2') { echo "checked"; }?>>
+										<i title="Weekly"></i> Weekly
+									</label>
+									<label class="radio">
+										<input type="radio" class="notify_status" name="notification_<?=$key?>" data-id="<?=$search_filter['id']?>" value="3" <?php if($search_filter['notification_status'] == '3') { echo "checked"; }?>>
+										<i title="Biweekly"></i> Biweekly
+									</label>
+								</td>
+								<td><?=date("m-d-Y",strtotime($search_filter['created_at']))?></td>
+								<td>
+									<a href="<?=base_url('rfp/view_filter_data/'.encode($search_filter['id']))?>" class="label label-info" title="Edit Filter"><i class="fa fa-edit"></i></a>
+									<a onclick="delete_search_filter(<?=$search_filter['id']?>,<?=$key?>)" class="label label-danger" title="Delete Filter"><i class="fa fa-trash"></i></a>
+								</td>
+							</tr>	
+							<?php endforeach; ?>
+							<?php else :?>
 								<tr>
-									<td colspan="7" class="text-center">
-										<b>No data Found</b>
+									<td colspan="2" class="text-center">
+										<b>No Filter Data Found</b>
 									</td>
 								</tr>
-							<?php } ?>
+							<?php endif;?>
 						</tbody>
 					</table>
 				</div>	
 			</div>	
 		</div>	
-		<!-- // ENDS here WON RFP -->
+		<!-- // ENDS Doctor's Filter For Search RFP -->
 
 		<div class="divider divider-color divider-center divider-short">
 			<!-- divider -->
@@ -194,7 +294,6 @@
 
 		<!-- Doctor's All Review -->
 		<div class="row review-list">
-			<?php //pr($won_rfps); ?>
 			<div class="col-md-12">
 				<h4> Your Review </h4>
 				<hr/>
@@ -257,6 +356,69 @@
 			</div>	
 		</div>	
 		<!-- // ENDS here Review -->
+
+		<div class="divider divider-color divider-center divider-short">
+			<!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+
+		<!-- Doctor's Manage Appointment -->
+		<div class="row appointment-list">
+			<div class="col-md-12">
+				<h4> Manage Appointment </h4>
+				<hr/>
+			</div>	
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Patient Name</th>
+								<th>RFP Title</th>
+								<!-- <th>Appointment Date</th>
+								<th>Appointment Time</th> -->
+								<th>Created on</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(!empty($appointment_list)) { ?>
+								<?php foreach($appointment_list as $key=>$appointment) :?>	
+									<tr>
+										<td><?=$appointment['user_name'];?></td>
+										<td><?=$appointment['title']; ?></td>
+										<!-- <td><?=isset($appointment['appointment_date'])?date("m-d-Y",strtotime($appointment['appointment_date'])):'N/A'; ?></td>
+										<td><?=isset($appointment['appointment_time'])?date("H:i:s",strtotime($appointment['appointment_time'])):'N/A'; ?></td> -->
+										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
+										<td>
+											<!-- === If Appointment not set then display the manage appointment button otherwise view == -->
+											<?php if($appointment['appointment_id'] == '') :?>
+												<a class="label label-success" title="Manage Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="manage_appointment(<?=$key?>)"><i class="fa fa-hand-o-right"></i></a>
+											<?php else : ?>
+												<a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
+											<?php endif;?>
+											<!-- == End == -->
+										</td>
+									</tr>
+								<?php endforeach; ?>	
+							<?php }else{ ?>
+								<tr>
+									<td colspan="5" class="text-center">
+										<b>No data Found</b>
+									</td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>	
+			</div>	
+		</div>	
+		<!-- // ENDS here Appointment -->
+
+		<div class="divider divider-color divider-center divider-short">
+			<!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
 		
 		<!-- Payment Table -->
 		<!-- <div class="row">
@@ -284,21 +446,7 @@
 									<tr>
 										<td><?=$list['rfp_title']?></td>
 										<td><?=$list['user_name']?></td>
-										<td>
-											<?php if($list['rfp_status'] == 0) :?>
-												<span class="label label-default">Draft</span>
-											<?php elseif($list['rfp_status'] == 1) : ?>
-												<span class="label label-primary">Pending</span>
-											<?php elseif($list['rfp_status'] == 2) : ?>
-												<span class="label label-danger">Submit Pending</span>
-											<?php elseif($list['rfp_status'] == 3) : ?>
-												<span class="label label-info">Open</span>
-											<?php elseif($list['rfp_status'] == 4) : ?>
-												<span class="label label-warning">In-Progress</span>			
-											<?php elseif($list['rfp_status'] == 5) : ?>
-												<span class="label label-success">Close</span>			
-											<?php endif; ?>
-										</td>
+										<td><?= rfp_status_label($list['rfp_status'])?></td>
 										<td><?=$list['dentition_type']?></td>
 										<td><?=$list['paid_price']?></td>
 										<td>
@@ -534,9 +682,116 @@
 		</div>
 	</div>
 </div>
-<!-- ================== /Modal Popup For Thank You Note ========================= -->		
+<!-- ================== /Modal Popup For Thank You Note ========================= -->	
 
-<!-- ================== /Modal Popup For Place a Bid ========================= -->		
+<!-- ==================== Modal Popup For Manage Appointment ========================= -->
+<div class="modal fade manage_appointment" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Manage Appointment</h4>
+			</div>
+			<form action="<?=base_url('dashboard/manage_appointment')?>" method="POST" id="frm_manage_appointment">
+				<input type="hidden" name="rfp_id" id="appointment_rfp_id">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Patient Name : <span id="appointment_user_name"></span></label>
+							</div>
+						</div>	
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Appointment Schedule : </label>
+								<div class="table-responsive">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Shift</th>
+												<th>Mon</th>
+												<th>Tue</th>
+												<th>Wed</th>
+												<th>Thu</th>
+												<th>Fri</th>
+												<th>Sat</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th>Morning</th>
+												<?php for($i=1;$i<=6;$i++) :?>
+													<th><input type="checkbox" id="M_<?=$i?>" name="appointment_schedule[]" value="M_<?=$i?>" disabled></th>
+												<?php endfor; ?>
+											</tr>
+											<tr>
+												<th>AfterNoon</th>
+												<?php for($i=1;$i<=6;$i++) :?>
+													<th><input type="checkbox" id="A_<?=$i?>" name="appointment_schedule[]" value="A_<?=$i?>" disabled></th>
+												<?php endfor; ?>
+											</tr>		
+										</tbody>	
+									</table>	
+								</div>
+							</div>
+						</div>	
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Comment :</label>
+								<span id="appointment_rfp_comment"></span>
+							</div>
+						</div>	
+
+						<!-- For multiple Appointment manage --> 
+						<?php for($i=1;$i<=3;$i++) : ?>	
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Appointment Date <?=$i?> :</label>
+									<input type="text" id="appointment_date_<?=$i?>" name="appointment_date[]" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+								</div>
+							</div>	
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Appointment Time <?=$i?> :</label>
+									<input type="text" id="appointment_time_<?=$i?>" name="appointment_time[]" class="form-control timepicker" readonly>
+								</div>
+							</div>
+						<?php endfor; ?>
+						<!-- End For multiple Appointment manage --> 
+
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Your Comment :</label>
+								<textarea name="doc_comments" id="appointment_doc_comments" class="form-control" rows="5"></textarea>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+						</div>	
+					</div>	
+				</div>	
+			</form>
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Manage Appointment ========================= -->	
+	
+
+<script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 
 <script type="text/javascript">
 
@@ -636,6 +891,8 @@
 
 		var total_payment = parseFloat(due_1) + parseFloat(due_2);
 
+		// console.log('total_payment '+total_payment);
+
 		$('.my_bid').html(mybid);
 		$('.due_1_price').html('$ '+due_1);
 		$('.due_2_price').html('$ '+due_2);
@@ -646,6 +903,7 @@
 		$('#total_due_modal').val(total_due);
 
 		$('.total-price').html('$ '+total_payment);
+		$('#orignal_price').val(total_payment);
 		
 		$(".coupan-msg").html("");
 		$('#coupan_code').val('');
@@ -710,4 +968,127 @@
 		}
 	});
 
+// ----------- For manage Appointment-----------
+function manage_appointment(key){
+	var appointment_data = <?php echo json_encode($appointment_list); ?>;
+	$("#appointment_rfp_id").val(appointment_data[key]['id']);
+	$("#appointment_user_name").html(appointment_data[key]['user_name']);
+	$("#appointment_rfp_title").html(appointment_data[key]['title']);
+
+	//----------- For Select Appointment data submit by patient -----------
+	if(appointment_data[key]['appointment_schedule'] != ''){
+		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+
+		$.each(app_arr, function( key, val ) {
+		console.log(val);	
+		  var app_data = val.split('_');
+		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+		});
+	}
+	//-----------------------------------------------------------------------
+
+	$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+	$('#appointment_doc_comments').html('');
+	$('#appointment_doc_comments').attr('readonly', false);
+	$("#frm_manage_appointment .submit_btn").show();
+}
+function view_appointment(key){
+	var appointment_data = <?php echo json_encode($appointment_list); ?>;
+		
+	$("#appointment_rfp_id").val(appointment_data[key]['id']);
+	$("#appointment_user_name").html(appointment_data[key]['user_name']);
+	$("#appointment_rfp_title").html(appointment_data[key]['title']);
+
+	//----------- For Select Appointment data submit by patient -----------
+	
+	if(appointment_data[key]['appointment_schedule'] != ''){
+		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+
+		$.each(app_arr, function( key, data ) {
+		  var app_data = data.split('_');
+		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+		});
+
+	}
+	//-----------------------------------------------------------------------
+
+	$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+
+	//----------------- For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
+	var app_sch_arr= appointment_data[key]['appointment_schedule_arr'];
+	$.each(app_sch_arr, function( key, data ) {
+		var date= data['appointment_date'];
+		var d= date.split("-");
+		var time = data['appointment_time'];
+		var t = time.split(":");
+
+		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
+		$("#appointment_time_"+(key+1)).val(t[0]+":"+t[1]);
+	});
+	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
+
+	$("#appointment_doc_comments").html(appointment_data[key]['doc_comments']);
+	$('#appointment_doc_comments').attr('readonly', true);
+	$("#frm_manage_appointment .submit_btn").hide();
+	$(".validation-error-label").remove();
+}
+// ----------- End For manage Appointment  -----------
+
+
+//---------------- Chnage Notification status for rfp search --------------
+$(".notify_status").click(function(e){
+	var filter_id=$(this).data('id');
+	var notify_status= $(this).val();
+	$.post("<?=base_url('dashboard/change_filter_notify_status/')?>",{	'filter_id' : filter_id , 'notification_status' : notify_status},function(data){
+
+	});
+});
+
+//-----------------End Notification status for rfp search -----------------
+
+//------------------------ Delete RFP Filter -------------------
+function delete_search_filter(filter_id,key){
+	bootbox.confirm('Are you sure to delete rfp filter ?' ,function(res){
+		if(res){
+			$.post("<?=base_url('dashboard/delete_search_filter/')?>",{	'filter_id' : filter_id },function(data){
+				if(data){
+					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP Filter Deleted Successfully.</div>');
+					$(".search_filter_row_"+key).hide();
+				}
+				else{
+					$(".alert-message").html('<div class="alert alert-danger margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error Into Delete RFP Filter.</div>');
+				}
+			});
+		}
+	});	
+}
+//----------------------- End Delete RFP Filter ----------------
+
+//--------------- For manage Appointment Form Validation --------------
+$("#frm_manage_appointment").validate({
+    errorClass: 'validation-error-label',
+    successClass: 'validation-valid-label',
+    highlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    unhighlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    rules: {
+        appointment_date: {
+            required: true,
+        },
+        appointment_time: {
+            required: true,
+        }
+    },
+    messages: {
+        appointment_date: {
+            required: "Please provide a Appointment Date"
+        },
+        appointment_time: {
+            required: "Please provide a Appointment Time"
+        }
+    }
+});
 </script>

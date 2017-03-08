@@ -154,7 +154,7 @@ class Rfp_model extends CI_Model {
         }
         //-------- End Multiple Category search --------------
 
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,rb.amount as bid_amt,count(rb_bid.rfp_id) as total_bid,rf.rfp_id as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
+        $this->db->select('rfp.*,TIMESTAMPDIFF(YEAR, rfp.birth_date, CURDATE()) AS patient_age,TIMESTAMPDIFF(DAY,CURDATE(),rfp.rfp_valid_date) AS rfp_valid_days,u.id as user_id,u.avatar as avatar,rb.amount as bid_amt,count(rb_bid.rfp_id) as total_bid,rf.rfp_id as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
@@ -212,7 +212,7 @@ class Rfp_model extends CI_Model {
         }
         //-------- End Multiple Category search --------------
 
-        $this->db->select('rfp.*,u.id as user_id,u.avatar as avatar,rb.amount as bid_amt,count(rb_bid.rfp_id) as total_bid,rf.rfp_id as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
+        $this->db->select('rfp.*,TIMESTAMPDIFF(YEAR, rfp.birth_date, CURDATE()) AS patient_age,TIMESTAMPDIFF(DAY,CURDATE(),rfp.rfp_valid_date) AS rfp_valid_days,u.id as user_id,u.avatar as avatar,rb.amount as bid_amt,count(rb_bid.rfp_id) as total_bid,rf.rfp_id as favorite_id, ( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
         $this->db->from('rfp');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
@@ -389,7 +389,7 @@ class Rfp_model extends CI_Model {
                           users.fname,users.lname,users.email_id');
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
-        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id]);
+        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'6']);
         $res = $this->db->get('rfp_bid')->result_array();
         return $res;
     }
@@ -419,5 +419,64 @@ class Rfp_model extends CI_Model {
         }
         return $result;
     } 
+
+    /* ----------------------- Fetch RFP For Doctor Appointment (With RFP Status [5] & RFP Bid status [2]) ----------------------- */
+    public function get_doctor_appointment_rfp($user_id){
+        
+        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->join('users u','rfp.patient_id = u.id');
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
+        $this->db->join('appointments a','rfp.id = a.rfp_id and a.is_cancelled = 0','left');
+        $this->db->where('rb.doctor_id',$user_id);
+        $this->db->where('rb.status','2'); // RFP BID Status 2 means winner for this rfp
+        $this->db->where('rb.is_deleted',0);
+        $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
+        $this->db->where('rfp.is_deleted',0);
+        $this->db->where('rfp.is_blocked',0);
+        $this->db->where('u.is_deleted',0);
+        $this->db->where('u.is_blocked',0);
+        $data=$this->db->get('rfp')->result_array();
+        
+        foreach($data as $key=>$app_data){
+            $this->db->where('appointment_id',$app_data['appointment_id']);
+            $data[$key]['appointment_schedule_arr']=$this->db->get('appointment_schedule')->result_array();
+        }
+     
+        return $data;
+    }
+
+     /* ----------------------- Fetch RFP For Patient Appointment (With RFP Status [5]) ----------------------- */
+    public function get_patient_appointment_rfp($user_id){
+        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->join('appointments a','rfp.id = a.rfp_id');
+        $this->db->join('users u','a.doc_id = u.id');
+        $this->db->where('rfp.patient_id',$user_id);
+        $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
+        $this->db->where('rfp.is_deleted',0);
+        $this->db->where('rfp.is_blocked',0);
+        $this->db->where('a.is_cancelled',0);
+        $this->db->where('u.is_deleted',0);
+        $this->db->where('u.is_blocked',0);
+        $data=$this->db->get('rfp')->result_array();
+
+         foreach($data as $key=>$app_data){
+            $this->db->where('appointment_id',$app_data['appointment_id']);
+            $data[$key]['appointment_schedule_arr']=$this->db->get('appointment_schedule')->result_array();
+        }
+        
+        return $data;
+    }
+
+    public function  return_status($rfp_id){
+
+        $all_data = $this->db->get_where('billing_schedule',['rfp_id'=>$rfp_id])->result_array();
+        if(!empty($all_data)){
+            
+            foreach($all_data as $a_data){
+                
+            }
+        }
+        return $all_data;
+    }
 
 }    
