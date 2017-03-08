@@ -360,24 +360,43 @@ class Dashboard extends CI_Controller {
     public function manage_appointment(){
 
         if($this->input->post('submit')){
-
-            $date= explode('-',$this->input->post('appointment_date'));
-            $appointment_date= $date[2]."-".$date[0]."-".$date[1];
-
-            $time = explode(':',$this->input->post('appointment_time'));
-            $appointment_time = trim($time[0]).':'.trim($time[1]).':00';
-            
+           
             $appointment_data = [
                           'rfp_id'  => $this->input->post('rfp_id'), 
                           'doc_id'  => $this->session->userdata('client')['id'], 
-                          'appointment_date'  => $appointment_date, 
-                          'appointment_time'  => $appointment_time, 
                           'doc_comments'  => $this->input->post('doc_comments'), 
                           'created_at'  => date("Y-m-d H:i:s"),
                         ];
 
             $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+            
             if($res){
+                $schedule_data='';
+                $i=0;
+                //------------ For Insert Data into appointment schedule table---------------
+                $app_id= $this->db->insert_id();
+                $app_date = $this->input->post('appointment_date');
+                $app_time = $this->input->post('appointment_time');            
+                foreach($app_date as $key=>$data){
+                    if($app_date[$key] != '' && $app_time[$key] != ''){
+
+                        $date= explode('-',$app_date[$key]);
+                        $appointment_date= $date[2]."-".$date[0]."-".$date[1];
+
+                        $time = explode(':',$app_time[$key]);
+                        $appointment_time = trim($time[0]).':'.trim($time[1]).':00';
+
+                        $schedule_data[$i]['appointment_id'] = $app_id;
+                        $schedule_data[$i]['appointment_date'] = $appointment_date;
+                        $schedule_data[$i]['appointment_time'] = $appointment_time;
+                        $i++;
+                    }
+                }
+                if($schedule_data != ''){
+                    $this->db->insert_batch('appointment_schedule',$schedule_data);
+                }
+                //-----------------End For Insert Data into appointment schedule table----------
+
                 $this->session->set_flashdata('success','Appointment Successfully Submitted');
             }else{
                 $this->session->set_flashdata('error','Error Into Submit Appointment');
