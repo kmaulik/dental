@@ -123,7 +123,7 @@
 									foreach($won_rfps as $w_rfp) {										
 										
 										$rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
-										pr($rfp_status_data);
+										
 
 										$amt = $w_rfp['amount']; // Bid price
 											
@@ -341,8 +341,8 @@
 							<tr>
 								<th>Patient Name</th>
 								<th>RFP Title</th>
-								<th>Appointment Date</th>
-								<th>Appointment Time</th>
+								<!-- <th>Appointment Date</th>
+								<th>Appointment Time</th> -->
 								<th>Created on</th>
 								<th>Action</th>
 							</tr>
@@ -353,8 +353,8 @@
 									<tr>
 										<td><?=$appointment['user_name'];?></td>
 										<td><?=$appointment['title']; ?></td>
-										<td><?=isset($appointment['appointment_date'])?date("m-d-Y",strtotime($appointment['appointment_date'])):'N/A'; ?></td>
-										<td><?=isset($appointment['appointment_time'])?date("H:i:s",strtotime($appointment['appointment_time'])):'N/A'; ?></td>
+										<!-- <td><?=isset($appointment['appointment_date'])?date("m-d-Y",strtotime($appointment['appointment_date'])):'N/A'; ?></td>
+										<td><?=isset($appointment['appointment_time'])?date("H:i:s",strtotime($appointment['appointment_time'])):'N/A'; ?></td> -->
 										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
 										<td>
 											<!-- === If Appointment not set then display the manage appointment button otherwise view == -->
@@ -674,43 +674,65 @@
 							<div class="form-group">
 								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
 							</div>
-						</div>	
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Appointment Date :</label>
-								<input type="text" id="appointment_date" name="appointment_date" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
-							</div>
-						</div>	
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Appointment Time :</label>
-								<input type="text" id="appointment_time" name="appointment_time" class="form-control timepicker" readonly>
-							</div>
 						</div>
-						<!-- <div class="col-sm-6">
+						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Appointment Date 2 :</label>
-								<input type="text" id="appointment_date" name="appointment_date" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+								<label>Appointment Schedule : </label>
+								<div class="table-responsive">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Shift</th>
+												<th>Mon</th>
+												<th>Tue</th>
+												<th>Wed</th>
+												<th>Thu</th>
+												<th>Fri</th>
+												<th>Sat</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th>Morning</th>
+												<?php for($i=1;$i<=6;$i++) :?>
+													<th><input type="checkbox" id="M_<?=$i?>" name="appointment_schedule[]" value="M_<?=$i?>" disabled></th>
+												<?php endfor; ?>
+											</tr>
+											<tr>
+												<th>AfterNoon</th>
+												<?php for($i=1;$i<=6;$i++) :?>
+													<th><input type="checkbox" id="A_<?=$i?>" name="appointment_schedule[]" value="A_<?=$i?>" disabled></th>
+												<?php endfor; ?>
+											</tr>		
+										</tbody>	
+									</table>	
+								</div>
 							</div>
 						</div>	
-						<div class="col-sm-6">
+						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Appointment Time 2 :</label>
-								<input type="text" id="appointment_time" name="appointment_time" class="form-control timepicker" readonly>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Appointment Date 3 :</label>
-								<input type="text" id="appointment_date" name="appointment_date" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+								<label>Comment :</label>
+								<span id="appointment_rfp_comment"></span>
 							</div>
 						</div>	
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Appointment Time 3 :</label>
-								<input type="text" id="appointment_time" name="appointment_time" class="form-control timepicker" readonly>
+
+						<!-- For multiple Appointment manage --> 
+						<?php for($i=1;$i<=3;$i++) : ?>	
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Appointment Date <?=$i?> :</label>
+									<input type="text" id="appointment_date_<?=$i?>" name="appointment_date[]" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+								</div>
+							</div>	
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Appointment Time <?=$i?> :</label>
+									<input type="text" id="appointment_time_<?=$i?>" name="appointment_time[]" class="form-control timepicker" readonly>
+								</div>
 							</div>
-						</div> -->
+						<?php endfor; ?>
+						<!-- End For multiple Appointment manage --> 
+
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Your Comment :</label>
@@ -918,34 +940,61 @@ function manage_appointment(key){
 	$("#appointment_rfp_id").val(appointment_data[key]['id']);
 	$("#appointment_user_name").html(appointment_data[key]['user_name']);
 	$("#appointment_rfp_title").html(appointment_data[key]['title']);
+
+	//----------- For Select Appointment data submit by patient -----------
+	if(appointment_data[key]['appointment_schedule'] != ''){
+		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+
+		$.each(app_arr, function( key, val ) {
+		console.log(val);	
+		  var app_data = val.split('_');
+		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+		});
+	}
+	//-----------------------------------------------------------------------
+
+	$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
 	$('#appointment_doc_comments').html('');
-	$("#appointment_date").attr('disabled',false);
-	$("#appointment_time").attr('disabled',false);
 	$('#appointment_doc_comments').attr('readonly', false);
 	$("#frm_manage_appointment .submit_btn").show();
 }
 function view_appointment(key){
 	var appointment_data = <?php echo json_encode($appointment_list); ?>;
-	
-	//-------------- For Date Format Change ------------
-	var date= appointment_data[key]['appointment_date'];
-	var d= date.split("-");
-	//-------------- End For Date Format Change ------------
-
-	//-------------- For Time Format Change ----------------
-	var time = appointment_data[key]['appointment_time'];
-	var t = time.split(":");
-	//-------------- End For Time Format Change ------------
-	
+		
 	$("#appointment_rfp_id").val(appointment_data[key]['id']);
 	$("#appointment_user_name").html(appointment_data[key]['user_name']);
 	$("#appointment_rfp_title").html(appointment_data[key]['title']);
-	$("#appointment_date").val(d[1]+"-"+d[2]+"-"+d[0]);
-	$("#appointment_time").val(t[0]+":"+t[1]);
+
+	//----------- For Select Appointment data submit by patient -----------
+	
+	if(appointment_data[key]['appointment_schedule'] != ''){
+		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+
+		$.each(app_arr, function( key, data ) {
+		  var app_data = data.split('_');
+		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+		});
+
+	}
+	//-----------------------------------------------------------------------
+
+	$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+
+	//----------------- For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
+	var app_sch_arr= appointment_data[key]['appointment_schedule_arr'];
+	$.each(app_sch_arr, function( key, data ) {
+		var date= data['appointment_date'];
+		var d= date.split("-");
+		var time = data['appointment_time'];
+		var t = time.split(":");
+
+		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
+		$("#appointment_time_"+(key+1)).val(t[0]+":"+t[1]);
+	});
+	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
+
 	$("#appointment_doc_comments").html(appointment_data[key]['doc_comments']);
 	$('#appointment_doc_comments').attr('readonly', true);
-	$("#appointment_date").attr('disabled',true);
-	$("#appointment_time").attr('disabled',true);
 	$("#frm_manage_appointment .submit_btn").hide();
 	$(".validation-error-label").remove();
 }

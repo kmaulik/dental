@@ -219,6 +219,76 @@
 </div>
 <!-- ================== /Modal Popup For Doctor Review ========================= -->		
 
+<!-- ==================== Modal Popup For Doctor Appointment  ========================= -->
+<div class="modal fade doctor_appointment" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<!-- header modal -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myLargeModalLabel">Appointment Schedule</h4>
+			</div>
+			<form action="" method="POST" id="frm_doctor_appointment">
+				<!-- body modal -->
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<!-- <label>Appointment</label>	 -->
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Shift</th>
+											<th>Mon</th>
+											<th>Tue</th>
+											<th>Wed</th>
+											<th>Thu</th>
+											<th>Fri</th>
+											<th>Sat</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>Morning</th>
+											<?php for($i=1;$i<=6;$i++) :?>
+												<th><input type="checkbox" name="appointment_schedule[]" value="M_<?=$i?>"></th>
+											<?php endfor; ?>
+										</tr>
+										<tr>
+											<th>AfterNoon</th>
+											<?php for($i=1;$i<=6;$i++) :?>
+												<th><input type="checkbox" name="appointment_schedule[]" value="A_<?=$i?>"></th>
+											<?php endfor; ?>
+										</tr>		
+									</tbody>	
+								</table>	
+							</div>	
+						</div>
+						<div class="col-sm-12">
+							<label>Comment (Optional)</label>
+							<div class="form-group">
+								<textarea name="appointment_comment" id="appointment_comment" class="form-control" rows="5"></textarea>
+							</div>	
+						</div>		
+					</div>	
+				</div>
+				<!-- body modal -->
+				<div class="modal-footer">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-info" value="Submit">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+						</div>	
+					</div>	
+				</div>	
+			</form>
+
+		</div>
+	</div>
+</div>
+<!-- ================== /Modal Popup For Doctor Appointment ========================= -->	
+
 
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 <!-- <script type="text/javascript" src="<?php echo DEFAULT_JS_PATH.'vague.js'; ?>"></script> -->
@@ -277,11 +347,8 @@ function send_review(key){
 $(".confirm_winner").click(function(e) {
 	e.preventDefault();
 	var lHref = $(this).attr('href');
-	bootbox.confirm('Are you sure to winner doctor for this rfp ?' ,function(res){
-		if(res){
-			window.location.href = lHref;
-		}
-	});	
+	$(".doctor_appointment").modal('show');
+	$(".doctor_appointment #frm_doctor_appointment").attr("action",lHref);		
 });
 	
 

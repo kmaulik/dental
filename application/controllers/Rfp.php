@@ -824,7 +824,7 @@ class Rfp extends CI_Controller {
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
 		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data,$favorite_data);
-		// pr($data['rfp_data']);
+		//pr($data['rfp_data']);
 		// qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
 		$this->load->view('front/layouts/layout_main',$data);
@@ -1460,11 +1460,20 @@ class Rfp extends CI_Controller {
     */
     public function choose_winner_doctor($rfp_id,$rfp_bid_id){
     	
+    	$appointment_schedule='';
+    	if($this->input->post('appointment_schedule') != ''){
+    		$appointment_schedule=implode(",",$this->input->post('appointment_schedule'));
+    	}
+    	
     	// Update RFP Status 
 	    $rfp_bid_fetch = $this->Rfp_model->get_result('rfp_bid',['id'=>decode($rfp_bid_id)],true);
 	    $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>decode($rfp_id)],true);
 	    
-    	$upd_rfp_status = ['status' => '4']; // 4 Means Waiting for doctor approval For this RFP
+    	$upd_rfp_status = [
+    					'status'			    => '4', // 4 Means Waiting for doctor approval For this RFP
+    					'appointment_schedule' 		=> $appointment_schedule,
+    					'appointment_comment'	=> $this->input->post('appointment_comment'),
+    					]; 
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
     	
     	if($res_rfp){
@@ -1502,7 +1511,11 @@ class Rfp extends CI_Controller {
     */
     public function cancel_winner_doctor($rfp_id,$rfp_bid_id){
 
-    	$upd_rfp_status = ['status' => '3']; // 3 Means Open Status For this RFP
+    	$upd_rfp_status = [
+    					'status' => '3',
+    					'appointment_schedule' 		=> '', // 3 Means Open Status For this RFP
+    					'appointment_comment'	=> '',
+    					]; 
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
     	if($res_rfp){
 	    	// Update RFP Bid Status 
