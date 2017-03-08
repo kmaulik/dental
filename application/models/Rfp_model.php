@@ -389,7 +389,7 @@ class Rfp_model extends CI_Model {
                           users.fname,users.lname,users.email_id');
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
-        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id]);
+        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'6']);
         $res = $this->db->get('rfp_bid')->result_array();
         return $res;
     }
@@ -458,11 +458,10 @@ class Rfp_model extends CI_Model {
     public function  return_status($rfp_id){
 
         $all_data = $this->db->get_where('billing_schedule',['rfp_id'=>$rfp_id])->result_array();
-
-        
         if(!empty($all_data)){
+            
             foreach($all_data as $a_data){
-
+                
             }
         }
         return $all_data;

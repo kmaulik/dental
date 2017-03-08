@@ -214,7 +214,8 @@ span.time {
 		                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
 		                    	else 
 		                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
-								<span class="name"><?=$record['fname']." ".$record['lname'];?></span>
+								<!-- <span class="name"><?=$record['fname']." ".$record['lname'];?></span> -->
+								<span class="name"><?=$record['id'];?></span>
 								<span class="subject">
 									<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
 									<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>

@@ -42,10 +42,128 @@
 			
 			<div class="alert-message"></div>
 
+			<ul class="nav nav-tabs nav-top-border">
+				<li class="active"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
+				<li><a href="#schedule_rfps" data-toggle="tab">Schedule RFPs</a></li>
+				<li><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="won_rfps">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>RFP Title</th>
+								<th>Bid Price</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+								if(!empty($won_rfps)) {
+									foreach($won_rfps as $w_rfp) {										
+										
+
+										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
+
+										$amt = $w_rfp['amount']; // Bid price
+											
+										$percentage = config('doctor_fees');
+										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
+										$total_transaction_cnt = 0;
+
+										$is_second_due = 1;
+										$due_1 = config('doctor_initial_fees');
+										$due_2 = 0;
+										$is_second_due = 0;
+
+										if($payable_price > $due_1){
+											$due_2 = $payable_price - $due_1;
+											$is_second_due = 1;
+										}else{
+											$payable_price = $due_1;
+										}
+							?>
+									<tr>
+										<td>
+											<?php echo $w_rfp['title']; ?>
+										</td>										
+										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
+										<td>
+											<?php
+												if(empty($all_billing_data)){
+													echo rfp_status_label($w_rfp['rfp_status']);
+												}else{
+													$check_transactions = array_column($all_billing_data,'transaction_id');													
+													$total_transaction_cnt = count(array_filter($check_transactions, function($x) {return !is_null($x); }));
+													// Check if there are any payment Errors in case of cancellation of agreement													
+
+													if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
+														echo '<span class="label label-danger">Payment Error</span>';
+													}else{
+														echo '<span class="label label-primary">In-progress</span>';
+													}
+												}
+											?>
+										</td>
+										<td>										
+											<?php if($w_rfp['rfp_status'] == '4' && empty($all_billing_data)) { ?>
+												<a class="btn btn-3d btn-xs btn-reveal btn-green"
+												   data-is-second-due="<?php echo $is_second_due; ?>"
+												   data-due-one="<?php echo $due_1; ?>"
+												   data-due-two="<?php echo $due_2; ?>"
+												   data-total-due="<?php echo $payable_price; ?>"
+												   data-mybid="<?php echo $amt; ?>"
+												   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
+												   onclick="show_modal_doctor(this)" >
+													<i class="fa fa-money"></i><span>Proceed</span>
+												</a>
+											<?php }else{ 												
+												
+													$show_pending_payment = 0;
+													foreach($all_billing_data as $bill_data){
+														if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
+															$show_pending_payment++;
+														}
+													}
+
+													if($show_pending_payment != 0){
+														echo '<span class="label label-warning">Payment is under review</span>';
+													}
+												} 
+											?>
+										</td>
+									</tr>
+								<?php } ?>
+							<?php }else{ ?>
+								<tr>
+									<td colspan="7" class="text-center">
+										<b>No data Found</b>
+									</td>
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+				<div class="tab-pane fade" id="schedule_rfps">
+					<p> Schedule RFPs </p>
+				</div>
+				<div class="tab-pane fade" id="rfp_bids">
+					<p> Bids of RFPs </p>
+				</div>
+			</div>
+			
+			<div class="divider divider-color divider-center divider-short"><!-- divider -->
+				<i class="fa fa-cog"></i>
+			</div>
+
 			<div class="col-md-12">
 				<h4> Favorite RFP </h4>
 				<hr/>
 			</div>	
+
+
 			<div class="col-md-12">
 				<?php 
 					$i = 0;
@@ -89,100 +207,14 @@
 					</div>					
 				<?php else : ?>
 					<h3>No RFP Available</h3>
-				<?php endif; ?>	
+				<?php endif; ?>
 			</div>	
 		</div>	
 		<!-- // ENDS here FAV RFPs -->
 
 		<div class="divider divider-color divider-center divider-short"><!-- divider -->
 			<i class="fa fa-cog"></i>
-		</div>
-		
-		<!-- Doctor's All WON RFP -->
-		<div class="row">
-			<?php //pr($won_rfps); ?>
-			<div class="col-md-12">
-				<h4> Won RFPs </h4>
-				<hr/>
-			</div>	
-			<div class="col-md-12">
-				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>RFP Title</th>								
-								<th>Dentition Type</th>								
-								<th>Bid Price</th>
-								<th>Status</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-								if(!empty($won_rfps)) {
-									foreach($won_rfps as $w_rfp) {										
-										
-										$rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
-										pr($rfp_status_data);
-
-										$amt = $w_rfp['amount']; // Bid price
-											
-										$percentage = config('doctor_fees');
-										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
-
-										$is_second_due = 1;
-										$due_1 = config('doctor_initial_fees');
-										$due_2 = 0;
-										$is_second_due = 0;
-
-										if($payable_price > $due_1){
-											$due_2 = $payable_price - $due_1;
-											$is_second_due = 1;
-										}else{
-											$payable_price = $due_1;
-										}
-							?>
-									<tr>
-										<td>
-											<?php echo $w_rfp['title']; ?>
-										</td>
-										<td><?php echo ucfirst($w_rfp['dentition_type']); ?></td>										
-										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
-										<td>
-											<?php
-												echo $rfp_status = $w_rfp['rfp_status'];
-												// $this->Rfp_model->get_result('');
-											?>
-										</td>
-										<td>
-											<?php if($w_rfp['rfp_status'] == '4') { ?>
-												<a class="btn btn-3d btn-xs btn-reveal btn-green"
-												   data-is-second-due="<?php echo $is_second_due; ?>"
-												   data-due-one="<?php echo $due_1; ?>"
-												   data-due-two="<?php echo $due_2; ?>"
-												   data-total-due="<?php echo $payable_price; ?>"
-												   data-mybid="<?php echo $amt; ?>"
-												   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
-												   onclick="show_modal_doctor(this)" >
-													<i class="fa fa-money"></i><span>Proceed</span>
-												</a>
-											<?php } ?>
-										</td>
-									</tr>
-								<?php } ?>
-							<?php }else{ ?>
-								<tr>
-									<td colspan="7" class="text-center">
-										<b>No data Found</b>
-									</td>
-								</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>	
-			</div>	
-		</div>	
-		<!-- // ENDS here WON RFP -->
+		</div>		
 
 		<div class="divider divider-color divider-center divider-short">
 			<!-- divider -->
@@ -191,8 +223,7 @@
 
 
 		<!-- Doctor's Filter For Search RFP -->
-		<div class="row rfp_radar_filter">
-			<?php //pr($won_rfps); ?>
+		<div class="row rfp_radar_filter">			
 			<div class="col-md-12">
 				<h4> RFP Radar </h4>
 				<hr/>

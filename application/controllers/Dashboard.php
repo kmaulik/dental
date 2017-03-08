@@ -386,7 +386,6 @@ class Dashboard extends CI_Controller {
         redirect('dashboard');
     }
 
-
     /*
     *   Change Filter Notification Status (Doctor Dashboard)
     */

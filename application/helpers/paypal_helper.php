@@ -591,7 +591,7 @@
 
 	// v! Do not make any changes into this function
 	//----------------Cancel Billing Agreement - BillAgreementUpdate @DHK -----------
-	function cancel_billing_agreement($REFERENCEID='B-59734495JP661434C'){		
+	function cancel_billing_agreement($REFERENCEID='B-72K505231C160584W'){
 		$nvpstr ="&VERSION=86";
 		$nvpstr .="&REFERENCEID=".$REFERENCEID;
 		$nvpstr .="&BILLINGAGREEMENTSTATUS=Canceled";		
