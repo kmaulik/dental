@@ -1020,6 +1020,9 @@ class Rfp extends CI_Controller {
 		}
     }
 
+    // ------------------------------------------------------------------------
+    // Doctor payments
+    // ------------------------------------------------------------------------
     public function make_doctor_payment(){
     	
        	$user_data = $this->session->userdata('client');
@@ -1238,11 +1241,12 @@ class Rfp extends CI_Controller {
     }
 
     public function make_doctor_payment_error(){
-    		
-
-
+    	
     }
 
+    // ------------------------------------------------------------------------	
+    // ENDS here 
+    // ------------------------------------------------------------------------
 
     //------------ Paypal Payment ---
     public function paypal_payment(){
