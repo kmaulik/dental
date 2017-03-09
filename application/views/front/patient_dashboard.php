@@ -327,8 +327,18 @@
 									<tr>
 										<td><?=$appointment['user_name'];?></td>
 										<td><?=$appointment['title']; ?></td>
-										<td><?=isset($appointment['appointment_date'])?date("m-d-Y",strtotime($appointment['appointment_date'])):'N/A'; ?></td>
-										<td><?=isset($appointment['appointment_time'])?date("H:i:s",strtotime($appointment['appointment_time'])):'N/A'; ?></td>
+										<!-- For Check Appointment fixed or not by patient -->
+										<?php $appointment_date ='';
+											  $appointment_time = '';
+										foreach($appointment['appointment_schedule_arr'] as $app_sche) {
+											if($app_sche['is_selected'] == 1) {
+												$appointment_date = $app_sche['appointment_date'];
+												$appointment_time = $app_sche['appointment_time'];
+											}
+										} ?>	
+										<!-- End For Check Appointment fixed or not by patient -->
+										<td><?php if($appointment_date) { echo date("m-d-Y",strtotime($appointment_date)); } else { echo 'N/A';} ?></td>
+										<td><?php if($appointment_time) { echo date("H:i:s",strtotime($appointment_time)); } else { echo 'N/A';} ?></td>
 										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
 										<td>
 											<a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
@@ -557,7 +567,7 @@
 </div>
 <!-- ================== /Modal Popup For Doctor Review ========================= -->
 
-<!-- ==================== Modal Popup For Manage Appointment ========================= -->
+<!-- ==================== Modal Popup For Manage Appointment (select one schedule by patient)========================= -->
 <div class="modal fade manage_appointment" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
@@ -567,9 +577,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myLargeModalLabel">View Appointment</h4>
 			</div>
-			<form action="<?=base_url('dashboard/manage_appointment')?>" method="POST" id="frm_manage_appointment">
-				<input type="hidden" name="appointment_id" id="appointment_id">
-				<input type="hidden" name="rfp_id" id="appointment_rfp_id">
+			<form action="<?=base_url('dashboard/choose_appointment_schedule')?>" method="POST" id="frm_choose_app">
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
@@ -583,10 +591,10 @@
 								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
 							</div>
 						</div>	
-						<div class="col-sm-12">
+						<div class="col-sm-12 patient_schedule">
 							<div class="form-group">
-								<label>Appointment Schedule : </label>
-								<div class="table-responsive">
+								<label>Appointment Schedule : <span></span></label>
+								<div class="table-responsive appointment_schedule_table">
 									<table class="table">
 										<thead>
 											<tr>
@@ -625,28 +633,31 @@
 						</div>	
 
 						<!-- For multiple Appointment manage --> 
-						<?php for($i=1;$i<=3;$i++) : ?>	
-							<div class="mul_schedule_<?=$i?>" style="display:none;">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<label>Appointment Date <?=$i?> :</label>
-										<input type="text" id="appointment_date_<?=$i?>" name="appointment_date[]" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+							<?php for($i=1;$i<=3;$i++) : ?>	
+								<div class="mul_schedule_<?=$i?> schedule_data">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label>Appointment Date <?=$i?> :</label>
+											<input type="text" id="appointment_date_<?=$i?>" name="appointment_date[]" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+										</div>
+									</div>	
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label>Appointment Time <?=$i?> :</label>
+											<input type="text" id="appointment_time_<?=$i?>" name="appointment_time[]" class="form-control timepicker" readonly>
+										</div>
 									</div>
-								</div>	
-								<div class="col-sm-5">
-									<div class="form-group">
-										<label>Appointment Time <?=$i?> :</label>
-										<input type="text" id="appointment_time_<?=$i?>" name="appointment_time[]" class="form-control timepicker" readonly>
+									<div class="col-sm-1">
+										<div class="form-group">
+											<label>&nbsp;</label>
+											<input type="radio" name="schedule_selected" id="schedule_selected_<?=$i?>">
+										</div>
 									</div>
-								</div>
-								<div class="col-sm-1">
-									<div class="form-group">
-										<label>&nbsp;</label>
-										<input type="radio" name="schedule_selected" id="schedule_selected_<?=$i?>">
-									</div>
-								</div>
-							</div>			
-						<?php endfor; ?>
+								</div>			
+							<?php endfor; ?>
+							<div class="col-sm-12">
+								<div class="mul_app"></div>
+							</div>
 						<!-- End For multiple Appointment manage --> 
 						<div class="col-sm-12">
 							<div class="form-group">
@@ -660,7 +671,7 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 						<div class="form-group">
-							<!-- <input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit"> -->
+							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
 							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 						</div>	
 					</div>	
@@ -671,7 +682,7 @@
 </div>
 <!-- ================== /Modal Popup For Manage Appointment ========================= -->	
 
-<!-- ==================== Modal Popup For Doctor Appointment  ========================= -->
+<!-- ==================== Modal Popup For Doctor Appointment (Suggest time by client first time) ========================= -->
 <div class="modal fade doctor_appointment" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
@@ -876,6 +887,14 @@ function send_review(rfp_key,bid_key){
 // ----------- For View Appointment by patient -----------
 
 function view_appointment(key){
+
+	$(".appointment_schedule_table input:checkbox").prop('checked', false);
+	$(".schedule_data").hide();
+	$(".schedule_data input:radio").prop('checked', false);
+	$(".validation-error-label").hide(); // For Hide Validation error
+	$("#frm_choose_app .submit_btn").show();
+	$(".schedule_data input:radio").prop('disabled', false);
+
 	var appointment_data = <?php echo json_encode($appointment_list); ?>;
 	
 	$("#appointment_id").val(appointment_data[key]['appointment_id']);
@@ -886,6 +905,8 @@ function view_appointment(key){
 	//----------- For Select Appointment data submit by patient -----------
 	
 	if(appointment_data[key]['appointment_schedule'] != ''){
+		$(".patient_schedule label span").html("");
+		$(".appointment_schedule_table").show();
 		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
 
 		$.each(app_arr, function( key, data ) {
@@ -894,9 +915,17 @@ function view_appointment(key){
 		});
 
 	}
+	else{
+		$(".patient_schedule label span").html("N/A");
+		$(".appointment_schedule_table").hide();
+	}
 	//-----------------------------------------------------------------------
 
-	$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+	if(appointment_data[key]['appointment_comment'] != '') {	
+		$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+	}else{
+		$("#appointment_rfp_comment").html('N/A');
+	}
 
 	//----------------- For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
 	var app_sch_arr= appointment_data[key]['appointment_schedule_arr'];
@@ -911,6 +940,15 @@ function view_appointment(key){
 		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
 		$("#appointment_time_"+(key+1)).val(t[0]+":"+t[1]);
 		$("#schedule_selected_"+(key+1)).val(data['id']);
+
+		//---------- IF Schedule selected then checked radio button & hide submit button -------
+		if(data['is_selected'] == 1){
+			
+			$(".schedule_data input:radio").prop('disabled', true);
+			$("#schedule_selected_"+(key+1)).prop("checked", true);
+			$("#frm_choose_app .submit_btn").hide();
+		}
+		//------------------
 	});
 	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
 
@@ -939,5 +977,38 @@ $("#frmmsg").validate({
         }
     }
 });
+
+
+//--------------- For Select Schedule --------------
+$("#frm_choose_app").validate({
+    errorClass: 'validation-error-label',
+    successClass: 'validation-valid-label',
+    highlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    unhighlight: function(element, errorClass) {
+        $(element).removeClass(errorClass);
+    },
+    rules: {
+        schedule_selected: {
+            required: true,
+        }
+    },
+     errorPlacement: function (error, element) {
+     		console.log(element);
+            if (element[0]['name'] == "schedule_selected") {
+                error.insertAfter(".mul_app");
+            } else {
+                error.insertAfter(element)
+            }
+        },
+    messages: {
+        schedule_selected: {
+            required: "Please select one Appointment schedule"
+        }
+    }
+});
+
+
 
 </script>
