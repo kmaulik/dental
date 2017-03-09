@@ -394,6 +394,17 @@ class Rfp_model extends CI_Model {
         return $res;
     }
 
+    public function get_bids_rfp($user_id){
+        // $user_id
+        $this->db->select('rfp_bid.*,rfp.title,rfp.dentition_type,rfp.created_at as rfp_created,rfp.status as rfp_status,rfp.treatment_plan_total,
+                          users.fname,users.lname,users.email_id');
+        $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
+        $this->db->join('users','rfp.patient_id=users.id');
+        $this->db->where(['rfp_bid.doctor_id'=>$user_id,'rfp.status'=>'3']);
+        $res = $this->db->get('rfp_bid')->result_array();
+        return $res;
+    }
+
     /* -------------- For Display Active RFP In Dashboard @DHK------------------- */
     public function get_active_rfp_patient_wise(){
         $this->db->select('rfp.*,count(rb.rfp_id) as total_bid,min(rb.amount) as min_bid_amt,rr.rfp_id as is_rated');

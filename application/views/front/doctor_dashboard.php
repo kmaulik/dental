@@ -63,16 +63,13 @@
 							<?php 
 								if(!empty($won_rfps)) {
 									foreach($won_rfps as $w_rfp) {										
-										
-
 
 										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
 										// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
-										
 
-										$amt = $w_rfp['amount']; // Bid price
-											
+										$amt = $w_rfp['amount']; // Bid price										
 										$percentage = config('doctor_fees');
+
 										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
 										$total_transaction_cnt = 0;
 
@@ -100,8 +97,8 @@
 												}else{
 													$check_transactions = array_column($all_billing_data,'transaction_id');													
 													$total_transaction_cnt = count(array_filter($check_transactions, function($x) {return !is_null($x); }));
-													// Check if there are any payment Errors in case of cancellation of agreement													
 
+													// Check if there are any payment Errors in case of cancellation of agreement
 													if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
 														echo '<span class="label label-danger">Payment Error</span>';
 													}else{
@@ -152,8 +149,37 @@
 				<div class="tab-pane fade" id="schedule_rfps">
 					<p> Schedule RFPs </p>
 				</div>
-				<div class="tab-pane fade" id="rfp_bids">
-					<p> Bids of RFPs </p>
+				<div class="tab-pane fade" id="rfp_bids">					
+					
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>RFP Title</th>
+								<th>Bid Price</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 													
+								if(!empty($total_rfp_bids)){
+									foreach($total_rfp_bids as $total_bids){										
+							?>
+								<tr>
+									<td><?php echo $total_bids['title']; ?></td>
+									<td><?php echo $total_bids['amount']; ?></td>
+									<td><?php echo rfp_status_label($total_bids['rfp_status']); ?></td>
+									<td>
+										<a href="<?php echo base_url().'rfp/view_rfp/'.encode($total_bids['rfp_id']); ?>" 
+										   class="btn btn-3d btn-xs btn-reveal btn-green">
+											View
+										</a>
+									</td>
+								</tr>
+							<?php } } ?>
+						</tbody>
+					</table>
+
 				</div>
 			</div>
 			
@@ -213,11 +239,7 @@
 				<?php endif; ?>
 			</div>	
 		</div>	
-		<!-- // ENDS here FAV RFPs -->
-
-		<div class="divider divider-color divider-center divider-short"><!-- divider -->
-			<i class="fa fa-cog"></i>
-		</div>		
+		<!-- // ENDS here FAV RFPs -->		
 
 		<div class="divider divider-color divider-center divider-short">
 			<!-- divider -->

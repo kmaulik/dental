@@ -103,6 +103,22 @@ class Test extends CI_Controller {
         $res = $this->unirest->get($url);   
                                 
     }
+
+    public function map(){
+
+        $this->load->library('googlemaps');
+
+        $config['center'] = '37.4419, -122.1419';
+        $config['zoom'] = 'auto';
+        $config['places'] = TRUE;
+        $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
+        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
+        $config['placesAutocompleteOnChange'] = 'alert(\'You selected a place\');';
+        $this->googlemaps->initialize($config);
+        $data['map'] = $this->googlemaps->create_map();
+
+        $this->load->view('test_view', $data);
+    }
 }
 
 /* End of file Test.php */

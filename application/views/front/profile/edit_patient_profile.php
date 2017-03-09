@@ -240,50 +240,50 @@
 								<i class="fa fa-check"></i>
 								Change Password
 							</button>
-							<a href="#" class="btn btn-default">Cancel </a>
+							<a href="#" class="btn btn-primary">Cancel</a>
 						</div>
 
 					</form>
 				</div>
 				<!-- /PASSWORD TAB -->
-				
+
 				<!-- Office Map TAB -->
 				<div class="tab-pane fade <?php if($tab == 'office_map'){ echo 'in active'; }?>" id="office_map">
-					<input type="text" id="myPlaceTextBox" />
+					<form  method="post">
+						<?php
+							$get_address = '';
+							$get_address = $this->input->get('address'); 
+							$get_address_decode = utf8_encode(decode($get_address));														
+						?>
+						<div class="form-group">
+							<label class="control-label">Type office address</label>
+							<input type="text" id="new_id" class="form-control" value="<?php echo $get_address_decode; ?>" />
+							<input type="hidden" id="latlong_location" value="<?php echo $latlong_location; ?>" >
+							<input type="hidden" id="lat" value="<?php echo $lat; ?>">
+							<input type="hidden" id="lng" value="<?php echo $lng; ?>">
+						</div>
+
+						<div class="form-group">
+							<a class="btn btn-primary for_pointer" onclick="save_office_map_address()">
+								Save Address
+							</a>
+						</div>
+					</form>
 					<br/>
 					<br/>
 					<?php echo $map['html']; ?>
-					<!-- <div id="googleMap" style="width:100%;height:400px;"></div> -->
-
-					<script>
-						// function myMap() {
-						// 	var mapProp= {
-						// 	    center:new google.maps.LatLng(51.508742,-0.120850),
-						// 	    zoom:5,
-						// 	};
-						// 	var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-						// 	google.maps.event.addListenerOnce(map, 'idle', function() {
-						// 	   google.maps.event.trigger(map, 'resize');
-						// 	});
-						// }
-					</script>
-
-					<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw&callback=myMap"></script> -->
 				</div>
 				<!--  //Office Map TAB -->
 
 			</div>
 		</div>
-		
+	
 		<?php $this->load->view('front/layouts/side_bar_profile'); ?>
 		
 	</div>
 </section>
 <!-- / -->
 
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw"></script> -->
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrAT6XIzO4FSwU1_iXBgvvOkAqqx8GRBw&callback=myMap"></script> -->
-				
 <script type="text/javascript">
 	
 	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
@@ -301,13 +301,44 @@
     });
 
     function get_location(){
-    	var myPlaceTextBox_str = $('#myPlaceTextBox').val();
+    	var myPlaceTextBox_str = $('#new_id').val();       	
        	myPlaceTextBox_str_decode = encodeURIComponent(btoa(myPlaceTextBox_str));
-       	window.location.href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map&address=';?>"+myPlaceTextBox_str_decode;
+    	window.location.href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map&address=';?>"+myPlaceTextBox_str_decode;    	   
     }
 
-     function fetch_lat_long(lat,longi){
-        bootbox.alert('lat --> '+lat+'long --'+longi);
+    function fetch_lat_long(lat,lng){
+              	       	       	       	     
+       	var office_text = $('#new_id').val();
+
+       	$.ajax({
+       		url:"<?php echo base_url().'dashboard/save_map_address'; ?>",
+       		type:"POST",
+       		dataType:"JSON",
+       		data:{office_text:office_text,lat:lat,lng:lng},
+       		success:function(data){
+       			bootbox.alert('Data saved successfully.');
+       		}
+       	});       	
     }
 	
+	function save_office_map_address(){	
+
+		var office_text = $('#new_id').val();
+		var lat = $('#lat').val();
+		var lng = $('#lng').val();
+
+		$.ajax({
+			url: '<?php echo base_url()."dashboard/save_map_address"; ?>',
+			type: 'POST',
+			dataType: 'JSON',
+			data: {office_text:office_text,lat:lat,lng:lng},
+			success:function(data){
+
+			}
+		});
+
+	}
+
+
+
 </script>

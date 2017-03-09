@@ -8,7 +8,7 @@ class Dashboard extends CI_Controller {
         parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
         $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model']);
-        $this->load->library(['unirest']);
+        $this->load->library(['unirest','googlemaps']);        
     }	
 
     public function index() {
@@ -26,20 +26,30 @@ class Dashboard extends CI_Controller {
             $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps                    
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
+            
+
+            $data['total_rfp_bids'] = $this->Rfp_model->get_bids_rfp($user_id);
+
+            // qry();
+            // pr($data['total_rfp_bids'],1);
+
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
 
             $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
 
-            //pr($data['search_filter_list'],1);
-            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
-            //pr($data['appointment_list'],1);
+            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment            
             $data['subview']="front/doctor_dashboard";
-        } else if($this->session->userdata('client')['role_id'] == 5) { // Means 5 Patient Dashboard
+
+        } else if($this->session->userdata('client')['role_id'] == 5) { 
+
+            // Means 5 Patient Dashboard
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
             $data['appointment_list']=$this->Rfp_model->get_patient_appointment_rfp($user_id); // Fetch RFP For Appointment
+            
             //pr($data['active_rfp_list'],1);
+
             $data['subview']="front/patient_dashboard";
         }
                 
@@ -51,6 +61,8 @@ class Dashboard extends CI_Controller {
         $user_data = $this->session->userdata('client');
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
+
+        // pr($data['db_data'],1);
         $data['country_list']=$this->Country_model->get_result('country');
         $decode_pass = $this->encrypt->decode($data['db_data']['password']);
 
@@ -64,27 +76,52 @@ class Dashboard extends CI_Controller {
 
         // ------------------------------------------------------------------------
         // Google Maps
-        // ------------------------------------------------------------------------
-        $this->load->library('googlemaps');
-        $config['center'] = '52.5200, 13.4050';
+        // -----------------------------------------------------------------------
+
+        $get_address = $this->input->get('address');
+        $get_address_decode = '';
+        $center_map_str = '52.5200, 13.4050';
+        $data['lat'] = '';
+        $data['lng'] = '';
+
+        if(!empty($get_address)){
+            $get_address_decode = utf8_encode(decode($get_address));
+            $online_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$get_address_decode.'&key='.GOOGLE_MAP_API;
+            $res_data = $this->unirest->get($online_url);
+
+            $row_data_decode = json_decode($res_data->raw_body);
+
+            $location_data = $row_data_decode->results[0]->geometry->location;
+
+            $lat_data = (string)$location_data->lat;
+            $lng_data = (string)$location_data->lng;
+
+            $data['lat'] = $lat_data;
+            $data['lng'] = $lng_data;
+
+            $center_map_str = $lat_data.', '.$lng_data;            
+        }        
+
+        
+        $config['center'] = $center_map_str;
         $config['zoom'] = 'auto';
-        // $config['places'] = TRUE;
-        $config['placesAutocompleteInputID'] = 'myPlaceTextBox';
+        $config['places'] = TRUE;
+        $config['placesAutocompleteInputID'] = 'new_id';
         $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport        
         $config['placesAutocompleteOnChange'] = 'get_location()';
         $this->googlemaps->initialize($config);
         
         // ------------------------------------------------------------------------
         $marker = array();
-        $marker['position'] = '52.5200, 13.4050'; 
-        $marker['infowindow_content'] = html_entity_decode('Doctor - My address');
+        $marker['position'] = $center_map_str; 
+        $marker['infowindow_content'] = html_entity_decode($data['db_data']['office_description']);
         $marker['draggable'] = true;
         $marker['ondragend'] = 'fetch_lat_long(event.latLng.lat(),event.latLng.lng())';
 
         $this->googlemaps->add_marker($marker);
 
-        $data['map'] = $this->googlemaps->create_map();
-                
+        $data['map'] = $this->googlemaps->create_map();        
+        $data['latlong_location'] = $center_map_str;
         // ------------------------------------------------------------------------
 
         if($_POST){
@@ -100,7 +137,7 @@ class Dashboard extends CI_Controller {
                                              ['validate_zipcode'=>'Please Enter Valid Zipcode']);
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
-                                                 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
+                                                ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
                 $this->form_validation->set_rules('public_email', 'Public Email', 'valid_email');
             }
 
@@ -122,7 +159,7 @@ class Dashboard extends CI_Controller {
             $this->load->view('front/layouts/layout_main',$data);
         }else{
             
-            if($tab == 'info'){ 
+            if($tab == 'info'){
 
                 $longitude = $data['db_data']['longitude'];
                 $latitude = $data['db_data']['latitude'];
@@ -236,16 +273,12 @@ class Dashboard extends CI_Controller {
         $config = array_merge($config,pagination_front_config());       
         $this->pagination->initialize($config);
         $data['rfp_data']=$this->Rfp_model->doctor_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
-
-        // qry();        
-        // pr($data['rfp_data'],1);
         
         $data['subview']="front/profile/appointmetns";
         $this->load->view('front/layouts/layout_main',$data);
     }
 
-    // v! - rfp_alert() function in bkp for 20_2 for RFP alert module    
-    
+    // v! - rfp_alert() function in bkp for 20_2 for RFP alert module
     public function remove_avatar($id){
         $id = decode($id);
         $this->Users_model->update_user_data($id,['avatar'=>'']);
@@ -425,4 +458,26 @@ class Dashboard extends CI_Controller {
         $res=$this->Rfp_model->delete_record('custom_search_filter',$where);
         echo $res;
     }
+
+    // ------------------------------------------------------------------------
+
+    public function save_map_address(){
+
+        $u_data = $this->session->userdata('client');
+        
+        $lat = $this->input->post('lat');
+        $lng = $this->input->post('lng');
+        $office_text = $this->input->post('office_text');
+
+        $ret_json['lat'] = $lat;
+        $ret_json['lng'] = $lng;
+        $ret_json['office_text'] = $office_text;
+
+        $json_str = json_encode($ret_json);
+        $this->Rfp_model->update_record('users',['id'=>$u_data['id']],['office_map_data'=>$json_str]);
+
+    }
+
+    // ------------------------------------------------------------------------
+
 }
