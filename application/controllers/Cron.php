@@ -81,7 +81,7 @@ class Cron extends CI_Controller {
 
 	public function get_payments(){
 
-		$all_data = $this->Rfp_model->get_result('billing_schedule',['next_billing_date'=>date('Y-m-d'),'transaction_id is null'=>null]);
+		$all_data = $this->Rfp_model->get_result('billing_schedule',['next_billing_date'=>date('Y-m-d'),'transaction_id is null'=>null,'status'=>'0']);
 		
 		// pr($all_data,1);
 

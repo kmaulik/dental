@@ -9,8 +9,8 @@ class Rfp extends CI_Controller {
 		$this->load->helper(['paypal_helper']);	
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
-	}	
-
+	}
+	
 	public function index(){
 		
 		//-------------- If Role Id (4 Means doctor then redirect to search rfp)
