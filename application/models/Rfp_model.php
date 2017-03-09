@@ -434,7 +434,7 @@ class Rfp_model extends CI_Model {
     /* ----------------------- Fetch RFP For Doctor Appointment (With RFP Status [5] & RFP Bid status [2]) ----------------------- */
     public function get_doctor_appointment_rfp($user_id){
         
-        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,u.phone,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         $this->db->join('appointments a','rfp.id = a.rfp_id and a.is_cancelled = 0','left');

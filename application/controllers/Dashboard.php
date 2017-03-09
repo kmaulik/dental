@@ -38,7 +38,8 @@ class Dashboard extends CI_Controller {
             $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
 
-            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment            
+
+            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { 
@@ -47,8 +48,6 @@ class Dashboard extends CI_Controller {
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
             $data['appointment_list']=$this->Rfp_model->get_patient_appointment_rfp($user_id); // Fetch RFP For Appointment
-            
-            //pr($data['active_rfp_list'],1);
 
             $data['subview']="front/patient_dashboard";
         }
@@ -388,26 +387,85 @@ class Dashboard extends CI_Controller {
     }
 
     /* 
-    * Manage Doctor Appointment
+    * Manage Call Appointment
+    */  
+    public function call_appointment(){
+
+        if($this->input->post('submit')){
+    
+            $appointment_data = [
+                          'rfp_id'              => $this->input->post('rfp_id'), 
+                          'doc_id'              => $this->session->userdata('client')['id'], 
+                          'doc_comments'        => $this->input->post('doc_comments'),
+                          'appointment_type'    => 1, // (1) It means call appointment type
+                          'created_at'          => date("Y-m-d H:i:s"),
+                        ];
+            $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+            $app_id = $this->db->insert_id();
+
+            if($res){
+                //---- Insert Data into Appointment schedule table ------
+                $date= explode('-',$this->input->post('appointment_date'));
+                $appointment_date= $date[2]."-".$date[0]."-".$date[1];
+
+                $time = explode(':',$this->input->post('appointment_time'));
+                $appointment_time = trim($time[0]).':'.trim($time[1]).':00';
+
+                $schedule_data = [
+                               'appointment_id'     =>  $app_id,
+                               'appointment_date'   =>  $appointment_date,
+                               'appointment_time'   =>  $appointment_time,
+                               'is_selected'        =>  1,
+                            ];
+
+                $this->db->insert('appointment_schedule',$schedule_data);
+                //-----------------------------------------------------------
+                $this->session->set_flashdata('success','Appointment Successfully Submitted');
+            }
+            else{
+                $this->session->set_flashdata('error','Error Into Submit Appointment');
+            }   
+        }   
+        redirect('dashboard'); 
+    }
+
+    /* 
+    * Manage Doctor Appointment Manual (3 time schedule option)
     */  
     public function manage_appointment(){
 
         if($this->input->post('submit')){
-           
-            $appointment_data = [
+
+            // if appointment_id is null then add new appointment otherwise edit the appointment 
+            if($this->input->post('appointment_id') == '') {
+                $appointment_data = [
                           'rfp_id'  => $this->input->post('rfp_id'), 
                           'doc_id'  => $this->session->userdata('client')['id'], 
                           'doc_comments'  => $this->input->post('doc_comments'), 
                           'created_at'  => date("Y-m-d H:i:s"),
                         ];
 
-            $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+                $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+                $app_id = $this->db->insert_id();
+           } 
+           else {
+                 $app_id = $this->input->post('appointment_id');
+                 $appointment_data = [
+                          'doc_comments'  => $this->input->post('doc_comments'), 
+                        ];
+                 $res=$this->Rfp_model->update_record('appointments',['id' => $app_id],$appointment_data);
+                 
+                 // IF successfully update then delete all schedule data from appointment schedule table
+                 if($res){
+                    $this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $app_id]);
+                 }
+           }
+           
             
             if($res){
                 $schedule_data='';
                 $i=0;
                 //------------ For Insert Data into appointment schedule table---------------
-                $app_id= $this->db->insert_id();
                 $app_date = $this->input->post('appointment_date');
                 $app_time = $this->input->post('appointment_time');            
                 foreach($app_date as $key=>$data){
@@ -434,6 +492,38 @@ class Dashboard extends CI_Controller {
             }else{
                 $this->session->set_flashdata('error','Error Into Submit Appointment');
             }
+        }
+        redirect('dashboard');
+    }
+
+    /*
+    * Choose a particular schedule by patient (Patient Dashboard)
+    */
+    public function choose_appointment_schedule(){
+        
+         $where = ['id' => $this->input->post('schedule_selected')];
+         $data_array = ['is_selected' => 1];
+         $res=$this->Rfp_model->update_record('appointment_schedule',$where,$data_array);
+         if($res)  {
+            $this->session->set_flashdata('success','Appointment Selected Successfully');
+        }else{
+            $this->session->set_flashdata('error','Error Into Select Appointment');
+        }
+        redirect('dashboard');
+    }
+
+    /*
+    * Delete Appointment
+    */
+    public function delete_appointment($app_id){
+
+        $appointment_id = decode($app_id);
+        //$res=$this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $appointment_id]);
+        $res=$this->Rfp_model->delete_record('appointments',['id' => $appointment_id]);
+        if($res)  {
+            $this->session->set_flashdata('success','Appointment Deleted Successfully');
+        }else{
+            $this->session->set_flashdata('error','Error Into Delete Appointment');
         }
         redirect('dashboard');
     }
