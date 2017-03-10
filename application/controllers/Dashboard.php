@@ -404,16 +404,35 @@ class Dashboard extends CI_Controller {
     public function call_appointment(){
 
         if($this->input->post('submit')){
-    
-            $appointment_data = [
-                          'rfp_id'              => $this->input->post('rfp_id'), 
-                          'doc_id'              => $this->session->userdata('client')['id'], 
-                          'doc_comments'        => $this->input->post('doc_comments'),
-                          'appointment_type'    => 1, // (1) It means call appointment type
-                          'created_at'          => date("Y-m-d H:i:s"),
-                        ];
-            $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
-            $app_id = $this->db->insert_id();
+
+            // if appointment_id is null then add new appointment otherwise edit the appointment 
+            if($this->input->post('appointment_id') == '')
+            {    
+                $appointment_data = [
+                              'rfp_id'              => $this->input->post('rfp_id'), 
+                              'doc_id'              => $this->session->userdata('client')['id'], 
+                              'doc_comments'        => $this->input->post('doc_comments'),
+                              'appointment_type'    => 1, // (1) It means call appointment type
+                              'created_at'          => date("Y-m-d H:i:s"),
+                            ];
+                $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+                $app_id = $this->db->insert_id();
+
+            }
+            else
+            {
+                $app_id = $this->input->post('appointment_id');
+                $appointment_data = [
+                            'doc_comments'        => $this->input->post('doc_comments'), 
+                            'appointment_type'    => 1,
+                            ];
+                $res=$this->Rfp_model->update_record('appointments',['id' => $app_id],$appointment_data);
+                 
+                // IF successfully update then delete all schedule data from appointment schedule table
+                if($res){
+                    $this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $app_id]);
+                }
+            }
 
             if($res){
                 //---- Insert Data into Appointment schedule table ------

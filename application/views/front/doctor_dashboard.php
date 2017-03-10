@@ -786,6 +786,7 @@
 			</div>
 			<form action="<?=base_url('dashboard/call_appointment')?>" method="POST" id="frm_call_appointment">
 				<input type="hidden" name="rfp_id" id="call_app_rfp_id">
+				<input type="hidden" name="appointment_id" id="call_app_id">
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
@@ -987,6 +988,7 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 						<div class="form-group">
+							<a class="btn btn-info btn_call" onclick="choose_call_option()"><i class="fa fa-phone"></i> Call</a>
 							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
 							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 						</div>	
@@ -1187,14 +1189,17 @@ function select_appointment_option(key){
 
 //---------------- Choose Call Option ---------------------
 function choose_call_option(){
-	$(".select_appointment_option").removeClass("fade").modal("hide");
+	console.log("==>"+$("#select_app_key").val());
+	$(".modal").removeClass("fade").modal("hide");
+	//$(".select_appointment_option").removeClass("fade").modal("hide");
 	$(".call_appointment").addClass("fade").modal("show");
 	call_appointment($("#select_app_key").val());
 }
 
 //---------------- Choose Appointment option --------------
 function choose_app_option(){
-	$(".select_appointment_option").removeClass("fade").modal("hide");
+	$(".modal").removeClass("fade").modal("hide");
+	//$(".select_appointment_option").removeClass("fade").modal("hide");
 	$(".manage_appointment").addClass("fade").modal("show");
 	manage_appointment($("#select_app_key").val());
 }
@@ -1203,6 +1208,7 @@ function choose_app_option(){
 function call_appointment(key){
 	var appointment_data = <?php echo json_encode($appointment_list); ?>;
 	$("#call_app_rfp_id").val(appointment_data[key]['id']);
+	$("#call_app_id").val(appointment_data[key]['appointment_id']);
 	$("#call_app_user_name").html(appointment_data[key]['user_name']);
 	$("#call_patient_phone").html(appointment_data[key]['phone']);
 	$("#call_app_rfp_title").html(appointment_data[key]['title']);
@@ -1267,6 +1273,7 @@ function manage_appointment(key){
 
 	$('#appointment_doc_comments').html('');
 	$('#appointment_doc_comments').attr('readonly', false);
+	$('#frm_manage_appointment .btn_call').show();
 	$("#frm_manage_appointment .submit_btn").show();
 	$(".validation-error-label").remove();
 }
@@ -1331,14 +1338,18 @@ function view_appointment(key){
 
 	if(approve_appointment == 0) // If condition true means doctor able to edit appointment otherwise only view
 	{
+		$("#select_app_key").val(key); // For call option in manage appointment
 		$(".schedule_data").show();
 		$("#appointment_id").val(appointment_data[key]['appointment_id']); // It means edit appointment
 		$('#appointment_doc_comments').attr('readonly', false);
+		$('#frm_manage_appointment .btn_call').show();
 		$("#frm_manage_appointment .submit_btn").show();
 	}
 	else{
+		$("#select_app_key").val(''); // IF apporve then remove the value for call option in manage appointment
 		$("#appointment_id").val(''); // It means only view appointment
 		$('#appointment_doc_comments').attr('readonly', true);
+		$('#frm_manage_appointment .btn_call').hide();
 		$("#frm_manage_appointment .submit_btn").hide();
 	}
 	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
