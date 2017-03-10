@@ -1354,8 +1354,13 @@ class Rfp extends CI_Controller {
 
     //----------Complete Transaction and Insert data into Payment Transaction table & Update Status in RFP----- 
     public function complete_transaction(){
-    	// $data=$this->input->get();
-    	// pr($data,1);
+    	
+    	//------ If refresh this page then redirect to RFP list ---
+    	if(empty($this->session->userdata('payment_data'))){
+    		redirect('rfp');
+    	}
+    	//---------------------
+    	
     	$this->load->model('Payment_transaction_model');
     	$pay_arr = [
     		'user_id'				=> $this->session->userdata['client']['id'],

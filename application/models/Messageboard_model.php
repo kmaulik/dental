@@ -58,6 +58,8 @@ class Messageboard_model extends CI_Model {
     */
     public function get_rfp_message_count($where,$search_data){
 
+        $this->db->select('u.id as user_id,u.avatar as user_avatar,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,rb.created_at as bid_date,msg.unread_msg');
+       
         $this->db->from('rfp');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         if($this->session->userdata('client')['role_id'] == '4'){
@@ -70,7 +72,7 @@ class Messageboard_model extends CI_Model {
         }
         $this->db->join('(select count(id) as unread_msg,from_id,rfp_id from messages where status=0 and to_id = '.$this->session->userdata('client')['id'].' and is_deleted_to=0 group by(from_id)) msg','rfp.id = msg.rfp_id and u.id=msg.from_id','LEFT');
          if ($search_data != '') {
-            $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR CONCAT(u.fname," ", u.lname) LIKE "%'.$search_data.'%"', NULL);
+            $this->db->having('rfp.title LIKE "%' . $search_data . '%" OR user_name LIKE "%'.$search_data.'%"', NULL);
         }
         $this->db->where($where);
         $data=$this->db->get()->num_rows();
@@ -103,7 +105,7 @@ class Messageboard_model extends CI_Model {
         $this->db->join('(select max(created_at) as latest_msg,from_id,rfp_id from messages where to_id = '.$this->session->userdata('client')['id'].' and is_deleted_to=0 group by(from_id)) msg_latest','rfp.id = msg_latest.rfp_id and u.id=msg_latest.from_id','LEFT');
         
         if ($search_data != '') {
-            $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR CONCAT(u.fname," ", u.lname) LIKE "%'.$search_data.'%"', NULL);
+            $this->db->having('rfp.title LIKE "%' . $search_data . '%" OR user_name LIKE "%'.$search_data.'%"', NULL);
         }
         $this->db->where($where);
         //$this->db->order_by('rb.created_at','desc');

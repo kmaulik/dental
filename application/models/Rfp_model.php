@@ -458,9 +458,10 @@ class Rfp_model extends CI_Model {
 
      /* ----------------------- Fetch RFP For Patient Appointment (With RFP Status [5]) ----------------------- */
     public function get_patient_appointment_rfp($user_id){
-        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at,rb.id as rfp_bid_id');
         $this->db->join('appointments a','rfp.id = a.rfp_id');
         $this->db->join('users u','a.doc_id = u.id');
+        $this->db->join('rfp_bid rb','a.rfp_id = rb.rfp_id and a.doc_id = rb.doctor_id');
         $this->db->where('rfp.patient_id',$user_id);
         $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
         $this->db->where('rfp.is_deleted',0);
