@@ -1008,7 +1008,7 @@
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 
 <script type="text/javascript">
-
+	
 	function send_reply(key){
 		var review_data = <?php echo json_encode($review_list); ?>;
 		$("#rfp_rating_id").val(review_data[key]['rating_id']);
@@ -1193,9 +1193,7 @@ function select_appointment_option(key){
 
 //---------------- Choose Call Option ---------------------
 function choose_call_option(){
-	console.log("==>"+$("#select_app_key").val());
 	$(".modal").removeClass("fade").modal("hide");
-	//$(".select_appointment_option").removeClass("fade").modal("hide");
 	$(".call_appointment").addClass("fade").modal("show");
 	call_appointment($("#select_app_key").val());
 }
@@ -1203,7 +1201,6 @@ function choose_call_option(){
 //---------------- Choose Appointment option --------------
 function choose_app_option(){
 	$(".modal").removeClass("fade").modal("hide");
-	//$(".select_appointment_option").removeClass("fade").modal("hide");
 	$(".manage_appointment").addClass("fade").modal("show");
 	manage_appointment($("#select_app_key").val());
 }

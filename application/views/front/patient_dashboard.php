@@ -275,6 +275,7 @@
 									</tr>
 									<!-- =======End For Bid Details ============ -->
 								<?php endforeach; ?>
+								<?php if(count($active_rfp_list) > 3) :?>
 								<tr>
 									<td colspan="10">
 										<a class="btn btn-3d btn-sm btn-reveal btn-success pull-right show_more">
@@ -284,7 +285,8 @@
 											<i class="fa fa-arrow-circle-up"></i><span>Hide</span>
 										</a>	
 									</td>
-								</tr>	
+								</tr>
+								<?php endif; ?>	
 							<?php else :?>
 								<tr>
 									<td colspan="9">No Active RFP</td>
@@ -578,6 +580,7 @@
 				<h4 class="modal-title" id="myLargeModalLabel">View Appointment</h4>
 			</div>
 			<form action="<?=base_url('dashboard/choose_appointment_schedule')?>" method="POST" id="frm_choose_app">
+				<input type="hidden" id="app_key" name="app_key">
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
@@ -638,13 +641,13 @@
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label>Appointment Date <?=$i?> :</label>
-											<input type="text" id="appointment_date_<?=$i?>" name="appointment_date[]" class="form-control datepicker" data-format="mm-dd-yyyy" readonly>
+											<input type="text" id="appointment_date_<?=$i?>" name="appointment_date[]" class="form-control" data-format="mm-dd-yyyy" readonly>
 										</div>
 									</div>	
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label>Appointment Time <?=$i?> :</label>
-											<input type="text" id="appointment_time_<?=$i?>" name="appointment_time[]" class="form-control timepicker" readonly>
+											<input type="text" id="appointment_time_<?=$i?>" name="appointment_time[]" class="form-control" readonly>
 										</div>
 									</div>
 									<div class="col-sm-1">
@@ -671,6 +674,7 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 						<div class="form-group">
+							<a class="btn btn-info send_msg_app" onclick="send_msg_for_change_app()" title="Send Message" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i> Send Message</a>
 							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
 							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 						</div>	
@@ -887,11 +891,12 @@ function send_review(rfp_key,bid_key){
 // ----------- For View Appointment by patient -----------
 
 function view_appointment(key){
-
+	$("#app_key").val(key); // For send message from appointment section
 	$(".appointment_schedule_table input:checkbox").prop('checked', false);
 	$(".schedule_data").hide();
 	$(".schedule_data input:radio").prop('checked', false);
 	$(".validation-error-label").hide(); // For Hide Validation error
+	$("#frm_choose_app .send_msg_app").show(); // For Hide send message button
 	$("#frm_choose_app .submit_btn").show();
 	$(".schedule_data input:radio").prop('disabled', false);
 
@@ -946,6 +951,7 @@ function view_appointment(key){
 			
 			$(".schedule_data input:radio").prop('disabled', true);
 			$("#schedule_selected_"+(key+1)).prop("checked", true);
+			$("#frm_choose_app .send_msg_app").hide();
 			$("#frm_choose_app .submit_btn").hide();
 		}
 		//------------------
@@ -955,6 +961,20 @@ function view_appointment(key){
 	$("#appointment_doc_comments").html(appointment_data[key]['doc_comments']);
 }
 // ----------- End For View Appointment  -----------
+
+
+//---------------- Send Message For Change Appointment ------------------
+function send_msg_for_change_app(){
+	$(".modal").removeClass("fade").modal("hide");
+	var app_data = <?php echo json_encode($appointment_list); ?>;
+	console.log(app_data);
+	var key = $("#app_key").val();
+	$("#msg_rfp_id").val(app_data[key]['id']);
+	$("#msg_rfp_title").val(app_data[key]['title']);
+	$("#msg_rfp_bid_id").val(app_data[key]['rfp_bid_id']);
+	$("#msg_to_id").val(app_data[key]['doc_id']);
+}
+//---------------- End Send Message For Change Appointment ------------------
 
 //--------------- For Message Form Validation --------------
 $("#frmmsg").validate({
