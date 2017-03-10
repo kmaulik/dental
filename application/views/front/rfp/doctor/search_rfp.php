@@ -238,8 +238,7 @@ span.time {
 						<div class="table-responsive rfp_doctor_search">
 							<table class="table">
 								<thead>
-									<th>Favorite</th>
-									<th>Patient Avatar</th>
+									<th>Favorite</th>									
 									<th>RFP #</th>
 									<th>RPF Title</th>
 									<th>Age</th>
@@ -260,14 +259,7 @@ span.time {
 													<!-- Means Not Favorite RFP -->
 													<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite RFP"></span>
 												<?php endif; ?>
-											</td>
-											
-											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>">
-												<img src="<?php if($record['avatar'] != '') 
-						                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
-						                    	else 
-						                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
-											</td>
+											</td>																			
 											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>"><?=$record['id']?></td>
 											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>"><?=character_limiter(strip_tags($record['title']), 70);?></td>
 											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>"><?=$record['patient_age']?></td>
