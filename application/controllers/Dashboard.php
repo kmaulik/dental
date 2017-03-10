@@ -80,16 +80,27 @@ class Dashboard extends CI_Controller {
         $get_address = $this->input->get('address');
         $get_address_decode = '';
         $center_map_str = '52.5200, 13.4050';
-        $data['lat'] = '';
-        $data['lng'] = '';
+        $data['get_address'] = '';
+
+        $data['lat']='52.5200';
+        $data['lng']='13.4050';
+
+        if(!empty($data['db_data']['office_map_data'])){
+                                        
+            $office_map_data = json_decode($data['db_data']['office_map_data'],true);
+            
+            $data['lat'] = $office_map_data['lat'];
+            $data['lng'] = $office_map_data['lng'];
+
+            $center_map_str =  $data['lat'].', '.$data['lng'];
+            $data['get_address'] = $office_map_data['office_text'];
+        }        
 
         if(!empty($get_address)){
             $get_address_decode = utf8_encode(decode($get_address));
             $online_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$get_address_decode.'&key='.GOOGLE_MAP_API;
             $res_data = $this->unirest->get($online_url);
-
             $row_data_decode = json_decode($res_data->raw_body);
-
             $location_data = $row_data_decode->results[0]->geometry->location;
 
             $lat_data = (string)$location_data->lat;
@@ -98,19 +109,19 @@ class Dashboard extends CI_Controller {
             $data['lat'] = $lat_data;
             $data['lng'] = $lng_data;
 
-            $center_map_str = $lat_data.', '.$lng_data;            
-        }        
-
+            $center_map_str = $lat_data.', '.$lng_data;
+        }
         
         $config['center'] = $center_map_str;
-        $config['zoom'] = 'auto';
+        $config['zoom'] = '16';
         $config['places'] = TRUE;
         $config['placesAutocompleteInputID'] = 'new_id';
-        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport        
+        $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
         $config['placesAutocompleteOnChange'] = 'get_location()';
         $this->googlemaps->initialize($config);
         
         // ------------------------------------------------------------------------
+
         $marker = array();
         $marker['position'] = $center_map_str; 
         $marker['infowindow_content'] = html_entity_decode($data['db_data']['office_description']);
@@ -124,7 +135,8 @@ class Dashboard extends CI_Controller {
         // ------------------------------------------------------------------------
 
         if($_POST){
-            $tab = $this->input->post('tab');            
+            
+            $tab = $this->input->post('tab');
             $data['tab'] = $tab;
 
             if($tab == 'info'){
@@ -565,7 +577,9 @@ class Dashboard extends CI_Controller {
 
         $json_str = json_encode($ret_json);
         $this->Rfp_model->update_record('users',['id'=>$u_data['id']],['office_map_data'=>$json_str]);
-
+        
+        echo json_encode(['success'=>'success']);
+        
     }
 
     // ------------------------------------------------------------------------

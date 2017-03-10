@@ -117,7 +117,10 @@ class Test extends CI_Controller {
         $this->googlemaps->initialize($config);
         $data['map'] = $this->googlemaps->create_map();
 
-        $this->load->view('test_view', $data);
+        $data['subview']="test_view";
+
+        // $this->load->view('test_view', $data);
+        $this->load->view('front/layouts/layout_main',$data);
     }
 }
 

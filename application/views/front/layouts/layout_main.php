@@ -158,42 +158,42 @@
                                 </li>
                             -->
                             <ul id="topMain" class="nav nav-pills nav-main">
-                            <li class="dropdown <?php if($this->uri->segment(1)=='') echo 'active'?>"><!-- HOME -->
-                                <a href="<?=base_url()?>">HOME </a>
-                            </li>
-                           
-                             <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 4) :?>
-                                <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
-                                    <a href="<?=base_url('rfp/search_rfp')?>">RFP</a>
+                                <li class="dropdown <?php if($this->uri->segment(1)=='') echo 'active'?>"><!-- HOME -->
+                                    <a href="<?=base_url()?>">HOME </a>
                                 </li>
-                            <?php endif;?>
+                               
+                                 <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 4) :?>
+                                    <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
+                                        <a href="<?=base_url('rfp/search_rfp')?>">RFP</a>
+                                    </li>
+                                <?php endif;?>
 
-                            <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
-                                <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
-                                    <a href="<?=base_url('rfp')?>">RFP</a>
-                                 </li>
-                            <?php endif;?>
+                                <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
+                                    <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
+                                        <a href="<?=base_url('rfp')?>">RFP</a>
+                                     </li>
+                                <?php endif;?>
 
-                            <li class="dropdown <?php if($this->uri->segment(1)=='blog') echo 'active'; ?>">
-                                <a href="<?=base_url('blog')?>">BLOG</a>
-                            </li>
-                            <li class="dropdown <?php if($this->uri->segment(1)=='faq') echo 'active'; ?>">
-                                <a href="<?=base_url('faq')?>">FAQ</a>
-                            </li>
-                            <li class="dropdown <?php if($this->uri->segment(1)=='contact_us') echo 'active'; ?>">
-                                <a href="<?=base_url('contact_us')?>">CONTACT US</a>
-                            </li>  
-
-                            <?php if(!empty($client_login)) { ?>                          
-                                <li class="notification_side">
-                                    <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
-                                        <span>NOTIFICATION</span>
-                                        <?php if($unread_cnt != 0) { ?>
-                                            <span class="post_number"><?php echo $unread_cnt; ?></span>
-                                        <?php } ?>
-                                    </a>
+                                <li class="dropdown <?php if($this->uri->segment(1)=='blog') echo 'active'; ?>">
+                                    <a href="<?=base_url('blog')?>">BLOG</a>
                                 </li>
-                            <?php } ?>
+                                <li class="dropdown <?php if($this->uri->segment(1)=='faq') echo 'active'; ?>">
+                                    <a href="<?=base_url('faq')?>">FAQ</a>
+                                </li>
+                                <li class="dropdown <?php if($this->uri->segment(1)=='contact_us') echo 'active'; ?>">
+                                    <a href="<?=base_url('contact_us')?>">CONTACT US</a>
+                                </li>  
+
+                                <?php if(!empty($client_login)) { ?>                          
+                                    <li class="notification_side">
+                                        <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
+                                            <span>NOTIFICATION</span>
+                                            <?php if($unread_cnt != 0) { ?>
+                                                <span class="post_number"><?php echo $unread_cnt; ?></span>
+                                            <?php } ?>
+                                        </a>
+                                    </li>
+                                <?php } ?>
                              
                             </ul>
                         </nav>
@@ -209,6 +209,7 @@
     <!-- /wrapper -->
     <!-- SCROLL TO TOP -->
     <a href="#" id="toTop"></a>
+    
     <!-- PRELOADER -->
     <div id="preloader">
         <div class="inner">
@@ -263,11 +264,11 @@
                                     }
 
                                     if($noti['noti_type'] == 'doc_won'){
-                                        echo 'Congratulation..!! You\'ve won one RFP from client. Click here to proceed.' ;
+                                        echo 'Congratulation..!! You\'ve won one RFP from client.' ;
                                     }
 
                                     if($noti['noti_type'] == 'doc_review'){
-                                        echo 'Congratulation..!! You\'ve review from the patient. Click here to show. ' ;
+                                        echo 'Congratulation..!! You\'ve review from the patient.' ;
                                     }                                    
                                 ?>
                             </p>
@@ -276,11 +277,11 @@
                         </a>
                     </li>
                     <?php } } ?>                    
-                    <!-- <li>
+                    <li>
                         <a onclick="fetch_ajax_notification(this)" data-limit="3" data-offset="3" id="load_more">
                             Load More
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
 
             </div>
@@ -288,28 +289,7 @@
         </div>
         <div class="fixed_clear_btn"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></div>  
     </div>
-    <!-- /SIDE PANEL -->
-
-    <!-- Small Modal -->
-    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">Small modal</button> -->
-    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-
-                <!-- header modal -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="mySmallModalLabel">Small modal</h4>
-                </div>
-
-                <!-- body modal -->
-                <div class="modal-body">
-                    ...
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <!-- /SIDE PANEL -->    
 
 <!--  Custom Scroll Bar Style and Script -->
 <link href="<?= DEFAULT_CSS_PATH ?>custom_scrollbar.css" rel="stylesheet" type="text/css" />
@@ -327,7 +307,7 @@
     jQuery('.scrollbar-inner').scrollbar();
     jQuery(document).ready(function(){
         var window_height = $( window ).height();        
-        //window_height = window_height-63; 
+        //window_height = window_height-63;
         $('.scrollbar-inner').css({'height':window_height});
     });
 
@@ -345,9 +325,10 @@
     }
 
     function fetch_ajax_notification(obj){
+        
         var limit = $(obj).data('limit');
         var offset = $(obj).attr('data-offset');
-
+        
         $.ajax({
             type:"POST",
             url:"<?php echo base_url().'home/fetch_notification'; ?>",
@@ -357,7 +338,8 @@
                 offset = parseInt(offset) + 3;
                 $('#load_more').attr('data-offset',offset);
             }
-        }); 
+        });
+
     }
 
 </script>

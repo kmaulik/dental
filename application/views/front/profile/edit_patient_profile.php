@@ -250,17 +250,20 @@
 				<!-- Office Map TAB -->
 				<div class="tab-pane fade <?php if($tab == 'office_map'){ echo 'in active'; }?>" id="office_map">
 					<form  method="post">
-						<?php
-							$get_address = '';
-							$get_address = $this->input->get('address'); 
-							$get_address_decode = utf8_encode(decode($get_address));														
+						<?php														
+							if($this->input->get('address') != ''){		
+								$get_address = $this->input->get('address');
+								$get_address_decode = utf8_encode(decode($get_address));
+							}else{													
+								$get_address_decode = utf8_encode($get_address);
+							}
 						?>
 						<div class="form-group">
 							<label class="control-label">Type office address</label>
-							<input type="text" id="new_id" class="form-control" value="<?php echo $get_address_decode; ?>" />
+							<input type="text" id="new_id" class="form-control" value="<?php echo $get_address_decode; ?>" />							
 							<input type="hidden" id="latlong_location" value="<?php echo $latlong_location; ?>" >
-							<input type="hidden" id="lat" value="<?php echo $lat; ?>">
-							<input type="hidden" id="lng" value="<?php echo $lng; ?>">
+							<input type="hidden" id="lat" value="<?php echo ($lat) ? $lat:''; ?>">
+							<input type="hidden" id="lng" value="<?php echo ($lng) ? $lng:''; ?>">
 						</div>
 
 						<div class="form-group">
@@ -306,19 +309,10 @@
     	window.location.href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map&address=';?>"+myPlaceTextBox_str_decode;    	   
     }
 
-    function fetch_lat_long(lat,lng){
-              	       	       	       	     
+    function fetch_lat_long(lat,lng){              	       	       	       	    
        	var office_text = $('#new_id').val();
-
-       	$.ajax({
-       		url:"<?php echo base_url().'dashboard/save_map_address'; ?>",
-       		type:"POST",
-       		dataType:"JSON",
-       		data:{office_text:office_text,lat:lat,lng:lng},
-       		success:function(data){
-       			bootbox.alert('Data saved successfully.');
-       		}
-       	});       	
+       	$('#lat').val(lat);
+		$('#lng').val(lng);
     }
 	
 	function save_office_map_address(){	
@@ -333,7 +327,7 @@
 			dataType: 'JSON',
 			data: {office_text:office_text,lat:lat,lng:lng},
 			success:function(data){
-
+				bootbox.alert('Save Successfully.');				
 			}
 		});
 
