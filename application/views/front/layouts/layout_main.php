@@ -254,30 +254,15 @@
                     <li style="cursor:pointer" id="li_<?php echo $noti['id']; ?>" class="<?php if($noti['is_read'] == '1'){ echo 'read'; }?>">
                         <a onclick="notification_action('<?php echo $noti_id; ?>')">
                             <p class="notifly_head">
-                                <?php echo $noti['noti_msg']; ?>
-                                <?php
-                                    if($noti['noti_type'] == 'message'){
-                                        echo "You have unread message for ".$noti['title']." from ".$noti['to_fname'];
-                                    }
-                                    if($noti['noti_type'] == 'doc_bid'){
-                                        echo "You have new bid on ".$noti['title'].' by '.$noti['to_fname'];
-                                    }
-
-                                    if($noti['noti_type'] == 'doc_won'){
-                                        echo 'Congratulation..!! You\'ve won one RFP from client.' ;
-                                    }
-
-                                    if($noti['noti_type'] == 'doc_review'){
-                                        echo 'Congratulation..!! You\'ve review from the patient.' ;
-                                    }                                    
-                                ?>
+                                <?php echo $noti['noti_msg']; ?>                                
                             </p>
                             <!-- <p class="notifly_msg">Near :0.00Miles </p>  -->
                             <p class="notifly_ago"><?php echo time_ago($noti['created_at']); ?></p>
                         </a>
                     </li>
-                    <?php } } ?>                    
-                    <li>
+                    <?php } } ?>
+
+                    <li class="last_li_cls">
                         <a onclick="fetch_ajax_notification(this)" data-limit="3" data-offset="3" id="load_more">
                             Load More
                         </a>
@@ -319,24 +304,35 @@
             data:{noti_id:noti_id},
             dataType:"json",
             success:function(data){
-
+                window.location.href = "<?php echo base_url(); ?>"+data['noti_data']['noti_url'];
             }
         });
     }
 
     function fetch_ajax_notification(obj){
         
+        // $('#preloader').show();
         var limit = $(obj).data('limit');
         var offset = $(obj).attr('data-offset');
-        
+
         $.ajax({
             type:"POST",
             url:"<?php echo base_url().'home/fetch_notification'; ?>",
             data:{limit:limit,offset:offset},
             dataType:"json",
             success:function(data){
-                offset = parseInt(offset) + 3;
-                $('#load_more').attr('data-offset',offset);
+                
+                // setTimeout(function() {
+                //     $('#preloader').hide();
+                // }, 1000);
+                
+                if(data['new_str'] != ''){
+                    offset = parseInt(offset) + 3;
+                    $('#load_more').attr('data-offset',offset);
+                    $(".last_li_cls").before(data['new_str']);
+                }else{
+                    $('.last_li_cls').remove();
+                }
             }
         });
 

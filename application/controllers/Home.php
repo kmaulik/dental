@@ -23,12 +23,11 @@ class Home extends CI_Controller {
 		$ret_arr['noti_data'] = $res;		
 
 		if($res['is_read'] == '0'){
-			$this->Notification_model->update_notification(['id'=>$noti_id],['is_read'=>'1']);
+			// $this->Notification_model->update_notification(['id'=>$noti_id],['is_read'=>'1']);
 			$ret_arr['unread']='yes';
-		}		
-		
+		}
+									
 		$ret_arr['unread_cnt'] = get_notifications_unread_count();
-
 		echo json_encode($ret_arr);
 	}
 
@@ -36,16 +35,21 @@ class Home extends CI_Controller {
 		$limit = $this->input->post('limit');
 		$offset = $this->input->post('offset');
 
-		$ret = get_notifications($limit,$offset);
+		$ret_data = get_notifications($limit,$offset);		
 		$new_str = '';
 
-		// if(!empty($ret)){
-		// 	foreach(){
-			
-		// 	}
-		// }
+		if(!empty($ret_data)){
+			foreach($ret_data as $noti){				
+				$li_class = '';
+				if($noti['is_read'] == '1'){ $li_class = 'read'; }
+				$new_str .= '<li style="cursor:pointer" id="li_'.$noti['id'].'" class="'.$li_class.'">';
+                $new_str .= '<a onclick="notification_action('.$noti['id'].')">';
+                $new_str .= '<p class="notifly_head">'.$noti['noti_msg'].'</p>';
+                $new_str .= '<p class="notifly_ago">'.time_ago($noti['created_at']).'</p></a></li>';
+			}
+		}
 
-		echo json_encode('success');	
+		echo json_encode(['status'=>'success','new_str'=>$new_str]);
 	}
 
 	// ------------------------------------------------------------------------

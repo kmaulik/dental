@@ -6,7 +6,7 @@ class Messageboard extends CI_Controller {
 	public function __construct() {
         parent::__construct();
         if(!isset($this->session->userdata['client']))redirect('login');
-        $this->load->model(array('Messageboard_model','Notification_model'));
+        $this->load->model(array('Messageboard_model','Notification_model','Rfp_model'));
     }
 
 	public function index(){
@@ -66,15 +66,25 @@ class Messageboard extends CI_Controller {
     			// ------------------------------------------------------------------------
     			// v! insert data notifications table
     			$frm_id =$this->session->userdata('client')['id'];
+    			
+    			$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>decode($rfp_id)],true);
+    			$role_id = $this->session->userdata('client')['role_id'];
+    			if($role_id == '4'){
+    				$noti_from = 'doctor';
+    			}else{
+    				$noti_from = 'patient';
+    			}
+
     			$link = 'messageboard/message/'.encode($rfp_id).'/'.encode($frm_id);
 				$noti_data = [
 								'from_id'=>$frm_id,
 								'to_id'=>decode($user_id),
 								'rfp_id' => decode($rfp_id),
 								'noti_type'=>'message',
-								'noti_url'=>$link
+								'noti_url'=>$link,
+								'noti_msg'=>'You have unread message for <b>'.$rfp_data['title'].'</b> from '.$noti_from,
 							];
-														
+																															
 				$this->Notification_model->insert_notification($noti_data);
 				// ------------------------------------------------------------------------
 

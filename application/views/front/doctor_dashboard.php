@@ -64,6 +64,7 @@
 								if(!empty($won_rfps)) {
 									foreach($won_rfps as $w_rfp) {										
 
+										// pr($w_rfp);
 										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
 										// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
 
@@ -87,7 +88,10 @@
 							?>
 									<tr>
 										<td>
-											<?php echo $w_rfp['title']; ?>
+											<!-- rfp/view_rfp/Mg%3D%3D -->
+											<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>">
+												<?php echo $w_rfp['title']; ?>
+											</a>
 										</td>										
 										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
 										<td>

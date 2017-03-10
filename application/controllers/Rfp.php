@@ -742,14 +742,23 @@ class Rfp extends CI_Controller {
     	// v! insert data notifications table
     	$frm_id = $this->session->userdata('client')['id'];
     	$rfp_id = $this->input->post('rfp_id');
+
+    	$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true); // fetch RFP data
     	$link = 'messageboard/message/'.encode($rfp_id).'/'.encode($frm_id);
+
+    	$role_id = $this->session->userdata('client')['role_id'];
+		
+		if($role_id == '4'){ $noti_from = 'doctor'; }else{ $noti_from = 'patient'; }
+
 		$noti_data = [
 						'from_id'=>$this->session->userdata('client')['id'],
 						'to_id'=>$this->input->post('to_id'),
 						'rfp_id' => $rfp_id,
 						'noti_type'=>'message',
+						'noti_msg'=>'You have unread message for <b>'.$rfp_data['title'].'</b> from '.$noti_from,
 						'noti_url'=>$link
 					];
+		// echo "You have unread message for <b>".$noti['title']."</b> from ".$noti['to_fname'];
 												
 		$this->Notification_model->insert_notification($noti_data);
     	// ------------------------------------------------------------------------
@@ -838,14 +847,13 @@ class Rfp extends CI_Controller {
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
         {
         	 //---------- Only Open RFP View By Doctor (Status = 3)-------
-        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status = ' => '3'],'1');
+        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status >=' => '3'],'1');
         	 if(empty($data['record'])){
         	 	show_404();
-        	 }
-        	 else{
-	        	 $where=['rfp_id' => decode($rfp_id),'doctor_id' => $this->session->userdata('client')['id'],'is_deleted' => '0'];
-	        	 $data['rfp_bid']=$this->Rfp_model->get_result('rfp_bid',$where,1);
-	        	 $data['subview']="front/rfp/doctor/view_rfp_doctor";
+        	 } else {
+	        	$where=['rfp_id' => decode($rfp_id),'doctor_id' => $this->session->userdata('client')['id'],'is_deleted' => '0'];
+	        	$data['rfp_bid']=$this->Rfp_model->get_result('rfp_bid',$where,1);
+	        	$data['subview']="front/rfp/doctor/view_rfp_doctor";
         	 }
         }
        	elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
@@ -911,14 +919,15 @@ class Rfp extends CI_Controller {
 	    	// v! insert data notifications table
 	    	$rfp_id = $this->input->post('rfp_id');
 	    	$link = 'rfp/view_rfp_bid/'.encode($rfp_id);
-
 	    	$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true);
+
 			$noti_data = [
 							'from_id'=>$this->session->userdata('client')['id'],
 							'to_id'=>$rfp_data['patient_id'],
 							'rfp_id' => $rfp_id,
 							'noti_type'=>'doc_bid',
-							'noti_url'=>$link
+							'noti_url'=>$link,
+							'noti_msg'=>"You have new bid on <b>".$rfp_data['title'].'</b> by doctor'							
 						];
 													
 			$this->Notification_model->insert_notification($noti_data);
@@ -1438,8 +1447,8 @@ class Rfp extends CI_Controller {
 	    					'to_id'=>$this->input->post('doctor_id'),
 	    					'rfp_id'=>$this->input->post('rfp_id'),
 	    					'noti_type'=>'doc_review',
-	    					'noti_msg'=>'',
-	    					'noti_url'=>''
+	    					'noti_msg'=>'Congratulation..!! You\'ve new review from the patient.',
+	    					'noti_url'=>'dashboard'
 	    				];
 	    	$this->Notification_model->insert_rfp_notification($noti_data);
 	    	// ------------------------------------------------------------------------
@@ -1488,8 +1497,8 @@ class Rfp extends CI_Controller {
 	    					'to_id'=>$rfp_bid_fetch['doctor_id'],
 	    					'rfp_id'=>decode($rfp_id),
 	    					'noti_type'=>'doc_won',
-	    					'noti_msg'=>'',
-	    					'noti_url'=>''
+	    					'noti_msg'=>'Congratulation..!! You\'ve won <b>'.$rfp_data['title'].'</b> from patient.',
+	    					'noti_url'=>'rfp/view_rfp/'.$rfp_id
 	    				];
 	    	$this->Notification_model->insert_rfp_notification($noti_data);
 	    	// ------------------------------------------------------------------------
@@ -1517,6 +1526,22 @@ class Rfp extends CI_Controller {
     					'appointment_comment'	=> '',
     					]; 
     	$res_rfp=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$upd_rfp_status);
+
+    	$rfp_bid_fetch = $this->Rfp_model->get_result('rfp_bid',['id'=>decode($rfp_bid_id)],true);
+    	$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>decode($rfp_id)],true);
+    	
+    	// ------------------------------------------------------------------------
+    	$noti_data = [
+    					'from_id'=>$rfp_data['patient_id'],
+    					'to_id'=>$rfp_bid_fetch['doctor_id'],
+    					'rfp_id'=>decode($rfp_id),
+    					'noti_type'=>'doc_bid_cancel',
+    					'noti_msg'=>'Sorry..!! Patient canceled the agreement for <b>'.$rfp_data['title'].'</b>',
+    					'noti_url'=>'dashboard'
+    				];
+    	$this->Notification_model->insert_rfp_notification($noti_data);
+    	// ------------------------------------------------------------------------
+
     	if($res_rfp){
 	    	// Update RFP Bid Status 
 			$upd_rfp_bid_status = ['status' => '0']; // 0 Means  Pending For This BID

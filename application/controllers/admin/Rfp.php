@@ -87,24 +87,26 @@ class Rfp extends CI_Controller {
         if($_POST){
 
             $last_remark = json_decode($record['admin_remarks'],true);
-
-
+            
             $remarks = $this->input->post('remarks');
             $action = $this->input->post('action');
-            $message = $this->input->post('message'); 
-           //------ For Extend the RFP Date ------
+            $message = $this->input->post('message');
+
+            //------ For Extend the RFP Date ------
             $rfp_approve_date = NULL;
             $rfp_valid_date = NULL;
-            //-------------------------------
+            //-------------------------------------
             
             if($action == 'yes'){
                 $status='3'; 
                 $rfp_approve_date = date('Y-m-d');
                 $rfp_valid_date = date('Y-m-d', strtotime("+13 days"));
-                $noti_msg = $record['title'].' has been successfully approved. and it is live.';
+                $noti_msg = '<b>'.$record['title'].'</b> has been successfully approved and it is live.';
+                $noti_url = 'dashboard';
             }else{ 
                 $status='2';
-                $noti_msg = $record['title'].' was denied.For know the reason check your mail.';
+                $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';
+                $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
             }
             
             if(!empty($record['admin_remarks'])){
@@ -140,10 +142,11 @@ class Rfp extends CI_Controller {
                             'rfp_id' => $rfp_id,
                             'noti_type'=>'admin_action',
                             'noti_msg'=>$noti_msg,
-                            'noti_url'=>'rfp'
+                            'noti_url'=>$noti_url
                         ];
             $this->Notification_model->insert_rfp_notification($noti_data);
             // ------------------------------------------------------------------------
+
             //------ For Email Template -----------
             /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
             $html_content=mailer('contact_inquiry','AccountActivation'); 
