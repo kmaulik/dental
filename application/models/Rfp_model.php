@@ -161,8 +161,12 @@ class Rfp_model extends CI_Model {
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.doctor_id='.$this->session->userdata('client')['id'],'left');
         $this->db->join('rfp_bid rb_bid','rfp.id = rb_bid.rfp_id','left');
 
+        $having_data = '';
         if ($search_data != '') {
-            $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+            $having_data = "(title LIKE '%".$search_data."%' OR dentition_type LIKE '%".$search_data."%') AND rfp.distance_travel >= distance";
+        }
+        else{
+            $having_data = "rfp.distance_travel >= distance"; // For check Patient travel distance or not
         }
         if($date_data != ''){
             $date=explode(" ",$date_data);
@@ -183,7 +187,7 @@ class Rfp_model extends CI_Model {
         }
 
 
-        $this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
+        $this->db->having($having_data);
 
         $this->db->where('rfp.status','3'); // For RFP Status Open (3) 
         $this->db->where('rfp.is_deleted','0');
@@ -218,8 +222,14 @@ class Rfp_model extends CI_Model {
         $this->db->join('rfp_favorite rf','rfp.id = rf.rfp_id and rf.doctor_id='.$this->session->userdata('client')['id'],'left');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.doctor_id='.$this->session->userdata('client')['id'],'left');
         $this->db->join('rfp_bid rb_bid','rfp.id = rb_bid.rfp_id','left');
+
+        $having_data = '';
         if ($search_data != '') {
-            $this->db->having('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+            $having_data = "(title LIKE '%".$search_data."%' OR dentition_type LIKE '%".$search_data."%') AND rfp.distance_travel >= distance";
+            //$this->db->where('title LIKE "%' . $search_data . '%" OR dentition_type LIKE "%'.$search_data.'%"', NULL);
+        }
+        else{
+            $having_data = "rfp.distance_travel >= distance"; // For check Patient travel distance or not
         }
         if($date_data != ''){
             $date=explode(" ",$date_data);
@@ -240,7 +250,7 @@ class Rfp_model extends CI_Model {
             }
         }
 
-        $this->db->having('rfp.distance_travel >= distance',NULL); // For check Patient travel distance or not
+        $this->db->having($having_data);
 
         $this->db->where('rfp.status','3'); // For RFP Status Open (3)
         $this->db->where('rfp.is_deleted','0');
@@ -427,7 +437,18 @@ class Rfp_model extends CI_Model {
             $this->db->group_by('rb.doctor_id');
             $data=$this->db->get('rfp_bid rb')->result_array();
             $result[$key]['bid_data']=$data;
+
+            /*------- For Chat timeline --*/
+            // foreach($data as $k=>$chat){
+            //     $where = '((m.from_id='.$chat['doctor_id'].' and m.to_id='.$this->session->userdata('client')['id'].' and m.is_deleted_to = 0) or (m.to_id ='.$chat['doctor_id'].' and m.from_id='.$this->session->userdata('client')['id'].' and m.is_deleted_from = 0))';
+            //     $this->db->where($where);
+            //     $this->db->where('m.rfp_id',$chat['rfp_id']); 
+            //     $chat_data=$this->db->get('messages m')->result_array();
+            //     $result[$key]['bid_data'][$k]['chat_data']=$chat_data;
+            // }
+            /*------ End Chat Timeline --*/
         }
+
         return $result;
     } 
 

@@ -48,7 +48,7 @@ class Dashboard extends CI_Controller {
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
             $data['appointment_list']=$this->Rfp_model->get_patient_appointment_rfp($user_id); // Fetch RFP For Appointment
-            //pr($data['appointment_list'],1);
+            //pr($data['active_rfp_list'],1);
             $data['subview']="front/patient_dashboard";
         }
                 
