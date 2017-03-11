@@ -116,9 +116,9 @@
 			<div class="row">
 				<div class="col-md-12 col-sm-12">
 					<div class="margin-bottom-20">
-						<label for="donation">Travel Distance (In. Miles)</label>
+						<label for="donation">Travel Distance (In. Miles) </label>
 						<label class="field">
-							<input type="text" name="distance_travel" id="distance_travel" class="form-control NumbersAndRange">
+							<input type="text" name="distance_travel" id="distance_travel" class="form-control NumbersAndRange" value="<?php if(set_value('distance_travel') != '') { echo set_value('distance_travel'); } ?>">
 						</label> 
 					</div>                
 					<div class="slider-wrapper black-slider custom-range-slider">
@@ -250,7 +250,7 @@
 			loadScript(plugin_path + 'jquery/jquery.ui.touch-punch.min.js', function() { /** Mobile Touch Slider **/
 				loadScript(plugin_path + 'form.slidebar/jquery-ui-slider-pips.min.js', function() { /** Slider Script **/
 		            
-		            var initialValue = 100;
+		            var initialValue = $("#distance_travel").val() || 100;
 					$("#slider5").slider({
 						value: initialValue,
 						animate: true,

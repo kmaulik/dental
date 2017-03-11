@@ -88,6 +88,7 @@ class Test extends CI_Controller {
     
     public function mm(){
         $all_details = get_detail_billing_agreement('B-7B6764950D0480641');
+
         pr($all_details,1);
     }           
 
