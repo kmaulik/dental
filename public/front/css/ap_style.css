@@ -196,8 +196,9 @@ section.page-header .breadcrumb a:hover {
 .custom_notification ul li.read {
   background: #fff;
 }
+/* #f4f4f4 replace with #e8ebf2*/
 .custom_notification ul li {
-  background: #f4f4f4 none repeat scroll 0 0;
+  background: #e8ebf2 none repeat scroll 0 0;
   border-bottom: 1px solid #cccccc;
   line-height: 100%;
   padding: 0 20px 15px;

@@ -310,7 +310,7 @@
     }
 
     function fetch_ajax_notification(obj){
-        
+
         // $('#preloader').show();
         var limit = $(obj).data('limit');
         var offset = $(obj).attr('data-offset');
@@ -321,10 +321,6 @@
             data:{limit:limit,offset:offset},
             dataType:"json",
             success:function(data){
-                
-                // setTimeout(function() {
-                //     $('#preloader').hide();
-                // }, 1000);
                 
                 if(data['new_str'] != ''){
                     offset = parseInt(offset) + 3;

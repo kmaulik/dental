@@ -12,7 +12,7 @@ class Notification_model extends CI_Model {
 		$data['created_at'] = date('Y-m-d H:i:s');
 		
 		$noti_data = $this->db->get_where('notifications',['rfp_id'=>$rfp_id,'from_id'=>$from_id,'to_id'=>$to_id,'noti_type'=>$noti_type])
-							  ->row_array();
+						      ->row_array();
 		if(!empty($noti_data)){			
 			$last_id = $noti_data['id'];
 			if($noti_data['is_read'] == 1){

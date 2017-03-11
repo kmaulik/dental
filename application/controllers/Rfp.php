@@ -757,9 +757,7 @@ class Rfp extends CI_Controller {
 						'noti_type'=>'message',
 						'noti_msg'=>'You have unread message for <b>'.$rfp_data['title'].'</b> from '.$noti_from,
 						'noti_url'=>$link
-					];
-		// echo "You have unread message for <b>".$noti['title']."</b> from ".$noti['to_fname'];
-												
+					];											
 		$this->Notification_model->insert_notification($noti_data);
     	// ------------------------------------------------------------------------
     	$where=['id' => $this->input->post('rfp_bid_id')];
@@ -1310,6 +1308,7 @@ class Rfp extends CI_Controller {
 
 	        	// ------------------------------------------------------------------------
 
+	        	$this->session->set_flashdata('run_cron','yes');
 	        	$this->session->set_flashdata('success','Agreement has been set successfully.');
 	        	redirect('dashboard');
 	        	// pr($payment_due_1);
@@ -1519,7 +1518,7 @@ class Rfp extends CI_Controller {
     	redirect('rfp/view_rfp_bid/'.$rfp_id);
     }
 
-     /* @DHK Cancel Doctor By Patient (Update RFP status 3(Open) And rfp_bid Status (0) Pending)
+    /* @DHK Cancel Doctor By Patient (Update RFP status 3(Open) And rfp_bid Status (0) Pending)
     /* Param 1 : RFP ID
     /* Param 2 : RFP BID ID
     */

@@ -23,7 +23,7 @@ class Home extends CI_Controller {
 		$ret_arr['noti_data'] = $res;		
 
 		if($res['is_read'] == '0'){
-			// $this->Notification_model->update_notification(['id'=>$noti_id],['is_read'=>'1']);
+			$this->Notification_model->update_notification(['id'=>$noti_id],['is_read'=>'1']);
 			$ret_arr['unread']='yes';
 		}
 									

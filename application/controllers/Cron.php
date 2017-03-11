@@ -6,7 +6,7 @@ class Cron extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper('paypal');
-		$this->load->model(['Rfp_model']);
+		$this->load->model(['Rfp_model','Notification_model']);
 	}
 	
 	public function index(){
@@ -22,12 +22,10 @@ class Cron extends CI_Controller {
 
 			foreach($res_data as $res){
 
-				pr($res);
-
 				$return_arr = GetTransactionDetails($res['transaction_id']);
 				$return_json = json_encode($return_arr);
-				$ack_transaction = strtoupper($return_arr['ACK']);
-				
+				$ack_transaction = strtoupper($return_arr['ACK']);				
+
 				if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
 					if($return_arr['PAYMENTSTATUS'] == 'Completed'){
 						
@@ -35,7 +33,21 @@ class Cron extends CI_Controller {
 
 						if($rfp_data['status'] == '5'){
 							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'6']); // status : 6 - change waiting for doctor approval to close
+						
 						}else{
+
+							// ------------------------------------------------------------------------
+					    	$noti_data = [
+					    					'from_id'=>$rfp_data['patient_id'],
+					    					'to_id'=>$res['id'],
+					    					'rfp_id'=>$res['rfp_id'],
+					    					'noti_type'=>'confirm_payment',
+					    					'noti_msg'=>'Congratulation..!! You\'re contract has been made with patient.',
+					    					'noti_url'=>'dashboard'
+					    				];
+					    	$this->Notification_model->insert_rfp_notification($noti_data);
+					    	// ------------------------------------------------------------------------
+
 							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'5']); // status : 5 - chnage pending  to waiting for doctor approval
 						}							
 

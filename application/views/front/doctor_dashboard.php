@@ -30,7 +30,7 @@
 					<?=$this->session->flashdata('error');?>
 				</div>
 			<?php endif; ?>
-			<!-- /ALERT -->				
+			<!-- /ALERT -->
 
 			<div class="col-md-12">
 				<h1>WelCome To Dashboard</h1>	
@@ -239,7 +239,7 @@
 						<?php } ?>
 					</div>					
 				<?php else : ?>
-					<h3>No RFP Available</h3>
+					<h5>No RFP Available</h5>
 				<?php endif; ?>
 			</div>	
 		</div>	
@@ -1002,6 +1002,14 @@
 		</div>
 	</div>
 </div>
+
+<?php
+	$run_cron = $this->session->flashdata('run_cron');
+	if($run_cron == 'yes'){
+		$url = base_url().'cron/check_status';
+		$res = $this->unirest->get($url);   
+	}
+?>	
 <!-- ================== /Modal Popup For Manage Appointment ========================= -->	
 	
 

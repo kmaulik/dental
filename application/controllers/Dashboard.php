@@ -7,7 +7,7 @@ class Dashboard extends CI_Controller {
     public function __construct(){
         parent::__construct();
 		if(!isset($this->session->userdata['client']))redirect('login');
-        $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model']);
+        $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model','Notification_model']);
         $this->load->library(['unirest','googlemaps']);        
     }	
 
@@ -26,18 +26,12 @@ class Dashboard extends CI_Controller {
             $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps                    
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
-            
 
             $data['total_rfp_bids'] = $this->Rfp_model->get_bids_rfp($user_id);
-
-            // qry();
-            // pr($data['total_rfp_bids'],1);
-
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
 
             $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
-
 
             $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
             $data['subview']="front/doctor_dashboard";
@@ -385,6 +379,24 @@ class Dashboard extends CI_Controller {
     public function thankyou_note(){
 
         if($this->input->post('submit')){
+
+            $doc_id = $this->session->userdata('client')['id'];
+            $rfp_rating_id = $this->input->post('rfp_rating_id');
+            $rfp_rating_data = $this->Rfp_model->get_result('rfp_rating',['id'=>$rfp_rating_id],true);
+            $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_rating_data['rfp_id']],true);            
+            $link = 'dashboard/view_profile/'.encode($doc_id);
+            // ------------------------------------------------------------------------
+            $noti_data = [
+                        'from_id'=>$this->session->userdata('client')['id'],
+                        'to_id'=>$rfp_data['patient_id'],
+                        'rfp_id' => $rfp_rating_data['rfp_id'],
+                        'noti_type'=>'doc_thank_you',
+                        'noti_msg'=>'Doctor write thank you note on your review for <b>'.$rfp_data['title'].'</b>',
+                        'noti_url'=>$link
+                    ];
+            $this->Notification_model->insert_notification($noti_data);
+            // ------------------------------------------------------------------------
+
             $review_data = [
                           'doctor_comment'  => $this->input->post('doctor_comment'), 
                         ];
