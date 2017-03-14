@@ -16,7 +16,9 @@ class Notification_model extends CI_Model {
 		if(!empty($noti_data)){			
 			$last_id = $noti_data['id'];
 			if($noti_data['is_read'] == 1){
-				$this->db->update('notifications',['is_read'=>'0'],['id'=>$noti_data['id']]);
+				$this->db->delete('notifications',['id'=>$noti_data['id']]);
+				$this->db->insert('notifications',$data);
+				// $this->db->update('notifications',['is_read'=>'0'],['id'=>$noti_data['id']]);
 			}
 		}else{
 			$this->db->insert('notifications',$data);

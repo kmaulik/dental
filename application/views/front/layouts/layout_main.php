@@ -243,13 +243,6 @@
                         if(!empty($all_notifications)) {
                             foreach($all_notifications as $noti) {
                                 $noti_id = $noti['id'];
-                                $link = '';
-                                if($noti['noti_type'] == 'message'){
-                                    $link = base_url().'messageboard/message/'.encode($noti['rfp_id']).'/'.encode($noti['from_id']);
-                                }
-                                if($noti['noti_type'] == 'doc_bid'){
-                                    $link = base_url().'rfp/view_rfp_bid/'.encode($noti['rfp_id']);
-                                }
                     ?>  
                     <li style="cursor:pointer" id="li_<?php echo $noti['id']; ?>" class="<?php if($noti['is_read'] == '1'){ echo 'read'; }?>">
                         <a onclick="notification_action('<?php echo $noti_id; ?>')">
