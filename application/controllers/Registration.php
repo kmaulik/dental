@@ -6,7 +6,11 @@ class Registration extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        if($this->session->userdata('client')) { redirect('dashboard');}
+        if($this->session->userdata('client')) { 
+            if($this->uri->segment('2') != 'verification' && $this->uri->segment('2') != 'forgotpassword'){
+                redirect('dashboard');
+            }
+        }
         $this->load->library('unirest');
         $this->load->model(array('Users_model','Country_model'));
     }
@@ -104,6 +108,7 @@ class Registration extends CI_Controller {
         @DHK
     */
     public function verification($id='0'){
+        $this->session->unset_userdata('client');
         if($this->Users_model->CheckActivationCode($id))
         {
             $this->db->set('activation_code','');
@@ -123,6 +128,7 @@ class Registration extends CI_Controller {
 
     /*  Check For Forgot Password   @DHK*/
     public function forgotpassword(){ 
+        $this->session->unset_userdata('client');
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email');
        
         if($this->form_validation->run() == FALSE){            
