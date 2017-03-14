@@ -7,7 +7,7 @@ class Registration extends CI_Controller {
     public function __construct() {
         parent::__construct();
         if($this->session->userdata('client')) { 
-            if($this->uri->segment('2') != 'verification' && $this->uri->segment('2') != 'forgotpassword'){
+            if($this->uri->segment('2') != 'verification' && $this->uri->segment('2') != 'resetpwd'){
                 redirect('dashboard');
             }
         }
@@ -128,7 +128,6 @@ class Registration extends CI_Controller {
 
     /*  Check For Forgot Password   @DHK*/
     public function forgotpassword(){ 
-        $this->session->unset_userdata('client');
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email');
        
         if($this->form_validation->run() == FALSE){            
@@ -201,6 +200,7 @@ class Registration extends CI_Controller {
         @DHK  
     */    
     public function resetpwd($id='0'){
+        $this->session->unset_userdata('client');
         $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
         $this->form_validation->set_rules('c_password', 'confirm password', 'required|matches[password]');
 
