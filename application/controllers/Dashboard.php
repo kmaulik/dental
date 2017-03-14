@@ -447,6 +447,19 @@ class Dashboard extends CI_Controller {
                     $this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $app_id]);
                 }
             }
+            
+            $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true); // fetch RFP data
+            // ------------------------------------------------------------------------
+            $noti_data = [
+                            'from_id'=>$this->session->userdata('client')['id'],
+                            'to_id'=>$rfp_data['patient_id'],
+                            'rfp_id' => $rfp_data['id'],
+                            'noti_type'=>'doc_confirm_by_call',
+                            'noti_msg'=>'Appointment has been confirmed by the doctor based on call for <b>'.$rfp_data['title'].'</b>',
+                            'noti_url'=>'dashboard'
+                        ];
+            $this->Notification_model->insert_notification($noti_data);
+            // ------------------------------------------------------------------------
 
             if($res){
                 //---- Insert Data into Appointment schedule table ------
@@ -481,6 +494,10 @@ class Dashboard extends CI_Controller {
 
         if($this->input->post('submit')){
 
+            $noti_msg = '';
+            $rfp_id = $this->input->post('rfp_id');
+            $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true); // fetch RFP data
+
             // if appointment_id is null then add new appointment otherwise edit the appointment 
             if($this->input->post('appointment_id') == '') {
                 $appointment_data = [
@@ -491,21 +508,36 @@ class Dashboard extends CI_Controller {
                         ];
 
                 $res=$this->Rfp_model->insert_record('appointments',$appointment_data);
+
+                $noti_msg = 'Appointment has been created by the doctor for <b>'.$rfp_data['title'].'</b>';
+
                 $app_id = $this->db->insert_id();
-           } 
-           else {
-                 $app_id = $this->input->post('appointment_id');
-                 $appointment_data = [
+            } else {
+                $app_id = $this->input->post('appointment_id');
+                $appointment_data = [
                           'doc_comments'  => $this->input->post('doc_comments'), 
                         ];
-                 $res=$this->Rfp_model->update_record('appointments',['id' => $app_id],$appointment_data);
-                 
-                 // IF successfully update then delete all schedule data from appointment schedule table
-                 if($res){
+                $res=$this->Rfp_model->update_record('appointments',['id' => $app_id],$appointment_data);
+                
+                $noti_msg = 'Appointment has been updated by the doctor for <b>'.$rfp_data['title'].'</b>';
+
+                // IF successfully update then delete all schedule data from appointment schedule table
+                if($res){
                     $this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $app_id]);
-                 }
-           }
-           
+                }
+            }
+
+            // ------------------------------------------------------------------------
+            $noti_data = [
+                            'from_id'=>$this->session->userdata('client')['id'],
+                            'to_id'=>$rfp_data['patient_id'],
+                            'rfp_id' => $rfp_data['id'],
+                            'noti_type'=>'doc_appointment_create',
+                            'noti_msg'=>$noti_msg,
+                            'noti_url'=>'dashboard'
+                        ];
+            $this->Notification_model->insert_notification($noti_data);
+            // ------------------------------------------------------------------------
             
             if($res){
                 $schedule_data='';
@@ -546,10 +578,26 @@ class Dashboard extends CI_Controller {
     */
     public function choose_appointment_schedule(){
         
-         $where = ['id' => $this->input->post('schedule_selected')];
-         $data_array = ['is_selected' => 1];
-         $res=$this->Rfp_model->update_record('appointment_schedule',$where,$data_array);
-         if($res)  {
+        $rfp_id = $this->input->post('rfp_id');
+        $doctor_id = $this->input->post('doctor_id');
+        $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true); // fetch RFP data
+        // ------------------------------------------------------------------------
+        $noti_data = [
+                        'from_id'=>$this->session->userdata('client')['id'],
+                        'to_id'=>$doctor_id,
+                        'rfp_id' => $rfp_id,
+                        'noti_type'=>'patient_appointment_confirm',
+                        'noti_msg'=>'Appointment has been confirmed by the patient for <b>'.$rfp_data['title'].'</b>',
+                        'noti_url'=>'dashboard'
+                    ];
+        $this->Notification_model->insert_notification($noti_data);
+        // ------------------------------------------------------------------------
+
+        $where = ['id' => $this->input->post('schedule_selected')];
+        $data_array = ['is_selected' => 1];
+        $res=$this->Rfp_model->update_record('appointment_schedule',$where,$data_array);
+
+        if($res)  {
             $this->session->set_flashdata('success','Appointment Selected Successfully');
         }else{
             $this->session->set_flashdata('error','Error Into Select Appointment');
@@ -563,6 +611,21 @@ class Dashboard extends CI_Controller {
     public function delete_appointment($app_id){
 
         $appointment_id = decode($app_id);
+        $appointment_data = $this->Rfp_model->get_result('appointments',['id'=>$appointment_id]);        
+        $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$appointment_data['rfp_id']],true); // fetch RFP data
+
+        // ------------------------------------------------------------------------
+        $noti_data = [
+                        'from_id'=>$this->session->userdata('client')['id'],
+                        'to_id'=>$rfp_data['patient_id'],
+                        'rfp_id' => $rfp_data['id'],
+                        'noti_type'=>'doc_appointment_delete',
+                        'noti_msg'=>'Appointment has been canceled by the doctor for <b>'.$rfp_data['title'].'</b>',
+                        'noti_url'=>'dashboard'
+                    ];
+        $this->Notification_model->insert_notification($noti_data);
+        // ------------------------------------------------------------------------
+
         //$res=$this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $appointment_id]);
         $res=$this->Rfp_model->delete_record('appointments',['id' => $appointment_id]);
         if($res)  {
