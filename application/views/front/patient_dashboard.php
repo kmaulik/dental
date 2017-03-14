@@ -581,6 +581,8 @@
 			</div>
 			<form action="<?=base_url('dashboard/choose_appointment_schedule')?>" method="POST" id="frm_choose_app">
 				<input type="hidden" id="app_key" name="app_key">
+				<input type="hidden" id="appointment_rfp_id" name="rfp_id">
+				<input type="hidden" id="appointment_doctor_id" name="doctor_id">
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
@@ -904,6 +906,7 @@ function view_appointment(key){
 	
 	$("#appointment_id").val(appointment_data[key]['appointment_id']);
 	$("#appointment_rfp_id").val(appointment_data[key]['id']);
+	$("#appointment_doctor_id").val(appointment_data[key]['doc_id']);
 	$("#appointment_user_name").html(appointment_data[key]['user_name']);
 	$("#appointment_rfp_title").html(appointment_data[key]['title']);
 	
