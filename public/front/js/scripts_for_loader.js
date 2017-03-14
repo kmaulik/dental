@@ -121,20 +121,20 @@
 
 /** Preloader
  **************************************************************** **/
-	if(jQuery('#preloader').length > 0) {
+	// if(jQuery('#preloader').length > 0) {
 
-		jQuery(window).load(function() {
+	// 	jQuery(window).load(function() {
 					
-			jQuery('#preloader').fadeOut(1000, function() {
-				// jQuery('#preloader').remove();
-				jQuery('#preloader_test').show();				
-			});
+	// 		jQuery('#preloader').fadeOut(1000, function() {
+	// 			// jQuery('#preloader').remove();
+	// 			jQuery('#preloader_test').show();				
+	// 		});
 
-			// jQuery('#preloader_test').fadeOut(100000, function() {
-			// 	// jQuery('#preloader').remove();
-			// });		  
-		});
-	}
+	// 		// jQuery('#preloader_test').fadeOut(100000, function() {
+	// 		// 	// jQuery('#preloader').remove();
+	// 		// });		  
+	// 	});
+	// }
 
 
 

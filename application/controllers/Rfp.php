@@ -998,8 +998,7 @@ class Rfp extends CI_Controller {
     }
 
     //------------- Make Payment by patient when create a RFP ---------
-    public function make_payment(){
-    	
+    public function make_payment(){    	
 		if($this->input->post('submit')) {
 			$final_price = config('patient_fees');
 			$discount=0;
@@ -1032,7 +1031,7 @@ class Rfp extends CI_Controller {
 				redirect('rfp/complete_transaction'); // Skip paypal and follow next step after paypal
 			}			
 			//------ End Calculate the discount based on coupan code ----
-		}
+		}		
     }
 
     // ------------------------------------------------------------------------

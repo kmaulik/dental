@@ -123,6 +123,11 @@ class Test extends CI_Controller {
         // $this->load->view('test_view', $data);
         $this->load->view('front/layouts/layout_main',$data);
     }
+
+    public function test_page(){
+        $data['subview']="test_view";
+        $this->load->view('front/layouts/layout_main',$data);
+    }
 }
 
 /* End of file Test.php */

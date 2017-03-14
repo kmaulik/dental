@@ -75,7 +75,7 @@ class Messageboard extends CI_Controller {
     				$noti_from = 'patient';
     			}
 
-    			$link = 'messageboard/message/'.encode($rfp_id).'/'.encode($frm_id);
+    			$link = 'messageboard/message/'.$rfp_id.'/'.encode($frm_id);
 				$noti_data = [
 								'from_id'=>$frm_id,
 								'to_id'=>decode($user_id),

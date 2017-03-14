@@ -120,6 +120,10 @@
 							<label class="control-label">Phone No</label>
 							<input type="text" placeholder="Phone no" name="phone" class="form-control" value="<?php echo $db_data['phone']; ?>">
 						</div>
+						<div class="form-group">
+							<label class="control-label">Street</label>
+							<input type="text" placeholder="Street" name="street" class="form-control" value="<?php echo $db_data['street']; ?>">
+						</div>
 
 						<div class="form-group">
 							<label class="control-label">Birth Date</label>
@@ -332,7 +336,5 @@
 		});
 
 	}
-
-
 
 </script>

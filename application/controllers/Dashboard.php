@@ -113,7 +113,7 @@ class Dashboard extends CI_Controller {
         $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
         $config['placesAutocompleteOnChange'] = 'get_location()';
         $this->googlemaps->initialize($config);
-        
+
         // ------------------------------------------------------------------------
 
         $marker = array();
@@ -191,6 +191,7 @@ class Dashboard extends CI_Controller {
                 $zipcode = $this->input->post('zipcode');
                 $gender = $this->input->post('gender');
                 $phone = $this->input->post('phone');
+                $street = $this->input->post('street');
                 $public_email = $this->input->post('public_email');
                 $office_description = $this->input->post('office_description');
 
@@ -208,6 +209,7 @@ class Dashboard extends CI_Controller {
                                     'zipcode'=>$zipcode,
                                     'gender'=>$gender,
                                     'phone'=>$phone,
+                                    'street'=>$street,
                                     'latitude' => $latitude,
                                     'longitude' => $longitude,
                                     'birth_date'=>$birth_date,
