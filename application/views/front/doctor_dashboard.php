@@ -1142,7 +1142,8 @@
 
 			$.post("<?=base_url('rfp/fetch_coupan_data')?>",{'coupan_code' : coupan_code},function(data){
 
-				if(data != 0){
+				//if(data != 0){
+				if(data != '' && data['id'] != null) {	 
 					var is_coupon_appiled = $('#is_coupon_applied').val();
 					// If coupon code is limit is exceed than allowed no of times
 					if(data['per_user_limit'] > data['total_apply_code'] && is_coupon_appiled == '0'){
