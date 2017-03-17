@@ -1,5 +1,520 @@
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+
+<style>
+/* For Chatting history css */
+
+.timeline {
+    list-style: none;
+    padding: 20px 0 20px;
+    position: relative;
+    padding-bottom: 0px;
+        margin: 0px 50px 0px;
+}
+
+.timeline:before {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 2px;
+    background-color: rgb(49, 176, 213);
+    left: 5%;
+    margin-left: -1.6px;
+}
+
+.timeline > li {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.timeline > li:before,
+.timeline > li:after {
+    content: " ";
+    display: table;
+}
+
+.timeline > li:after {
+    clear: both;
+}
+
+.timeline > li:before,
+.timeline > li:after {
+    content: " ";
+    display: table;
+}
+
+.timeline > li:after {
+    clear: both;
+}
+
+.timeline > li > .timeline-panel {
+    width: 89%;
+    float: left;
+    border-radius: 2px;
+    padding: 15px;
+    position: relative;
+    background: #eaeaea;
+}
+
+.timeline > li > .timeline-panel:before {
+    position: absolute;
+    top: 15px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid #f8f8f8;
+    border-right: 0 solid #f8f8f8;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
+
+.timeline > li > .timeline-panel:after {
+    position: absolute;
+    top: 15px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid #f8f8f8;
+    border-right: 0 solid #f8f8f8;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
+
+.timeline > li > .timeline-badge {
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 1.4em;
+    text-align: center;
+    position: absolute;
+    top: 15px;
+    left: 5%;
+    margin-left: -25px;
+    background-color: #999999;
+    z-index: 100;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border: 2px solid rgb(49, 176, 213);
+}
+
+.timeline > li.timeline-inverted > .timeline-panel {
+    float: right;
+}
+
+.timeline > li.timeline-inverted > .timeline-panel:before {
+    border-left-width: 0;
+    border-right-width: 15px;
+    left: -15px;
+    right: auto;
+}
+
+.timeline > li.timeline-inverted > .timeline-panel:after {
+    border-left-width: 0;
+    border-right-width: 14px;
+    left: -14px;
+    right: auto;
+}
+
+.timeline-badge.warning {
+    background-color: #f0ad4e !important;
+}
+
+.timeline-title {
+    margin-top: 0;
+    color: inherit;
+}
+
+.timeline-body > p,
+.timeline-body > ul {
+    margin-bottom: 0;
+}
+
+.timeline-body > p + p {
+    margin-top: 5px;
+}
+
+.timeline-badge.warning img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50px;
+    vertical-align: top;
+}
+
+.verticle-timeline {
+    list-style: none;
+    padding: 20px 0 0px;
+    position: relative;
+}
+
+.verticle-timeline:before {
+    left: 0;
+    right: 0;
+    position: absolute;
+    content: " ";
+    background-color: rgb(49, 176, 213);
+    margin-top: 50px;
+    height: 3px;
+}
+
+.verticle-timeline li .timeline-msg {
+    background-color: rgb(255, 255, 255);
+    border: 3px solid rgb(49, 176, 213);
+    border-radius: 30px;
+    color: rgb(65, 65, 65);
+    font-size: 15px;
+    font-weight: bold;
+    left: 50%;
+    margin-left: -25px;
+    padding: 7px;
+    position: absolute;
+    text-align: center;
+    top: 35px;
+    z-index: 100;
+}
+
+.timeline-msg img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50px;
+    vertical-align: top;
+}
+.verticle-timeline::before {
+    background-color: rgb(49, 176, 213);
+    content: " ";
+    height: 3px;
+    left: 0;
+    margin-top: 35px;
+    position: absolute;
+    right: 0;
+}
+
+.verticle-timeline .left-section {
+    border: 3px solid rgb(49, 176, 213);
+    border-radius: 50%;
+    display: inline-block;
+    height: 70px;
+    margin-top: 0;
+    position: relative;
+    width: 70px;
+}
+        
+.verticle-timeline .right-section {
+    border: 3px solid rgb(49, 176, 213);
+    border-radius: 50%;
+    display: inline-block;
+    float: right;
+    height: 70px;
+    margin-top: 0;
+    position: relative;
+    width: 70px;
+}
+
+.verticle-timeline .left-section img,
+.verticle-timeline .right-section img {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.cong-msg {
+    text-align: center;
+    background: rgb(49, 176, 213);
+    padding: 15px;
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+    border-radius: 6px;
+        clear: both;
+        margin: 30px 50px 0px;
+}
+
+.cong-msg h2 {
+    margin: 10px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+}
+.cong-msg h5{color: #fff;margin-bottom: 0px;}
+
+.verticle-timeline .left-section span,
+.verticle-timeline .right-section span {
+    width: 130px;
+    display: block;
+    font-size: 15px;
+    color: #414141;
+    font-weight: bold;
+}
+
+.timeline-panel-input {
+    float: right;
+    width: 89%;
+}
+
+.timeline-panel-input input {
+    width: 100%;
+    padding: 6px;
+    border: 2px solid #ddd;
+}
+
+.send-btn {
+    background: rgb(49, 176, 213);
+    color: #fff;
+    padding: 10px 20px;
+    float: right;
+    margin-top: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid #fff;
+}
+
+.send-btn:hover {
+    color: #fff;
+}
+
+.product-reviews .title {
+    color: #414141;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 20px;
+    margin: 0 0 10px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.product-reviews .reviews .review {
+    margin-bottom: 20px;
+    font-family: 'Open Sans', sans-serif, sans-serif;
+    text-transform: none;
+    background: #f8f8f8;
+    padding: 20px;
+}
+
+.product-reviews .reviews .review .review-title {
+    margin-bottom: 5px;
+}
+
+.product-reviews .reviews .review .review-title .summary {
+    color: #666666;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 10px;
+    font-style: italic;
+}
+
+.product-reviews .reviews .review .review-title .date {
+    font-size: 12px;
+}
+
+.product-reviews .reviews .review .review-title .date span {
+    color: #0f6cb2;
+}
+
+.product-reviews .reviews .review .text {
+    line-height: 18px;
+}
+
+.timeline-heading h5 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.review-form label {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.cong-msg .check {
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    line-height: 58px;
+    border-radius: 50%;
+    box-shadow: 1px 2px 20px -6px rgba(0, 0, 0, 1);
+    background: rgb(39, 175, 214);
+    margin-bottom: 0px;
+}
+
+.cong-msg .check i {
+    font-size: 40px;
+    line-height: 62px;
+    color: #fff;
+    font-weight: lighter;
+}
+
+.patient-reviews {
+    background: rgb(49, 176, 213);
+    color: #fff;
+    padding: 20px 50px;
+    overflow: hidden;
+    border-radius: 6px;
+    margin-bottom: 50px;
+}
+
+.chatting .star-rating {
+    font-size: 18px;
+}
+
+.chatting .star-rating .star-rating-stars {
+    font-family: "Arial Unicode MS", Arial, sans-serif;
+    unicode-bidi: bidi-override;
+    color: #cccccc;
+}
+
+.chatting .star-rating .star-rating-stars .star-rating-star {
+    float: left;
+    width: 0.88em;
+    font-size: 36px;
+    color: #fff;
+}
+
+.chatting .star-rating .star-rating-stars .star-rating-star:before {
+    content: "\2605";
+    position: absolute;
+    color: #ffb400;
+}
+
+.chatting .star-rating .star-rating-current-value:before,
+.chatting .star-rating .star-rating-current-value ~ .star-rating-star:before {
+    content: normal;
+}
+
+.chatting .star-rating.editable:hover .star-rating-current-value:before,
+.chatting .star-rating.editable:hover .star-rating-current-value ~ .star-rating-star:before {
+    content: "\2605";
+    position: absolute;
+    color: #ffb400;
+}
+
+.chatting .star-rating.editable .star-rating-star:hover,
+.chatting .star-rating.editable .star-rating-star:hover ~ .star-rating-star:before {
+    content: normal;
+    cursor: pointer;
+}
+
+.chatting .star-rating .star-rating-aside {
+    float: left;
+    margin-left: 5px;
+    color: #999999;
+    font-size: 11px;
+    line-height: 24px;
+}
+
+.chatting .star-rating.small {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.chatting .star-rating.small .star-rating-aside {
+    line-height: 16px;
+}
+
+.chatting .star-rating.large {
+    font-size: 20px;
+}
+
+.chatting .star-rating.large .star-rating-aside {
+    line-height: 26px;
+}
+
+.chatting .star-rating {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+    max-width: 200px;
+}
+.timeline-up-section{overflow: hidden;}
+.timeline-inverted .timeline-panel{text-align: left;}
+.new-section.timeline-up-section {
+    margin: 0 auto;
+    max-width: 500px;
+}
+button.btn.send-btn{margin-top: 15px;}
+tr.hover-timeline:hover{background: #fff !important;}
+        .timeline > li.timeline-inverted > .timeline-panel:before {
+    border-left-width: 0;
+    border-right-width: 15px;
+    left: -15px;
+    right: auto;
+}
+.timeline > li > .timeline-panel:before {
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid #ccc;
+    border-right: 0 solid #ccc;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
+
+.timeline > li.timeline-inverted > .timeline-panel:after {
+    border-left-width: 0;
+    border-right-width: 14px;
+    left: -14px;
+    right: auto;
+}
+
+.timeline > li > .timeline-panel:after {
+    position: absolute;
+    top: 20px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid #eaeaea;
+    border-right: 0 solid #eaeaea;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
+.send_chat_loader{    
+	position: relative;
+	padding-left: 30px;
+	line-height: 18px !important;
+}
+.send_chat_loader i{    
+	position: absolute;
+	left: 7px;
+	top: 50%;
+	margin-top: -7px;
+	padding-right: 0px !important;
+}
+@media (max-width: 767px) {
+   ul.timeline:before {
+        left: 40px;
+    }
+    ul.timeline > li > .timeline-panel {
+        width: calc(100% - 90px);
+        width: -moz-calc(100% - 90px);
+        width: -webkit-calc(100% - 90px);
+    }
+    ul.timeline > li > .timeline-badge {
+        left: 15px;
+        margin-left: 0;
+        top: 16px;
+    }
+    ul.timeline > li > .timeline-panel {
+        float: right;
+    }
+    ul.timeline > li > .timeline-panel:before {
+        border-left-width: 0;
+        border-right-width: 15px;
+        left: -15px;
+        right: auto;
+    }
+    ul.timeline > li > .timeline-panel:after {
+        border-left-width: 0;
+        border-right-width: 14px;
+        left: -14px;
+        right: auto;
+    }
+}
+
+
+/* End Chatting history css */
+</style>
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
@@ -211,8 +726,8 @@
 																</a>
 															</td>
 															<td>
-																<div class="star-rating">
-																    <span class="display_rating_<?=$key.'_'.$k?>"></span>
+																<div class="star-rating doctor_rating_<?=$bid_data['doctor_id']?>">
+																    <span class="display_rating_<?=$key.'_'.$k?> doctor_star"></span>
 																	<span class="avg_rating"><?=isset($bid_data['avg_rating'])?$bid_data['avg_rating']:'0'?> / 5.0 (<?=$bid_data['total_rating']?> Reviews)</span>
 																</div>
 															</td>
@@ -252,9 +767,10 @@
 
 																<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
 																<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
-																	<!-- If Review not given for this RFP then display the review button -->
+																	<!-- If Review not given for this RFP then display the review button -->	
+																	<a class="label label-info" onclick="view_chat(<?=$key?>,<?=$k?>)" title="Chat"><i class="fa fa-wechat"></i></a>
 																	<?php if($active_rfp['is_rated'] == '') : ?>
-																		<a class="label label-info rfp-price" onclick="send_review(<?=$key?>,<?=$k?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
+																		<a class="label label-info rfp-price" id="rated_btn_<?=$bid_data['id']?>" onclick="send_review(<?=$key?>,<?=$k?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
 																	<?php endif; ?>
 																	<!-- End Review -->
 																	<a class="label label-info rfp-price" onclick="send_msg(<?=$key?>,<?=$k?>)" title="Send Mail" data-toggle="modal" data-target=".send_message"><i class="fa fa-envelope"></i></a> 
@@ -267,7 +783,109 @@
 																<!-- End Message & Review Button-->	
 
 															</td>
-														</tr>	
+														</tr>
+														<!-- ============ Chat History for winner ============= -->
+														<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
+															<tr class="hover-timeline chatting chat_data_<?=$key?>_<?=$k?>" style="display:none;">
+																<td colspan="8">
+											                    <!-- ============ Avatar ======== -->
+																<div class="new-section timeline-up-section">
+																	<ul class="verticle-timeline">
+																		<li>
+    																		<div class="left-section"><img src="<?php if($this->session->userdata['client']['avatar'] != '') 
+    												                    		{ echo base_url('uploads/avatars/'.$this->session->userdata['client']['avatar']); } 
+    												                    	else 
+    												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>"><span>Has Requested</span></div>
+    																		<div class="timeline-msg">$<?=$bid_data['amount']?></div>
+    																		<div class="right-section"><img src="<?php if($bid_data['avatar'] != '') 
+    												                    		{ echo base_url('uploads/avatars/'.$bid_data['avatar']); } 
+    												                    	else 
+    												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>"><span>Has Confirmed</span></div>
+																		</li>
+																	</ul>
+																</div>
+																<!-- ============ End Avatar ==== -->
+																<!-- ============= Congratulation Box ===== -->
+																<div class="cong-msg">
+																	<p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
+																	<h2>Congratulation!!</h2>
+																	<h5>Your RFP Was successful</h5>
+																</div>
+																<!-- ============= End Congratulation Box === -->
+																<!-- ============= Chat Conversation ===== -->
+																<ul class="timeline">
+                                                                <?php if(!empty($bid_data['chat_data'])) :?>    
+    																<?php foreach($bid_data['chat_data'] as $chat) :?>
+    															        <li class="timeline-inverted">
+    															          <div class="timeline-badge warning"><img src="<?php if($chat['sender_avatar'] != '') 
+    												                    		{ echo base_url('uploads/avatars/'.$chat['sender_avatar']); } 
+    												                    	else 
+    												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>"></div>
+    															          <div class="timeline-panel">
+    															            <div class="timeline-heading">
+    															              <h5 class="timeline-title"><?=$chat['sender_name']?></h5>
+    															            </div>
+    															            <div class="timeline-body">
+    															              <p><?=$chat['message']?></p>
+    															            </div>
+    															          </div>
+    															        </li>
+    																<?php endforeach; ?>
+                                                                <?php endif; ?>
+																<!-- ============= Chat Text Box ===== -->
+																<li class="timeline-inverted chat_text_box">
+																	<div class="timeline-panel-input">
+																		<form method="post" id="chat_msg_form_<?=$bid_data['id']?>">
+																			<input type="hidden" name="rfp_id" value="<?=$active_rfp['id']?>">
+																			<input type="hidden" name="rfp_title" value="<?=$active_rfp['title']?>">
+																			<input type="hidden" name="rfp_bid_id" value="<?=$bid_data['id']?>">
+																			<input type="hidden" name="to_id" value="<?=$bid_data['doctor_id']?>">	
+																            <input type="text" name="message" placeholder="Your Message"/>
+                                                                            <span class="validate-msg"></span>
+																			<button type="submit" class="btn send-btn send_chat_msg" data-id="<?=$bid_data['id']?>">SUBMIT</button>
+																			<a class="btn send-btn send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
+																		</form>	
+																	</div>
+														        </li>
+														        <!-- ============= End Chat Text Box ===== -->
+																</ul>
+																<!-- ============= End Chat Conversation ===== -->
+																<!-- =============== Review =============== -->
+                                                                <?php if($active_rfp['is_rated'] == '') :?>
+    																<form role="form" class="cnt-form" id="chat_review_form_<?=$bid_data['id']?>">
+                                                                        <input type="hidden" name="rfp_id" value="<?=$active_rfp['id']?>">
+                                                                        <input type="hidden" name="doctor_id" value="<?=$bid_data['doctor_id']?>">
+    																	<div class="patient-reviews">
+    																		<div class="star-rating">
+    																		    <span id="rateYo"></span>
+    																		    <span class="point" style="display:none">0</span>
+    																			<input type="hidden" name="rating" class="my-rating"/>
+    																		</div>
+    																		<div class="review-form">
+    																			<div class="form-container">
+    																				<div class="row">
+    																					<div class="col-md-12">
+    																						<div class="form-group">
+    																							<label for="exampleInputReview">Review <span class="astk">*</span></label>
+    																							<textarea class="form-control txt txt-review" id="exampleInputReview" name="description" rows="4" style="margin-top: 0px; margin-bottom: 0px; height: 107px;"></textarea>
+    																						</div><!-- /.form-group -->
+    																					</div>
+    																				</div><!-- /.row -->
+    																				<div class="action text-right">
+                                                                                        <input type="hidden" name="submit" value="submit">
+    																					<button type="submit" class="btn send-btn send_chat_review" data-id="<?=$bid_data['id']?>">SUBMIT REVIEW</button>
+    																				    <a class="btn send-btn send_review_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
+                                                                                    </div><!-- /.action -->
+    																			</div><!-- /.form-container -->
+    																		</div>
+    																	</div>
+    																</form><!-- /.cnt-form -->
+                                                                <?php endif; ?>    
+																<!-- ============= End Review ============= -->
+																</td>
+															</tr>	
+														<?php endif; ?>
+														<!-- ============== End Chat History for winner ================ -->
 													<?php endforeach;?>
 												</tbody>	
 											</table>
@@ -335,12 +953,12 @@
 										foreach($appointment['appointment_schedule_arr'] as $app_sche) {
 											if($app_sche['is_selected'] == 1) {
 												$appointment_date = $app_sche['appointment_date'];
-												$appointment_time = $app_sche['appointment_time'];
+												$appointment_time = $app_sche['new_appointment_time'];
 											}
 										} ?>	
 										<!-- End For Check Appointment fixed or not by patient -->
 										<td><?php if($appointment_date) { echo date("m-d-Y",strtotime($appointment_date)); } else { echo 'N/A';} ?></td>
-										<td><?php if($appointment_time) { echo date("H:i:s",strtotime($appointment_time)); } else { echo 'N/A';} ?></td>
+										<td><?php if($appointment_time) { echo $appointment_time; } else { echo 'N/A';} ?></td>
 										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
 										<td>
 											<a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
@@ -543,7 +1161,7 @@
 							</div>
 						</div>
 						<div class="col-sm-12">	
-							<input type="hidden" name="rating" id="rating"/>
+							<input type="hidden" name="rating" class="my-rating"/>
 						</div>	
 						<div class="col-sm-12">
 							<label>Comment (Optional)</label>
@@ -755,7 +1373,7 @@
 
 		</div>
 	</div>
-</div>
+</div>	
 <!-- ================== /Modal Popup For Doctor Appointment ========================= -->	
 
 
@@ -764,13 +1382,13 @@
 
 $(function () {
  //------------- For Star Rating ----------------
-$("#rating").val('0.5'); 
+$(".my-rating").val('0.5'); 
 $(".star-rating #rateYo").rateYo({
     halfStar: true,
     rating: 0.5,
      onSet: function (rating, rateYoInstance) {
 			$(".point").show();
-			$("#rating").val(rating);
+			$(".my-rating").val(rating);
 		}
   });
 
@@ -827,6 +1445,7 @@ $(".active_rfp .view_bid_data").click(function(e) {
 	$(".active_rfp .view_bid_data").show();
 	$(".active_rfp #view_bid_data_"+id).hide();
 	$(".active_rfp #hide_bid_data_"+id).show();
+	$(".chatting").hide(); // Hide Chat Section
 
 });
 
@@ -835,6 +1454,7 @@ $(".active_rfp .hide_bid_data").click(function(e) {
 	$(".bid_data").hide();
 	$(".active_rfp #view_bid_data_"+id).show();
 	$(".active_rfp #hide_bid_data_"+id).hide();
+	$(".chatting").hide(); // Hide Chat Section
 });
 //------------------- End Hide/Show Sub Table for Active RFP -----------------
 
@@ -887,8 +1507,21 @@ function send_review(rfp_key,bid_key){
 	$("#review_rfp_id").val(rfp_data[rfp_key]['id']);
 	//$("#rfp_title").val(rfp_data[key]['title']);
 	$("#doctor_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['doctor_id']);
+    //------------ For reset rating ------
+    $(".my-rating").val('0.5'); 
+    $(".point").html('0.5 Star');
+    $("#frmreview #rateYo").rateYo().rateYo("rating", '0.5');
+    //------------ End For reset rating ------
 }
 //--------------- Send Review ----------------------
+
+//----------------- For modal popup close then reset review value ----------
+$('.doctor_review').on('hidden.bs.modal', function (e) {
+    $(".my-rating").val('0.5'); 
+    $(".point").html('0.5 Star');
+    $("#rateYo").rateYo().rateYo("rating", '0.5');
+}); 
+//----------------- End For modal popup close then reset review value ----------
 
 // ----------- For View Appointment by patient -----------
 
@@ -940,13 +1573,13 @@ function view_appointment(key){
 	$.each(app_sch_arr, function( key, data ) {
 		var date= data['appointment_date'];
 		var d= date.split("-");
-		var time = data['appointment_time'];
-		var t = time.split(":");
+		var time = data['new_appointment_time'];
+		
 
 		$(".mul_schedule_"+(key+1)).show();
 
 		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
-		$("#appointment_time_"+(key+1)).val(t[0]+":"+t[1]);
+		$("#appointment_time_"+(key+1)).val(time);
 		$("#schedule_selected_"+(key+1)).val(data['id']);
 
 		//---------- IF Schedule selected then checked radio button & hide submit button -------
@@ -970,7 +1603,7 @@ function view_appointment(key){
 function send_msg_for_change_app(){
 	$(".modal").removeClass("fade").modal("hide");
 	var app_data = <?php echo json_encode($appointment_list); ?>;
-	console.log(app_data);
+	
 	var key = $("#app_key").val();
 	$("#msg_rfp_id").val(app_data[key]['id']);
 	$("#msg_rfp_title").val(app_data[key]['title']);
@@ -978,6 +1611,90 @@ function send_msg_for_change_app(){
 	$("#msg_to_id").val(app_data[key]['doc_id']);
 }
 //---------------- End Send Message For Change Appointment ------------------
+
+
+//------------------- View Chatting ----------------------
+function view_chat(rfp_key,bid_key){
+
+    //------------ For reset rating ------
+    $(".my-rating").val('0.5'); 
+    $(".point").html('0.5 Star');
+    $("#rateYo").rateYo().rateYo("rating", '0.5');
+    //------------ End For reset rating ------
+	//var app_data = <?php echo json_encode($appointment_list); ?>;
+	$(".chat_data_"+rfp_key+"_"+bid_key).show();
+}
+//------------------- End View Chatting ----------------------
+
+//------------------- Send Message From Chatting ----------------------
+$(".send_chat_msg").click(function(e){
+	e.preventDefault();
+	var bid_id=$(this).data('id');
+	var chat_msg_data = $("#chat_msg_form_"+bid_id).serialize();
+	var chat_msg = $("#chat_msg_form_"+bid_id+" input[name='message']").val();
+    if(chat_msg != ''){
+        $(".validate-msg").html('');
+    	$(".send_chat_msg").hide();
+    	$(".send_chat_loader").show();
+    	$.post("<?=base_url('rfp/send_message/1')?>",chat_msg_data,function(data){
+    		
+    		if(data){
+    			$("#chat_msg_form_"+bid_id+" input[name='message']").val('');
+    			var uname= "<?=$this->session->userdata('client')['fname'].' '.$this->session->userdata('client')['lname']?>";
+
+    			<?php if($this->session->userdata('client')['avatar'] != '') { ?>
+    				var uavatar= "<?php echo base_url('uploads/avatars/'.$this->session->userdata('client')['avatar']); ?>";
+    			<?php }else { ?>
+    				var uavatar= "<?php echo DEFAULT_IMAGE_PATH.'user/user-img.jpg';  ?>";
+    			<?php } ?>
+
+    			var msg_block ='<li class="timeline-inverted"><div class="timeline-badge warning"><img src="'+uavatar+'"></div><div class="timeline-panel"><div class="timeline-heading"><h5 class="timeline-title">'+uname+'</h5></div><div class="timeline-body"><p>'+chat_msg+'</p></div></div></li>';
+    			$(".timeline .chat_text_box").before(msg_block);
+    		}
+    		
+    		$(".send_chat_msg").show();
+    		$(".send_chat_loader").hide();
+    	});
+    }
+    else{
+        $(".validate-msg").html('<label class="validation-error-label" for="message">Please provide a Message</label>');
+    }    
+	
+});
+//------------------- End Send Message From Chatting ----------------------
+
+
+//-------------------- Submit Review From Chatting -------------------
+$(".send_chat_review").click(function(e){
+    e.preventDefault();
+    var bid_id=$(this).data('id');
+    var chat_review_data = $("#chat_review_form_"+bid_id).serialize();
+
+    $(".send_chat_review").hide();
+    $(".send_review_loader").show();
+    $.post("<?=base_url('rfp/doctor_review/1')?>",chat_review_data,function(data){
+
+            if(data){
+
+                //---------- Hide Rating Form and rating button ----------
+                $("#chat_review_form_"+bid_id).hide();
+                $("#rated_btn_"+bid_id).hide();
+                 //---------- /Hide Rating Form and rating button --------
+
+                //----- For Change rating for particular doctor -------
+                $(".doctor_rating_"+data['doctor_id']+" .doctor_star").rateYo().rateYo("rating", data['avg_rating']);
+                $(".doctor_rating_"+data['doctor_id']+" .avg_rating").html(data['avg_rating']+' / 5.0 ('+data['total_rating']+' Reviews)');
+               //----- /For Change rating for particular doctor -------
+
+            }
+            
+            $(".send_chat_review").show();
+            $(".send_review_loader").hide();
+        },'json');
+    
+});    
+//--------------------- End Submit Review From Chatting --------------
+
 
 //--------------- For Message Form Validation --------------
 $("#frmmsg").validate({
@@ -1018,7 +1735,6 @@ $("#frm_choose_app").validate({
         }
     },
      errorPlacement: function (error, element) {
-     		console.log(element);
             if (element[0]['name'] == "schedule_selected") {
                 error.insertAfter(".mul_app");
             } else {

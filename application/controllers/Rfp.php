@@ -729,7 +729,7 @@ class Rfp extends CI_Controller {
 	}
 
 	/*------------------ For Send Message To Bidder ------------ */
-    public function send_message(){
+    public function send_message($ajax_call=''){
     	$data=array(
     		'rfp_id' => $this->input->post('rfp_id'),
     		'from_id' => $this->session->userdata('client')['id'],
@@ -790,7 +790,16 @@ class Rfp extends CI_Controller {
 	    {
 	    	$this->session->set_flashdata('error', 'Error Into Send Message');
 	    }
-	    redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
+	    //--------- If submit using ajax then return true and false -----
+	    if($ajax_call && $res){
+	    	echo true;
+	    }
+	    elseif($ajax_call && !$res){
+	    	echo false;
+	    }
+	    else{
+	    	redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
+	    }
     }
 
 	/* 
@@ -1428,9 +1437,8 @@ class Rfp extends CI_Controller {
     }
 
     //-------------- Doctor Review -------------------
-    public function doctor_review(){
+    public function doctor_review($ajax_call=''){
 
-    	
     	if($this->input->post('submit')){
     		
     		$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true);
@@ -1461,7 +1469,18 @@ class Rfp extends CI_Controller {
     		}else{
     			$this->session->set_flashdata('error', 'Error Into Submit Review, Please Try Again!');
     		}
-    		redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
+    		//--------- If submit using ajax then return true and false -----
+    		if($ajax_call && $res){
+    			$doctor_id = $this->input->post('doctor_id');
+    			$review_data=$this->Rfp_model->fetch_doctor_wise_review($doctor_id);
+    			echo json_encode($review_data); 
+		    }
+		    elseif($ajax_call && !$res){
+		    	echo false;
+		    }
+		    else{
+    			redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
+    		}
     	}
     }
     //------------- End Review --------------

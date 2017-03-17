@@ -193,7 +193,152 @@ class Cron extends CI_Controller {
 		}
 	}
 
+	/*----------------- For Send message according to search filter ----------------- */
+	public function send_mail_alert_doctor(){
+
+		//--------------------- Fetch Doctor User For rfp notofication --------
+		$this->db->from('users');
+		$this->db->where('role_id','4');
+		$this->db->where('is_blocked','0');
+		$this->db->where('is_deleted','0');
+		$doctor_data = $this->db->get()->result_array();
+
+		$rfp_notify_data=[];
+		$up_filter_data =[];
+		foreach ($doctor_data as $key => $doctor) {
+
+			//------- For Fecth Filter data according to current date and userwise --------
+			$this->db->from('custom_search_filter');
+			$this->db->where('filter_cron_date',date("Y-m-d"));
+			$this->db->where('user_id',$doctor['id']);
+			$this->db->where('notification_status !=','0');
+			$filter_data=$this->db->get()->result_array();
+			$up_filter_data[$key] = $filter_data;
+			//-------------------------------------------------------------------------
+			//---------- For fetch category data and make a unique array --------------
+			$category_data = [];
+			$cat_data = [];
+			if($filter_data){
+				foreach($filter_data as $data){
+					if(!empty($data['search_treatment_cat_id'])){
+						$cat_data = explode(",",$data['search_treatment_cat_id']);
+						$category_data=array_merge($category_data,$cat_data);
+					}
+				}
+				$category_data=array_unique($category_data); 
+			
+				//--------------- For Check RFP exist or not based on treatment category ----
+				$str='';
+				foreach($category_data as $k=>$cat_id)
+	            {
+	                if($k == 0) {  
+	                    $str .="FIND_IN_SET($cat_id,teeth_category)";
+	                }else{
+	                    $str .=" OR FIND_IN_SET($cat_id,teeth_category)";
+	                }
+	            }
+
+	            $this->db->select('rfp.*,TIMESTAMPDIFF(YEAR, rfp.birth_date, CURDATE()) AS patient_age,TIMESTAMPDIFF(DAY,CURDATE(),rfp.rfp_valid_date) AS rfp_valid_days,u.id as user_id,( 3959 * acos( cos( radians(' . $doctor['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $doctor['longitude'] . ') ) + sin( radians(' . $doctor['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
+		        $this->db->from('rfp');
+		        $this->db->join('users u','rfp.patient_id = u.id');
+
+		        if($category_data != ''){
+		            $this->db->where("(".$str.") != 0");
+		        } 
+		        $this->db->having('rfp.distance_travel >= distance'); // For check Patient travel distance or not
+		        $this->db->where('rfp.status','3'); // For RFP Status Open (3)
+		        $this->db->where('rfp.is_deleted','0');
+		        $this->db->where('rfp.is_blocked','0');
+		        $this->db->where('rfp.rfp_valid_date >= CURDATE()'); // For check rfp valid date >= curdate
+		        $query = $this->db->get();
+	        	$rfp_data=$query->result_array();
+	        	$rfp_notify_data[$key]['rfp_data']=$rfp_data;
+	        	$rfp_notify_data[$key]['doctor_id']=$doctor['id'];
+	        	$rfp_notify_data[$key]['doctor_name']=$doctor['fname']." ".$doctor['lname'];
+	        	$rfp_notify_data[$key]['doctor_email']=$doctor['email_id'];
+		       //-----------------------------------------
+	        }	
+		}
+
+		//--------------- Send Mail to user particualr RFP wise ------------------
+		foreach($rfp_notify_data as $notify_user){
+			if($notify_user['rfp_data']){
+					//------------------ Html Message format ------------
+					$msg = "New RFP List <br/><br/>";
+					$msg .="<table border='1' cellspacing='1' cellpadding='1' style='width:100%;'>
+							<thead>
+								<tr style='font-size:12px;font-weight:100;'>
+									<th>RFP #</th>
+									<th>RFP Title</th>
+									<th>Patient Age</th>
+									<th>Distance (Miles.)</th>
+									<th>RFP Valid Days</th>
+								</tr>
+						</thead><tbody>";
+					foreach($notify_user['rfp_data'] as $notify_rfp){
+						$rfp_url = base_url('rfp/view_rfp/'.encode($notify_rfp['id']));
+						$msg .= "<tr>
+									<td>".$notify_rfp['id']."</td>
+									<td><a href='".$rfp_url."'>".$notify_rfp['title']."</a></td>
+									<td>".$notify_rfp['patient_age']."</td>
+									<td>".round($notify_rfp['distance'],2)."</td>
+									<td>".($notify_rfp['rfp_valid_days']+1)."</td>
+								</tr>";	
+					}
+					$msg .= "</tbody></table>";
+					//------------------ End Html Message format ------------
+					//------------ Send Mail Config-----------------
+			    	$html_content=mailer('contact_inquiry','AccountActivation'); 
+			        $username= $notify_user['doctor_name'];
+			        $html_content = str_replace("@USERNAME@",$username,$html_content);
+			        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+			       
+			        $email_config = mail_config();
+			        $this->email->initialize($email_config);
+			        $subject=config('site_name').' - New RFP Creation Notification';    
+			        $this->email->from(config('contact_email'), config('sender_name'))
+			                    ->to($notify_user['doctor_email'])
+			                    ->subject($subject)
+			                    ->message($html_content);
+			        $this->email->send();
+			        //------------ End Send Mail Config----------------- 
+			}	
+		}
+
+		//------------- For Edit filter table cron date --------
+		
+		if($up_filter_data){
+			$add_days = 0;
+			foreach($up_filter_data as $filter_search_data){
+				foreach($filter_search_data as $filter){
+					if($filter['notification_status'] == 1){
+						$add_days = 1; // status 1 means daily notification
+					}
+					else if($filter['notification_status'] == 2){
+						$add_days = 7; // status 2 means weekly notification
+					}
+					else if($filter['notification_status'] == 3){
+						$add_days = 15; // status 3 means bi-weekly notification
+					}
+
+					$condition = ['id'	=>	$filter['id']];
+					$updateArray= [
+							'filter_cron_date'	=>	date("Y-m-d", strtotime("+ ".$add_days." day")),
+						];
+					$this->Rfp_model->update_record('custom_search_filter',$condition,$updateArray); 
+				}
+			}
+		}	
+		// --------------- End Edit filter table cron date ------------
+		pr($rfp_notify_data);
+		die;
+	}
+	/* ------------------ End Send message according to search filter ---------------- */
+
 }
+
+
+
 
 /* End of file Cron.php */
 /* Location: ./application/controllers/Cron.php */

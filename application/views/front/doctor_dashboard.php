@@ -420,13 +420,13 @@
 										foreach($appointment['appointment_schedule_arr'] as $app_sche) {
 											if($app_sche['is_selected'] == 1) {
 												$appointment_date = $app_sche['appointment_date'];
-												$appointment_time = $app_sche['appointment_time'];
+												$appointment_time = $app_sche['new_appointment_time'];
 												$is_approve_app = 1;
 											}
 										} ?>	
 										<!-- End For Check Appointment fixed or not by patient -->
 										<td><?php if($appointment_date) { echo date("m-d-Y",strtotime($appointment_date)); } else { echo 'N/A';} ?></td>
-										<td><?php if($appointment_time) { echo date("H:i:s",strtotime($appointment_time)); } else { echo 'N/A';} ?></td>
+										<td><?php if($appointment_time) { echo $appointment_time; } else { echo 'N/A';} ?></td>
 										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
 										<td>
 											<!-- === If Appointment not set then display the manage appointment button otherwise view == -->
@@ -1327,13 +1327,13 @@ function view_appointment(key){
 	$.each(app_sch_arr, function( key, data ) {
 		var date= data['appointment_date'];
 		var d= date.split("-");
-		var time = data['appointment_time'];
-		var t = time.split(":");
+		var time = data['new_appointment_time'];
+		
 
 		$(".mul_schedule_"+(key+1)).show();
 
 		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
-		$("#appointment_time_"+(key+1)).val(t[0]+":"+t[1]);
+		$("#appointment_time_"+(key+1)).val(time);
 		$("#schedule_selected_"+(key+1)).val(data['id']);
 
 		//---------- IF Schedule selected then checked radio button -------

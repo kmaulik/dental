@@ -346,7 +346,6 @@ class Dashboard extends CI_Controller {
     }
 
     /* @DHK Refund Payment Request
-    /* Param 1 : User Id
     */
     public function refund_request(){
         $refund_arr=[
@@ -552,14 +551,15 @@ class Dashboard extends CI_Controller {
                         $appointment_date= $date[2]."-".$date[0]."-".$date[1];
 
                         $time = explode(':',$app_time[$key]);
-                        $appointment_time = trim($time[0]).':'.trim($time[1]).':00';
-
+                        $appointment_time = trim($time[0]).':'.trim($time[1]).' '.trim($time[2]);
+                       
                         $schedule_data[$i]['appointment_id'] = $app_id;
                         $schedule_data[$i]['appointment_date'] = $appointment_date;
-                        $schedule_data[$i]['appointment_time'] = $appointment_time;
+                        $schedule_data[$i]['appointment_time'] = date("H:i", strtotime($appointment_time));
                         $i++;
                     }
                 }
+                
                 if($schedule_data != ''){
                     $this->db->insert_batch('appointment_schedule',$schedule_data);
                 }
@@ -641,8 +641,23 @@ class Dashboard extends CI_Controller {
     */
     public function change_filter_notify_status(){
 
+        //-------------- For add particular date ----------------
+        if($this->input->post('notification_status') == 0){
+            $filter_cron_date=null;
+        }
+        else if($this->input->post('notification_status') == 1){
+            $filter_cron_date = date("Y-m-d", strtotime("+ 1 day"));
+        }
+        else if($this->input->post('notification_status') == 2){
+            $filter_cron_date = date("Y-m-d", strtotime("+ 7 day"));
+        }
+        else if($this->input->post('notification_status') == 3){
+            $filter_cron_date = date("Y-m-d", strtotime("+ 15 day"));
+        }
+        //-------------- For add particular date ----------------
+
         $where=['id' => $this->input->post('filter_id')];
-        $data_array=['notification_status'  => $this->input->post('notification_status')];
+        $data_array=['notification_status'  => $this->input->post('notification_status') , 'filter_cron_date' => $filter_cron_date];
         $res=$this->Rfp_model->update_record('custom_search_filter',$where,$data_array);
         echo $res;
     }
