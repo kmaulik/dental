@@ -312,8 +312,8 @@
 							<div class="row">	
 								<div class="col-md-12 col-sm-12">
 									<div class="form-group">
-										<label>Other Description</label> 
-										<textarea name="other_description" class="form-control" placeholder="Enter Description"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
+										<label>Treatment Description</label> 
+										<textarea name="other_description" class="form-control" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
 									</div>
 									<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
 								</div>
@@ -357,9 +357,9 @@
 					</div>	
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
-							<label>Additional Comments</label> 
+							<label>Further Information for our Agents</label> 
 							<div class="fancy-form">
-								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Enter Additional Comments"><?php if($this->input->post('message') != '') { echo $this->input->post('message'); } else { echo (isset($record['message'])? $record['message'] : set_value('message')); }?></textarea>
+								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Share any comments you would like to provide to us."><?php if($this->input->post('message') != '') { echo $this->input->post('message'); } else { echo (isset($record['message'])? $record['message'] : set_value('message')); }?></textarea>
 								<i class="fa fa-comments"><!-- icon --></i>
 								<span class="fancy-hint size-11 text-muted">
 									<strong>Hint:</strong> 500 characters allowed!

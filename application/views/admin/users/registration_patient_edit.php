@@ -44,12 +44,12 @@
                             </div>
                         </div>                     
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo $patient_data['address']; ?></textarea>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Street:</label>
@@ -228,7 +228,7 @@
                     data:{email_id:function () {return $("#email_id").val();},old_email_id:function(){ return '<?php echo $patient_data["email_id"]; ?>'; }}
                 }
             },            
-            address:{required: true },
+            // address:{required: true },
             street:{required: true },
             city:{required: true },
             country_id:{required: true },

@@ -52,14 +52,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">Street:</label>
-                            <div class="col-lg-3">   
-                                <input type="text" name="street" class="form-control" value="<?php echo $doctor_data['street']; ?>" placeholder="Street name">
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
                             <label class="col-lg-3 control-label">City:</label>
                             <div class="col-lg-3">
                                 <input type="text" name="city" class="form-control" placeholder="City" value="<?php echo $doctor_data['city']; ?>" >
@@ -79,19 +71,6 @@
                         </div>
 
                          <div class="form-group">
-                            <label class="col-lg-3 control-label">State:</label>
-                            <div class="col-lg-3">
-                                <select name="state_id" class="form-control select2" id="state_id">
-                                        <option value="" selected>Select State</option>
-                                        <?php foreach($state_list as $state) : ?>
-                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
-                                    <?php endforeach; ?>
-                                </select>   
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
                             <label class="col-lg-3 control-label">State:</label>
                             <div class="col-lg-3">
                                 <select name="state_id" class="form-control select2" id="state_id">
@@ -241,7 +220,7 @@
                     data:{email_id:function () {return $("#email_id").val();},old_email_id:function(){ return '<?php echo $doctor_data["email_id"]; ?>'; }}
                 }
             },            
-            address:{required: true },
+            // address:{required: true },
             street:{required: true },
             city:{required: true },
             street:{required: true },

@@ -81,7 +81,7 @@ class Users_model extends CI_Model {
     // ------------------------------------------------------------------------
     
     public function get_all_patients(){
-        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
+        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(last_login,"%d %b %Y <br> %l:%i %p") AS last_login,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
 
         $this->db->where('role_id', 5); // Role id - 5 recognise as patient Id
         $this->db->where('is_deleted !=', 1);
@@ -116,7 +116,7 @@ class Users_model extends CI_Model {
     // Doctor Section
     // ------------------------------------------------------------------------
     public function get_all_doctors(){
-        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
+        $this->db->select('id,id AS test_id,fname,lname,email_id,DATE_FORMAT(last_login,"%d %b %Y <br> %l:%i %p") AS last_login,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_at,is_blocked', false);
 
         $this->db->where('role_id', 4); // Role id - 5 recognise as patient Id
         $this->db->where('is_deleted !=', 1);

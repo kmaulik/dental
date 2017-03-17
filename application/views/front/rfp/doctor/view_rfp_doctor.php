@@ -49,7 +49,7 @@
 						<!-- ====== End Check RFP status Open or not ====== -->
 					<?php endif; ?>
 					<!-- ====== End Check Bid Already Placed Or Not  ====== -->
-					<a href="<?=base_url('rfp/search_rfp')?>" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back To RFP List</a>
+					<a href="javascript:history.go(-1)" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back </a>
 				</div>
 			</div>	
 			<div class="col-md-12">
@@ -87,7 +87,7 @@
 							</div>	
 						</div>
 						<div class="col-sm-12">
-							<label>Description (you may add a comment to specify your treatment)</label>
+							<label>Description (Optionally share a comment for the patient to specify your treatment)</label>
 							<div class="form-group">
 								<textarea name="description" id="description" class="form-control" rows="5"></textarea>
 							</div>	

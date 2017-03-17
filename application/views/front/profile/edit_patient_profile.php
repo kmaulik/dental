@@ -82,11 +82,11 @@
 
 						<div class="form-group">
 							<label class="control-label">First Name</label>
-							<input type="text" placeholder="First name" name="fname" class="form-control" value="<?php echo $db_data['fname']; ?>">
+							<input type="text" placeholder="First name" name="fname" class="form-control AlphaAndDotWithhypen" value="<?php echo $db_data['fname']; ?>">
 						</div>
 						<div class="form-group">
 							<label class="control-label">Last Name</label>
-							<input type="text" placeholder="Last name" name="lname" class="form-control" value="<?php echo $db_data['lname']; ?>">
+							<input type="text" placeholder="Last name" name="lname" class="form-control AlphaAndDotWithhypen" value="<?php echo $db_data['lname']; ?>">
 						</div>
 						<div class="form-group">
 							<label class="control-label">Email ID</label>
@@ -295,6 +295,10 @@
 <!-- / -->
 
 <script type="text/javascript">
+
+	$('.AlphaAndDotWithhypen').keyup(function () { 
+    	this.value = this.value.replace(/[^A-Za-z.-\s]/g,'');
+	});
 	
 	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
 	$('#country_id').val("<?php echo $db_data['country_id']; ?>");

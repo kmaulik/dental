@@ -890,8 +890,8 @@ tr.hover-timeline:hover{background: #fff !important;}
 							<?php endforeach; ?>
 							<?php else :?>
 								<tr>
-									<td colspan="2" class="text-center">
-										<b>No Filter Data Found</b>
+									<td colspan="4" class="text-center">
+										<b>Go to Search <a href="<?=base_url('rfp/search_rfp')?>" class="goto_rfp">RFP</a> to create your filter</b>
 									</td>
 								</tr>
 							<?php endif;?>

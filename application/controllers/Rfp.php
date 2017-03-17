@@ -96,7 +96,7 @@ class Rfp extends CI_Controller {
 							'dentition_type' => $this->input->post('dentition_type'),
 							);
 						$this->session->set_userdata('rfp_data',$rfp_data); // Store Last Insert Id & Dentition Type into Session
-						$this->session->set_flashdata('success', 'Basic Detail & Medical History Created Successfully');
+						$this->session->set_flashdata('success', 'Step 1 of 3 completed - You can access the Draft Version anytime from the Dashboard');
 						redirect('rfp/add/1');
 					}else{
 						$this->session->set_flashdata('error', 'Error Into Create Basic Detail & Medical History');
@@ -135,10 +135,10 @@ class Rfp extends CI_Controller {
 					$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
 				}
 
-				$this->form_validation->set_rules('other_description', 'Description', 'required');
+				//$this->form_validation->set_rules('other_description', 'Description', 'required');
 			}
 	
-			$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
+			$this->form_validation->set_rules('message', 'message', 'max_length[500]');
 
 			if($this->form_validation->run() == FALSE)
 			{  
@@ -254,7 +254,7 @@ class Rfp extends CI_Controller {
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_2);
 				
 				if($res){
-					$this->session->set_flashdata('success', 'Treatment Plan Created Successfully');
+					$this->session->set_flashdata('success', 'Step 2 of 3  completed - Treatment Plan Information Updated Successfully');
 					redirect('rfp/add/2');
 				} else {
 					$this->session->set_flashdata('error', 'Error Into Create Treatment Plan');
@@ -276,7 +276,7 @@ class Rfp extends CI_Controller {
 				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 				if($res){
-					$this->session->set_flashdata('success', 'Financial Information Created Successfully');
+					$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
 					//$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
 					//$this->session->unset_userdata('rfp_data');
 					redirect('rfp/add/3');
@@ -377,7 +377,7 @@ class Rfp extends CI_Controller {
 					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_step_1);
 
 					if($res){
-						$this->session->set_flashdata('success', 'Basic Detail & Medical History Updated Successfully');
+						$this->session->set_flashdata('success', 'Step 1 of 3 completed - You can access the Draft Version anytime from the Dashboard');
 
 						// ----- If Dentition Type Not Change then redirect to summary page otherwise goto 2nd step
 						if($rfp_arr['dentition_type'] == $this->input->post('dentition_type'))
@@ -435,9 +435,9 @@ class Rfp extends CI_Controller {
 						$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
 					}
 
-					$this->form_validation->set_rules('other_description', 'Description', 'required');
+					//$this->form_validation->set_rules('other_description', 'Description', 'required');
 				}
-				$this->form_validation->set_rules('message', 'message', 'required|max_length[500]');
+				$this->form_validation->set_rules('message', 'message', 'max_length[500]');
 				
 
 				if($this->form_validation->run() == FALSE){  
@@ -606,7 +606,7 @@ class Rfp extends CI_Controller {
 
 					if($res){
 						// IF Success
-						$this->session->set_flashdata('success', 'Treatment Plan Updated Successfully');
+						$this->session->set_flashdata('success', 'Step 2 of 3  completed - Treatment Plan Information Updated Successfully');
 						//redirect('rfp/edit/'.$id.'/2');
 						redirect('rfp/edit/'.$id.'/3');
 					}
@@ -627,7 +627,7 @@ class Rfp extends CI_Controller {
 					$condition=['id' => decode($id)];
 					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 					if($res){
-						$this->session->set_flashdata('success', 'Financial Information Updated Successfully');
+						$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
 						redirect('rfp/edit/'.$id.'/3');
 					} else {
 						$this->session->set_flashdata('error', 'Error Into Update Financial Information');

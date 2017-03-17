@@ -164,7 +164,7 @@
 				<!-- Other Treatment Category Type -->	
 				<?php elseif($record['dentition_type'] == 'other') :?>
 					<div class="col-sm-12">
-						<label>Other Description : </label> <?=$record['other_description'] ?> 	
+						<label>Treatment Description : </label> <?=$record['other_description'] ?> 	
 					</div>
 					<!-- ===== For Other Treatment Category === -->
 					<div class="col-sm-12">
@@ -226,7 +226,7 @@
 			<div class="rfp-additional">
 				<h4 class="rfp-title">Additional Section</h4>
 				<div class="col-sm-12">
-					<label>Additional Comments : </label><?=$record['message'] ?> 
+					<label>Further Information for our Agents : </label><?=$record['message'] ?> 
 				</div>
 				
 				<div class="col-sm-12 col_custom">
