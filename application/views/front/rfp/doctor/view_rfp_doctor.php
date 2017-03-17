@@ -87,7 +87,7 @@
 							</div>	
 						</div>
 						<div class="col-sm-12">
-							<label>Description</label>
+							<label>Description (you may add a comment to specify your treatment)</label>
 							<div class="form-group">
 								<textarea name="description" id="description" class="form-control" rows="5"></textarea>
 							</div>	
@@ -150,17 +150,17 @@ $("#frmbid").validate({
         amount: {
             required: true,
         },
-        description: {
-            required: true
-        }
+        // description: {
+        //     required: true
+        // }
     },
     messages: {
         amount: {
             required: "Please provide a Amount"
         },
-        description: {
-            required: "Please provide a Description"
-        }
+        // description: {
+        //     required: "Please provide a Description"
+        // }
     }
 });
 </script>

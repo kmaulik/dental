@@ -456,13 +456,15 @@ class Rfp_model extends CI_Model {
             $result[$key]['bid_data']=$data;
 
             /*------- For Chat timeline --*/
-            // foreach($data as $k=>$chat){
-            //     $where = '((m.from_id='.$chat['doctor_id'].' and m.to_id='.$this->session->userdata('client')['id'].' and m.is_deleted_to = 0) or (m.to_id ='.$chat['doctor_id'].' and m.from_id='.$this->session->userdata('client')['id'].' and m.is_deleted_from = 0))';
-            //     $this->db->where($where);
-            //     $this->db->where('m.rfp_id',$chat['rfp_id']); 
-            //     $chat_data=$this->db->get('messages m')->result_array();
-            //     $result[$key]['bid_data'][$k]['chat_data']=$chat_data;
-            // }
+            foreach($data as $k=>$chat){
+                $this->db->select('m.*,CONCAT(u.fname," ",u.lname) as sender_name,u.avatar as sender_avatar');
+                $this->db->join('users u','m.from_id = u.id');
+                $where = '((m.from_id='.$chat['doctor_id'].' and m.to_id='.$this->session->userdata('client')['id'].' and m.is_deleted_to = 0) or (m.to_id ='.$chat['doctor_id'].' and m.from_id='.$this->session->userdata('client')['id'].' and m.is_deleted_from = 0))';
+                $this->db->where($where);
+                $this->db->where('m.rfp_id',$chat['rfp_id']); 
+                $chat_data=$this->db->get('messages m')->result_array();
+                $result[$key]['bid_data'][$k]['chat_data']=$chat_data;
+            }
             /*------ End Chat Timeline --*/
         }
 
@@ -487,10 +489,11 @@ class Rfp_model extends CI_Model {
         $data=$this->db->get('rfp')->result_array();
         
         foreach($data as $key=>$app_data){
-            $this->db->where('appointment_id',$app_data['appointment_id']);
-            $data[$key]['appointment_schedule_arr']=$this->db->get('appointment_schedule')->result_array();
+            $this->db->select('app_sch.*,TIME_FORMAT(app_sch.appointment_time, "%h : %i : %p") as new_appointment_time');
+            $this->db->where('app_sch.appointment_id',$app_data['appointment_id']);
+            $data[$key]['appointment_schedule_arr']=$this->db->get('appointment_schedule app_sch')->result_array();
         }
-     
+        //pr($data,1);
         return $data;
     }
 
@@ -510,8 +513,9 @@ class Rfp_model extends CI_Model {
         $data=$this->db->get('rfp')->result_array();
 
          foreach($data as $key=>$app_data){
-            $this->db->where('appointment_id',$app_data['appointment_id']);
-            $data[$key]['appointment_schedule_arr']=$this->db->get('appointment_schedule')->result_array();
+            $this->db->select('app_sch.*,TIME_FORMAT(app_sch.appointment_time, "%h : %i : %p") as new_appointment_time');
+            $this->db->where('app_sch.appointment_id',$app_data['appointment_id']);
+            $data[$key]['appointment_schedule_arr']=$this->db->get('appointment_schedule app_sch')->result_array();
         }
         
         return $data;
@@ -528,5 +532,18 @@ class Rfp_model extends CI_Model {
         }
         return $all_data;
     }
+
+
+    //----------------- For fetch Total Review and average review for particualr doctor wise ------------
+    public function fetch_doctor_wise_review($doctor_id){
+        $this->db->select('doctor_id,avg(rating) as avg_rating,count(doctor_id) as total_rating');
+        $this->db->where('doctor_id',$doctor_id);
+        $this->db->where('is_deleted','0');
+        $this->db->where('is_blocked','0');
+        $this->db->group_by('doctor_id');
+        $rating_data=$this->db->get('rfp_rating')->row_array();
+        return $rating_data;
+    } 
+    //----------------- End For fetch Total Review and average review for particualr doctor wise ------------
 
 }    
