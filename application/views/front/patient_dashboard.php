@@ -351,6 +351,7 @@
     overflow: hidden;
     border-radius: 6px;
     margin-bottom: 50px;
+    width: 100%;
 }
 
 .chatting .star-rating {
@@ -431,7 +432,7 @@
     margin: 0 auto;
     max-width: 500px;
 }
-button.btn.send-btn{margin-top: 15px;}
+button.btn.send-btn{margin-top: 15px;line-height: 1;margin-bottom: 15px;}
 tr.hover-timeline:hover{background: #fff !important;}
         .timeline > li.timeline-inverted > .timeline-panel:before {
     border-left-width: 0;
@@ -832,9 +833,8 @@ tr.hover-timeline:hover{background: #fff !important;}
     															        </li>
     																<?php endforeach; ?>
                                                                 <?php endif; ?>
-																<!-- ============= Chat Text Box ===== -->
-																<li class="timeline-inverted chat_text_box">
-																	<div class="timeline-panel-input">
+																<!-- ============= Chat Text Box ===== -->																
+																	<div class="timeline-panel-input chat_text_box">
 																		<form method="post" id="chat_msg_form_<?=$bid_data['id']?>">
 																			<input type="hidden" name="rfp_id" value="<?=$active_rfp['id']?>">
 																			<input type="hidden" name="rfp_title" value="<?=$active_rfp['title']?>">
@@ -842,11 +842,10 @@ tr.hover-timeline:hover{background: #fff !important;}
 																			<input type="hidden" name="to_id" value="<?=$bid_data['doctor_id']?>">	
 																            <input type="text" name="message" placeholder="Your Message"/>
                                                                             <span class="validate-msg"></span>
-																			<button type="submit" class="btn send-btn send_chat_msg" data-id="<?=$bid_data['id']?>">SUBMIT</button>
+																			<button type="submit" class="btn send-btn btn-primary send_chat_msg" data-id="<?=$bid_data['id']?>">SUBMIT</button>
 																			<a class="btn send-btn send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
 																		</form>	
-																	</div>
-														        </li>
+																	</div>														        
 														        <!-- ============= End Chat Text Box ===== -->
 																</ul>
 																<!-- ============= End Chat Conversation ===== -->
@@ -1633,10 +1632,12 @@ $(".send_chat_msg").click(function(e){
 	var chat_msg_data = $("#chat_msg_form_"+bid_id).serialize();
 	var chat_msg = $("#chat_msg_form_"+bid_id+" input[name='message']").val();
     if(chat_msg != ''){
+        
         $(".validate-msg").html('');
     	$(".send_chat_msg").hide();
     	$(".send_chat_loader").show();
-    	$.post("<?=base_url('rfp/send_message/1')?>",chat_msg_data,function(data){
+
+    	$.post("<?=base_url('rfp/send_message')?>",chat_msg_data,function(data){
     		
     		if(data){
     			$("#chat_msg_form_"+bid_id+" input[name='message']").val('');
@@ -1672,7 +1673,7 @@ $(".send_chat_review").click(function(e){
 
     $(".send_chat_review").hide();
     $(".send_review_loader").show();
-    $.post("<?=base_url('rfp/doctor_review/1')?>",chat_review_data,function(data){
+    $.post("<?=base_url('rfp/doctor_review')?>",chat_review_data,function(data){
 
             if(data){
 

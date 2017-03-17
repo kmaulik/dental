@@ -1,501 +1,521 @@
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+
 <style>
-        .timeline {
-            list-style: none;
-            padding: 20px 0 20px;
-            position: relative;
-            padding-bottom: 0px;
-                margin: 0px 50px 0px;
-        }
+/* For Chatting history css */
+
+.timeline {
+    list-style: none;
+    padding: 20px 0 20px;
+    position: relative;
+    padding-bottom: 0px;
+        margin: 0px 50px 0px;
+}
+
+.timeline:before {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 2px;
+    background-color: rgb(49, 176, 213);
+    left: 5%;
+    margin-left: -1.6px;
+}
+
+.timeline > li {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.timeline > li:before,
+.timeline > li:after {
+    content: " ";
+    display: table;
+}
+
+.timeline > li:after {
+    clear: both;
+}
+
+.timeline > li:before,
+.timeline > li:after {
+    content: " ";
+    display: table;
+}
+
+.timeline > li:after {
+    clear: both;
+}
+
+.timeline > li > .timeline-panel {
+    width: 89%;
+    float: left;
+    border-radius: 2px;
+    padding: 15px;
+    position: relative;
+    background: #eaeaea;
+}
+
+.timeline > li > .timeline-panel:before {
+    position: absolute;
+    top: 15px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid #f8f8f8;
+    border-right: 0 solid #f8f8f8;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
+
+.timeline > li > .timeline-panel:after {
+    position: absolute;
+    top: 15px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid #f8f8f8;
+    border-right: 0 solid #f8f8f8;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
+
+.timeline > li > .timeline-badge {
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 1.4em;
+    text-align: center;
+    position: absolute;
+    top: 15px;
+    left: 5%;
+    margin-left: -25px;
+    background-color: #999999;
+    z-index: 100;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border: 2px solid rgb(49, 176, 213);
+}
+
+.timeline > li.timeline-inverted > .timeline-panel {
+    float: right;
+}
+
+.timeline > li.timeline-inverted > .timeline-panel:before {
+    border-left-width: 0;
+    border-right-width: 15px;
+    left: -15px;
+    right: auto;
+}
+
+.timeline > li.timeline-inverted > .timeline-panel:after {
+    border-left-width: 0;
+    border-right-width: 14px;
+    left: -14px;
+    right: auto;
+}
+
+.timeline-badge.warning {
+    background-color: #f0ad4e !important;
+}
+
+.timeline-title {
+    margin-top: 0;
+    color: inherit;
+}
+
+.timeline-body > p,
+.timeline-body > ul {
+    margin-bottom: 0;
+}
+
+.timeline-body > p + p {
+    margin-top: 5px;
+}
+
+.timeline-badge.warning img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50px;
+    vertical-align: top;
+}
+
+.verticle-timeline {
+    list-style: none;
+    padding: 20px 0 0px;
+    position: relative;
+}
+
+.verticle-timeline:before {
+    left: 0;
+    right: 0;
+    position: absolute;
+    content: " ";
+    background-color: rgb(49, 176, 213);
+    margin-top: 50px;
+    height: 3px;
+}
+
+.verticle-timeline li .timeline-msg {
+    background-color: rgb(255, 255, 255);
+    border: 3px solid rgb(49, 176, 213);
+    border-radius: 30px;
+    color: rgb(65, 65, 65);
+    font-size: 15px;
+    font-weight: bold;
+    left: 50%;
+    margin-left: -25px;
+    padding: 7px;
+    position: absolute;
+    text-align: center;
+    top: 35px;
+    z-index: 100;
+}
+
+.timeline-msg img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50px;
+    vertical-align: top;
+}
+.verticle-timeline::before {
+    background-color: rgb(49, 176, 213);
+    content: " ";
+    height: 3px;
+    left: 0;
+    margin-top: 35px;
+    position: absolute;
+    right: 0;
+}
+
+.verticle-timeline .left-section {
+    border: 3px solid rgb(49, 176, 213);
+    border-radius: 50%;
+    float:left;
+    display: inline-block;
+    height: 70px;
+    margin-top: 0;
+    position: relative;
+    width: 70px;
+}
         
-        .timeline:before {
-            top: 0;
-            bottom: 0;
-            position: absolute;
-            content: " ";
-            width: 2px;
-            background-color: rgb(49, 176, 213);
-            left: 5%;
-            margin-left: -1.6px;
-        }
-        
-        .timeline > li {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .timeline > li:before,
-        .timeline > li:after {
-            content: " ";
-            display: table;
-        }
-        
-        .timeline > li:after {
-            clear: both;
-        }
-        
-        .timeline > li:before,
-        .timeline > li:after {
-            content: " ";
-            display: table;
-        }
-        
-        .timeline > li:after {
-            clear: both;
-        }
-        
-        .timeline > li > .timeline-panel {
-            width: 89%;
-            float: left;
-            border-radius: 2px;
-            padding: 15px;
-            position: relative;
-            background: #eaeaea;
-        }
-        
-        .timeline > li > .timeline-panel:before {
-            position: absolute;
-            top: 15px;
-            right: -15px;
-            display: inline-block;
-            border-top: 15px solid transparent;
-            border-left: 15px solid #f8f8f8;
-            border-right: 0 solid #f8f8f8;
-            border-bottom: 15px solid transparent;
-            content: " ";
-        }
-        
-        .timeline > li > .timeline-panel:after {
-            position: absolute;
-            top: 15px;
-            right: -14px;
-            display: inline-block;
-            border-top: 14px solid transparent;
-            border-left: 14px solid #f8f8f8;
-            border-right: 0 solid #f8f8f8;
-            border-bottom: 14px solid transparent;
-            content: " ";
-        }
-        
-        .timeline > li > .timeline-badge {
-            color: #fff;
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
-            font-size: 1.4em;
-            text-align: center;
-            position: absolute;
-            top: 15px;
-            left: 5%;
-            margin-left: -25px;
-            background-color: #999999;
-            z-index: 100;
-            border-top-right-radius: 50%;
-            border-top-left-radius: 50%;
-            border-bottom-right-radius: 50%;
-            border-bottom-left-radius: 50%;
-            border: 2px solid rgb(49, 176, 213);
-        }
-        
-        .timeline > li.timeline-inverted > .timeline-panel {
-            float: right;
-        }
-        
+.verticle-timeline .right-section {
+    border: 3px solid rgb(49, 176, 213);
+    border-radius: 50%;
+    display: inline-block;
+    float: right;
+    height: 70px;
+    margin-top: 0;
+    position: relative;
+    width: 70px;
+}
+
+.verticle-timeline .left-section img,
+.verticle-timeline .right-section img {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.cong-msg {
+    text-align: center;
+    background: rgb(49, 176, 213);
+    padding: 15px;
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+    border-radius: 6px;
+        clear: both;
+        margin: 30px 50px 0px;
+}
+
+.cong-msg h2 {
+    margin: 10px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+}
+.cong-msg h5{color: #fff;margin-bottom: 0px;}
+
+.verticle-timeline .left-section span,
+.verticle-timeline .right-section span {
+    width: 130px;
+    display: block;
+    font-size: 15px;
+    color: #414141;
+    font-weight: bold;
+}
+
+.timeline-panel-input {
+    float: right;
+    width: 89%;
+}
+
+.timeline-panel-input input {
+    width: 100%;
+    padding: 6px;
+    border: 2px solid #ddd;
+}
+
+.send-btn {
+    background: rgb(49, 176, 213);
+    color: #fff;
+    padding: 10px 20px;
+    float: right;
+    margin-top: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid #fff;
+}
+
+.send-btn:hover {
+    color: #fff;
+}
+
+.product-reviews .title {
+    color: #414141;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 20px;
+    margin: 0 0 10px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.product-reviews .reviews .review {
+    margin-bottom: 20px;
+    font-family: 'Open Sans', sans-serif, sans-serif;
+    text-transform: none;
+    background: #f8f8f8;
+    padding: 20px;
+}
+
+.product-reviews .reviews .review .review-title {
+    margin-bottom: 5px;
+}
+
+.product-reviews .reviews .review .review-title .summary {
+    color: #666666;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 10px;
+    font-style: italic;
+}
+
+.product-reviews .reviews .review .review-title .date {
+    font-size: 12px;
+}
+
+.product-reviews .reviews .review .review-title .date span {
+    color: #0f6cb2;
+}
+
+.product-reviews .reviews .review .text {
+    line-height: 18px;
+}
+
+.timeline-heading h5 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.review-form label {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.cong-msg .check {
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    line-height: 58px;
+    border-radius: 50%;
+    box-shadow: 1px 2px 20px -6px rgba(0, 0, 0, 1);
+    background: rgb(39, 175, 214);
+    margin-bottom: 0px;
+}
+
+.cong-msg .check i {
+    font-size: 40px;
+    line-height: 62px;
+    color: #fff;
+    font-weight: lighter;
+}
+
+.patient-reviews {
+    background: rgb(49, 176, 213);
+    color: #fff;
+    padding: 20px 50px;
+    overflow: hidden;
+    border-radius: 6px;
+    margin-bottom: 50px;
+    width: 100%;
+}
+
+.chatting .star-rating {
+    font-size: 18px;
+}
+
+.chatting .star-rating .star-rating-stars {
+    font-family: "Arial Unicode MS", Arial, sans-serif;
+    unicode-bidi: bidi-override;
+    color: #cccccc;
+}
+
+.chatting .star-rating .star-rating-stars .star-rating-star {
+    float: left;
+    width: 0.88em;
+    font-size: 36px;
+    color: #fff;
+}
+
+.chatting .star-rating .star-rating-stars .star-rating-star:before {
+    content: "\2605";
+    position: absolute;
+    color: #ffb400;
+}
+
+.chatting .star-rating .star-rating-current-value:before,
+.chatting .star-rating .star-rating-current-value ~ .star-rating-star:before {
+    content: normal;
+}
+
+.chatting .star-rating.editable:hover .star-rating-current-value:before,
+.chatting .star-rating.editable:hover .star-rating-current-value ~ .star-rating-star:before {
+    content: "\2605";
+    position: absolute;
+    color: #ffb400;
+}
+
+.chatting .star-rating.editable .star-rating-star:hover,
+.chatting .star-rating.editable .star-rating-star:hover ~ .star-rating-star:before {
+    content: normal;
+    cursor: pointer;
+}
+
+.chatting .star-rating .star-rating-aside {
+    float: left;
+    margin-left: 5px;
+    color: #999999;
+    font-size: 11px;
+    line-height: 24px;
+}
+
+.chatting .star-rating.small {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.chatting .star-rating.small .star-rating-aside {
+    line-height: 16px;
+}
+
+.chatting .star-rating.large {
+    font-size: 20px;
+}
+
+.chatting .star-rating.large .star-rating-aside {
+    line-height: 26px;
+}
+
+.chatting .star-rating {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+    max-width: 200px;
+}
+.timeline-up-section{overflow: hidden;}
+.timeline-inverted .timeline-panel{text-align: left;}
+.new-section.timeline-up-section {
+    margin: 0 auto;
+    max-width: 500px;
+}
+button.btn.send-btn{margin-top: 15px;line-height: 1;margin-bottom: 15px;}
+tr.hover-timeline:hover{background: #fff !important;}
         .timeline > li.timeline-inverted > .timeline-panel:before {
-            border-left-width: 0;
-            border-right-width: 15px;
-            left: -15px;
-            right: auto;
-        }
-        
-        .timeline > li.timeline-inverted > .timeline-panel:after {
-            border-left-width: 0;
-            border-right-width: 14px;
-            left: -14px;
-            right: auto;
-        }
-        
-        .timeline-badge.warning {
-            background-color: #f0ad4e !important;
-        }
-        
-        .timeline-title {
-            margin-top: 0;
-            color: inherit;
-        }
-        
-        .timeline-body > p,
-        .timeline-body > ul {
-            margin-bottom: 0;
-        }
-        
-        .timeline-body > p + p {
-            margin-top: 5px;
-        }
-        
-        .timeline-badge.warning img {
-            height: 100%;
-            width: 100%;
-            border-radius: 50px;
-            vertical-align: top;
-        }
-        
-        .verticle-timeline {
-            list-style: none;
-            padding: 20px 0 0px;
-            position: relative;
-        }
-        
-        .verticle-timeline:before {
-            left: 0;
-            right: 0;
-            position: absolute;
-            content: " ";
-            background-color: rgb(49, 176, 213);
-            margin-top: 50px;
-            height: 3px;
-        }
-        
-        .verticle-timeline li .timeline-msg {
-            background-color: rgb(255, 255, 255);
-            border: 3px solid rgb(49, 176, 213);
-            border-radius: 30px;
-            color: rgb(65, 65, 65);
-            font-size: 15px;
-            font-weight: bold;
-            left: 50%;
-            margin-left: -25px;
-            padding: 7px;
-            position: absolute;
-            text-align: center;
-            top: 35px;
-            z-index: 100;
-        }
-        
-        .timeline-msg img {
-            height: 100%;
-            width: 100%;
-            border-radius: 50px;
-            vertical-align: top;
-        }
-        .verticle-timeline::before {
-            background-color: rgb(49, 176, 213);
-            content: " ";
-            height: 3px;
-            left: 0;
-            margin-top: 35px;
-            position: absolute;
-            right: 0;
-        }
-        
-        .verticle-timeline .left-section {
-            border: 3px solid rgb(49, 176, 213);
-            border-radius: 50%;
-            display: inline-block;
-            height: 70px;
-            margin-top: 0;
-            position: relative;
-            width: 70px;
-        }
-                
-        .verticle-timeline .right-section {
-            border: 3px solid rgb(49, 176, 213);
-            border-radius: 50%;
-            display: inline-block;
-            float: right;
-            height: 70px;
-            margin-top: 0;
-            position: relative;
-            width: 70px;
-        }
-        
-        .verticle-timeline .left-section img,
-        .verticle-timeline .right-section img {
-            border-radius: 50%;
-            height: 100%;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
-        .cong-msg {
-            text-align: center;
-            background: rgb(49, 176, 213);
-            padding: 15px;
-            color: #fff;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
-            border-radius: 6px;
-                clear: both;
-                margin: 30px 50px 0px;
-        }
-        
-        .cong-msg h2 {
-            margin: 10px;
-            font-size: 32px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .cong-msg h5{color: #fff;margin-bottom: 0px;}
-        
-        .verticle-timeline .left-section span,
-        .verticle-timeline .right-section span {
-            width: 130px;
-            display: block;
-            font-size: 15px;
-            color: #414141;
-            font-weight: bold;
-        }
-        
-        .timeline-panel-input {
-            float: right;
-            width: 89%;
-        }
-        
-        .timeline-panel-input input {
-            width: 100%;
-            padding: 6px;
-            border: 2px solid #ddd;
-        }
-        
-        .send-btn {
-            background: rgb(49, 176, 213);
-            color: #fff;
-            padding: 10px 20px;
-            float: right;
-            margin-top: 15px;
-            text-decoration: none;
-            font-weight: bold;
-            border: 2px solid #fff;
-        }
-        
-        .send-btn:hover {
-            color: #fff;
-        }
-        
-        .product-reviews .title {
-            color: #414141;
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 20px;
-            margin: 0 0 10px;
-            font-family: 'Open Sans', sans-serif;
-        }
-        
-        .product-reviews .reviews .review {
-            margin-bottom: 20px;
-            font-family: 'Open Sans', sans-serif, sans-serif;
-            text-transform: none;
-            background: #f8f8f8;
-            padding: 20px;
-        }
-        
-        .product-reviews .reviews .review .review-title {
-            margin-bottom: 5px;
-        }
-        
-        .product-reviews .reviews .review .review-title .summary {
-            color: #666666;
-            font-size: 14px;
-            font-weight: normal;
-            margin-right: 10px;
-            font-style: italic;
-        }
-        
-        .product-reviews .reviews .review .review-title .date {
-            font-size: 12px;
-        }
-        
-        .product-reviews .reviews .review .review-title .date span {
-            color: #0f6cb2;
-        }
-        
-        .product-reviews .reviews .review .text {
-            line-height: 18px;
-        }
-        
-        .timeline-heading h5 {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .review-form label {
-            font-weight: normal;
-            font-size: 13px;
-        }
-        
-        .cong-msg .check {
-            display: inline-block;
-            height: 60px;
-            width: 60px;
-            line-height: 58px;
-            border-radius: 50%;
-            box-shadow: 1px 2px 20px -6px rgba(0, 0, 0, 1);
-            background: rgb(39, 175, 214);
-            margin-bottom: 0px;
-        }
-        
-        .cong-msg .check i {
-            font-size: 40px;
-            line-height: 62px;
-            color: #fff;
-            font-weight: lighter;
-        }
-        
-        .patient-reviews {
-            background: rgb(49, 176, 213);
-            color: #fff;
-            padding: 20px 50px;
-            overflow: hidden;
-            border-radius: 6px;
-            margin-bottom: 50px;
-        }
-        
-        .star-rating {
-            font-size: 18px;
-        }
-        
-        .star-rating .star-rating-stars {
-            font-family: "Arial Unicode MS", Arial, sans-serif;
-            unicode-bidi: bidi-override;
-            color: #cccccc;
-        }
-        
-        .star-rating .star-rating-stars .star-rating-star {
-            float: left;
-            width: 0.88em;
-            font-size: 36px;
-            color: #fff;
-        }
-        
-        .star-rating .star-rating-stars .star-rating-star:before {
-            content: "\2605";
-            position: absolute;
-            color: #ffb400;
-        }
-        
-        .star-rating .star-rating-current-value:before,
-        .star-rating .star-rating-current-value ~ .star-rating-star:before {
-            content: normal;
-        }
-        
-        .star-rating.editable:hover .star-rating-current-value:before,
-        .star-rating.editable:hover .star-rating-current-value ~ .star-rating-star:before {
-            content: "\2605";
-            position: absolute;
-            color: #ffb400;
-        }
-        
-        .star-rating.editable .star-rating-star:hover,
-        .star-rating.editable .star-rating-star:hover ~ .star-rating-star:before {
-            content: normal;
-            cursor: pointer;
-        }
-        
-        .star-rating .star-rating-aside {
-            float: left;
-            margin-left: 5px;
-            color: #999999;
-            font-size: 11px;
-            line-height: 24px;
-        }
-        
-        .star-rating.small {
-            font-size: 16px;
-            line-height: 1;
-        }
-        
-        .star-rating.small .star-rating-aside {
-            line-height: 16px;
-        }
-        
-        .star-rating.large {
-            font-size: 20px;
-        }
-        
-        .star-rating.large .star-rating-aside {
-            line-height: 26px;
-        }
-        
-        .star-rating {
-            margin: 0 auto;
-            text-align: center;
-            display: block;
-            max-width: 200px;
-        }
-        .timeline-up-section{overflow: hidden;}
-        .timeline-inverted .timeline-panel{text-align: left;}
-        .new-section.timeline-up-section {
-            margin: 0 auto;
-            max-width: 500px;
-        }
-        button.btn.send-btn{margin-top: 15px;}
-        tr.hover-timeline:hover{background: #fff !important;}
-                .timeline > li.timeline-inverted > .timeline-panel:before {
-            border-left-width: 0;
-            border-right-width: 15px;
-            left: -15px;
-            right: auto;
-        }
-        .timeline > li > .timeline-panel:before {
-            position: absolute;
-            top: 20px;
-            right: -15px;
-            display: inline-block;
-            border-top: 15px solid transparent;
-            border-left: 15px solid #ccc;
-            border-right: 0 solid #ccc;
-            border-bottom: 15px solid transparent;
-            content: " ";
-        }
+    border-left-width: 0;
+    border-right-width: 15px;
+    left: -15px;
+    right: auto;
+}
+.timeline > li > .timeline-panel:before {
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid #ccc;
+    border-right: 0 solid #ccc;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
 
-        .timeline > li.timeline-inverted > .timeline-panel:after {
-            border-left-width: 0;
-            border-right-width: 14px;
-            left: -14px;
-            right: auto;
-        }
+.timeline > li.timeline-inverted > .timeline-panel:after {
+    border-left-width: 0;
+    border-right-width: 14px;
+    left: -14px;
+    right: auto;
+}
 
-        .timeline > li > .timeline-panel:after {
-            position: absolute;
-            top: 20px;
-            right: -14px;
-            display: inline-block;
-            border-top: 14px solid transparent;
-            border-left: 14px solid #eaeaea;
-            border-right: 0 solid #eaeaea;
-            border-bottom: 14px solid transparent;
-            content: " ";
-        }
-        @media (max-width: 767px) {
-            ul.timeline:before {
-                left: 40px;
-            }
-            ul.timeline > li > .timeline-panel {
-                width: calc(100% - 90px);
-                width: -moz-calc(100% - 90px);
-                width: -webkit-calc(100% - 90px);
-            }
-            ul.timeline > li > .timeline-badge {
-                left: 15px;
-                margin-left: 0;
-                top: 16px;
-            }
-            ul.timeline > li > .timeline-panel {
-                float: right;
-            }
-            ul.timeline > li > .timeline-panel:before {
-                border-left-width: 0;
-                border-right-width: 15px;
-                left: -15px;
-                right: auto;
-            }
-            ul.timeline > li > .timeline-panel:after {
-                border-left-width: 0;
-                border-right-width: 14px;
-                left: -14px;
-                right: auto;
-            }
-        }
+.timeline > li > .timeline-panel:after {
+    position: absolute;
+    top: 20px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid #eaeaea;
+    border-right: 0 solid #eaeaea;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
+.send_chat_loader{    
+    position: relative;
+    padding-left: 30px;
+    line-height: 18px !important;
+}
+.send_chat_loader i{    
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    margin-top: -7px;
+    padding-right: 0px !important;
+}
+@media (max-width: 767px) {
+   ul.timeline:before {
+        left: 40px;
+    }
+    ul.timeline > li > .timeline-panel {
+        width: calc(100% - 90px);
+        width: -moz-calc(100% - 90px);
+        width: -webkit-calc(100% - 90px);
+    }
+    ul.timeline > li > .timeline-badge {
+        left: 15px;
+        margin-left: 0;
+        top: 16px;
+    }
+    ul.timeline > li > .timeline-panel {
+        float: right;
+    }
+    ul.timeline > li > .timeline-panel:before {
+        border-left-width: 0;
+        border-right-width: 15px;
+        left: -15px;
+        right: auto;
+    }
+    ul.timeline > li > .timeline-panel:after {
+        border-left-width: 0;
+        border-right-width: 14px;
+        left: -14px;
+        right: auto;
+    }
+}
+
+
+/* End Chatting history css */
 </style>
 
 <section class="page-header page-header-xs">
@@ -547,7 +567,7 @@
 
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="won_rfps">
-					<table class="table table-hover">
+					<table class="table table-hover chatting">
 						<thead>
 							<tr>
 								<th>RFP Title</th>
@@ -559,9 +579,7 @@
 						<tbody>
 							<?php 
 								if(!empty($won_rfps)) {
-									foreach($won_rfps as $w_rfp) {
-
-										// pr($w_rfp);
+									foreach($won_rfps as $w_rfp) {										
 										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
 										// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
 
@@ -584,7 +602,7 @@
 										}
 							?>
 									<tr>
-										<td>											
+										<td>
 											<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>">
 												<?php echo $w_rfp['title']; ?>
 											</a>
@@ -673,7 +691,7 @@
 
                                                 <?php 
                                                     if(!empty($w_rfp['chat_data'])) :
-                                                        foreach($w_rfp['chat_data'] as $chat) :
+                                                        foreach($w_rfp['chat_data'] as $chat) :                                                            
                                                 ?>
                                                     <li class="timeline-inverted">
                                                         <div class="timeline-badge warning"><img src="<?php if($chat['sender_avatar'] != '')
@@ -694,11 +712,20 @@
                                                     </li>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
+                                                
+    									            <div class="timeline-panel-input" id="div_before_timeline_<?php echo $w_rfp['rfp_id']; ?>">
+                                                        <form method="post" data-id="<?php echo $w_rfp['rfp_id']; ?>" id="timeline_form_<?php echo $w_rfp['rfp_id']; ?>" 
+                                                              onsubmit="event.preventDefault(); submit_form(this);">
 
-									            <div class="timeline-panel-input">
-                                                    <input type="textbox" placeholder="Your Message"/>
-                                                    <button class="btn send-btn">SUBMIT</button>
-                                                </div>
+                                                            <input type="hidden" name="rfp_id" value="<?=$w_rfp['rfp_id']?>">
+                                                            <input type="hidden" name="rfp_title" value="<?=$w_rfp['title']?>">
+                                                            <input type="hidden" name="to_id" value="<?php echo $w_rfp['patient_id']; ?>">
+                                                            <input type="textbox" name="message" id="message_id_<?php echo $w_rfp['rfp_id'];?>" placeholder="Your Message"/>                                                        
+                                                            <span id="validate-msg-<?php echo $w_rfp['rfp_id']; ?>"></span>
+                                                            <button class="btn btn-primary" id="button_<?php echo $w_rfp['rfp_id']; ?>" style="float:right">SUBMIT</button>
+                                                            <a class="btn btn-primary" style="display:none; float:right;" id="anchor_<?php echo $w_rfp['rfp_id']; ?>"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
+                                                        </form>
+                                                    </div>
 									        </ul>							        
 										</td>
 									</tr>
@@ -1567,18 +1594,58 @@
 </div>
 
 <?php
-	$run_cron = $this->session->flashdata('run_cron');
-	if($run_cron == 'yes'){
-	   // $url = base_url().'cron/check_status';
-	   // $res = $this->unirest->get($url);   
-	}
-?>	
-<!-- ================== /Modal Popup For Manage Appointment ========================= -->	
 	
+    $run_cron = $this->session->flashdata('run_cron');
+	
+    if($run_cron == 'yes'){
+	   $url = base_url().'cron/check_status';
+	   $res = $this->unirest->get($url);
+	}
+
+?>	
+<!-- ================== /Modal Popup For Manage Appointment ========================= -->
 
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 
 <script type="text/javascript">
+
+    function submit_form(obj){
+
+        var dynamic_id = $(obj).data('id');
+        var message_text = $('#message_id_'+dynamic_id).val();        
+        $('#validate-msg-'+dynamic_id).html('');
+
+        if(message_text == ''){
+            $('#validate-msg-'+dynamic_id).html('<label class="validation-error-label" for="message">Please provide a Message</label>');
+        }else{            
+            $('#button_'+dynamic_id).hide();
+            $('#anchor_'+dynamic_id).show();
+            var chat_msg_data = $("#timeline_form_"+dynamic_id).serialize();
+
+            $.post("<?=base_url('rfp/send_message')?>",chat_msg_data,function(data){
+
+                $('#message_id_'+dynamic_id).val('');
+
+                var uname= "<?=$this->session->userdata('client')['fname'].' '.$this->session->userdata('client')['lname']?>";
+
+                <?php if($this->session->userdata('client')['avatar'] != '') { ?>
+                    var uavatar= "<?php echo base_url('uploads/avatars/'.$this->session->userdata('client')['avatar']); ?>";
+                <?php }else { ?>
+                    var uavatar= "<?php echo DEFAULT_IMAGE_PATH.'user/user-img.jpg';  ?>";
+                <?php } ?>
+
+                var msg_block = '';                
+                msg_block += '<li class="timeline-inverted"><div class="timeline-badge warning">';
+                msg_block += '<img src="'+uavatar+'"></div><div class="timeline-panel">';
+                msg_block += '<div class="timeline-heading"><h5 class="timeline-title">'+uname+'</h5></div>';
+                msg_block += '<div class="timeline-body"><p>'+message_text+'</p></div></div></li>';
+
+                $('#div_before_timeline_'+dynamic_id).before(msg_block);
+                $('#button_'+dynamic_id).show();
+                $('#anchor_'+dynamic_id).hide();
+            });
+        }
+    }
 	
 	function send_reply(key){
 		var review_data = <?php echo json_encode($review_list); ?>;
@@ -1754,247 +1821,247 @@
 		}
 	});
 
-// ----------- For Select Appointment option -----------
-function select_appointment_option(key){
-	var appointment_data = <?php echo json_encode($appointment_list); ?>;
-	$("#select_app_key").val(key);
-	$("#select_patient_name").html(appointment_data[key]['user_name']);
-	$("#select_patient_phone").html(appointment_data[key]['phone']);
-	$("#select_rfp_title").html(appointment_data[key]['title']);
-}
+    // ----------- For Select Appointment option -----------
+    function select_appointment_option(key){
+    	var appointment_data = <?php echo json_encode($appointment_list); ?>;
+    	$("#select_app_key").val(key);
+    	$("#select_patient_name").html(appointment_data[key]['user_name']);
+    	$("#select_patient_phone").html(appointment_data[key]['phone']);
+    	$("#select_rfp_title").html(appointment_data[key]['title']);
+    }
 
-//---------------- Choose Call Option ---------------------
-function choose_call_option(){
-	$(".modal").removeClass("fade").modal("hide");
-	$(".call_appointment").addClass("fade").modal("show");
-	call_appointment($("#select_app_key").val());
-}
+    //---------------- Choose Call Option ---------------------
+    function choose_call_option(){
+    	$(".modal").removeClass("fade").modal("hide");
+    	$(".call_appointment").addClass("fade").modal("show");
+    	call_appointment($("#select_app_key").val());
+    }
 
-//---------------- Choose Appointment option --------------
-function choose_app_option(){
-	$(".modal").removeClass("fade").modal("hide");
-	$(".manage_appointment").addClass("fade").modal("show");
-	manage_appointment($("#select_app_key").val());
-}
+    //---------------- Choose Appointment option --------------
+    function choose_app_option(){
+    	$(".modal").removeClass("fade").modal("hide");
+    	$(".manage_appointment").addClass("fade").modal("show");
+    	manage_appointment($("#select_app_key").val());
+    }
 
-//--------------- For Call Appointment ------------
-function call_appointment(key){
-	var appointment_data = <?php echo json_encode($appointment_list); ?>;
-	$("#call_app_rfp_id").val(appointment_data[key]['id']);
-	$("#call_app_id").val(appointment_data[key]['appointment_id']);
-	$("#call_app_user_name").html(appointment_data[key]['user_name']);
-	$("#call_patient_phone").html(appointment_data[key]['phone']);
-	$("#call_app_rfp_title").html(appointment_data[key]['title']);
+    //--------------- For Call Appointment ------------
+    function call_appointment(key){
+    	var appointment_data = <?php echo json_encode($appointment_list); ?>;
+    	$("#call_app_rfp_id").val(appointment_data[key]['id']);
+    	$("#call_app_id").val(appointment_data[key]['appointment_id']);
+    	$("#call_app_user_name").html(appointment_data[key]['user_name']);
+    	$("#call_patient_phone").html(appointment_data[key]['phone']);
+    	$("#call_app_rfp_title").html(appointment_data[key]['title']);
 
-	//----------- For Select Appointment data submit by patient -----------
-	if(appointment_data[key]['appointment_schedule'] != ''){
-		$(".patient_schedule label span").html("");
-		$(".appointment_schedule_table").show();
-		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+    	//----------- For Select Appointment data submit by patient -----------
+    	if(appointment_data[key]['appointment_schedule'] != ''){
+    		$(".patient_schedule label span").html("");
+    		$(".appointment_schedule_table").show();
+    		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
 
-		$.each(app_arr, function( key, val ) {
-		  var app_data = val.split('_');
-		  $("#Call_"+app_data[0]+"_"+app_data[1]).prop('checked', true);
-		});
-	}
-	else{
-		$(".patient_schedule label span").html("N/A");
-		$(".appointment_schedule_table").hide();
-	}
-	//-----------------------------------------------------------------------
-	if(appointment_data[key]['appointment_comment'] != '') {	
-		$("#call_app_rfp_comment").html(appointment_data[key]['appointment_comment']);
-	}else{
-		$("#call_app_rfp_comment").html('N/A');
-	}
-	//-----------------------------------------------------------------------
-	$(".validation-error-label").remove();
-}
+    		$.each(app_arr, function( key, val ) {
+    		  var app_data = val.split('_');
+    		  $("#Call_"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+    		});
+    	}
+    	else{
+    		$(".patient_schedule label span").html("N/A");
+    		$(".appointment_schedule_table").hide();
+    	}
+    	//-----------------------------------------------------------------------
+    	if(appointment_data[key]['appointment_comment'] != '') {	
+    		$("#call_app_rfp_comment").html(appointment_data[key]['appointment_comment']);
+    	}else{
+    		$("#call_app_rfp_comment").html('N/A');
+    	}
+    	//-----------------------------------------------------------------------
+    	$(".validation-error-label").remove();
+    }
 
-// ----------- For manage Appointment-----------
-function manage_appointment(key){
-	var appointment_data = <?php echo json_encode($appointment_list); ?>;
-	$("#appointment_rfp_id").val(appointment_data[key]['id']);
-	$("#appointment_id").val(''); // It means add appointment
-	$("#appointment_user_name").html(appointment_data[key]['user_name']);
-	$("#appointment_rfp_title").html(appointment_data[key]['title']);
-	$(".schedule_data input:radio").hide();
-	$(".schedule_data").show();
+    // ----------- For manage Appointment-----------
+    function manage_appointment(key){
+    	var appointment_data = <?php echo json_encode($appointment_list); ?>;
+    	$("#appointment_rfp_id").val(appointment_data[key]['id']);
+    	$("#appointment_id").val(''); // It means add appointment
+    	$("#appointment_user_name").html(appointment_data[key]['user_name']);
+    	$("#appointment_rfp_title").html(appointment_data[key]['title']);
+    	$(".schedule_data input:radio").hide();
+    	$(".schedule_data").show();
 
-	//----------- For Select Appointment data submit by patient -----------
-	if(appointment_data[key]['appointment_schedule'] != ''){
-		$(".patient_schedule label span").html("");
-		$(".appointment_schedule_table").show();
-		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+    	//----------- For Select Appointment data submit by patient -----------
+    	if(appointment_data[key]['appointment_schedule'] != ''){
+    		$(".patient_schedule label span").html("");
+    		$(".appointment_schedule_table").show();
+    		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
 
-		$.each(app_arr, function( key, val ) {
-		  var app_data = val.split('_');
-		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
-		});
-	}
-	else{
-		$(".patient_schedule label span").html("N/A");
-		$(".appointment_schedule_table").hide();
-	}
-	//-----------------------------------------------------------------------
-	if(appointment_data[key]['appointment_comment'] != '') {	
-		$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
-	}else{
-		$("#appointment_rfp_comment").html('N/A');
-	}
-	//-----------------------------------------------------------------------
+    		$.each(app_arr, function( key, val ) {
+    		  var app_data = val.split('_');
+    		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+    		});
+    	}
+    	else{
+    		$(".patient_schedule label span").html("N/A");
+    		$(".appointment_schedule_table").hide();
+    	}
+    	//-----------------------------------------------------------------------
+    	if(appointment_data[key]['appointment_comment'] != '') {	
+    		$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+    	}else{
+    		$("#appointment_rfp_comment").html('N/A');
+    	}
+    	//-----------------------------------------------------------------------
 
-	$('#appointment_doc_comments').html('');
-	$('#appointment_doc_comments').attr('readonly', false);
-	$('#frm_manage_appointment .btn_call').show();
-	$("#frm_manage_appointment .submit_btn").show();
-	$(".validation-error-label").remove();
-}
-function view_appointment(key){
+    	$('#appointment_doc_comments').html('');
+    	$('#appointment_doc_comments').attr('readonly', false);
+    	$('#frm_manage_appointment .btn_call').show();
+    	$("#frm_manage_appointment .submit_btn").show();
+    	$(".validation-error-label").remove();
+    }
+    function view_appointment(key){
 
-	$(".appointment_schedule_table input:checkbox").prop('checked', false);
-	$(".schedule_data input:radio").hide();
-	$(".schedule_data").hide();
-	var appointment_data = <?php echo json_encode($appointment_list); ?>;
-	
-	$("#appointment_rfp_id").val(appointment_data[key]['id']);
-	$("#appointment_user_name").html(appointment_data[key]['user_name']);
-	$("#appointment_rfp_title").html(appointment_data[key]['title']);
+    	$(".appointment_schedule_table input:checkbox").prop('checked', false);
+    	$(".schedule_data input:radio").hide();
+    	$(".schedule_data").hide();
+    	var appointment_data = <?php echo json_encode($appointment_list); ?>;
+    	
+    	$("#appointment_rfp_id").val(appointment_data[key]['id']);
+    	$("#appointment_user_name").html(appointment_data[key]['user_name']);
+    	$("#appointment_rfp_title").html(appointment_data[key]['title']);
 
-	//----------- For Select Appointment data submit by patient -----------
-	
-	if(appointment_data[key]['appointment_schedule'] != ''){
-		$(".patient_schedule label span").html("");
-		$(".appointment_schedule_table").show();
-		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
+    	//----------- For Select Appointment data submit by patient -----------
+    	
+    	if(appointment_data[key]['appointment_schedule'] != ''){
+    		$(".patient_schedule label span").html("");
+    		$(".appointment_schedule_table").show();
+    		var app_arr = appointment_data[key]['appointment_schedule'].split(',');
 
-		$.each(app_arr, function( key, data ) {
-		  var app_data = data.split('_');
-		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
-		});
-	}
-	else{
-		$(".patient_schedule label span").html("N/A");
-		$(".appointment_schedule_table").hide();
-	}
-	//-----------------------------------------------------------------------
-	if(appointment_data[key]['appointment_comment'] != '') {	
-		$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
-	}else{
-		$("#appointment_rfp_comment").html('N/A');
-	}
+    		$.each(app_arr, function( key, data ) {
+    		  var app_data = data.split('_');
+    		  $("#"+app_data[0]+"_"+app_data[1]).prop('checked', true);
+    		});
+    	}
+    	else{
+    		$(".patient_schedule label span").html("N/A");
+    		$(".appointment_schedule_table").hide();
+    	}
+    	//-----------------------------------------------------------------------
+    	if(appointment_data[key]['appointment_comment'] != '') {	
+    		$("#appointment_rfp_comment").html(appointment_data[key]['appointment_comment']);
+    	}else{
+    		$("#appointment_rfp_comment").html('N/A');
+    	}
 
-	//----------------- For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
-	var approve_appointment = 0;
-	var app_sch_arr= appointment_data[key]['appointment_schedule_arr'];
-	$.each(app_sch_arr, function( key, data ) {
-		var date= data['appointment_date'];
-		var d= date.split("-");
-		var time = data['new_appointment_time'];
-		
+    	//----------------- For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
+    	var approve_appointment = 0;
+    	var app_sch_arr= appointment_data[key]['appointment_schedule_arr'];
+    	$.each(app_sch_arr, function( key, data ) {
+    		var date= data['appointment_date'];
+    		var d= date.split("-");
+    		var time = data['new_appointment_time'];
+    		
 
-		$(".mul_schedule_"+(key+1)).show();
+    		$(".mul_schedule_"+(key+1)).show();
 
-		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
-		$("#appointment_time_"+(key+1)).val(time);
-		$("#schedule_selected_"+(key+1)).val(data['id']);
+    		$("#appointment_date_"+(key+1)).val(d[1]+"-"+d[2]+"-"+d[0]);
+    		$("#appointment_time_"+(key+1)).val(time);
+    		$("#schedule_selected_"+(key+1)).val(data['id']);
 
-		//---------- IF Schedule selected then checked radio button -------
-		$(".schedule_data input:radio").prop('disabled', true);
-		if(data['is_selected'] == 1){
-			$(".schedule_data input:radio").show();
-			$("#schedule_selected_"+(key+1)).prop("checked", true);
-			approve_appointment= 1;
-		}
-		//------------------
-	});
+    		//---------- IF Schedule selected then checked radio button -------
+    		$(".schedule_data input:radio").prop('disabled', true);
+    		if(data['is_selected'] == 1){
+    			$(".schedule_data input:radio").show();
+    			$("#schedule_selected_"+(key+1)).prop("checked", true);
+    			approve_appointment= 1;
+    		}
+    		//------------------
+    	});
 
-	if(approve_appointment == 0) // If condition true means doctor able to edit appointment otherwise only view
-	{
-		$("#select_app_key").val(key); // For call option in manage appointment
-		$(".schedule_data").show();
-		$("#appointment_id").val(appointment_data[key]['appointment_id']); // It means edit appointment
-		$('#appointment_doc_comments').attr('readonly', false);
-		$('#frm_manage_appointment .btn_call').show();
-		$("#frm_manage_appointment .submit_btn").show();
-	}
-	else{
-		$("#select_app_key").val(''); // IF apporve then remove the value for call option in manage appointment
-		$("#appointment_id").val(''); // It means only view appointment
-		$('#appointment_doc_comments').attr('readonly', true);
-		$('#frm_manage_appointment .btn_call').hide();
-		$("#frm_manage_appointment .submit_btn").hide();
-	}
-	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
+    	if(approve_appointment == 0) // If condition true means doctor able to edit appointment otherwise only view
+    	{
+    		$("#select_app_key").val(key); // For call option in manage appointment
+    		$(".schedule_data").show();
+    		$("#appointment_id").val(appointment_data[key]['appointment_id']); // It means edit appointment
+    		$('#appointment_doc_comments').attr('readonly', false);
+    		$('#frm_manage_appointment .btn_call').show();
+    		$("#frm_manage_appointment .submit_btn").show();
+    	}
+    	else{
+    		$("#select_app_key").val(''); // IF apporve then remove the value for call option in manage appointment
+    		$("#appointment_id").val(''); // It means only view appointment
+    		$('#appointment_doc_comments').attr('readonly', true);
+    		$('#frm_manage_appointment .btn_call').hide();
+    		$("#frm_manage_appointment .submit_btn").hide();
+    	}
+    	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------
 
-	$("#appointment_doc_comments").html(appointment_data[key]['doc_comments']);
-	$(".validation-error-label").remove();
-}
-// ----------- End For manage Appointment  -----------
-
-
-//---------------- Chnage Notification status for rfp search --------------
-$(".notify_status").click(function(e){
-	var filter_id=$(this).data('id');
-	var notify_status= $(this).val();
-	$.post("<?=base_url('dashboard/change_filter_notify_status/')?>",{	'filter_id' : filter_id , 'notification_status' : notify_status},function(data){
-
-	});
-});
-
-//-----------------End Notification status for rfp search -----------------
-
-//------------------------ Delete RFP Filter -------------------
-function delete_search_filter(filter_id,key){
-	bootbox.confirm('Are you sure to delete rfp filter ?' ,function(res){
-		if(res){
-			$.post("<?=base_url('dashboard/delete_search_filter/')?>",{	'filter_id' : filter_id },function(data){
-				if(data){
-					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP Filter Deleted Successfully.</div>');
-					$(".search_filter_row_"+key).hide();
-				}
-				else{
-					$(".alert-message").html('<div class="alert alert-danger margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error Into Delete RFP Filter.</div>');
-				}
-			});
-		}
-	});	
-}
-//----------------------- End Delete RFP Filter ----------------
+    	$("#appointment_doc_comments").html(appointment_data[key]['doc_comments']);
+    	$(".validation-error-label").remove();
+    }
+    // ----------- End For manage Appointment  -----------
 
 
-//-------------------------- Delete Appointment ------------------
-$(document).on( "click",".delete_appointment", function(e) {  
-	e.preventDefault();
-    var lHref = $(this).attr('href');
-	bootbox.confirm('Are you sure to delete appointment ?' ,function(res){
-		if(res){
-			window.location.href = lHref; 
-		}	
-	});
-});
-//------------------------- End Delete Appointment ---------------
+    //---------------- Chnage Notification status for rfp search --------------
+    $(".notify_status").click(function(e){
+    	var filter_id=$(this).data('id');
+    	var notify_status= $(this).val();
+    	$.post("<?=base_url('dashboard/change_filter_notify_status/')?>",{	'filter_id' : filter_id , 'notification_status' : notify_status},function(data){
 
-//--------------- For manage Appointment Form Validation --------------
-$("#frm_manage_appointment").validate({
-    errorClass: 'validation-error-label',
-    successClass: 'validation-valid-label',
-    highlight: function(element, errorClass) {
-        $(element).removeClass(errorClass);
-    },
-    unhighlight: function(element, errorClass) {
-        $(element).removeClass(errorClass);
-    },
-});
+    	});
+    });
 
-$("#frm_call_appointment").validate({
-    errorClass: 'validation-error-label',
-    successClass: 'validation-valid-label',
-    highlight: function(element, errorClass) {
-        $(element).removeClass(errorClass);
-    },
-    unhighlight: function(element, errorClass) {
-        $(element).removeClass(errorClass);
-    },
-});
+    //-----------------End Notification status for rfp search -----------------
+
+    //------------------------ Delete RFP Filter -------------------
+    function delete_search_filter(filter_id,key){
+    	bootbox.confirm('Are you sure to delete rfp filter ?' ,function(res){
+    		if(res){
+    			$.post("<?=base_url('dashboard/delete_search_filter/')?>",{	'filter_id' : filter_id },function(data){
+    				if(data){
+    					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP Filter Deleted Successfully.</div>');
+    					$(".search_filter_row_"+key).hide();
+    				}
+    				else{
+    					$(".alert-message").html('<div class="alert alert-danger margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error Into Delete RFP Filter.</div>');
+    				}
+    			});
+    		}
+    	});	
+    }
+    //----------------------- End Delete RFP Filter ----------------
+
+
+    //-------------------------- Delete Appointment ------------------
+    $(document).on( "click",".delete_appointment", function(e) {  
+    	e.preventDefault();
+        var lHref = $(this).attr('href');
+    	bootbox.confirm('Are you sure to delete appointment ?' ,function(res){
+    		if(res){
+    			window.location.href = lHref; 
+    		}	
+    	});
+    });
+    //------------------------- End Delete Appointment ---------------
+
+    //--------------- For manage Appointment Form Validation --------------
+    $("#frm_manage_appointment").validate({
+        errorClass: 'validation-error-label',
+        successClass: 'validation-valid-label',
+        highlight: function(element, errorClass) {
+            $(element).removeClass(errorClass);
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).removeClass(errorClass);
+        },
+    });
+
+    $("#frm_call_appointment").validate({
+        errorClass: 'validation-error-label',
+        successClass: 'validation-valid-label',
+        highlight: function(element, errorClass) {
+            $(element).removeClass(errorClass);
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).removeClass(errorClass);
+        },
+    });
 </script>

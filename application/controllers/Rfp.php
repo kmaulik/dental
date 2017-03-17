@@ -729,7 +729,8 @@ class Rfp extends CI_Controller {
 	}
 
 	/*------------------ For Send Message To Bidder ------------ */
-    public function send_message($ajax_call=''){
+    public function send_message(){
+
     	$data=array(
     		'rfp_id' => $this->input->post('rfp_id'),
     		'from_id' => $this->session->userdata('client')['id'],
@@ -737,7 +738,7 @@ class Rfp extends CI_Controller {
     		'message' => $this->input->post('message'),
     		'created_at'	=> date("Y-m-d H:i:s")
     	);
-    	$this->Messageboard_model->insert_record('messages',$data);
+    	$res = $this->Messageboard_model->insert_record('messages',$data);
     	// ------------------------------------------------------------------------
     	// v! insert data notifications table
     	$frm_id = $this->session->userdata('client')['id'];
@@ -758,11 +759,13 @@ class Rfp extends CI_Controller {
 						'noti_msg'=>'You have unread message for <b>'.$rfp_data['title'].'</b> from '.$noti_from,
 						'noti_url'=>$link
 					];											
-		$this->Notification_model->insert_notification($noti_data);
+		$this->Notification_model->insert_notification($noti_data);    	
     	// ------------------------------------------------------------------------
-    	$where=['id' => $this->input->post('rfp_bid_id')];
-    	$up_data=['is_chat_started' => '1'];
-	    $res=$this->Rfp_model->update_record('rfp_bid',$where,$up_data);
+    	
+    	// $where=['id' => $this->input->post('rfp_bid_id')];
+    	// $up_data=['is_chat_started' => '1'];
+	    // $res=$this->Rfp_model->update_record('rfp_bid',$where,$up_data);
+
 	    if($res)
 	    {
 	    	$where=['id' => $this->input->post('to_id')];
@@ -785,19 +788,16 @@ class Rfp extends CI_Controller {
 	        $this->email->send(); 
 	        //------------ End Send Mail Config-----------------        
 	    	$this->session->set_flashdata('success', 'Message Send Successfully');
-	    }
-	    else
-	    {
+	    } else {
 	    	$this->session->set_flashdata('error', 'Error Into Send Message');
 	    }
+
 	    //--------- If submit using ajax then return true and false -----
-	    if($ajax_call && $res){
-	    	echo true;
-	    }
-	    elseif($ajax_call && !$res){
+	    if($this->input->is_ajax_request() && $res){	    	
+	    	echo true;			
+	    } elseif($this->input->is_ajax_request() && !$res){
 	    	echo false;
-	    }
-	    else{
+	    } else{
 	    	redirect('rfp/view_rfp_bid/'.encode($this->input->post('rfp_id')));
 	    }
     }
@@ -1437,7 +1437,7 @@ class Rfp extends CI_Controller {
     }
 
     //-------------- Doctor Review -------------------
-    public function doctor_review($ajax_call=''){
+    public function doctor_review(){
 
     	if($this->input->post('submit')){
     		
@@ -1473,12 +1473,12 @@ class Rfp extends CI_Controller {
     			$this->session->set_flashdata('error', 'Error Into Submit Review, Please Try Again!');
     		}
     		//--------- If submit using ajax then return true and false -----
-    		if($ajax_call && $res){
+    		if($this->input->is_ajax_request() && $res){
     			$doctor_id = $this->input->post('doctor_id');
     			$review_data=$this->Rfp_model->fetch_doctor_wise_review($doctor_id);
     			echo json_encode($review_data); 
 		    }
-		    elseif($ajax_call && !$res){
+		    elseif($this->input->is_ajax_request() && !$res){
 		    	echo false;
 		    }
 		    else{
