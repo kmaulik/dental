@@ -111,7 +111,9 @@
 <!-- ================== /Modal Popup For Place a Bid ========================= -->
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/additional_methods.min.js"; ?>"></script>
-
+<?php 	
+	$description = str_replace(array("\r","\n"),"",$rfp_bid['description']);
+?>
 <script>
 $('.NumbersAndDot').keyup(function () { 
     this.value = this.value.replace(/[^0-9.]/g,'');
@@ -125,7 +127,7 @@ $("#update_bid").click(function(){
 	$("#rfp_id").val(<?=$record['id']?>);
 	$("#rfp_bid_id").val(<?=$rfp_bid['id']?>);
 	$("#amount").val("<?=$rfp_bid['amount']?>");
-	$("#description").val("<?=$rfp_bid['description']?>");
+	$("#description").val("<?= $description?>");
 
 	//---------- For Read Only when update bid ----
 	$('#amount').prop('readonly', true);

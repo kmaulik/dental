@@ -16,4 +16,10 @@
 		<!-- <h3 class="size-11 margin-top-0 margin-bottom-10 text-muted">DEVELOPER</h3> -->
 	</div>
 	
+	<?php if($this->session->userdata('client')['role_id'] == '4'){ ?>
+		<a href="<?php echo base_url().'dashboard/view_profile/'.encode($this->session->userdata('client')['id']);?>" class="btn btn-primary profile-btn">
+			View my profile
+		</a>
+	<?php } ?>
+
 </div>

@@ -54,7 +54,7 @@ class Notification_model extends CI_Model {
 		}
 
 		$res_array = $this->db->get('notifications')->result_array();
-		
+
 		return $res_array;
 	}
 

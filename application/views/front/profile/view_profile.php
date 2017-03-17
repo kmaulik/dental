@@ -1,6 +1,11 @@
-
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+
+<?php 
+	if(!empty($map)){
+		echo $map['js'];
+	}
+?>
 
 <section class="page-header page-header-xs">
 	<div class="container">
@@ -21,16 +26,22 @@
 	<div class="container view_profile">
 
 		<!-- RIGHT -->
-		<div class="col-lg-9 col-md-9 col-sm-8 col-lg-push-3 col-md-push-3 col-sm-push-4 margin-bottom-80">
-
+		<div class="col-lg-9 col-md-9 col-sm-8 col-lg-push-3 col-md-push-3 col-sm-push-4 margin-bottom-80">			
 			<ul class="nav nav-tabs nav-top-border">
-				<li class="active"><a href="#info" data-toggle="tab">Personal Info</a></li>	
-				<li><a href="#review" data-toggle="tab">Review</a></li>				
+				<li class="<?php if($tab == ''){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>	
+				<li><a href="#review" data-toggle="tab">Review</a></li>
+				<?php if(!empty($map)){ ?>
+					<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>">
+						<a href="<?php echo base_url().'dashboard/view_profile/'.$encoded_user_id.'/?tab=office_map'; ?>">
+							Office Map
+						</a>					
+					</li>
+				<?php } ?>
 			</ul>
 			
 			<div class="tab-content">
 				<!-- PERSONAL INFO TAB -->
-				<div class="tab-pane fade in active" id="info">
+				<div class="tab-pane fade <?php if($tab == ''){ echo 'in active'; }?>" id="info">
 					<div class="form-group">
 						<span class="title">Name : </span>
 						<span class="desc"> <?=$db_data['fname'] ." ".$db_data['lname']?></span>
@@ -137,6 +148,17 @@
 					<?php endif;?>	
 				</div>
 				<!-- /Review TAB -->
+	
+				<!-- Office Map TAB -->
+				<div class="tab-pane fade <?php if($tab == 'office_map'){ echo 'in active'; }?>" id="office_map">
+					<?php 
+						if(!empty($map)){ 
+							echo $map['html']; 
+						}
+					?>
+				</div>
+				<!--  //Office Map TAB -->
+
 			</div>
 		</div>
 

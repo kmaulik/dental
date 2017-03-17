@@ -395,12 +395,29 @@ class Rfp_model extends CI_Model {
     }
     
     public function get_user_won_rfp($user_id){
-        $this->db->select('rfp_bid.*,rfp.title,rfp.dentition_type,rfp.created_at as rfp_created,rfp.status as rfp_status,rfp.treatment_plan_total,
+        $this->db->select('rfp_bid.*,rfp.patient_id, rfp.title,rfp.dentition_type,rfp.created_at as rfp_created,rfp.status as rfp_status,rfp.treatment_plan_total,
                           users.fname,users.lname,users.email_id');
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
         $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'6']);
         $res = $this->db->get('rfp_bid')->result_array();
+
+        $i=0;
+        if(!empty($res)){
+            foreach ($res as $rfp_data) { 
+                
+                $this->db->select('m.*,CONCAT(u.fname," ",u.lname) as sender_name,u.avatar as sender_avatar');
+                $this->db->join('users u','m.from_id = u.id');
+                $where = '((m.from_id='.$rfp_data['patient_id'].' and m.to_id='.$this->session->userdata('client')['id'].' 
+                        and m.is_deleted_to = 0) or (m.to_id ='.$rfp_data['patient_id'].' and 
+                        m.from_id='.$this->session->userdata('client')['id'].' and m.is_deleted_from = 0))';
+                $this->db->where($where);
+                $this->db->where('m.rfp_id',$rfp_data['rfp_id']); 
+                $chat_data=$this->db->get('messages m')->result_array();
+                $res[$i]['chat_data'] = $chat_data;
+                $i++;
+            }
+        }
         return $res;
     }
 

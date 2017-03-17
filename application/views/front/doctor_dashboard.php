@@ -1,5 +1,502 @@
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+<style>
+        .timeline {
+            list-style: none;
+            padding: 20px 0 20px;
+            position: relative;
+            padding-bottom: 0px;
+                margin: 0px 50px 0px;
+        }
+        
+        .timeline:before {
+            top: 0;
+            bottom: 0;
+            position: absolute;
+            content: " ";
+            width: 2px;
+            background-color: rgb(49, 176, 213);
+            left: 5%;
+            margin-left: -1.6px;
+        }
+        
+        .timeline > li {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .timeline > li:before,
+        .timeline > li:after {
+            content: " ";
+            display: table;
+        }
+        
+        .timeline > li:after {
+            clear: both;
+        }
+        
+        .timeline > li:before,
+        .timeline > li:after {
+            content: " ";
+            display: table;
+        }
+        
+        .timeline > li:after {
+            clear: both;
+        }
+        
+        .timeline > li > .timeline-panel {
+            width: 89%;
+            float: left;
+            border-radius: 2px;
+            padding: 15px;
+            position: relative;
+            background: #eaeaea;
+        }
+        
+        .timeline > li > .timeline-panel:before {
+            position: absolute;
+            top: 15px;
+            right: -15px;
+            display: inline-block;
+            border-top: 15px solid transparent;
+            border-left: 15px solid #f8f8f8;
+            border-right: 0 solid #f8f8f8;
+            border-bottom: 15px solid transparent;
+            content: " ";
+        }
+        
+        .timeline > li > .timeline-panel:after {
+            position: absolute;
+            top: 15px;
+            right: -14px;
+            display: inline-block;
+            border-top: 14px solid transparent;
+            border-left: 14px solid #f8f8f8;
+            border-right: 0 solid #f8f8f8;
+            border-bottom: 14px solid transparent;
+            content: " ";
+        }
+        
+        .timeline > li > .timeline-badge {
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 1.4em;
+            text-align: center;
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            margin-left: -25px;
+            background-color: #999999;
+            z-index: 100;
+            border-top-right-radius: 50%;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border: 2px solid rgb(49, 176, 213);
+        }
+        
+        .timeline > li.timeline-inverted > .timeline-panel {
+            float: right;
+        }
+        
+        .timeline > li.timeline-inverted > .timeline-panel:before {
+            border-left-width: 0;
+            border-right-width: 15px;
+            left: -15px;
+            right: auto;
+        }
+        
+        .timeline > li.timeline-inverted > .timeline-panel:after {
+            border-left-width: 0;
+            border-right-width: 14px;
+            left: -14px;
+            right: auto;
+        }
+        
+        .timeline-badge.warning {
+            background-color: #f0ad4e !important;
+        }
+        
+        .timeline-title {
+            margin-top: 0;
+            color: inherit;
+        }
+        
+        .timeline-body > p,
+        .timeline-body > ul {
+            margin-bottom: 0;
+        }
+        
+        .timeline-body > p + p {
+            margin-top: 5px;
+        }
+        
+        .timeline-badge.warning img {
+            height: 100%;
+            width: 100%;
+            border-radius: 50px;
+            vertical-align: top;
+        }
+        
+        .verticle-timeline {
+            list-style: none;
+            padding: 20px 0 0px;
+            position: relative;
+        }
+        
+        .verticle-timeline:before {
+            left: 0;
+            right: 0;
+            position: absolute;
+            content: " ";
+            background-color: rgb(49, 176, 213);
+            margin-top: 50px;
+            height: 3px;
+        }
+        
+        .verticle-timeline li .timeline-msg {
+            background-color: rgb(255, 255, 255);
+            border: 3px solid rgb(49, 176, 213);
+            border-radius: 30px;
+            color: rgb(65, 65, 65);
+            font-size: 15px;
+            font-weight: bold;
+            left: 50%;
+            margin-left: -25px;
+            padding: 7px;
+            position: absolute;
+            text-align: center;
+            top: 35px;
+            z-index: 100;
+        }
+        
+        .timeline-msg img {
+            height: 100%;
+            width: 100%;
+            border-radius: 50px;
+            vertical-align: top;
+        }
+        .verticle-timeline::before {
+            background-color: rgb(49, 176, 213);
+            content: " ";
+            height: 3px;
+            left: 0;
+            margin-top: 35px;
+            position: absolute;
+            right: 0;
+        }
+        
+        .verticle-timeline .left-section {
+            border: 3px solid rgb(49, 176, 213);
+            border-radius: 50%;
+            display: inline-block;
+            height: 70px;
+            margin-top: 0;
+            position: relative;
+            width: 70px;
+        }
+                
+        .verticle-timeline .right-section {
+            border: 3px solid rgb(49, 176, 213);
+            border-radius: 50%;
+            display: inline-block;
+            float: right;
+            height: 70px;
+            margin-top: 0;
+            position: relative;
+            width: 70px;
+        }
+        
+        .verticle-timeline .left-section img,
+        .verticle-timeline .right-section img {
+            border-radius: 50%;
+            height: 100%;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .cong-msg {
+            text-align: center;
+            background: rgb(49, 176, 213);
+            padding: 15px;
+            color: #fff;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+            border-radius: 6px;
+                clear: both;
+                margin: 30px 50px 0px;
+        }
+        
+        .cong-msg h2 {
+            margin: 10px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .cong-msg h5{color: #fff;margin-bottom: 0px;}
+        
+        .verticle-timeline .left-section span,
+        .verticle-timeline .right-section span {
+            width: 130px;
+            display: block;
+            font-size: 15px;
+            color: #414141;
+            font-weight: bold;
+        }
+        
+        .timeline-panel-input {
+            float: right;
+            width: 89%;
+        }
+        
+        .timeline-panel-input input {
+            width: 100%;
+            padding: 6px;
+            border: 2px solid #ddd;
+        }
+        
+        .send-btn {
+            background: rgb(49, 176, 213);
+            color: #fff;
+            padding: 10px 20px;
+            float: right;
+            margin-top: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #fff;
+        }
+        
+        .send-btn:hover {
+            color: #fff;
+        }
+        
+        .product-reviews .title {
+            color: #414141;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 20px;
+            margin: 0 0 10px;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        .product-reviews .reviews .review {
+            margin-bottom: 20px;
+            font-family: 'Open Sans', sans-serif, sans-serif;
+            text-transform: none;
+            background: #f8f8f8;
+            padding: 20px;
+        }
+        
+        .product-reviews .reviews .review .review-title {
+            margin-bottom: 5px;
+        }
+        
+        .product-reviews .reviews .review .review-title .summary {
+            color: #666666;
+            font-size: 14px;
+            font-weight: normal;
+            margin-right: 10px;
+            font-style: italic;
+        }
+        
+        .product-reviews .reviews .review .review-title .date {
+            font-size: 12px;
+        }
+        
+        .product-reviews .reviews .review .review-title .date span {
+            color: #0f6cb2;
+        }
+        
+        .product-reviews .reviews .review .text {
+            line-height: 18px;
+        }
+        
+        .timeline-heading h5 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .review-form label {
+            font-weight: normal;
+            font-size: 13px;
+        }
+        
+        .cong-msg .check {
+            display: inline-block;
+            height: 60px;
+            width: 60px;
+            line-height: 58px;
+            border-radius: 50%;
+            box-shadow: 1px 2px 20px -6px rgba(0, 0, 0, 1);
+            background: rgb(39, 175, 214);
+            margin-bottom: 0px;
+        }
+        
+        .cong-msg .check i {
+            font-size: 40px;
+            line-height: 62px;
+            color: #fff;
+            font-weight: lighter;
+        }
+        
+        .patient-reviews {
+            background: rgb(49, 176, 213);
+            color: #fff;
+            padding: 20px 50px;
+            overflow: hidden;
+            border-radius: 6px;
+            margin-bottom: 50px;
+        }
+        
+        .star-rating {
+            font-size: 18px;
+        }
+        
+        .star-rating .star-rating-stars {
+            font-family: "Arial Unicode MS", Arial, sans-serif;
+            unicode-bidi: bidi-override;
+            color: #cccccc;
+        }
+        
+        .star-rating .star-rating-stars .star-rating-star {
+            float: left;
+            width: 0.88em;
+            font-size: 36px;
+            color: #fff;
+        }
+        
+        .star-rating .star-rating-stars .star-rating-star:before {
+            content: "\2605";
+            position: absolute;
+            color: #ffb400;
+        }
+        
+        .star-rating .star-rating-current-value:before,
+        .star-rating .star-rating-current-value ~ .star-rating-star:before {
+            content: normal;
+        }
+        
+        .star-rating.editable:hover .star-rating-current-value:before,
+        .star-rating.editable:hover .star-rating-current-value ~ .star-rating-star:before {
+            content: "\2605";
+            position: absolute;
+            color: #ffb400;
+        }
+        
+        .star-rating.editable .star-rating-star:hover,
+        .star-rating.editable .star-rating-star:hover ~ .star-rating-star:before {
+            content: normal;
+            cursor: pointer;
+        }
+        
+        .star-rating .star-rating-aside {
+            float: left;
+            margin-left: 5px;
+            color: #999999;
+            font-size: 11px;
+            line-height: 24px;
+        }
+        
+        .star-rating.small {
+            font-size: 16px;
+            line-height: 1;
+        }
+        
+        .star-rating.small .star-rating-aside {
+            line-height: 16px;
+        }
+        
+        .star-rating.large {
+            font-size: 20px;
+        }
+        
+        .star-rating.large .star-rating-aside {
+            line-height: 26px;
+        }
+        
+        .star-rating {
+            margin: 0 auto;
+            text-align: center;
+            display: block;
+            max-width: 200px;
+        }
+        .timeline-up-section{overflow: hidden;}
+        .timeline-inverted .timeline-panel{text-align: left;}
+        .new-section.timeline-up-section {
+            margin: 0 auto;
+            max-width: 500px;
+        }
+        button.btn.send-btn{margin-top: 15px;}
+        tr.hover-timeline:hover{background: #fff !important;}
+                .timeline > li.timeline-inverted > .timeline-panel:before {
+            border-left-width: 0;
+            border-right-width: 15px;
+            left: -15px;
+            right: auto;
+        }
+        .timeline > li > .timeline-panel:before {
+            position: absolute;
+            top: 20px;
+            right: -15px;
+            display: inline-block;
+            border-top: 15px solid transparent;
+            border-left: 15px solid #ccc;
+            border-right: 0 solid #ccc;
+            border-bottom: 15px solid transparent;
+            content: " ";
+        }
+
+        .timeline > li.timeline-inverted > .timeline-panel:after {
+            border-left-width: 0;
+            border-right-width: 14px;
+            left: -14px;
+            right: auto;
+        }
+
+        .timeline > li > .timeline-panel:after {
+            position: absolute;
+            top: 20px;
+            right: -14px;
+            display: inline-block;
+            border-top: 14px solid transparent;
+            border-left: 14px solid #eaeaea;
+            border-right: 0 solid #eaeaea;
+            border-bottom: 14px solid transparent;
+            content: " ";
+        }
+        @media (max-width: 767px) {
+            ul.timeline:before {
+                left: 40px;
+            }
+            ul.timeline > li > .timeline-panel {
+                width: calc(100% - 90px);
+                width: -moz-calc(100% - 90px);
+                width: -webkit-calc(100% - 90px);
+            }
+            ul.timeline > li > .timeline-badge {
+                left: 15px;
+                margin-left: 0;
+                top: 16px;
+            }
+            ul.timeline > li > .timeline-panel {
+                float: right;
+            }
+            ul.timeline > li > .timeline-panel:before {
+                border-left-width: 0;
+                border-right-width: 15px;
+                left: -15px;
+                right: auto;
+            }
+            ul.timeline > li > .timeline-panel:after {
+                border-left-width: 0;
+                border-right-width: 14px;
+                left: -14px;
+                right: auto;
+            }
+        }
+</style>
 
 <section class="page-header page-header-xs">
 	<div class="container">
@@ -62,7 +559,7 @@
 						<tbody>
 							<?php 
 								if(!empty($won_rfps)) {
-									foreach($won_rfps as $w_rfp) {										
+									foreach($won_rfps as $w_rfp) {
 
 										// pr($w_rfp);
 										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
@@ -87,8 +584,7 @@
 										}
 							?>
 									<tr>
-										<td>
-											<!-- rfp/view_rfp/Mg%3D%3D -->
+										<td>											
 											<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>">
 												<?php echo $w_rfp['title']; ?>
 											</a>
@@ -123,20 +619,87 @@
 												   onclick="show_modal_doctor(this)" >
 													<i class="fa fa-money"></i><span>Proceed</span>
 												</a>
-											<?php }else{ 												
+											<?php }else{
 												
 													$show_pending_payment = 0;
 													foreach($all_billing_data as $bill_data){
 														if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
-															$show_pending_payment++;
+														  $show_pending_payment++;
 														}
-													}
+													}  
+
+                                                    $won_rfp_id = $w_rfp['rfp_id'];
+                                                    $timeline_id = '#timeline_id_'.$w_rfp['rfp_id'];
 
 													if($show_pending_payment != 0){
-														echo '<span class="label label-warning">Payment is under review</span>';
+														echo '<span class="label label-warning">Payment is under review</span>';													
+                                                    }else{
+                                                    ?>
+
+													    <a class="label label-info a_show_<?php echo $won_rfp_id; ?>" 
+                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();"> Show Timeline </a>
+
+                                                        <a class="label label-info a_hide_<?php echo $won_rfp_id; ?>" 
+                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;"> Hide Timeline </a>
+                                                    <?php
 													}
-												} 
+												}
 											?>
+										</td>
+									</tr>
+									<tr class="hover-timeline" id="timeline_id_<?php echo $w_rfp['rfp_id']; ?>" style="display:none;">
+										<td colspan="7" class="text-center">						        
+									        <div class="new-section timeline-up-section">
+									            <ul class="verticle-timeline">
+									                <li>
+									                    <div class="left-section">
+									                    	<img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+									                    	<span>Have accepted</span>
+									                    </div>
+									                    <div class="timeline-msg">$3333</div>
+									                    <div class="right-section">
+									                    	<img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+									                    	<span>Has Confirmed</span>
+									                    </div>
+									                </li>
+									            </ul>
+									        </div>
+									        <div class="cong-msg">
+									            <p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
+									            <h2>Congratulation!!</h2>
+									            <h5>Your sale Was successful</h5>
+									        </div>
+									        <ul class="timeline">
+
+                                                <?php 
+                                                    if(!empty($w_rfp['chat_data'])) :
+                                                        foreach($w_rfp['chat_data'] as $chat) :
+                                                ?>
+                                                    <li class="timeline-inverted">
+                                                        <div class="timeline-badge warning"><img src="<?php if($chat['sender_avatar'] != '')
+                                                            { echo base_url('uploads/avatars/'.$chat['sender_avatar']); } 
+                                                            else 
+                                                            { echo DEFAULT_IMAGE_PATH."user/user-img.jpg "; }?>">
+                                                        </div>
+                                                        <div class="timeline-panel">
+                                                            <div class="timeline-heading">
+                                                                <h5 class="timeline-title"><?=$chat['sender_name']?></h5>
+                                                            </div>
+                                                            <div class="timeline-body">
+                                                                <p>
+                                                                    <?=$chat['message']?>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+
+									            <div class="timeline-panel-input">
+                                                    <input type="textbox" placeholder="Your Message"/>
+                                                    <button class="btn send-btn">SUBMIT</button>
+                                                </div>
+									        </ul>							        
 										</td>
 									</tr>
 								<?php } ?>
@@ -914,7 +1477,7 @@
 								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
 							</div>
 						</div>
-						<div class="col-sm-12 patient_schedule">
+					   <div class="col-sm-12 patient_schedule">
 							<div class="form-group">
 								<label>Appointment Schedule : <span></span></label>
 								<div class="table-responsive appointment_schedule_table">
@@ -1006,8 +1569,8 @@
 <?php
 	$run_cron = $this->session->flashdata('run_cron');
 	if($run_cron == 'yes'){
-		$url = base_url().'cron/check_status';
-		$res = $this->unirest->get($url);   
+	   // $url = base_url().'cron/check_status';
+	   // $res = $this->unirest->get($url);   
 	}
 ?>	
 <!-- ================== /Modal Popup For Manage Appointment ========================= -->	

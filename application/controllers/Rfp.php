@@ -1443,6 +1443,9 @@ class Rfp extends CI_Controller {
     			'created_at'	=>  date("Y-m-d H:i:s"),
     		];
     		$res=$this->Rfp_model->insert_record('rfp_rating',$rating_data);
+    			
+    		$encode_id = encode($this->input->post('doctor_id'));
+    		$link = 'dashboard/view_profile/'.$encode_id;
 
     		// ------------------------------------------------------------------------
 	    	$noti_data = [
@@ -1451,7 +1454,7 @@ class Rfp extends CI_Controller {
 	    					'rfp_id'=>$this->input->post('rfp_id'),
 	    					'noti_type'=>'doc_review',
 	    					'noti_msg'=>'Congratulation..!! You\'ve new review from the patient.',
-	    					'noti_url'=>'dashboard'
+	    					'noti_url'=>$link
 	    				];
 	    	$this->Notification_model->insert_rfp_notification($noti_data);
 	    	// ------------------------------------------------------------------------

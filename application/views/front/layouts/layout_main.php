@@ -1,12 +1,13 @@
 <?php 
-    $client_login = $this->session->userdata('client');    
-    $all_notifications = get_notifications(); 
+    
+    $client_login = $this->session->userdata('client');
+    $all_notifications = get_notifications('10');     
     $all_noti_cnt = get_total_noti_count();
-    // pr($all_notifications,1);
-    // die;
+    
     if(!empty($client_login)) { 
         $unread_cnt = get_notifications_unread_count();
     }
+
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]>          <html class="ie ie8"> <![endif]-->
@@ -171,7 +172,7 @@
                                 <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
                                     <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
                                         <a href="<?=base_url('rfp')?>">RFP</a>
-                                     </li>
+                                    </li>
                                 <?php endif;?>
 
                                 <li class="dropdown <?php if($this->uri->segment(1)=='blog') echo 'active'; ?>">
@@ -248,18 +249,21 @@
                         <a onclick="notification_action('<?php echo $noti_id; ?>')">
                             <p class="notifly_head">
                                 <?php echo $noti['noti_msg']; ?>                                
-                            </p>
-                            <!-- <p class="notifly_msg">Near :0.00Miles </p>  -->
+                            </p>                            
                             <p class="notifly_ago"><?php echo time_ago($noti['created_at']); ?></p>
                         </a>
                     </li>
                     <?php } } ?>
-
-                    <li class="last_li_cls">
-                        <a onclick="fetch_ajax_notification(this)" data-limit="3" data-offset="3" id="load_more">
-                            Load More
-                        </a>
-                    </li>
+                    
+                    <?php if($all_noti_cnt > 10) { ?>
+                        <li class="last_li_cls">
+                            <a onclick="fetch_ajax_notification(this)" data-limit="3" data-offset="10" id="load_more" 
+                               class="load_more btn btn-primary">
+                                Load More
+                            </a>
+                        </li>
+                    <?php } ?>
+                                                            
                 </ul>
 
             </div>
@@ -290,7 +294,7 @@
     });
 
     function notification_action(noti_id){
-
+        
         $.ajax({
             type:"POST",
             url:"<?php echo base_url().'home/read_notification'; ?>",
@@ -304,7 +308,6 @@
 
     function fetch_ajax_notification(obj){
 
-        // $('#preloader').show();
         var limit = $(obj).data('limit');
         var offset = $(obj).attr('data-offset');
 
@@ -314,17 +317,22 @@
             data:{limit:limit,offset:offset},
             dataType:"json",
             success:function(data){
-                
+                console.log(data);
+
                 if(data['new_str'] != ''){
-                    offset = parseInt(offset) + 3;
+                    offset = parseInt(offset) + limit;
+
+                    if(data['all_noti_cnt'] < offset){
+                        $('.last_li_cls').remove();
+                    }
+                    
                     $('#load_more').attr('data-offset',offset);
                     $(".last_li_cls").before(data['new_str']);
                 }else{
                     $('.last_li_cls').remove();
                 }
             }
-        });
-
+        });        
     }
 
 </script>

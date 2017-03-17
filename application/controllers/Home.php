@@ -35,6 +35,8 @@ class Home extends CI_Controller {
 		$limit = $this->input->post('limit');
 		$offset = $this->input->post('offset');
 
+		$all_noti_cnt = get_total_noti_count();
+
 		$ret_data = get_notifications($limit,$offset);		
 		$new_str = '';
 
@@ -49,7 +51,7 @@ class Home extends CI_Controller {
 			}
 		}
 
-		echo json_encode(['status'=>'success','new_str'=>$new_str]);
+		echo json_encode(['status'=>'success','new_str'=>$new_str,'all_noti_cnt'=>$all_noti_cnt,'offset'=>(int)$offset]);
 	}
 
 	// ------------------------------------------------------------------------

@@ -56,11 +56,15 @@
 				<li class="<?php if($tab == 'avatar'){ echo 'active'; }?>"><a href="#avatar" data-toggle="tab">Avatar</a></li>
 				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>			
 				<?php if($this->session->userdata('client')['role_id'] == 4) :?> <!-- If Role (4) Dcotor Then display this map option-->
-					<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>"><a href="#office_map" data-toggle="tab">Office Map</a></li>
+				<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>">
+					<a href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map'; ?>">
+						Office Map
+					</a>					
+				</li>
 				<?php endif; ?>
 			</ul>
 			
-			<div class="tab-content margin-top-20">
+			<div class="tab-content profile-edit-form">
 				<!-- PERSONAL INFO TAB -->
 				<div class="tab-pane fade <?php if($tab == 'info'){ echo 'in active'; }?>" id="info">
 					<?php 
@@ -92,14 +96,13 @@
 							<label class="control-label">City</label>
 							<input type="text" placeholder="City" name='city' class="form-control" value="<?php echo $db_data['city']; ?>">
 						</div>
-						<div class="form-group">
-							<label class="control-label">Country</label>							
+						
+						<div class="form-group country_custom">
+							<label class="control-label">Country</label>
 							<select name="country_id" class="form-control select2" id="country_id">
 								<option value="" selected disabled>Select Country</option>
 								<?php foreach($country_list as $country) : ?>
-									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
-										<?=$country['name']?>
-									</option>
+									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> ><?=$country['name']?></option>
 								<?php endforeach; ?>
 							</select>	
 						</div>
@@ -109,7 +112,7 @@
 							<input type="text" placeholder="zipcode" name="zipcode" class="form-control" value="<?php echo $db_data['zipcode']; ?>">
 						</div>
 
-						<div class="form-group">
+						<div class="form-group ">
 							<label class="control-label">Gender</label>
 							<select name="gender" id="" class="form-control">
 								<option value="male" <?php if($db_data['gender']=='male'){ echo 'selected'; } ?>>Male</option>
@@ -263,7 +266,7 @@
 							}
 						?>
 						<div class="form-group">
-							<label class="control-label">Type office address</label>
+							<label class="control-label">Search office address</label>
 							<input type="text" id="new_id" class="form-control" value="<?php echo $get_address_decode; ?>" />							
 							<input type="hidden" id="latlong_location" value="<?php echo $latlong_location; ?>" >
 							<input type="hidden" id="lat" value="<?php echo ($lat) ? $lat:''; ?>">
@@ -308,6 +311,7 @@
     });
 
     function get_location(){
+    	$('#preloader').show();
     	var myPlaceTextBox_str = $('#new_id').val();       	
        	myPlaceTextBox_str_decode = encodeURIComponent(btoa(myPlaceTextBox_str));
     	window.location.href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map&address=';?>"+myPlaceTextBox_str_decode;    	   

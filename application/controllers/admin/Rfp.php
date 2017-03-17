@@ -102,7 +102,7 @@ class Rfp extends CI_Controller {
                 $rfp_approve_date = date('Y-m-d');
                 $rfp_valid_date = date('Y-m-d', strtotime("+13 days"));
                 $noti_msg = '<b>'.$record['title'].'</b> has been successfully approved and it is live.';
-                $noti_url = 'dashboard';
+                $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
             }else{ 
                 $status='2';
                 $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';

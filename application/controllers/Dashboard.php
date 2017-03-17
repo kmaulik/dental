@@ -9,7 +9,7 @@ class Dashboard extends CI_Controller {
 		if(!isset($this->session->userdata['client']))redirect('login');
         $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model','Notification_model']);
         $this->load->library(['unirest','googlemaps']);        
-    }	
+    }
 
     public function index() {
                 
@@ -115,10 +115,11 @@ class Dashboard extends CI_Controller {
         $this->googlemaps->initialize($config);
 
         // ------------------------------------------------------------------------
+        $description = str_replace(array("\r","\n"),"",nl2br($data['db_data']['office_description']));
 
         $marker = array();
         $marker['position'] = $center_map_str; 
-        $marker['infowindow_content'] = html_entity_decode($data['db_data']['office_description']);
+        $marker['infowindow_content'] = html_entity_decode($description);
         $marker['draggable'] = true;
         $marker['ondragend'] = 'fetch_lat_long(event.latLng.lat(),event.latLng.lng())';
 
@@ -340,7 +341,44 @@ class Dashboard extends CI_Controller {
         $data['db_data'] = $this->Users_model->get_data(['id'=>decode($user_id)],true);
         $data['review_data'] = $this->Rfp_model->get_user_rating(decode($user_id));
         $data['overall_review']=$this->Rfp_model->get_overall_rating(decode($user_id));
-        //pr($data['review_data'],1);
+        $data['encoded_user_id'] = $user_id;
+        
+        $data['tab'] = $this->input->get('tab');
+
+        if(!empty($data['db_data']['office_map_data'])){
+            $office_map_data = json_decode($data['db_data']['office_map_data'],true);
+            
+            $data['lat'] = $office_map_data['lat'];
+            $data['lng'] = $office_map_data['lng'];
+
+            $center_map_str =  $data['lat'].', '.$data['lng'];
+            $data['get_address'] = $office_map_data['office_text'];
+
+            $config['center'] = $center_map_str;
+            $config['zoom'] = '16';
+            $config['places'] = TRUE;
+            $config['placesAutocompleteInputID'] = 'new_id';
+            $config['placesAutocompleteBoundsMap'] = TRUE; // set results biased towards the maps viewport
+            $config['placesAutocompleteOnChange'] = 'get_location()';
+            $this->googlemaps->initialize($config);
+
+            // ------------------------------------------------------------------------
+            $description = str_replace(array("\r","\n"),"",nl2br($data['db_data']['office_description']));
+
+            $marker = array();
+            $marker['position'] = $center_map_str; 
+            $marker['infowindow_content'] = html_entity_decode($description);
+
+            $this->googlemaps->add_marker($marker);
+            
+            $data['map'] = $this->googlemaps->create_map();        
+            $data['latlong_location'] = $center_map_str;
+            // pr($data['map'],1);
+            // ------------------------------------------------------------------------
+        }
+
+        // pr($data['db_data'],1);
+
         $data['subview']="front/profile/view_profile";
         $this->load->view('front/layouts/layout_main',$data);
     }
@@ -396,7 +434,7 @@ class Dashboard extends CI_Controller {
                         'noti_msg'=>'Doctor write thank you note on your review for <b>'.$rfp_data['title'].'</b>',
                         'noti_url'=>$link
                     ];
-            $this->Notification_model->insert_notification($noti_data);
+            $this->Notification_model->insert_rfp_notification($noti_data);
             // ------------------------------------------------------------------------
 
             $review_data = [
@@ -418,6 +456,8 @@ class Dashboard extends CI_Controller {
     public function call_appointment(){
 
         if($this->input->post('submit')){
+
+            $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true); // fetch RFP data
 
             // if appointment_id is null then add new appointment otherwise edit the appointment 
             if($this->input->post('appointment_id') == '')
@@ -448,7 +488,6 @@ class Dashboard extends CI_Controller {
                 }
             }
             
-            $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$this->input->post('rfp_id')],true); // fetch RFP data
             // ------------------------------------------------------------------------
             $noti_data = [
                             'from_id'=>$this->session->userdata('client')['id'],
@@ -458,7 +497,8 @@ class Dashboard extends CI_Controller {
                             'noti_msg'=>'Appointment has been confirmed by the doctor based on call for <b>'.$rfp_data['title'].'</b>',
                             'noti_url'=>'dashboard'
                         ];
-            $this->Notification_model->insert_notification($noti_data);
+            $this->Notification_model->insert_rfp_notification($noti_data);
+
             // ------------------------------------------------------------------------
 
             if($res){
@@ -482,7 +522,7 @@ class Dashboard extends CI_Controller {
             }
             else{
                 $this->session->set_flashdata('error','Error Into Submit Appointment');
-            }   
+            }            
         }   
         redirect('dashboard'); 
     }
@@ -536,7 +576,7 @@ class Dashboard extends CI_Controller {
                             'noti_msg'=>$noti_msg,
                             'noti_url'=>'dashboard'
                         ];
-            $this->Notification_model->insert_notification($noti_data);
+            $this->Notification_model->insert_rfp_notification($noti_data);
             // ------------------------------------------------------------------------
             
             if($res){
@@ -578,6 +618,7 @@ class Dashboard extends CI_Controller {
     */
     public function choose_appointment_schedule(){
         
+        // pr($_POST,1);
         $rfp_id = $this->input->post('rfp_id');
         $doctor_id = $this->input->post('doctor_id');
         $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true); // fetch RFP data
@@ -590,7 +631,7 @@ class Dashboard extends CI_Controller {
                         'noti_msg'=>'Appointment has been confirmed by the patient for <b>'.$rfp_data['title'].'</b>',
                         'noti_url'=>'dashboard'
                     ];
-        $this->Notification_model->insert_notification($noti_data);
+        $this->Notification_model->insert_rfp_notification($noti_data);
         // ------------------------------------------------------------------------
 
         $where = ['id' => $this->input->post('schedule_selected')];
@@ -611,7 +652,7 @@ class Dashboard extends CI_Controller {
     public function delete_appointment($app_id){
 
         $appointment_id = decode($app_id);
-        $appointment_data = $this->Rfp_model->get_result('appointments',['id'=>$appointment_id]);        
+        $appointment_data = $this->Rfp_model->get_result('appointments',['id'=>$appointment_id],true);                
         $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$appointment_data['rfp_id']],true); // fetch RFP data
 
         // ------------------------------------------------------------------------
@@ -623,7 +664,7 @@ class Dashboard extends CI_Controller {
                         'noti_msg'=>'Appointment has been canceled by the doctor for <b>'.$rfp_data['title'].'</b>',
                         'noti_url'=>'dashboard'
                     ];
-        $this->Notification_model->insert_notification($noti_data);
+        $this->Notification_model->insert_rfp_notification($noti_data);
         // ------------------------------------------------------------------------
 
         //$res=$this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $appointment_id]);
