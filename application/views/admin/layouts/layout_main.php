@@ -68,7 +68,7 @@
                                     </li>
 
                                     <!-- USERS Menu -->
-                                    <?php if($role_id != 3) { ?>
+                                    
                                         <li class="<?php echo (in_array($controller,['doctor','patient','users'])) ? 'active' : ''; ?>">
                                             <a href="#" class="has-ul"><i class="icon-users4"></i> <span>Users</span></a>
                                             <ul style="">
@@ -84,15 +84,17 @@
                                                         Doctors
                                                     </a>
                                                 </li>
+                                                <?php if($role_id != 3) { ?>
                                                 <li class="<?php echo (in_array($controller,['users'])) ? 'active' : ''; ?>">
                                                     <a href="<?php echo base_url().'admin/users'; ?>">
                                                         <i class="icon-arrow-right32"></i>
                                                         Staff
                                                     </a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </li>
-                                    <?php } ?>
+                                    
                                     
                                     <!-- Website Survey Menu -->
                                     <?php if($role_id != 3) { ?>

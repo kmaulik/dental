@@ -46,6 +46,11 @@ class Treatment_category_model extends CI_Model {
         if (!is_null($condition)) {
             $this->db->where($condition);
         }
+
+        if($table == 'treatment_category'){
+            $this->db->order_by('code');
+        }
+
         $query = $this->db->get($table);
         return $query->result_array();
     }
