@@ -162,6 +162,12 @@
                                 <li class="dropdown <?php if($this->uri->segment(1)=='') echo 'active'?>"><!-- HOME -->
                                     <a href="<?=base_url()?>">HOME </a>
                                 </li>
+
+                                <?php if($this->session->userdata('client') && ($this->session->userdata('client')['role_id'] == 4 || $this->session->userdata('client')['role_id'] == 5)) :?>
+                                    <li class="dropdown <?php if($this->uri->segment(1)=='dashboard') echo 'active'; ?>">
+                                        <a tabindex="-1" href="<?=base_url('dashboard')?>">DASHBOARD</a>
+                                    </li>
+                                <?php endif;?>
                                
                                  <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 4) :?>
                                     <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->

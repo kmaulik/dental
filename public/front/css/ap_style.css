@@ -25,7 +25,7 @@ section.page-header h1{font-weight: bold;}
     opacity: 1;
 }
 #frmregister .form-control {
-    border: 1px solid rgb(229, 229, 229) !important;
+    /*border: 1px solid rgb(229, 229, 229) !important;*/
 	height: 50px;
 }
 .top-links  ul.dropdown-menu {
@@ -47,7 +47,7 @@ section.page-header h1{font-weight: bold;}
     margin: 0 auto;
     width: 40%;
 }
-#frmlogin .form-control{height: 50px !important; border:1px solid rgb(229, 229, 229) !important;border-radius: 3px;}
+#frmlogin .form-control{height: 50px !important; border-radius: 3px;}
 .sky-form .ico-append, .sky-form .ico-prepend{top:12px !important;}
 
 
@@ -757,6 +757,9 @@ span.time {
     font-weight: 300;
 }
 section .nav-tabs.nav-top-border>li.active>a:hover{background-color: #fff !important;border-color: #fff !important;border-top-color: rgb(49,176,213) !important;}
+.goto_rfp{
+  color: rgb(49,176,213) !important;
+}
 /*************** ` start here 	*************/
 @media (min-width:768px) and (max-width:991px){
   .wrapper_inner_box {

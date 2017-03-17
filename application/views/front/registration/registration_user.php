@@ -42,11 +42,11 @@
 				<form method="post" action="" id="frmregister" >					
 					<div class="clearfix">
 						<div class="form-group">
-							<input type="text" name="fname" class="form-control AlphaAndDot" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
+							<input type="text" name="fname" class="form-control AlphaAndDotWithhypen" placeholder="First Name" value="<?php echo set_value('fname'); ?>" >
 						</div>						
 
 						<div class="form-group">
-							<input type="text" name="lname" class="form-control AlphaAndDot" placeholder="Last Name" value="<?php echo set_value('lname'); ?>" >
+							<input type="text" name="lname" class="form-control AlphaAndDotWithhypen" placeholder="Last Name" value="<?php echo set_value('lname'); ?>" >
 						</div>
 
 						<!-- Email -->
@@ -69,16 +69,13 @@
 						<div class="form-group">
 							<input type="password" name="c_password" class="form-control" placeholder="Confirm Password" value="<?php echo set_value('c_password'); ?>">
 						</div>												
+						<!-- Street Name -->
+						<div class="form-group">
+							<input type="text" name="street" class="form-control" placeholder="Street name" value="<?php echo set_value('street'); ?>" >
+						</div>
 
 						<div class="form-group">
-							<select name="country_id" class="form-control select2_disable" id="country_id" readonly data-id="select2_disable">
-								<option value="" selected disabled>Select Country</option>
-								<?php foreach($country_list as $country) : ?>
-									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
-										<?=$country['name']?>
-									</option>
-								<?php endforeach; ?>
-							</select>	
+							<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo set_value('city'); ?>" >
 						</div>
 
 						<div class="form-group">
@@ -89,21 +86,23 @@
 									</option>
 								<?php endforeach; ?>
 							</select>	
-						</div>
-
-						<div class="form-group">
-							<input type="text" name="city" class="form-control" placeholder="City" value="<?php echo set_value('city'); ?>" >
-						</div>
-
-						<!-- Street Name -->
-						<div class="form-group">
-							<input type="text" name="street" class="form-control" placeholder="Street name" value="<?php echo set_value('street'); ?>" >
 						</div>			
 
 						<div class="form-group">
 							<input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="Zip code"
 							       value="<?php echo set_value('zipcode'); ?>">
-						</div>					
+						</div>	
+
+						<div class="form-group">
+							<select name="country_id" class="form-control select2_disable" id="country_id" readonly data-id="select2_disable">
+								<option value="" selected disabled>Select Country</option>
+								<?php foreach($country_list as $country) : ?>
+									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
+										<?=$country['name']?>
+									</option>
+								<?php endforeach; ?>
+							</select>	
+						</div>				
 
 						<div class="form-group">
 							<select name="gender" class="form-control" id="gender">
@@ -152,8 +151,8 @@
 <script type="text/javascript">
 	$('#country_id').val('231');
 
-	$('.AlphaAndDot').keyup(function () { 
-    	this.value = this.value.replace(/[^A-Za-z.]/g,'');
+	$('.AlphaAndDotWithhypen').keyup(function () { 
+    	this.value = this.value.replace(/[^A-Za-z.-\s]/g,'');
 	});
 
 	$('.NumbersAndPlus').keyup(function () { 

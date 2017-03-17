@@ -38,7 +38,8 @@
                     <th>User Role</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Email</th>                        
+                    <th>Email</th> 
+                    <th>Last Login</th>                       
                     <th>Created Date</th>                        
                     <th width="100px">Action</th>
                 </tr>
@@ -83,6 +84,11 @@
                 {
                     sortable: false,
                     data: "email_id",
+                    visible: true
+                },
+                {
+                    sortable: false,
+                    data: "last_login",
                     visible: true
                 },
                 {

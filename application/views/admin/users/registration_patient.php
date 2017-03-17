@@ -222,7 +222,7 @@
                     data:{email_id:function () {return $("#email_id").val();}}
                 }
             },            
-            address:{required: true },
+            // address:{required: true },
             street:{required: true },
             city:{required: true },
             country_id:{required: true },

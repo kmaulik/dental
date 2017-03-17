@@ -63,12 +63,12 @@
                             </div>
                         </div>                     
 
-                        <div class="form-group">
+                       <!--  <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo isset($user_data['address'])?$user_data['address']:''; ?></textarea>
                             </div>
-                        </div>
+                        </div> -->
 
                          <div class="form-group">
                             <label class="col-lg-3 control-label">Street:</label>
@@ -277,7 +277,7 @@
                     data:{email_id:function () {return $("#email_id").val();},old_email_id:function(){ return '<?php echo isset($user_data["email_id"])?$user_data["email_id"]:''; ?>'; }}
                 }
             },            
-            address:{required: true },
+            //address:{required: true },
             street:{required: true },
             city:{required: true },
             country_id:{required: true },
@@ -294,7 +294,7 @@
                 required: 'Please provide a Email Address' ,
                 remote:"Email already exists. Please enter other email address"
             }, 
-            address:{required: 'Please provide a Address' },
+            //address:{required: 'Please provide a Address' },
             street:{required: 'Please provide a Street' },
             city:{required: 'Please Provide a City' },
             country_id:{required: 'Please Select Country' },

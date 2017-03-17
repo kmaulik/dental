@@ -87,7 +87,7 @@
                                                 <li class="<?php echo (in_array($controller,['users'])) ? 'active' : ''; ?>">
                                                     <a href="<?php echo base_url().'admin/users'; ?>">
                                                         <i class="icon-arrow-right32"></i>
-                                                        Users
+                                                        Staff
                                                     </a>
                                                 </li>
                                             </ul>
