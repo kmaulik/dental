@@ -3702,6 +3702,14 @@
 	});
 })(jQuery);
 
+
+
+/*------------- Custom Select 2 focus open select2 option----------------------------------- */
+$(document).on('focus', '.select2', function() {
+    $(this).siblings('select').select2('open');
+});
+/*-------------End Custom Select 2 focus open select2 options -----*/
+
  
 
 /** Appear

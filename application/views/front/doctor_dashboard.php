@@ -561,7 +561,7 @@ tr.hover-timeline:hover{background: #fff !important;}
 
 			<ul class="nav nav-tabs nav-top-border">
 				<li class="active"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
-				<li><a href="#schedule_rfps" data-toggle="tab">Schedule RFPs</a></li>
+				<li><a href="#schedule_rfps" data-toggle="tab">Appointments</a></li>
 				<li><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
 			</ul>
 
@@ -741,7 +741,73 @@ tr.hover-timeline:hover{background: #fff !important;}
 					</table>
 				</div>
 				<div class="tab-pane fade" id="schedule_rfps">
-					<p> Schedule RFPs </p>
+					<!-- Doctor's Manage Appointment -->
+                    <div class="row appointment-list">
+                        <!-- <div class="col-md-12">
+                            <h4> Manage Appointment </h4>
+                            <hr/>
+                        </div>   -->
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Patient Name</th>
+                                            <th>RFP Title</th>
+                                            <th>Appointment Date</th>
+                                            <th>Appointment Time</th>
+                                            <th>Created on</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($appointment_list)) { ?>
+                                            <?php foreach($appointment_list as $key=>$appointment) :?>  
+                                                <tr>
+                                                    <td><?=$appointment['user_name'];?></td>
+                                                    <td><?=$appointment['title']; ?></td>
+                                                    <!-- For Check Appointment fixed or not by patient -->
+                                                    <?php $appointment_date ='';
+                                                          $appointment_time = '';
+                                                          $is_approve_app = '';
+                                                    foreach($appointment['appointment_schedule_arr'] as $app_sche) {
+                                                        if($app_sche['is_selected'] == 1) {
+                                                            $appointment_date = $app_sche['appointment_date'];
+                                                            $appointment_time = $app_sche['new_appointment_time'];
+                                                            $is_approve_app = 1;
+                                                        }
+                                                    } ?>    
+                                                    <!-- End For Check Appointment fixed or not by patient -->
+                                                    <td><?php if($appointment_date) { echo date("m-d-Y",strtotime($appointment_date)); } else { echo 'N/A';} ?></td>
+                                                    <td><?php if($appointment_time) { echo $appointment_time; } else { echo 'N/A';} ?></td>
+                                                    <td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
+                                                    <td>
+                                                        <!-- === If Appointment not set then display the manage appointment button otherwise view == -->
+                                                        <?php if($appointment['appointment_id'] == '') :?>
+                                                            <a class="label label-success" title="Manage Appointment" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-hand-o-right"></i></a>
+                                                        <?php else : ?>
+                                                            <a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
+                                                            <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
+                                                                <a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>    
+                                                            <?php endif; ?>
+                                                        <?php endif;?>
+                                                        <!-- == End == -->
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>    
+                                        <?php }else{ ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center">
+                                                    <b>No data Found</b>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>  
+                        </div>  
+                    </div>  
+                    <!-- // ENDS here Appointment -->
 				</div>
 				<div class="tab-pane fade" id="rfp_bids">					
 					
@@ -978,78 +1044,11 @@ tr.hover-timeline:hover{background: #fff !important;}
 			<i class="fa fa-cog"></i>
 		</div>
 
-		<!-- Doctor's Manage Appointment -->
-		<div class="row appointment-list">
-			<div class="col-md-12">
-				<h4> Manage Appointment </h4>
-				<hr/>
-			</div>	
-			<div class="col-md-12">
-				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Patient Name</th>
-								<th>RFP Title</th>
-								<th>Appointment Date</th>
-								<th>Appointment Time</th>
-								<th>Created on</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if(!empty($appointment_list)) { ?>
-								<?php foreach($appointment_list as $key=>$appointment) :?>	
-									<tr>
-										<td><?=$appointment['user_name'];?></td>
-										<td><?=$appointment['title']; ?></td>
-										<!-- For Check Appointment fixed or not by patient -->
-										<?php $appointment_date ='';
-											  $appointment_time = '';
-											  $is_approve_app = '';
-										foreach($appointment['appointment_schedule_arr'] as $app_sche) {
-											if($app_sche['is_selected'] == 1) {
-												$appointment_date = $app_sche['appointment_date'];
-												$appointment_time = $app_sche['new_appointment_time'];
-												$is_approve_app = 1;
-											}
-										} ?>	
-										<!-- End For Check Appointment fixed or not by patient -->
-										<td><?php if($appointment_date) { echo date("m-d-Y",strtotime($appointment_date)); } else { echo 'N/A';} ?></td>
-										<td><?php if($appointment_time) { echo $appointment_time; } else { echo 'N/A';} ?></td>
-										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
-										<td>
-											<!-- === If Appointment not set then display the manage appointment button otherwise view == -->
-											<?php if($appointment['appointment_id'] == '') :?>
-												<a class="label label-success" title="Manage Appointment" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-hand-o-right"></i></a>
-											<?php else : ?>
-												<a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
-												<?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
-													<a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>	
-												<?php endif; ?>
-											<?php endif;?>
-											<!-- == End == -->
-										</td>
-									</tr>
-								<?php endforeach; ?>	
-							<?php }else{ ?>
-								<tr>
-									<td colspan="5" class="text-center">
-										<b>No data Found</b>
-									</td>
-								</tr>
-							<?php } ?>
-						</tbody>
-					</table>
-				</div>	
-			</div>	
-		</div>	
-		<!-- // ENDS here Appointment -->
+		
 
-		<div class="divider divider-color divider-center divider-short">
-			<!-- divider -->
+		<!-- <div class="divider divider-color divider-center divider-short">
 			<i class="fa fa-cog"></i>
-		</div>
+		</div> -->
 		
 		<!-- Payment Table -->
 		<!-- <div class="row">
