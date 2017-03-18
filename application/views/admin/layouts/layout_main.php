@@ -164,15 +164,13 @@
                                         </li>
                                     <?php } ?>
                                     
-                                    <!-- Contact Inquiry Menu -->
-                                    <?php if($role_id != 3) { ?>
-                                        <li class="<?php echo ($controller == 'contact_inquiry') ? 'active' : ''; ?>">
-                                            <a href="<?php echo base_url() . 'admin/contact_inquiry'; ?>">
-                                                <i class="icon-phone-plus2"></i>
-                                                <span>Contact Inquiry</span>
-                                            </a>
-                                        </li>
-                                    <?php } ?>
+                                    
+                                    <li class="<?php echo ($controller == 'contact_inquiry') ? 'active' : ''; ?>">
+                                        <a href="<?php echo base_url() . 'admin/contact_inquiry'; ?>">
+                                            <i class="icon-phone-plus2"></i>
+                                            <span>Contact Inquiry</span>
+                                        </a>
+                                    </li>                                    
                                     
                                     <!-- Front Side Setting Menu -->
                                     <?php if($role_id != 3) { ?>

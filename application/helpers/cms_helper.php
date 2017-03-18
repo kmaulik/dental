@@ -299,7 +299,7 @@
         $res_data = $CI->session->userdata('admin');
 
         $current_class = $CI->router->fetch_class();        
-        $allowed_class = ['dashboard','rfp'];
+        $allowed_class = ['dashboard','rfp','contact_inquiry','patient','doctor'];
 
         if(empty($res_data)){
             redirect('admin');

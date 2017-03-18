@@ -107,7 +107,7 @@ class Rfp extends CI_Controller {
                 $noti_msg = '<b>'.$record['title'].'</b> has been successfully approved and it is live.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
                 
-                $subject_mail = 'Approve RFP dynamic subject line';
+                $subject_mail = config('site_name').' - Approve RFP dynamic subject line';
                 $message .= ' <a href="'.base_url().'dashboard"> click here'.'</a>';
             }else{ 
 
@@ -115,7 +115,7 @@ class Rfp extends CI_Controller {
                 $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
 
-                $subject_mail = 'Dis-approve RFP dynamic subject line';
+                $subject_mail = config('site_name').' - Dis-approve RFP dynamic subject line';
                 $message .= ' <a href="'.base_url().'rfp/view_rfp/'.$encode_rfp_id.'"> click here'.'</a>';
             }
 

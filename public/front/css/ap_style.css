@@ -1240,6 +1240,7 @@ span.time {
     background: #fff !important;
     border-bottom:none !important;
     margin-top: 20px;
+    margin-bottom: 10px !important;
 }
 #sidepanel .last_li_cls .load_more.btn.btn-primary {
   background: rgb(255, 255, 255) none repeat scroll 0 0 !important;
