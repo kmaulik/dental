@@ -81,9 +81,7 @@
 						<div class="form-group">
 							<select name="state_id" class="form-control select2" id="state_id" data-id="select2">
 								<?php foreach($state_list as $state) : ?>
-									<option value="<?=$state['id']?>" <?php echo  set_select('state_id', $state['id']); ?> >
-										<?=$state['name']?>
-									</option>
+									<option value="<?=$state['id']?>" <?php echo  set_select('state_id', $state['id']); ?> ><?=$state['name']?></option>
 								<?php endforeach; ?>
 							</select>	
 						</div>			

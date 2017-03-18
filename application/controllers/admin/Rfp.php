@@ -77,6 +77,8 @@ class Rfp extends CI_Controller {
     }
 
     public function choose_action($rfp_id){
+        $encode_rfp_id = $rfp_id;
+
         $rfp_id = decode($rfp_id);
         $data['rfp_id'] = $rfp_id;        
         $record = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],'1');
@@ -98,17 +100,25 @@ class Rfp extends CI_Controller {
             //-------------------------------------
             
             if($action == 'yes'){
+                
                 $status='3'; 
                 $rfp_approve_date = date('Y-m-d');
                 $rfp_valid_date = date('Y-m-d', strtotime("+13 days"));
                 $noti_msg = '<b>'.$record['title'].'</b> has been successfully approved and it is live.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
+                
+                $subject_mail = 'Approve RFP dynamic subject line';
+                $message .= ' <a href="'.base_url().'dashboard"> click here'.'</a>';
             }else{ 
+
                 $status='2';
                 $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
+
+                $subject_mail = 'Dis-approve RFP dynamic subject line';
+                $message .= ' <a href="'.base_url().'rfp/view_rfp/'.$encode_rfp_id.'"> click here'.'</a>';
             }
-            
+
             if(!empty($record['admin_remarks'])){
                 $last_remark = json_decode($record['admin_remarks'],true);
                 $last_cnt = count($last_remark)+1;
@@ -131,10 +141,9 @@ class Rfp extends CI_Controller {
                 $final_remark[] =$admin_remarks;
             }
 
-            // pr($final_remark,1);
-
             $admin_remarks_str = json_encode($final_remark);
             $this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>$status,'admin_remarks'=>$admin_remarks_str,'rfp_approve_date'=>$rfp_approve_date,'rfp_valid_date' => $rfp_valid_date]);
+            
             // ------------------------------------------------------------------------
             $noti_data = [
                             'from_id'=>$this->session->userdata('admin')['id'],
@@ -149,7 +158,7 @@ class Rfp extends CI_Controller {
 
             //------ For Email Template -----------
             /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
-            $html_content=mailer('contact_inquiry','AccountActivation'); 
+            $html_content=mailer('contact_inquiry','AccountActivation');
             $username= $user_data['fname'].' '.$user_data['lname'];
             $html_content = str_replace("@USERNAME@",$username,$html_content);
             $html_content = str_replace("@MESSAGE@",$message,$html_content);            
@@ -159,7 +168,7 @@ class Rfp extends CI_Controller {
             $subject=config('site_name').' - Regarding your RFP -'.$record['title'];
             $this->email->from(config('contact_email'), config('sender_name'))
                     ->to($user_data['email_id'])
-                    ->subject($subject)
+                    ->subject($subject_mail)
                     ->message($html_content);
 
             if($this->email->send() == false){

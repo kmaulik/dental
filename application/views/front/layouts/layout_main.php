@@ -329,7 +329,7 @@
                     offset = parseInt(offset) + limit;
 
                     if(data['all_noti_cnt'] < offset){
-                        $('.last_li_cls').remove();
+                        // $('.last_li_cls').remove();
                     }
                     
                     $('#load_more').attr('data-offset',offset);
