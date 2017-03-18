@@ -279,15 +279,28 @@
 																<div class="new-section timeline-up-section">
 																	<ul class="verticle-timeline">
 																		<li>
-    																		<div class="left-section"><img src="<?php if($this->session->userdata['client']['avatar'] != '') 
-    												                    		{ echo base_url('uploads/avatars/'.$this->session->userdata['client']['avatar']); } 
-    												                    	else 
-    												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>"><span>Has Requested</span></div>
+    																		<div class="left-section">
+                                                                                <div class="profile-image-border">
+
+                                                                                    <img src="<?php if($this->session->userdata['client']['avatar'] != '') 
+        												                    		{ echo base_url('uploads/avatars/'.$this->session->userdata['client']['avatar']); } 
+        												                    	   else 
+        												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>">
+                                                                                </div>
+                                                                                <span>Has Requested</span>
+                                                                            </div>
     																		<div class="timeline-msg">$<?=$bid_data['amount']?></div>
-    																		<div class="right-section"><img src="<?php if($bid_data['avatar'] != '') 
-    												                    		{ echo base_url('uploads/avatars/'.$bid_data['avatar']); } 
-    												                    	else 
-    												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>"><span>Has Confirmed</span></div>
+    																		
+                                                                            <div class="right-section">
+                                                                                <div class="profile-image-border">
+                                                                                    <img src="<?php if($bid_data['avatar'] != '') 
+        												                    		{ echo base_url('uploads/avatars/'.$bid_data['avatar']); } 
+        												                    	else 
+        												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>">
+                                                                                </div>
+
+                                                                                <span>Has Confirmed</span>
+                                                                            </div>
 																		</li>
 																	</ul>
 																</div>

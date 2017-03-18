@@ -868,8 +868,7 @@ class Rfp extends CI_Controller {
        		$data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'patient_id' => $this->session->userdata['client']['id'] ],'1');
        		 if(empty($data['record'])){
         	 	show_404();
-        	 }
-        	 else{
+        	 } else{
         	 	$data['subview']="front/rfp/patient/view_rfp_patient";
         	 }
        		
@@ -1217,7 +1216,7 @@ class Rfp extends CI_Controller {
         						);
 
 			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
-       		$this->session->set_flashdata('success','Thank you for your transaction. It\'ll take some time to review it.');
+       		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab<a href="'.base_url().'dashboard'.'">click here</a>');
 	    	redirect('dashboard');
     	}
     }	
@@ -1317,7 +1316,7 @@ class Rfp extends CI_Controller {
 	        	// ------------------------------------------------------------------------
 
 	        	$this->session->set_flashdata('run_cron','yes');
-	        	$this->session->set_flashdata('success','Agreement has been set successfully.');
+	        	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab<a href="'.base_url().'dashboard'.'">click here</a>');
 	        	redirect('dashboard');
 	        	// pr($payment_due_1);
 	        	// pr($doc_payment_data);

@@ -154,12 +154,16 @@
 									            <ul class="verticle-timeline">
 									                <li>
 									                    <div class="left-section">
-									                    	<img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+                                                            <div class="profile-image-border">
+                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+                                                            </div>
 									                    	<span>Have accepted</span>
 									                    </div>
 									                    <div class="timeline-msg">$3333</div>
 									                    <div class="right-section">
-									                    	<img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+                                                            <div class="profile-image-border">
+                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+                                                            </div>
 									                    	<span>Has Confirmed</span>
 									                    </div>
 									                </li>
@@ -168,7 +172,7 @@
 									        <div class="cong-msg">
 									            <p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
 									            <h2>Congratulation!!</h2>
-									            <h5>Your sale Was successful</h5>
+									            <h5>Your RFP was successful</h5>
 									        </div>
 									        <ul class="timeline">
 
@@ -1078,12 +1082,8 @@
 <?php
 	
     $run_cron = $this->session->flashdata('run_cron');
-	
-    if($run_cron == 'yes'){
-	   $url = base_url().'cron/check_status';
-	   $res = $this->unirest->get($url);
-	}
-
+    $url = base_url().'cron/check_status';
+    $res = $this->unirest->get($url);
 ?>	
 <!-- ================== /Modal Popup For Manage Appointment ========================= -->
 

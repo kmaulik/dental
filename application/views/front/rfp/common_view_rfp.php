@@ -20,7 +20,10 @@
 					<span class="title">Patient Name : </span> <span><?=$record['fname']." ".$record['lname']?></span>
 				</div>	
 				<div class="col-sm-6">
-					<span class="title">BirthDate : </span> <span><?=date("m-d-Y",strtotime($record['birth_date']));?></span>
+					<span class="title">BirthDate : </span> 
+					<span>
+						<?=date("m-d-Y",strtotime($record['birth_date']));?>
+					</span>
 				</div>
 				<div class="col-sm-6">
 					<span class="title">Dentition Type : </span> <span><?=$record['dentition_type']?></span>
@@ -29,8 +32,33 @@
 					<span class="title">Zip Code : </span> <span><?=$record['zipcode']?></span>
 				</div>
 				<div class="col-sm-6">
-					<span class="title">Travel Distance : </span> <span><?=$record['distance_travel']." Miles"?></span>
+					<span class="title">Age : </span>
+					<span>
+						<?php
+							$birthday = new DateTime($record['birth_date']);
+							$interval = $birthday->diff(new DateTime);
+							echo $interval->y.' years';
+						?>
+					</span>
 				</div>
+				
+				<?php 
+					if(!empty($rfp_bid)) {						
+				?>
+					<div class="col-sm-6">						
+						<span class="title">Bid amount : </span>
+						<span><?php echo '$ '.$rfp_bid['amount']; ?></span>
+					</div>
+
+					<div class="col-sm-12">						
+						<br/>					
+						<span class="title">Bid Description : </span>
+						<span><?php echo $rfp_bid['description']; ?></span>
+					</div>
+
+				<?php } ?>
+				
+
 			</div>	
 			<!--  /Basic Details  -->
 

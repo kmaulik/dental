@@ -27,7 +27,7 @@
 					<?=$this->session->flashdata('error');?>
 				</div>
 			<?php endif; ?>
-			<!-- /ALERT -->				
+			<!-- /ALERT -->
 
 			<div class="col-md-12">
 				<div class="pull-right">
@@ -37,10 +37,7 @@
 						<?php if($rfp_bid['is_chat_started'] == '1') : ?>
 							<a href="<?=base_url('messageboard/message/'.encode($record['id']).'/'.encode($record['patient_id']))?>" class="btn btn-info"><i class="fa fa-envelope"></i> Message</a>
 						<?php endif; ?>
-						<!-- ====== End Check chat is started or not ====== -->
-						<!-- ====== For Check RFP status In-progress(Winner) or not ====== -->
-						<a class="btn btn-success" data-toggle="modal" data-target=".manage_bid" id="update_bid"><i class="fa fa-eye"></i> View Bid</a>
-						<!-- ====== End Check RFP status In-progress(Winner) or not ====== -->
+						<!-- ====== End Check chat is started or not ====== -->											
 					<?php else : ?>
 						<!-- ====== For Check RFP status Open or not ====== -->
 						<?php if($record['status'] == 3 && $record['rfp_valid_date'] >= date("Y-m-d")) : ?> <!-- 3 Means Open RFP & rfp_valid_date >= date) For this RFP then show bid button -->
@@ -49,7 +46,14 @@
 						<!-- ====== End Check RFP status Open or not ====== -->
 					<?php endif; ?>
 					<!-- ====== End Check Bid Already Placed Or Not  ====== -->
-					<a href="javascript:history.go(-1)" class="btn btn-info"><i class="fa fa-arrow-left"></i> Back </a>
+					<a href="<?php echo base_url().'dashboard'; ?>" class="btn btn-info">
+						<i class="fa fa-arrow-left"></i> 
+						Back to Dashboard 
+					</a>
+					<a href="<?php echo base_url().'rfp/search_rfp'; ?>" class="btn btn-info">
+						<i class="fa fa-arrow-left"></i> 
+						Back to RFP
+					</a>
 				</div>
 			</div>	
 			<div class="col-md-12">
@@ -61,8 +65,6 @@
 		</div>
 	</div>
 </section>
-
-
 
 <!-- ==================== Modal Popup For Place a Bid ========================= -->
 <div class="modal fade manage_bid" tabindex="-1" role="dialog" aria-hidden="true">
@@ -97,14 +99,13 @@
 				<!-- body modal -->
 				<div class="modal-footer">
 					<div class="col-sm-12">
-							<div class="form-group">
-								<input type="submit" name="submit" class="btn btn-info custom-submit" value="Submit">
-								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
-							</div>	
+						<div class="form-group">
+							<input type="submit" name="submit" class="btn btn-info custom-submit" value="Submit">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 						</div>	
+					</div>	
 				</div>	
 			</form>
-
 		</div>
 	</div>
 </div>

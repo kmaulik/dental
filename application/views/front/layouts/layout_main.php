@@ -60,7 +60,7 @@
                             </ul>
                         </li>
                     <?php else :?>
-                        <li class="hidden-xs"><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
+                        <li><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
                         <li>
                             <a class="dropdown-toggle no-text-underline" href="<?=base_url('registration/user')?>">
                                 <i class="fa fa-user hidden-xs"></i>
