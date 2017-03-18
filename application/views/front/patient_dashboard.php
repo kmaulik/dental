@@ -314,6 +314,15 @@
 																<!-- ============= End Congratulation Box === -->
 																<!-- ============= Chat Conversation ===== -->
 																<ul class="timeline">
+																<!-- For Appointment -->	
+																<?php if(!empty($bid_data['appointment_data'])) :?>
+																	<li class="timeline-inverted appointment-fix">
+																		<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($bid_data['appointment_data']['appointment_date']))?>
+																		<span>Appointment Time :</span> <?=$bid_data['appointment_data']['appointment_time']?></p>
+																		<p><span>Doctor Comment : </span><?=$bid_data['appointment_data']['doc_comments']?></p>
+																	</li>	
+																<?php endif; ?>	
+																<!-- End Appointment -->
                                                                 <?php if(!empty($bid_data['chat_data'])) :?>    
     																<?php foreach($bid_data['chat_data'] as $chat) :?>
     															        <li class="timeline-inverted">
