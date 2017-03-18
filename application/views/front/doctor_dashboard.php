@@ -181,7 +181,16 @@
 										            <h5>Your RFP was successful</h5>
 										        </div>
 										        <ul class="timeline">
-
+													<!-- For Appointment -->	
+													<?php if(!empty($w_rfp['appointment_data'])) :?>
+														<li class="timeline-inverted appointment-fix">
+															<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($w_rfp['appointment_data']['appointment_date']))?>
+															<span>Appointment Time :</span> <?=$w_rfp['appointment_data']['appointment_time']?></p>
+															<p><span>Doctor Comment : </span><?=$w_rfp['appointment_data']['doc_comments']?></p>
+														</li>	
+													<?php endif; ?>	
+													<!-- End Appointment -->
+																
 	                                                <?php 
 	                                                    if(!empty($w_rfp['chat_data'])) :
 	                                                        foreach($w_rfp['chat_data'] as $chat) :                                                            

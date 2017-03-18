@@ -1282,6 +1282,10 @@ section .nav-tabs.nav-top-border>li.active>a:hover{background-color: #fff !impor
 section p span.block strong{ padding-right:0px;}
 section p span.block strong i{color: rgb(49,176,213);width: 16px;
     text-align: center;}
+    .timeline-inverted.appointment-fix{text-align: center;}
+    .timeline-inverted.appointment-fix span{font-size: 14px !important;
+    font-weight: bold;padding-right: 5px;}
+    .timeline-inverted.appointment-fix p{margin-bottom:10px;    color: #1F262D;}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

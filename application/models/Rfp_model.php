@@ -405,7 +405,7 @@ class Rfp_model extends CI_Model {
         $i=0;
         if(!empty($res)){
             foreach ($res as $rfp_data) { 
-                
+                /* -------- Chat Data ------ */
                 $this->db->select('m.*,CONCAT(u.fname," ",u.lname) as sender_name,u.avatar as sender_avatar');
                 $this->db->join('users u','m.from_id = u.id');
                 $where = '((m.from_id='.$rfp_data['patient_id'].' and m.to_id='.$this->session->userdata('client')['id'].' 
@@ -415,6 +415,19 @@ class Rfp_model extends CI_Model {
                 $this->db->where('m.rfp_id',$rfp_data['rfp_id']); 
                 $chat_data=$this->db->get('messages m')->result_array();
                 $res[$i]['chat_data'] = $chat_data;
+                /*------- End Chat Data ----- */
+
+                /*------- For Fix Appointment timeline Data ---------- */
+                $this->db->select('a.*,as.appointment_date,TIME_FORMAT(as.appointment_time, "%h : %i %p") as appointment_time');
+                $this->db->join('appointment_schedule as','a.id = as.appointment_id');
+                $this->db->where('a.rfp_id',$rfp_data['rfp_id']);
+                $this->db->where('a.doc_id',$rfp_data['doctor_id']);
+                $this->db->where('a.is_cancelled','0');
+                $this->db->where('as.is_selected','1');
+                $appointment_data=$this->db->get('appointments a')->row_array();
+                $res[$i]['appointment_data']=$appointment_data;
+                /*------- End For Fix Appointment timeline Data ------- */
+
                 $i++;
             }
         }
@@ -455,8 +468,9 @@ class Rfp_model extends CI_Model {
             $data=$this->db->get('rfp_bid rb')->result_array();
             $result[$key]['bid_data']=$data;
 
-            /*------- For Chat timeline --*/
+            
             foreach($data as $k=>$chat){
+               /*------- For Chat timeline --*/
                 $this->db->select('m.*,CONCAT(u.fname," ",u.lname) as sender_name,u.avatar as sender_avatar');
                 $this->db->join('users u','m.from_id = u.id');
                 $where = '((m.from_id='.$chat['doctor_id'].' and m.to_id='.$this->session->userdata('client')['id'].' and m.is_deleted_to = 0) or (m.to_id ='.$chat['doctor_id'].' and m.from_id='.$this->session->userdata('client')['id'].' and m.is_deleted_from = 0))';
@@ -464,8 +478,19 @@ class Rfp_model extends CI_Model {
                 $this->db->where('m.rfp_id',$chat['rfp_id']); 
                 $chat_data=$this->db->get('messages m')->result_array();
                 $result[$key]['bid_data'][$k]['chat_data']=$chat_data;
+                /*------ End Chat Timeline --*/
+
+                /*------- For Appointment timeline --*/
+                $this->db->select('a.*,as.appointment_date,TIME_FORMAT(as.appointment_time, "%h : %i %p") as appointment_time');
+                $this->db->join('appointment_schedule as','a.id = as.appointment_id');
+                $this->db->where('a.rfp_id',$chat['rfp_id']);
+                $this->db->where('a.doc_id',$chat['doctor_id']);
+                $this->db->where('a.is_cancelled','0');
+                $this->db->where('as.is_selected','1');
+                $appointment_data=$this->db->get('appointments a')->row_array();
+                $result[$key]['bid_data'][$k]['appointment_data']=$appointment_data;
+                /*------- End Appointment timeline --*/
             }
-            /*------ End Chat Timeline --*/
         }
 
         return $result;
