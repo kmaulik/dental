@@ -37,7 +37,7 @@
 			</div>		
 		</div>
 						
-		<!-- Doctor's All favorite RFP -->
+		<!-- Doctor's Tab Section -->
 		<div class="row">
 			
 			<div class="alert-message"></div>
@@ -46,6 +46,7 @@
 				<li class="active"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
 				<li><a href="#schedule_rfps" data-toggle="tab">Appointments</a></li>
 				<li><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
+				<li><a href="#favorite_rfp" data-toggle="tab">Favorite RFP</a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -138,10 +139,14 @@
                                                     ?>
 
 													    <a class="label label-info a_show_<?php echo $won_rfp_id; ?>" 
-                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();"> Show Timeline </a>
+                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();" data-toggle="tooltip" data-placement="top" data-original-title="Timeline"> <i class="fa fa-wechat"></i></a>
 
                                                         <a class="label label-info a_hide_<?php echo $won_rfp_id; ?>" 
-                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;"> Hide Timeline </a>
+                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Hide Timeline"> <i class="fa fa-eye-slash"></i></a>
+                                                    	
+                                                    	<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+                                                    		<i class="fa fa-eye"></i>
+                                                    	</a>	
                                                     <?php
 													}
 												}
@@ -322,73 +327,63 @@
 							<?php } } ?>
 						</tbody>
 					</table>
-
 				</div>
+				<div class="tab-pane fade" id="favorite_rfp">
+					<div class="col-md-12">
+						<?php 
+							$i = 0;
+							if(count($rfp_data_fav) > 0) :
+						?>
+							<div class="list-group success square no-side-border search_rfp">
+								<?php foreach($rfp_data_fav as $record) :?>
+									<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" 
+									   class="list-group-item a_fav_rfp <?php if($i > 2){ echo 'hide'; }  ?> ">
+										<div class="rfp-left">									
+											<!-- Means Favorite RFP -->
+											<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>																										
+											
+											<img src="<?php if($record['avatar'] != '') 
+					                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
+					                    	else 
+					                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">								
+											<span class="subject">
+												<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
+												<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
+											</span>
+										</div>	
+										<div class="rfp-right">
+											<?php if($record['img_path'] != '') :?>
+												<span class="attachment"><i class="fa fa-paperclip"></i></span>
+											<?php endif; ?>
+											<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
+										</div>
+									</a>
+
+								<?php $i++; ?>	
+								<?php endforeach; ?>
+								
+								<?php if(count($rfp_data_fav) > 3) { ?>
+									<br/>
+									<a onclick="$('.a_fav_rfp').removeClass('hide');$(this).hide();" 
+									   class="btn btn-primary text-center">
+										Show More
+									</a>
+								<?php } ?>
+							</div>					
+						<?php else : ?>
+							<h5>No RFP Available</h5>
+						<?php endif; ?>
+					</div>	
+					<!-- ======= End Favorite RFP ===== -->
+				</div>	
 			</div>
 			
 			<div class="divider divider-color divider-center divider-short"><!-- divider -->
 				<i class="fa fa-cog"></i>
 			</div>
 
-			<div class="col-md-12">
-				<h4> Favorite RFP </h4>
-				<hr/>
-			</div>	
-
-
-			<div class="col-md-12">
-				<?php 
-					$i = 0;
-					if(count($rfp_data_fav) > 0) :
-				?>
-					<div class="list-group success square no-side-border search_rfp">
-						<?php foreach($rfp_data_fav as $record) :?>
-							<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" 
-							   class="list-group-item a_fav_rfp <?php if($i > 2){ echo 'hide'; }  ?> ">
-								<div class="rfp-left">									
-									<!-- Means Favorite RFP -->
-									<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>																										
-									
-									<img src="<?php if($record['avatar'] != '') 
-			                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
-			                    	else 
-			                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">								
-									<span class="subject">
-										<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
-										<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
-									</span>
-								</div>	
-								<div class="rfp-right">
-									<?php if($record['img_path'] != '') :?>
-										<span class="attachment"><i class="fa fa-paperclip"></i></span>
-									<?php endif; ?>
-									<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
-								</div>
-							</a>
-
-						<?php $i++; ?>	
-						<?php endforeach; ?>
-						
-						<?php if(count($rfp_data_fav) > 3) { ?>
-							<br/>
-							<a onclick="$('.a_fav_rfp').removeClass('hide');$(this).hide();" 
-							   class="btn btn-primary text-center">
-								Show More
-							</a>
-						<?php } ?>
-					</div>					
-				<?php else : ?>
-					<h5>No RFP Available</h5>
-				<?php endif; ?>
-			</div>	
 		</div>	
-		<!-- // ENDS here FAV RFPs -->		
-
-		<div class="divider divider-color divider-center divider-short">
-			<!-- divider -->
-			<i class="fa fa-cog"></i>
-		</div>
-
+		<!-- End Doctor's Tab Section -->
 
 		<!-- Doctor's Filter For Search RFP -->
 		<div class="row rfp_radar_filter">			

@@ -255,7 +255,7 @@
 																<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
 																<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
 																	<!-- If Review not given for this RFP then display the review button -->	
-																	<a class="label label-info" onclick="view_chat(<?=$key?>,<?=$k?>)" title="Chat"><i class="fa fa-wechat"></i></a>
+																	<a class="label label-info" onclick="view_chat(<?=$key?>,<?=$k?>)" title="Timeline"><i class="fa fa-wechat"></i></a>
 																	<?php if($active_rfp['is_rated'] == '') : ?>
 																		<a class="label label-info rfp-price" id="rated_btn_<?=$bid_data['id']?>" onclick="send_review(<?=$key?>,<?=$k?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
 																	<?php endif; ?>

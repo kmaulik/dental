@@ -84,7 +84,17 @@
                 {
                     sortable: false,
                     data: "last_login",
-                    visible: true
+                    visible: true,
+                    render: function (data, type, full, meta) {
+                        var login_date='';
+                        if(data){
+                            login_date = data;
+                        }
+                        else{
+                            login_date = '-';
+                        }
+                        return login_date;
+                    },    
                 },
                 {
                     sortable: false,

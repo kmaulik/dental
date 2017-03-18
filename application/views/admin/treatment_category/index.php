@@ -27,10 +27,10 @@
     
         <div class="panel panel-flat">
             <div class="panel-heading text-right">
-                <a href="<?php echo site_url('admin/treatment_category/import'); ?>" class="btn btn-success btn-labeled">
+                <!-- <a href="<?php echo site_url('admin/treatment_category/import'); ?>" class="btn btn-success btn-labeled">
                     <b><i class="icon-box-add"></i></b>
                     Import CSV
-                </a>
+                </a> -->
                 &nbsp;&nbsp;&nbsp;
                 <a href="<?php echo site_url('admin/treatment_category/add'); ?>" class="btn btn-success btn-labeled">
                     <b><i class=" icon-plus-circle2"></i></b>
@@ -42,7 +42,8 @@
                     <tr>
                         <th>Category ID.</th>
                         <th>Category Title</th>
-                        <th>Code</th>                                            
+                        <th>Code</th> 
+                        <th>Status</th>                                           
                         <th width="100px">Action</th>
                     </tr>
                 </thead>
@@ -62,7 +63,7 @@
             },
             dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
             order: [[0, "asc"]],
-            ordering: false,
+            ordering: true,
             ajax: 'treatment_category/list_treatment_category',
             columns: [
                 {
@@ -70,14 +71,28 @@
                     visible: true
                 },
                 {
-                    sortable: false,
+                    //sortable: false,
                     data: "title",
                     visible: true
                 },
                 {
-                    sortable: false,
+                    //sortable: false,
                     data: "code",
                     visible: true
+                },
+                {
+                    //sortable: false,
+                    data: "is_blocked",
+                    visible: true,
+                    render: function (data, type, full, meta) {
+                        var status = '';
+                        if(data == 0){
+                            status = '<span class="label label-success">Active</span>';
+                        }else{
+                            status = '<span class="label label-danger">In Active</span>';
+                        }
+                        return status;
+                    }
                 },
                 {
                     data: "is_blocked",
