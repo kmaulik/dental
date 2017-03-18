@@ -1007,6 +1007,7 @@ span.favorite {
     line-height: 35px;
     width: 30px;
     text-align: center;
+    cursor: pointer !important;
 }
 span.favorite_rfp{
   color: #1980B6;

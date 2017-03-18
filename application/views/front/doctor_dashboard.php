@@ -51,186 +51,188 @@
 
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="won_rfps">
-					<table class="table table-hover chatting">
-						<thead>
-							<tr>
-								<th>RFP Title</th>
-								<th>Bid Price</th>
-								<th>Status</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-								if(!empty($won_rfps)) {
-									foreach($won_rfps as $w_rfp) {										
-										$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
-										// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
+					<div class="table-responsive">
+						<table class="table table-hover chatting">
+							<thead>
+								<tr>
+									<th>RFP Title</th>
+									<th>Bid Price</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php 
+									if(!empty($won_rfps)) {
+										foreach($won_rfps as $w_rfp) {										
+											$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
+											// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
 
-										$amt = $w_rfp['amount']; // Bid price										
-										$percentage = config('doctor_fees');
+											$amt = $w_rfp['amount']; // Bid price										
+											$percentage = config('doctor_fees');
 
-										$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
-										$total_transaction_cnt = 0;
+											$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
+											$total_transaction_cnt = 0;
 
-										$is_second_due = 1;
-										$due_1 = config('doctor_initial_fees');
-										$due_2 = 0;
-										$is_second_due = 0;
-
-										if($payable_price > $due_1){
-											$due_2 = $payable_price - $due_1;
 											$is_second_due = 1;
-										}else{
-											$payable_price = $due_1;
-										}
-							?>
-									<tr>
-										<td>
-											<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>">
-												<?php echo $w_rfp['title']; ?>
-											</a>
-										</td>										
-										<td><?php echo ucfirst($w_rfp['amount']); ?></td>
-										<td>
-											<?php
-												if(empty($all_billing_data)){
-													echo rfp_status_label($w_rfp['rfp_status']);
-												}else{
-													$check_transactions = array_column($all_billing_data,'transaction_id');													
-													$total_transaction_cnt = count(array_filter($check_transactions, function($x) {return !is_null($x); }));
+											$due_1 = config('doctor_initial_fees');
+											$due_2 = 0;
+											$is_second_due = 0;
 
-													// Check if there are any payment Errors in case of cancellation of agreement
-													if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
-														echo '<span class="label label-danger">Payment Error</span>';
-													}else{
-														echo '<span class="label label-primary">In-progress</span>';
-													}
-												}
-											?>
-										</td>
-										<td>										
-											<?php if($w_rfp['rfp_status'] == '4' && empty($all_billing_data)) { ?>
-												<a class="btn btn-3d btn-xs btn-reveal btn-green"
-												   data-is-second-due="<?php echo $is_second_due; ?>"
-												   data-due-one="<?php echo $due_1; ?>"
-												   data-due-two="<?php echo $due_2; ?>"
-												   data-total-due="<?php echo $payable_price; ?>"
-												   data-mybid="<?php echo $amt; ?>"
-												   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
-												   onclick="show_modal_doctor(this)" >
-													<i class="fa fa-money"></i><span>Proceed</span>
+											if($payable_price > $due_1){
+												$due_2 = $payable_price - $due_1;
+												$is_second_due = 1;
+											}else{
+												$payable_price = $due_1;
+											}
+								?>
+										<tr>
+											<td>
+												<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>">
+													<?php echo $w_rfp['title']; ?>
 												</a>
-											<?php }else{
-												
-													$show_pending_payment = 0;
-													foreach($all_billing_data as $bill_data){
-														if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
-														  $show_pending_payment++;
+											</td>										
+											<td><?php echo ucfirst($w_rfp['amount']); ?></td>
+											<td>
+												<?php
+													if(empty($all_billing_data)){
+														echo rfp_status_label($w_rfp['rfp_status']);
+													}else{
+														$check_transactions = array_column($all_billing_data,'transaction_id');													
+														$total_transaction_cnt = count(array_filter($check_transactions, function($x) {return !is_null($x); }));
+
+														// Check if there are any payment Errors in case of cancellation of agreement
+														if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
+															echo '<span class="label label-danger">Payment Error</span>';
+														}else{
+															echo '<span class="label label-primary">In-progress</span>';
 														}
-													}  
-
-                                                    $won_rfp_id = $w_rfp['rfp_id'];
-                                                    $timeline_id = '#timeline_id_'.$w_rfp['rfp_id'];
-
-													if($show_pending_payment != 0){
-														echo '<span class="label label-warning">Payment is under review</span>';													
-                                                    }else{
-                                                    ?>
-
-													    <a class="label label-info a_show_<?php echo $won_rfp_id; ?>" 
-                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();" data-toggle="tooltip" data-placement="top" data-original-title="Timeline"> <i class="fa fa-wechat"></i></a>
-
-                                                        <a class="label label-info a_hide_<?php echo $won_rfp_id; ?>" 
-                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Hide Timeline"> <i class="fa fa-eye-slash"></i></a>
-                                                    	
-                                                    	<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
-                                                    		<i class="fa fa-eye"></i>
-                                                    	</a>	
-                                                    <?php
 													}
-												}
-											?>
-										</td>
-									</tr>
-									<tr class="hover-timeline" id="timeline_id_<?php echo $w_rfp['rfp_id']; ?>" style="display:none;">
-										<td colspan="7" class="text-center">						        
-									        <div class="new-section timeline-up-section">
-									            <ul class="verticle-timeline">
-									                <li>
-									                    <div class="left-section">
-                                                            <div class="profile-image-border">
-                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
-                                                            </div>
-									                    	<span>Have accepted</span>
-									                    </div>
-									                    <div class="timeline-msg">$3333</div>
-									                    <div class="right-section">
-                                                            <div class="profile-image-border">
-                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
-                                                            </div>
-									                    	<span>Has Confirmed</span>
-									                    </div>
-									                </li>
-									            </ul>
-									        </div>
-									        <div class="cong-msg">
-									            <p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
-									            <h2>Congratulation!!</h2>
-									            <h5>Your RFP was successful</h5>
-									        </div>
-									        <ul class="timeline">
+												?>
+											</td>
+											<td>										
+												<?php if($w_rfp['rfp_status'] == '4' && empty($all_billing_data)) { ?>
+													<a class="label label-success"
+													   data-is-second-due="<?php echo $is_second_due; ?>"
+													   data-due-one="<?php echo $due_1; ?>"
+													   data-due-two="<?php echo $due_2; ?>"
+													   data-total-due="<?php echo $payable_price; ?>"
+													   data-mybid="<?php echo $amt; ?>"
+													   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
+													   onclick="show_modal_doctor(this)" data-toggle="tooltip" data-placement="top" data-original-title="Proceed">
+														<i class="fa fa-check"></i>
+													</a>
+												<?php }else{
+													
+														$show_pending_payment = 0;
+														foreach($all_billing_data as $bill_data){
+															if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
+															  $show_pending_payment++;
+															}
+														}  
 
-                                                <?php 
-                                                    if(!empty($w_rfp['chat_data'])) :
-                                                        foreach($w_rfp['chat_data'] as $chat) :                                                            
-                                                ?>
-                                                    <li class="timeline-inverted">
-                                                        <div class="timeline-badge warning"><img src="<?php if($chat['sender_avatar'] != '')
-                                                            { echo base_url('uploads/avatars/'.$chat['sender_avatar']); } 
-                                                            else 
-                                                            { echo DEFAULT_IMAGE_PATH."user/user-img.jpg "; }?>">
-                                                        </div>
-                                                        <div class="timeline-panel">
-                                                            <div class="timeline-heading">
-                                                                <h5 class="timeline-title"><?=$chat['sender_name']?></h5>
-                                                            </div>
-                                                            <div class="timeline-body">
-                                                                <p>
-                                                                    <?=$chat['message']?>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                                
-    									            <div class="timeline-panel-input" id="div_before_timeline_<?php echo $w_rfp['rfp_id']; ?>">
-                                                        <form method="post" data-id="<?php echo $w_rfp['rfp_id']; ?>" id="timeline_form_<?php echo $w_rfp['rfp_id']; ?>" 
-                                                              onsubmit="event.preventDefault(); submit_form(this);">
+	                                                    $won_rfp_id = $w_rfp['rfp_id'];
+	                                                    $timeline_id = '#timeline_id_'.$w_rfp['rfp_id'];
 
-                                                            <input type="hidden" name="rfp_id" value="<?=$w_rfp['rfp_id']?>">
-                                                            <input type="hidden" name="rfp_title" value="<?=$w_rfp['title']?>">
-                                                            <input type="hidden" name="to_id" value="<?php echo $w_rfp['patient_id']; ?>">
-                                                            <input type="textbox" name="message" id="message_id_<?php echo $w_rfp['rfp_id'];?>" placeholder="Your Message"/>                                                        
-                                                            <span id="validate-msg-<?php echo $w_rfp['rfp_id']; ?>"></span>
-                                                            <button class="btn btn-primary" id="button_<?php echo $w_rfp['rfp_id']; ?>" style="float:right">SUBMIT</button>
-                                                            <a class="btn btn-primary" style="display:none; float:right;" id="anchor_<?php echo $w_rfp['rfp_id']; ?>"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
-                                                        </form>
-                                                    </div>
-									        </ul>							        
+														if($show_pending_payment != 0){
+															echo '<span class="label label-warning">Payment is under review</span>';													
+	                                                    }else{
+	                                                    ?>
+
+														    <a class="label label-info a_show_<?php echo $won_rfp_id; ?>" 
+	                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();" data-toggle="tooltip" data-placement="top" data-original-title="Timeline"> <i class="fa fa-wechat"></i></a>
+
+	                                                        <a class="label label-info a_hide_<?php echo $won_rfp_id; ?>" 
+	                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Hide Timeline"> <i class="fa fa-eye-slash"></i></a>
+	                                                    	
+	                                                    	<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+	                                                    		<i class="fa fa-eye"></i>
+	                                                    	</a>	
+	                                                    <?php
+														}
+													}
+												?>
+											</td>
+										</tr>
+										<tr class="hover-timeline" id="timeline_id_<?php echo $w_rfp['rfp_id']; ?>" style="display:none;">
+											<td colspan="7" class="text-center">						        
+										        <div class="new-section timeline-up-section">
+										            <ul class="verticle-timeline">
+										                <li>
+										                    <div class="left-section">
+	                                                            <div class="profile-image-border">
+	                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+	                                                            </div>
+										                    	<span>Have accepted</span>
+										                    </div>
+										                    <div class="timeline-msg">$3333</div>
+										                    <div class="right-section">
+	                                                            <div class="profile-image-border">
+	                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+	                                                            </div>
+										                    	<span>Has Confirmed</span>
+										                    </div>
+										                </li>
+										            </ul>
+										        </div>
+										        <div class="cong-msg">
+										            <p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
+										            <h2>Congratulation!!</h2>
+										            <h5>Your RFP was successful</h5>
+										        </div>
+										        <ul class="timeline">
+
+	                                                <?php 
+	                                                    if(!empty($w_rfp['chat_data'])) :
+	                                                        foreach($w_rfp['chat_data'] as $chat) :                                                            
+	                                                ?>
+	                                                    <li class="timeline-inverted">
+	                                                        <div class="timeline-badge warning"><img src="<?php if($chat['sender_avatar'] != '')
+	                                                            { echo base_url('uploads/avatars/'.$chat['sender_avatar']); } 
+	                                                            else 
+	                                                            { echo DEFAULT_IMAGE_PATH."user/user-img.jpg "; }?>">
+	                                                        </div>
+	                                                        <div class="timeline-panel">
+	                                                            <div class="timeline-heading">
+	                                                                <h5 class="timeline-title"><?=$chat['sender_name']?></h5>
+	                                                            </div>
+	                                                            <div class="timeline-body">
+	                                                                <p>
+	                                                                    <?=$chat['message']?>
+	                                                                </p>
+	                                                            </div>
+	                                                        </div>
+	                                                    </li>
+	                                                    <?php endforeach; ?>
+	                                                <?php endif; ?>
+	                                                
+	    									            <div class="timeline-panel-input" id="div_before_timeline_<?php echo $w_rfp['rfp_id']; ?>">
+	                                                        <form method="post" data-id="<?php echo $w_rfp['rfp_id']; ?>" id="timeline_form_<?php echo $w_rfp['rfp_id']; ?>" 
+	                                                              onsubmit="event.preventDefault(); submit_form(this);">
+
+	                                                            <input type="hidden" name="rfp_id" value="<?=$w_rfp['rfp_id']?>">
+	                                                            <input type="hidden" name="rfp_title" value="<?=$w_rfp['title']?>">
+	                                                            <input type="hidden" name="to_id" value="<?php echo $w_rfp['patient_id']; ?>">
+	                                                            <input type="textbox" name="message" id="message_id_<?php echo $w_rfp['rfp_id'];?>" placeholder="Your Message"/>                                                        
+	                                                            <span id="validate-msg-<?php echo $w_rfp['rfp_id']; ?>"></span>
+	                                                            <button class="btn btn-primary" id="button_<?php echo $w_rfp['rfp_id']; ?>" style="float:right">SUBMIT</button>
+	                                                            <a class="btn btn-primary" style="display:none; float:right;" id="anchor_<?php echo $w_rfp['rfp_id']; ?>"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
+	                                                        </form>
+	                                                    </div>
+										        </ul>							        
+											</td>
+										</tr>
+									<?php } ?>
+								<?php }else{ ?>
+									<tr>
+										<td colspan="7" class="text-center">
+											<b>No RFP Found</b>
 										</td>
 									</tr>
 								<?php } ?>
-							<?php }else{ ?>
-								<tr>
-									<td colspan="7" class="text-center">
-										<b>No data Found</b>
-									</td>
-								</tr>
-							<?php } ?>
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="schedule_rfps">
 					<!-- Doctor's Manage Appointment -->
@@ -276,7 +278,7 @@
                                                     <td>
                                                         <!-- === If Appointment not set then display the manage appointment button otherwise view == -->
                                                         <?php if($appointment['appointment_id'] == '') :?>
-                                                            <a class="label label-success" title="Manage Appointment" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-hand-o-right"></i></a>
+                                                            <a class="label label-info" title="Manage Appointment" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-hand-o-right"></i></a>
                                                         <?php else : ?>
                                                             <a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
                                                             <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
@@ -290,7 +292,7 @@
                                         <?php }else{ ?>
                                             <tr>
                                                 <td colspan="5" class="text-center">
-                                                    <b>No data Found</b>
+                                                    <b>No Appointment Found</b>
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -302,92 +304,84 @@
                     <!-- // ENDS here Appointment -->
 				</div>
 				<div class="tab-pane fade" id="rfp_bids">					
-					
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>RFP Title</th>
-								<th>Bid Price</th>
-								<th>Status</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php 													
-								if(!empty($total_rfp_bids)){
-									foreach($total_rfp_bids as $total_bids){										
-							?>
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
 								<tr>
-									<td><?php echo $total_bids['title']; ?></td>
-									<td><?php echo $total_bids['amount']; ?></td>
-									<td><?php echo rfp_status_label($total_bids['rfp_status']); ?></td>
-									<td>
-										<a href="<?php echo base_url().'rfp/view_rfp/'.encode($total_bids['rfp_id']); ?>" 
-										   class="btn btn-3d btn-xs btn-reveal btn-green">
-											View
-										</a>
-									</td>
+									<th>RFP Title</th>
+									<th>Bid Price</th>
+									<th>Status</th>
+									<th>Action</th>
 								</tr>
-							<?php } } ?>
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								<?php 													
+									if(!empty($total_rfp_bids)){
+										foreach($total_rfp_bids as $total_bids){										
+								?>
+									<tr>
+										<td><?php echo $total_bids['title']; ?></td>
+										<td><?php echo $total_bids['amount']; ?></td>
+										<td><?php echo rfp_status_label($total_bids['rfp_status']); ?></td>
+										<td>
+											<a href="<?php echo base_url().'rfp/view_rfp/'.encode($total_bids['rfp_id']); ?>" 
+											   class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+												<i class="fa fa-eye"></i>
+											</a>
+										</td>
+									</tr>
+								<?php } } else { ?>
+									<tr>
+										<td colspan="4" class="text-center"><b>No RFP Bid Found</b></td>
+									</tr>
+								<?php }?>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div class="tab-pane fade" id="favorite_rfp">
 					<div class="col-md-12">
-						<?php 
-							$i = 0;
-							if(count($rfp_data_fav) > 0) :
-						?>
-							<div class="list-group success square no-side-border search_rfp">
-								<?php foreach($rfp_data_fav as $record) :?>
-									<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" 
-									   class="list-group-item a_fav_rfp <?php if($i > 2){ echo 'hide'; }  ?> ">
-										<div class="rfp-left">									
-											<!-- Means Favorite RFP -->
-											<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>"></span>																										
-											
-											<img src="<?php if($record['avatar'] != '') 
-					                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
-					                    	else 
-					                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">								
-											<span class="subject">
-												<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
-												<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
-											</span>
-										</div>	
-										<div class="rfp-right">
-											<?php if($record['img_path'] != '') :?>
-												<span class="attachment"><i class="fa fa-paperclip"></i></span>
-											<?php endif; ?>
-											<span class="time"><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></span>
-										</div>
-									</a>
-
-								<?php $i++; ?>	
-								<?php endforeach; ?>
-								
-								<?php if(count($rfp_data_fav) > 3) { ?>
-									<br/>
-									<a onclick="$('.a_fav_rfp').removeClass('hide');$(this).hide();" 
-									   class="btn btn-primary text-center">
-										Show More
-									</a>
-								<?php } ?>
-							</div>					
-						<?php else : ?>
-							<h5>No RFP Available</h5>
-						<?php endif; ?>
+						<!-- ============== Favorite RFP Table =============== -->
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th></th>
+										<th>RFP Title</th>
+										<th>Dentition Type</th>
+										<th>Created On</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php if(count($rfp_data_fav) > 0) : ?>
+										<?php foreach($rfp_data_fav as $record) :?>
+											<tr>
+												<td><span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>" data-toggle="tooltip" data-placement="top" data-original-title="Favorite RFP"></span></td>
+					                    		<td><?=character_limiter(strip_tags($record['title']), 70);?></td>
+					                    		<td><span class="label label-info"><?=ucfirst($record['dentition_type'])?></span></td>
+					                    		<td><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></td>
+												<td>
+													<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
+												</td>
+											</tr>
+										<?php endforeach; ?>	
+									<?php else : ?>
+										<tr><td colspan="6" class="text-center"><b>No Favorite RFP Found</b></td></tr>
+									<?php endif; ?>
+								</tbody>	
+							</table>	
+						</div>	
+						<!-- ============ End Favorite RFP Table ============= -->
 					</div>	
-					<!-- ======= End Favorite RFP ===== -->
 				</div>	
 			</div>
-			
-			<div class="divider divider-color divider-center divider-short"><!-- divider -->
-				<i class="fa fa-cog"></i>
-			</div>
-
 		</div>	
 		<!-- End Doctor's Tab Section -->
+
+		<div class="divider divider-color divider-center divider-short"><!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
 
 		<!-- Doctor's Filter For Search RFP -->
 		<div class="row rfp_radar_filter">			
