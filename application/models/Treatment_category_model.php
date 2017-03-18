@@ -16,11 +16,18 @@ class Treatment_category_model extends CI_Model {
         $this->db->select('id,title,code,DATE_FORMAT(created_at,"%d %b %Y <br> %l:%i %p") AS created_date,is_blocked', false);
         $this->db->where('is_deleted !=', 1);
         
+        $order = $this->input->get('order');
         $keyword = $this->input->get('search');
         $keyword = str_replace('"', '', $keyword);
         
         if (!empty($keyword['value'])) {
             $this->db->having('title LIKE "%' . $keyword['value'] . '%" or code LIKE "%'.$keyword['value'].'%"', NULL);
+        }
+
+        if(!empty($order)){
+            $key = $order[0]['column'];
+            $columns = $this->input->get('columns');
+            $this->db->order_by($columns[$key]['data'],$order[0]['dir']);
         }
 
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
