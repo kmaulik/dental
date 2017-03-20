@@ -144,7 +144,7 @@
 				                        <div class="form-group">
 				                            <label class="col-lg-3 control-label">Action :</label>
 				                            <div class="col-lg-3">
-				                                <select name="action" class="form-control select" id="action">
+				                                <select name="action" class="form-control select" id="action" onchange="fetch_pre_drafted_text()">
 				                                    <option value="no">Dis-Approve</option>
 				                                    <option value="yes">Approve</option>
 				                                </select>
@@ -157,7 +157,7 @@
 				                                    <small style="color:red">( This message will sent it to patient in mail.)</small>
 				                             </label>
 				                            <div class="col-lg-3">
-				                                <textarea rows="4" name="message" class="form-control" placeholder="Message...."></textarea>
+				                                <textarea rows="4" name="message" class="form-control" placeholder="Message...." id="pre_drafted_text"></textarea>
 				                            </div>
 				                        </div>
 
@@ -559,7 +559,27 @@
             minimumResultsForSearch: Infinity,
             width: 250            
         });
+        fetch_pre_drafted_text(); // For fetch predrafted text based on rfp action
     });
+
+    //--------------- Fetch Predrafted Text --------------
+    function fetch_pre_drafted_text(){
+    	var field='';
+    	var action = $("#action").val(); 
+    	if(action == 'yes'){
+    		field='rfp_approve_text';
+    	}else{
+    		field='rfp_dis_approve_text';
+    	}
+    	$.post("<?=base_url('admin/rfp/fetch_pre_drafted_text')?>",{'key':field},function(data){
+    		if(data){
+    			$("#pre_drafted_text").val(data);
+    		}else{
+    			$("#pre_drafted_text").val('');
+    		}
+    	});
+    }
+    //------------ End Fetch Predrafted Text ------------- 
  
 
     // fname ,lname

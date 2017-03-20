@@ -491,6 +491,87 @@
 			<i class="fa fa-cog"></i>
 		</div>
 
+		<!-- Patient's RFP List -->
+		<div class="row patient-rfp-list">
+			<div class="col-md-12">
+				<h4> Your RFP List </h4>
+				<hr/>
+			</div>	
+			<div class="col-sm-12">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Title</th>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Status</th>
+								<th>Expire Date</th>
+								<th>Extended</th>
+								<th>Dentition Type</th>
+								<th style="width:235px;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if(count($patient_rfp_list) > 0) :?>
+								<?php foreach($patient_rfp_list as $key=>$record) : ?>
+									<tr>
+										<td><?=$key+1;?></td>
+										<td><?=$record['title']?></td>
+										<td><?=$record['fname']?></td>
+										<td><?=$record['lname']?></td>
+										<td><?=rfp_status_label($record['status'])?></td>
+										<td><?=isset($record['rfp_valid_date'])?date("m-d-Y",strtotime($record['rfp_valid_date'])):'N/A'?></td>
+										<td>
+											<?php if($record['is_extended'] == 1) :?>	
+											Yes
+											<?php else : ?>
+											No
+											<?php endif; ?>
+										</td>
+										<td><?=$record['dentition_type']?></td>
+										<td>
+											<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+												<i class="fa fa-eye"></i><span>View</span>
+											</a>
+											<!-- For Check Status == 3 && valid date set and valid date >= today and patient validity not extend then display extend button--> 
+											<?php if($record['status'] == 3 && $record['rfp_valid_date'] != '' && $record['rfp_valid_date'] >= date("Y-m-d") && $record['is_extended'] == 0) :?>
+												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days">
+												<i class="fa fa-arrows"></i><span>Extend</span>
+											<?php endif; ?>
+											<!-- End Check Valid date -->
+
+											<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit & delete option -->
+											<?php if($record['status'] <= 2) : ?>
+												<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP">
+													<i class="fa fa-edit"></i><span>Edit</span>
+												</a>
+												<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP">
+													<i class="fa fa-trash"></i><span>Delete</span>
+												</a>
+											<?php endif; ?>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else :?>
+									<tr class="text-center"><td colspan="6">No RFP Data</td></tr>
+							<?php endif; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<?php echo $this->pagination->create_links(); ?>	
+			</div>	
+		</div>
+		<!-- Patient's RFP List -->	
+
+		<div class="divider divider-color divider-center divider-short">
+			<!-- divider -->
+			<i class="fa fa-cog"></i>
+		</div>
+
 
 		<!-- Payment Table -->
 		<!-- <div class="row">
@@ -906,6 +987,16 @@ $(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
 	$(".point").text(rating +" Star");
 });
  //------------- End Star Rating ----------------
+});
+
+$(".btn_delete").click(function(e){	
+	e.preventDefault();	
+	var href = $(this).data('href');
+	bootbox.confirm('Are you sure to delete this rfp?' ,function(res){ 	 		
+	    if(res) {
+	        window.location.href = href;
+	    }
+	});
 });
 
 function refund_request(key){

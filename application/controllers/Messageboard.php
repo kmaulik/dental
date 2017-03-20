@@ -5,7 +5,13 @@ class Messageboard extends CI_Controller {
 
 	public function __construct() {
         parent::__construct();
-        if(!isset($this->session->userdata['client']))redirect('login');
+
+        if(!isset($this->session->userdata['client']))
+        {
+        	$this->session->set_userdata('redirect_url',  current_url());
+        	redirect('login');
+        }	
+        	
         $this->load->model(array('Messageboard_model','Notification_model','Rfp_model'));
     }
 
@@ -93,8 +99,13 @@ class Messageboard extends CI_Controller {
 		    	//------------ Send Mail Config-----------------
 		    	$html_content=mailer('contact_inquiry','AccountActivation'); 
 		        $username= $user_data['fname']." ".$user_data['lname'];
+		        //----- For Message -------
+		    	$msg_url = 'messageboard/message/'.$rfp_id.'/'.encode($frm_id);
+		        $msg = $this->input->post('message')." <br/><br/>";
+		        $msg .= "<a href='".base_url($msg_url)."'>Click Here To Reply</a>";
+		        //----- End For Message -------
 		        $html_content = str_replace("@USERNAME@",$username,$html_content);
-		        $html_content = str_replace("@MESSAGE@",$this->input->post('message'),$html_content);
+		        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
 		       
 		        $email_config = mail_config();
 		        $this->email->initialize($email_config);

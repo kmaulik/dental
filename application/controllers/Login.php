@@ -60,7 +60,13 @@ class Login extends CI_Controller {
                         $this->session->set_userdata(['client' => $user_data, 'loggedin' => TRUE]); // Start Loggedin User Session
                         $this->session->set_flashdata('success','Login Successfull');
                         $this->Users_model->update_user_data($user_data['id'], ['last_login' => date('Y-m-d H:i:s')]); // update last login time
-                        redirect('dashboard');
+                        //----------- For check redirect url is set or not --------
+                        if($this->session->userdata('redirect_url')){
+                            redirect($this->session->userdata('redirect_url'));
+                        }else{   
+                            redirect('dashboard');
+                        }
+                        //------------ End For check redirect url is set or not -----------------
                     } else {
                         $this->session->set_flashdata('error', 'Password is incorrect.');
                         redirect('login');
@@ -77,6 +83,7 @@ class Login extends CI_Controller {
 
     public function logout(){
         $this->session->unset_userdata('client');
+        $this->session->unset_userdata('redirect_url');
         $this->session->set_flashdata('success','Logout Successfull');
         redirect('login');
     }    

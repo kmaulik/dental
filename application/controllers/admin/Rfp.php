@@ -128,7 +128,7 @@ class Rfp extends CI_Controller {
 
             $admin_remarks =[
                                 'attempt_no'=>$last_cnt,
-                                'last_message'=>$message,
+                                'last_message'=>$this->input->post('message'),
                                 'last_remarks'=>$remarks,
                                 'last_action_by'=>$this->session->userdata('admin')['email_id'],
                                 'last_action'=>date('Y-m-d H:i:s')
@@ -182,6 +182,12 @@ class Rfp extends CI_Controller {
         }
         // $data['subview'] = 'admin/rfp/choose_action';
         // $this->load->view('admin/layouts/layout_main', $data);
+    }
+
+    //--------------- Fetch Pre Drafted Text based on RFP Action using Ajax -----------
+    public function fetch_pre_drafted_text(){
+        $data = config($this->input->post('key'));
+        echo $data;
     }
 
 }
