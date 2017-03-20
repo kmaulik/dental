@@ -435,8 +435,14 @@
 							<input type="hidden" id="total_img" value="1">
 							<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
 							<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
+
+							<!-- <a class="btn btn-success" href="<?php echo base_url().''; ?>">
+								<i class="fa fa-arrow-right"></i> 
+								Next
+							</a> -->
 						</div>
 					</div>
+					<?php //pr($record); ?>
 				</form>
 			</div>
 		</div>

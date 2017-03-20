@@ -50,7 +50,7 @@
 						<span><?php echo '$ '.$rfp_bid['amount']; ?></span>
 					</div>
 
-					<div class="col-sm-12">						
+					<div class="col-sm-12 bid-title">						
 						<br/>					
 						<span class="title">Bid Description : </span>
 						<span><?php echo $rfp_bid['description']; ?></span>
@@ -66,19 +66,19 @@
 			<div class="rfp-history">
 				<h4 class="rfp-title">Medical History</h4>
 				<div class="col-sm-12">
-					<label>Known Allergies : </label> <?=$record['allergies']?>
+					<label>Known Allergies : </label><span> <?=$record['allergies']?></span>
 				</div>
 				<div class="col-sm-12">
-					<label>Full Medication List : </label> <?=$record['medication_list']?>
+					<label>Full Medication List : </label><span> <?=$record['medication_list']?></span>
 				</div>
 				<div class="col-sm-12">
-					<label>Any heart problems including blood pressure? : </label> <?=$record['heart_problem']?>
+					<label>Any heart problems including blood pressure? : </label> <span><?=$record['heart_problem']?><span>
 				</div>
 				<div class="col-sm-12">
-					<label>Any history of chemo/radiation ? : </label> <?=$record['chemo_radiation']?>
-				</div>
+					<label>Any history of chemo/radiation ? : </label><span> <?=$record['chemo_radiation']?></span>
+				</div>	
 				<div class="col-sm-12">
-					<label>Surgery occurred during the last two years. : </label> <?=$record['surgery']?>
+					<label>Surgery occurred during the last two years. : </label><span> <?=$record['surgery']?></span>
 				</div>
 			</div>	
 			<!--  /Medical History  -->
@@ -304,7 +304,7 @@
 			<!-- /Additional Section  -->	
 
 			<!--  Financial Information  -->
-			<div class="rfp-history">
+			<div class="rfp-history rfp-info">
 				<h4 class="rfp-title">Financial Information
 					<!-- For check Rfp created by = session id && status < 3 (open)  then display edit button-->
 					<?php if($this->session->userdata['client']['id'] == $record['patient_id'] && $record['status'] < 3): ?>

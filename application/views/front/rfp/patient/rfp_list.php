@@ -78,8 +78,10 @@
 							<!-- End Check Valid date -->
 
 							<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit & delete option -->
+							<!-- <?=base_url('rfp/edit/'.encode($record['id']).'/3')?> -->
 							<?php if($record['status'] <= 2) : ?>
-								<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP">
+								<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green"
+								   data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP">
 									<i class="fa fa-edit"></i><span>Edit</span>
 								</a>
 								<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP">

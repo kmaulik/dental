@@ -1,13 +1,11 @@
 <?php 
-    
     $client_login = $this->session->userdata('client');
     $all_notifications = get_notifications('10');     
     $all_noti_cnt = get_total_noti_count();
-    
+
     if(!empty($client_login)) { 
         $unread_cnt = get_notifications_unread_count();
     }
-
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]>          <html class="ie ie8"> <![endif]-->
@@ -275,7 +273,11 @@
             </div>
 
         </div>
-        <div class="fixed_clear_btn"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a></div>  
+        <div class="fixed_clear_btn">
+            <a onclick="$('#sidepanel_close').click();unread_notifications()">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </a>
+        </div>  
     </div>
     <!-- /SIDE PANEL -->    
 
@@ -339,6 +341,14 @@
                 }
             }
         });        
+    }
+
+    function unread_notifications(){
+        bootbox.confirm('Are you sure',function(res){
+            if(res){
+                
+            }
+        });
     }
 
 </script>

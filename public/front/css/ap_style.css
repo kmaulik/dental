@@ -240,9 +240,11 @@
 .verticle-timeline .right-section span {
     width: 130px;
     display: block;
-    font-size: 15px;
+    font-size: 15px !important;
+    padding-top: 5px !important;
     color: #414141;
-    font-weight: bold;
+    font-weight: bold !important;
+    text-align: center;
 }
 
 .timeline-panel-input {
@@ -1287,11 +1289,27 @@ section p span.block strong i{color: rgb(49,176,213);width: 16px;
     .timeline-inverted.appointment-fix span{font-size: 14px !important;
     font-weight: bold;padding-right: 5px;}
     .timeline-inverted.appointment-fix p{margin-bottom:10px;    color: #1F262D;}
+.panel-flat	 h4{color:#414141;font-size:24px;font-family:"Raleway","Open Sans",Arial,Helvetica,sans-serif;}
+.panel-flat .rfp-basic .title{color: #1f262d;color: #1f262d;font-weight: 400;width: 25%;}
+.rfp-history label{display: inline-block;width: 30%;color: #1f262d;font-weight: 300;    float: left;}
+.bid-title .title{width: 12% !important;}
+.rfp-treatment label{color: #1f262d;font-weight: 400;font-size:16px;}
+.rfp-treatment ul{margin-bottom:10px;padding-left:20px;}
+.rfp-treatment .manual_category {margin-bottom: 10px;padding-left: 15px;}
+.rfp-additional label{display: inline-block;width:25%;color: #1f262d;font-weight: 400;font-size:16px;}
+.rfp-info label{width:auto !important;}
+.rfp-history span{width: 50%;float: left;}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {
     width: 100%;
 	margin-right:0px;	
+}
+.panel-flat .rfp-basic .title {
+    width: 40%;
+}
+.bid-title .title {
+    width: 20% !important;
 }
 }
 @media (min-width:768px) and (max-width:1024px){
@@ -1411,6 +1429,13 @@ body #header #topNav #topMain>li.notification_side>a span{display:inline-block !
     margin-top: 20px;
 }
 section p span.block{margin-bottom:5px;}
+.rfp-basic .col-sm-6 {clear:both;}
+.bid-title .title {
+    width: 51% !important;
+}
+.panel-flat .rfp-basic .title{width:50%;}
+.rfp-history label,
+.rfp-additional label{ width: auto;}
 }
 
 @media (min-width:481px) and (max-width:767px){
@@ -1475,8 +1500,9 @@ section p span.block{margin-bottom:5px;}
     height: 40px;
     margin: 0 auto;
     display: block;
-
 }
+section.view-rfp .pull-right{float:none !important;}
+section.view-rfp .pull-right a{display:block; margin-bottom: 10px;}
 }  
 
 @media (min-width:320px) and (max-width:480px){

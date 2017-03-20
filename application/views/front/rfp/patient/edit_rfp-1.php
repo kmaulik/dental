@@ -189,7 +189,9 @@
 
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
-					<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
+					<a href='<?php echo base_url().'rfp/edit_rfp_redirect/'.$record['id']; ?>' class="btn btn-success">
+						<i class="fa fa-arrow-right"></i> Next
+					</a>
 				</div>
 			</div>
 		</form>
