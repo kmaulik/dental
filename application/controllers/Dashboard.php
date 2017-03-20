@@ -6,7 +6,11 @@ class Dashboard extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-		if(!isset($this->session->userdata['client']))redirect('login');
+		if(!isset($this->session->userdata['client']))
+        {
+            $this->session->set_userdata('redirect_url',  current_url());
+            redirect('login');
+        }   
         $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model','Notification_model']);
         $this->load->library(['unirest','googlemaps']);        
     }
@@ -40,6 +44,18 @@ class Dashboard extends CI_Controller {
         } else if($this->session->userdata('client')['role_id'] == 5) { 
 
             // Means 5 Patient Dashboard
+
+            //--------------- All RFP List -------------
+            $this->load->library('pagination');
+            $where = ['is_deleted' => 0 , 'is_blocked' => 0, 'patient_id' => $this->session->userdata['client']['id']];
+            $config['base_url'] = base_url().'dashboard/index';
+            $config['total_rows'] = $this->Rfp_model->get_rfp_front_count('rfp',$where);
+            $config['per_page'] = 10;
+            $offset = $this->input->get('per_page');
+            $config = array_merge($config,pagination_front_config());       
+            $this->pagination->initialize($config);
+            $data['patient_rfp_list']=$this->Rfp_model->get_rfp_front_result('rfp',$where,$config['per_page'],$offset); 
+            //-------------End All RPF List ------------
             
             $data['active_rfp_list']=$this->Rfp_model->get_active_rfp_patient_wise();
             $data['appointment_list']=$this->Rfp_model->get_patient_appointment_rfp($user_id); // Fetch RFP For Appointment

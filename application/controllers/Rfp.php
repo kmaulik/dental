@@ -5,7 +5,11 @@ class Rfp extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		if(!isset($this->session->userdata['client']))redirect('login');
+		if(!isset($this->session->userdata['client']))
+        {
+        	$this->session->set_userdata('redirect_url',  current_url());
+        	redirect('login');
+        }	
 		$this->load->helper(['paypal_helper']);	
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
@@ -17,20 +21,23 @@ class Rfp extends CI_Controller {
 		if($this->session->userdata['client']['role_id'] == 4) {
 			redirect('rfp/search_rfp');
 		}
+		else{
+			redirect('dashboard'); // For Patient Dashboard
+		}
 		//------------------------------------------------------------------
 
-		$this->load->library('pagination');
-		$where = ['is_deleted' => 0 , 'is_blocked' => 0, 'patient_id' => $this->session->userdata['client']['id']];
-		$config['base_url'] = base_url().'rfp/index';
-		$config['total_rows'] = $this->Rfp_model->get_rfp_front_count('rfp',$where);
-		$config['per_page'] = 10;
-		$offset = $this->input->get('per_page');
-		$config = array_merge($config,pagination_front_config());       
-		$this->pagination->initialize($config);
-		$data['rfp_list']=$this->Rfp_model->get_rfp_front_result('rfp',$where,$config['per_page'],$offset); 
+		// $this->load->library('pagination');
+		// $where = ['is_deleted' => 0 , 'is_blocked' => 0, 'patient_id' => $this->session->userdata['client']['id']];
+		// $config['base_url'] = base_url().'rfp/index';
+		// $config['total_rows'] = $this->Rfp_model->get_rfp_front_count('rfp',$where);
+		// $config['per_page'] = 10;
+		// $offset = $this->input->get('per_page');
+		// $config = array_merge($config,pagination_front_config());       
+		// $this->pagination->initialize($config);
+		// $data['rfp_list']=$this->Rfp_model->get_rfp_front_result('rfp',$where,$config['per_page'],$offset); 
 
-		$data['subview']="front/rfp/patient/rfp_list";
-		$this->load->view('front/layouts/layout_main',$data);
+		//$data['subview']="front/rfp/patient/rfp_list";
+		//$this->load->view('front/layouts/layout_main',$data);
 	}
 
 	/* ---------------- For Create a RFP --------------- */
@@ -774,8 +781,13 @@ class Rfp extends CI_Controller {
 	    	//------------ Send Mail Config-----------------
 	    	$html_content=mailer('contact_inquiry','AccountActivation'); 
 	        $username= $user_data['fname']." ".$user_data['lname'];
+	        //----- For Message -------
+	    	$msg_url = 'messageboard/message/'.encode($rfp_id).'/'.encode($frm_id);
+	        $msg = $this->input->post('message')." <br/><br/>";
+		    $msg .= "<a href='".base_url($msg_url)."'>Click Here To Reply</a>";
+		    //----- End For Message -------
 	        $html_content = str_replace("@USERNAME@",$username,$html_content);
-	        $html_content = str_replace("@MESSAGE@",$this->input->post('message'),$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
 	       
 	        $email_config = mail_config();
 	        $this->email->initialize($email_config);

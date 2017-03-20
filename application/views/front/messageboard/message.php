@@ -164,7 +164,11 @@ padding: 20px;
 		<!-- /ALERT -->			
 		<div class="row">
 			<div class="col-sm-12">
-				<h3 class="rfp-title"><?=isset($message_data[0]['rfp_title'])?$message_data[0]['rfp_title']:''?></h3>
+				<h3 class="rfp-title">
+					<?php if(!empty($message_data)) : ?>	
+						<a href="<?=base_url('rfp/view_rfp/'.encode($message_data[0]['rfp_id']))?>"><?=isset($message_data[0]['rfp_title'])?$message_data[0]['rfp_title']:''?></a>
+					<?php endif; ?>
+				</h3>
 				<div id="comments" class="wrapper_msg">
 					<h4 class="page-header margin-bottom-60 size-20">
 						<span><?=count($message_data)?></span> Messages
@@ -247,7 +251,9 @@ padding: 20px;
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 <script>
 $("document").ready(function(){
-	$('.wrapper_inner_box').scrollTop($('.wrapper_inner_box')[0].scrollHeight);
+	<?php if(count($message_data) > 0) : ?>
+		$('.wrapper_inner_box').scrollTop($('.wrapper_inner_box')[0].scrollHeight);
+	<?php endif;?>	
 });
 
 
