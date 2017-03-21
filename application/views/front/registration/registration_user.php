@@ -80,6 +80,7 @@
 
 						<div class="form-group">
 							<select name="state_id" class="form-control select2" id="state_id" data-id="select2">
+								<option value="" selected disabled>Select State</option>
 								<?php foreach($state_list as $state) : ?>
 									<option value="<?=$state['id']?>" <?php echo  set_select('state_id', $state['id']); ?> ><?=$state['name']?></option>
 								<?php endforeach; ?>
@@ -92,10 +93,10 @@
 						</div>	
 
 						<div class="form-group">
-							<select name="country_id" class="form-control select2_disable" id="country_id" readonly data-id="select2_disable">
+							<select name="country_id" class="form-control select2_disable" id="country_id" data-id="select2_disable">
 								<option value="" selected disabled>Select Country</option>
 								<?php foreach($country_list as $country) : ?>
-									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
+									<option disabled value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
 										<?=$country['name']?>
 									</option>
 								<?php endforeach; ?>
@@ -156,4 +157,10 @@
 	$('.NumbersAndPlus').keyup(function () { 
     	this.value = this.value.replace(/[^0-9+ ]/g,'');
   });
+
+/*------------- Custom Select 2 focus open select2 option @DHK-Select2 --------- */
+$(document).on('focus', '.select2', function() {
+    $(this).siblings('select').select2('open');
+});
+/*-------------End Custom Select 2 focus open select2 options -----*/
 </script> 

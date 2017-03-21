@@ -154,7 +154,7 @@
 											<?php endif; ?>
 										</td>
 										<td><?=$key+1?></td>
-										<td><?=$active_rfp['title']?></td>
+										<td><?=character_limiter($active_rfp['title'],20)?></td>
 										<td><?=$active_rfp['fname']." ".$active_rfp['lname']?></td>
 										<td><?=rfp_status_label($active_rfp['status']); ?></td>
 										<td><?=$active_rfp['total_bid']?></td>

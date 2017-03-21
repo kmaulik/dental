@@ -501,4 +501,9 @@ $("#frm_save_filter").validate({
     }
 });
 
+/*------------- Custom Select 2 focus open select2 option @DHK-Select2 --------- */
+$(document).on('blur', '#favorite_search', function() {
+    $('.select2').select2('open');
+});
+/*-------------End Custom Select 2 focus open select2 options -----*/
 </script>

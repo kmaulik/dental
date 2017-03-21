@@ -74,6 +74,7 @@ class Dashboard extends CI_Controller {
 
         // pr($data['db_data'],1);
         $data['country_list']=$this->Country_model->get_result('country');
+        $data['state_list']=$this->Country_model->get_result('states',['country_id'=>'231']);
         $decode_pass = $this->encrypt->decode($data['db_data']['password']);
 
         $get_tab = $this->input->get('tab');
@@ -155,7 +156,8 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('fname', 'first name', 'required');
                 $this->form_validation->set_rules('lname', 'last name', 'required');
                 $this->form_validation->set_rules('city', 'city', 'required');
-                $this->form_validation->set_rules('country_id', 'country', 'required');
+                // $this->form_validation->set_rules('country_id', 'country', 'required');
+                $this->form_validation->set_rules('state_id', 'state', 'required');
                 $this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
                                              ['validate_zipcode'=>'Please Enter Valid Zipcode']);
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
@@ -201,11 +203,12 @@ class Dashboard extends CI_Controller {
                     }
                     //--------------------------
                 }                
-
+                //pr($_POST,1);
                 $fname = $this->input->post('fname');
                 $lname = $this->input->post('lname');                
                 $city = $this->input->post('city');
-                $country_id = $this->input->post('country_id');
+                $state_id = $this->input->post('state_id');
+                // $country_id = $this->input->post('country_id');
                 $zipcode = $this->input->post('zipcode');
                 $gender = $this->input->post('gender');
                 $phone = $this->input->post('phone');
@@ -223,7 +226,8 @@ class Dashboard extends CI_Controller {
                                     'lname'=>$lname,
                                     'address'=>$address,
                                     'city'=>$city,
-                                    'country_id'=>$country_id,
+                                    'state_id'=>$state_id,
+                                    // 'country_id'=>$country_id,
                                     'zipcode'=>$zipcode,
                                     'gender'=>$gender,
                                     'phone'=>$phone,

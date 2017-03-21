@@ -93,24 +93,41 @@
 							<input type="text" placeholder="Email ID" name="email_id" readonly class="form-control" value="<?php echo $db_data['email_id']; ?>">
 						</div>
 						<div class="form-group">
+							<label class="control-label">Street</label>
+							<input type="text" placeholder="Street" name="street" class="form-control" value="<?php echo $db_data['street']; ?>">
+						</div>
+
+						<div class="form-group">
 							<label class="control-label">City</label>
 							<input type="text" placeholder="City" name='city' class="form-control" value="<?php echo $db_data['city']; ?>">
 						</div>
-						
-						<div class="form-group country_custom">
-							<label class="control-label">Country</label>
-							<select name="country_id" class="form-control select2" id="country_id">
-								<option value="" selected disabled>Select Country</option>
-								<?php foreach($country_list as $country) : ?>
-									<option value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> ><?=$country['name']?></option>
+
+						<div class="form-group">
+							<label class="control-label">State</label>
+							<select name="state_id" class="form-control select2" id="state_id">
+								<option value="" selected disabled>Select State</option>
+								<?php foreach($state_list as $state) : ?>
+									<option value="<?=$state['id']?>" <?php echo  set_select('state_id', $state['id']); ?> ><?=$state['name']?></option>
 								<?php endforeach; ?>
 							</select>	
-						</div>
+						</div>	
 
 						<div class="form-group">
 							<label class="control-label">Zipcode</label>
 							<input type="text" placeholder="zipcode" name="zipcode" class="form-control" value="<?php echo $db_data['zipcode']; ?>">
+						</div>	
+						
+						<div class="form-group country_custom">
+							<label class="control-label">Country</label>
+							<select name="country_id" class="form-control select2_disable"  id="country_id">
+								<option value="" selected disabled>Select Country</option>
+								<?php foreach($country_list as $country) : ?>
+									<option disabled value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> ><?=$country['name']?></option>
+								<?php endforeach; ?>
+							</select>	
 						</div>
+
+						
 
 						<div class="form-group ">
 							<label class="control-label">Gender</label>
@@ -123,11 +140,7 @@
 							<label class="control-label">Phone No</label>
 							<input type="text" placeholder="Phone no" name="phone" class="form-control" value="<?php echo $db_data['phone']; ?>">
 						</div>
-						<div class="form-group">
-							<label class="control-label">Street</label>
-							<input type="text" placeholder="Street" name="street" class="form-control" value="<?php echo $db_data['street']; ?>">
-						</div>
-
+						
 						<div class="form-group">
 							<label class="control-label">Birth Date</label>
 							<input type="text" placeholder="MM-DD-YYYY" name="birth_date" data-format="mm-dd-yyyy" class="form-control birth_date" value="<?php echo date("m-d-Y",strtotime($db_data['birth_date'])); ?>">
@@ -295,13 +308,16 @@
 <!-- / -->
 
 <script type="text/javascript">
+	
 
 	$('.AlphaAndDotWithhypen').keyup(function () { 
     	this.value = this.value.replace(/[^A-Za-z.-\s]/g,'');
 	});
 	
 	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
+
 	$('#country_id').val("<?php echo $db_data['country_id']; ?>");
+	$('#state_id').val("<?php echo $db_data['state_id']; ?>");
 
 	$(document).ready(function() {
         $('a[href="#office_map"]').click(function(e) {
@@ -345,4 +361,9 @@
 
 	}
 
+/*------------- Custom Select 2 focus open select2 option @DHK-Select2 --------- */
+$(document).on('focus', '.select2', function() {
+    $(this).siblings('select').select2('open');
+});
+/*-------------End Custom Select 2 focus open select2 options -----*/
 </script>
