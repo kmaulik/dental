@@ -454,7 +454,7 @@ class Rfp_model extends CI_Model {
         $this->db->where('rfp.patient_id',$this->session->userdata['client']['id']);
         $this->db->where('rfp.is_deleted',0);
         $this->db->where('rfp.is_blocked',0);
-        $this->db->group_by('rb.rfp_id');
+        $this->db->group_by('rfp.id');
         $this->db->order_by('rfp.id','desc');
         $result = $this->db->get('rfp')->result_array();
 

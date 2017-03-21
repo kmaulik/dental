@@ -334,7 +334,7 @@ class Cron extends CI_Controller {
 									<th>RFP Title</th>
 									<th>Patient Age</th>
 									<th>Distance (Miles.)</th>
-									<th>RFP Valid Days</th>
+									<th>RFP Remaining Days</th>
 								</tr>
 						</thead><tbody>";
 					foreach($notify_user['rfp_data'] as $notify_rfp){

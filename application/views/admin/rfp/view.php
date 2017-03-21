@@ -324,7 +324,7 @@
 										<table class="table table-bordered teeth">
 											<thead>
 												<tr>
-													<th colspan="16">permanent Dentition</th>
+													<th colspan="16">Permanent Dentition</th>
 												</tr>
 												<tr>
 													<th colspan="8">upper right</th>
@@ -380,7 +380,7 @@
 									?>
 									<?php if(count($other_category) > 0) :?>
 										<?php foreach($other_category as $category) :?>
-											<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?></li>
+											<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?> [<?= fetch_row_data('treatment_category',['id' => $category],'code') ?>]</li>
 										<?php endforeach; ?>
 									<?php else : ?>
 										<li> N/A</li>
@@ -406,7 +406,7 @@
 									<ul>
 										<?php if(isset($val->cat_id)) :?>
 											<?php foreach($val->cat_id as $category) :?>
-												<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?></li>
+												<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?> [<?= fetch_row_data('treatment_category',['id' => $category],'code') ?>]</li>
 											<?php endforeach; ?>
 										<?php else : ?>
 											<li> N/A</li>	

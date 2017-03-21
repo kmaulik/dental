@@ -189,9 +189,10 @@
 
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
-					<a href='<?php echo base_url().'rfp/edit_rfp_redirect/'.$record['id']; ?>' class="btn btn-success">
+					<a href='<?php echo base_url().'rfp/edit_rfp_redirect/'.$record['id']; ?>' class="btn btn-success submit_data">
 						<i class="fa fa-arrow-right"></i> Next
 					</a>
+					<a class="btn btn-success send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
 				</div>
 			</div>
 		</form>
@@ -289,6 +290,11 @@
 		});
 		//------- End For Range Picker -------------
 	});
+
+$(".submit_data").click(function(event) {
+	$(".submit_data").hide();
+	$(".send_chat_loader").show();
+});
 
 </script>
 

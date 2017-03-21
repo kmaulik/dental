@@ -245,8 +245,8 @@ span.time {
 									<th>Distance (Miles.)</th>
 									<th>Bid Amt ($)</th>
 									<th>Total Bid</th>
-									<th>Valid Days</th>
-									<th>Created On</th>
+									<th>Remaining Days</th>
+									<!-- <th>Created On</th> -->
 								</thead>
 								<tbody>
 									<?php foreach($rfp_data as $record) :?>
@@ -273,12 +273,9 @@ span.time {
 											</td>
 											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>"><span class="total_bid label label-success"><?=$record['total_bid']?></span></td>
 											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>"><?=$record['rfp_valid_days']+1?></td>
-											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>">
-												<?php if($record['img_path'] != '') :?>
-													<!-- <span class=""><i class="fa fa-paperclip"></i></span> -->
-												<?php endif; ?>
+											<!-- <td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>">
 												<span class=""><?=date("m-d-Y H:i a",strtotime($record['created_at']));?></span>
-											</td>
+											</td> -->
 										</tr>	
 									<?php endforeach; ?>
 								</tbody>	

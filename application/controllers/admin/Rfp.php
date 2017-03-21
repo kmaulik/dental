@@ -107,7 +107,7 @@ class Rfp extends CI_Controller {
                 $noti_msg = '<b>'.$record['title'].'</b> has been successfully approved and it is live.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
                 
-                $subject_mail = config('site_name').' - Approve RFP dynamic subject line';
+                $subject_mail = config('site_name').' - Congratulation your  "'.$record['title'].'" is released';
                 $message .= ' <a href="'.base_url().'dashboard"> click here'.'</a>';
             }else{ 
 
@@ -115,8 +115,8 @@ class Rfp extends CI_Controller {
                 $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
 
-                $subject_mail = config('site_name').' - Dis-approve RFP dynamic subject line';
-                $message .= ' <a href="'.base_url().'rfp/view_rfp/'.$encode_rfp_id.'"> click here'.'</a>';
+                $subject_mail = config('site_name').' - Question regarding  "'.$record['title'].'"';
+                $message .= ' <a href="'.base_url().'rfp/view_rfp/'.encode($rfp_id).'"> click here'.'</a>';
             }
 
             if(!empty($record['admin_remarks'])){
@@ -165,7 +165,7 @@ class Rfp extends CI_Controller {
 
             $email_config = mail_config();
             $this->email->initialize($email_config);
-            $subject=config('site_name').' - Regarding your RFP -'.$record['title'];
+            //$subject=config('site_name').' - Regarding your RFP -'.$record['title'];
             $this->email->from(config('contact_email'), config('sender_name'))
                     ->to($user_data['email_id'])
                     ->subject($subject_mail)

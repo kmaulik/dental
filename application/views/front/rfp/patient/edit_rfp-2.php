@@ -123,7 +123,7 @@
 									<table class="table table-bordered">
 										<thead>
 											<tr>
-												<th colspan="16">permanent Dentition</th>
+												<th colspan="16">Permanent Dentition</th>
 											</tr>
 											<tr>
 												<th colspan="8">upper right</th>
@@ -434,8 +434,8 @@
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
 							<input type="hidden" id="total_img" value="1">
 							<a href="<?=base_url('rfp/edit/'.encode($record['id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
-							<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
-
+							<button type="submit" class="btn btn-success submit_data"><i class="fa fa-arrow-right"></i> Next</button>
+							<a class="btn btn-success send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
 							<!-- <a class="btn btn-success" href="<?php echo base_url().''; ?>">
 								<i class="fa fa-arrow-right"></i> 
 								Next
@@ -640,6 +640,11 @@
 	// 	}
 	// });
 	// =========== END Check Validation For teeth category ===============//
+
+	$(".submit_data").click(function(event) {
+	$(".submit_data").hide();
+	$(".send_chat_loader").show();
+});
 
 </script>
 

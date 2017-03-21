@@ -73,7 +73,7 @@
 			<!-- header modal -->
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myLargeModalLabel">Apply Coupan Code</h4>
+				<h4 class="modal-title" id="myLargeModalLabel">Apply Coupon Code</h4>
 			</div>
 			<form action="<?=base_url('rfp/make_payment')?>" method="POST" id="frmcoupan">
 				<input type="hidden" name="is_paid" value="1">
@@ -88,7 +88,7 @@
 						</div>
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Coupan Code</label>
+								<label>Coupon Code</label>
 								<div class="fancy-file-upload fancy-file-success">
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 									<span class="button" id="apply-code">Apply Code</span>
@@ -133,7 +133,7 @@ $("#apply-code").click(function(){
 			console.log(data);
 			if(data != '' && data['id'] != null){
 				//---------- Check apply code limit for per user ----------
-				if(data['per_user_limit'] >= data['total_apply_code']){
+				if(data['per_user_limit'] > data['total_apply_code']){
 					discount_amt = 	((<?=config('patient_fees')?> * data['discount'])/100);
 					var final_price = <?=config('patient_fees')?> - discount_amt;
 					$(".final-prices").html(final_price);

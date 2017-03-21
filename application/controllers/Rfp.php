@@ -1037,7 +1037,7 @@ class Rfp extends CI_Controller {
 			if($this->input->post('coupan_code') != ''){
 				$data=$this->Promotional_code_model->fetch_coupan_data();
 				//--- Check code is valid and apply code limit for per user
-				if(isset($data['discount']) && $data['discount'] != '' && $data['per_user_limit'] >= $data['total_apply_code']) {
+				if(isset($data['discount']) && $data['discount'] != '' && $data['per_user_limit'] > $data['total_apply_code']) {
 					$promotinal_code_id = $data['id'];
 					$discount = $data['discount'];
 					$final_price = $final_price - (($final_price * $discount) /100);

@@ -145,7 +145,7 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Avatar:</label>
                             <div class="col-lg-3">
-                                <input type="file" class="file-styled" name="avatar">
+                                <input type="file" class="file-styled" name="avatar" id="avatar">
                                 <input type="hidden" name="H_avatar" value="<?php echo isset($user_data['avatar'])?$user_data['avatar']:''; ?>">
                             </div>
                             <div class="col-lg-3">
@@ -167,7 +167,7 @@
     </div>
 </div>
 
-
+<script src="<?php echo DEFAULT_ADMIN_JS_PATH ?>plugins/forms/validation/additional_methods.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 
     function readURL(input) {
@@ -260,6 +260,9 @@
             else if (element[0]['id'] == "state_id") {
                 error.insertAfter(element.next('span'));  // select2
             }
+            else if (element[0]['id'] == "avatar") {
+                error.insertAfter('.uploader');  // select2
+            }
             else {
                 error.insertAfter(element)
             }
@@ -284,7 +287,10 @@
             state_id:{required: true },
             zipcode:{required: true },
             phone:{required: true,maxlength: 15 },
-            birth_date:{required: true}
+            birth_date:{required: true},
+            avatar: {
+                 extension: "jpg|jpeg|png|gif"
+                }
         },        
         messages: {
             role_id: {required: 'Please Select a User Role' },
@@ -301,7 +307,10 @@
             state_id:{required: 'Please Select State' },
             zipcode:{required: 'Please Provide a Zipcode' }, 
             phone:{required: 'Please Provide a Phone' }, 
-            birth_date:{required: 'Please Provide a Birthdate' },           
+            birth_date:{required: 'Please Provide a Birthdate' },
+            avatar: {
+                 extension: "Please Provide Valid Avatar <br/>(Allow .jpg,.jpeg,.png,.gif File)"
+                }           
         }
     });
     
