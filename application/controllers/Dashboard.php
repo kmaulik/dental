@@ -22,7 +22,7 @@ class Dashboard extends CI_Controller {
         $user_data = $this->session->userdata('client');
         $user_id = $user_data['id'];
         $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
-        
+
         // Means 4 Doctor Dashboard
         if($this->session->userdata('client')['role_id'] == 4) {
                         
@@ -67,6 +67,7 @@ class Dashboard extends CI_Controller {
     }
 
     public function edit_profile(){
+        
         $loc_arr = array();
         $user_data = $this->session->userdata('client');
         $user_id = $user_data['id'];

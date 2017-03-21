@@ -1301,6 +1301,8 @@ section p span.block strong i{color: rgb(49,176,213);width: 16px;
 .rfp-history span{width: 50%;float: left;}
 .from_login_user .timeline-panel{background: #e6eaee none repeat scroll 0 0 !important;}
 .non_user ..timeline-panel{background: rgb(234, 234, 234) none repeat scroll 0 0 !important;}
+#permanent table tr td{padding: 8px 4px;}
+#permanent table tr td .checkbox{  margin: 0 7px 3px;}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {
