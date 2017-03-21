@@ -60,7 +60,16 @@
 					</div>
 					<div class="form-group">
 						<span class="title">State : </span>
-						<span class="desc"> <?=fetch_row_data('states',['id' => $db_data['state_id']],'name')?></span>
+						<span class="desc">
+							<?php 
+								$state = fetch_row_data('states',['id' => $db_data['state_id']],'name');
+								if($state == ''){
+									echo 'N/A';
+								}else{
+									echo $state;
+								}
+							?>
+						</span>
 					</div>
 					<div class="form-group">
 						<span class="title">Country : </span>
@@ -81,6 +90,14 @@
 					<div class="form-group">
 						<span class="title">Birth Date : </span>
 						<span class="desc"> <?=date("m-d-Y",strtotime($db_data['birth_date']))?></span>
+					</div>
+					<div class="form-group">
+						<span class="title">Public Email : </span>
+						<span class="desc"> <?php echo ($db_data['public_email'] == '') ? 'N/A':$db_data['public_email']; ?></span>
+					</div>
+					<div class="form-group">
+						<span class="title">Office address : </span>
+						<span class="desc"> <?php echo $db_data['office_description']; ?></span>
 					</div>
 				</div>	
 				<!-- /PERSONAL INFO TAB -->

@@ -2361,7 +2361,7 @@
 
 		if(_container.length > 0) {
 			loadScript(plugin_path + 'select2/js/select2.full.min.js', function() {			
-				jQuery('select.select2').select2({ maximumSelectionLength: 5 });
+				jQuery('select.select2').select2({ maximumSelectionLength: 5 ,closeOnSelect:false});
 				jQuery('select.select2_disable').select2({'disabled':true});
 				// jQuery('select.select2_custom').select2({ maximumSelectionLength: 5 });				
 			});

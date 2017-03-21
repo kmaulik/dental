@@ -522,7 +522,7 @@ class Rfp_model extends CI_Model {
         return $data;
     }
 
-     /* ----------------------- Fetch RFP For Patient Appointment (With RFP Status [5]) ----------------------- */
+    /* ----------------------- Fetch RFP For Patient Appointment (With RFP Status [5]) ----------------------- */
     public function get_patient_appointment_rfp($user_id){
         $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at,rb.id as rfp_bid_id');
         $this->db->join('appointments a','rfp.id = a.rfp_id');
@@ -546,19 +546,6 @@ class Rfp_model extends CI_Model {
         return $data;
     }
 
-    public function  return_status($rfp_id){
-
-        $all_data = $this->db->get_where('billing_schedule',['rfp_id'=>$rfp_id])->result_array();
-        if(!empty($all_data)){
-            
-            foreach($all_data as $a_data){
-                
-            }
-        }
-        return $all_data;
-    }
-
-
     //----------------- For fetch Total Review and average review for particualr doctor wise ------------
     public function fetch_doctor_wise_review($doctor_id){
         $this->db->select('doctor_id,avg(rating) as avg_rating,count(doctor_id) as total_rating');
@@ -570,5 +557,19 @@ class Rfp_model extends CI_Model {
         return $rating_data;
     } 
     //----------------- End For fetch Total Review and average review for particualr doctor wise ------------
+
+    public function check_if_user_view_profile($user_id){
+        $loggedin_user = $this->session->userdata('client')['id'];
+        $all_inprogress_rfps =  $this->db->select('id')->get_where('rfp',['patient_id'=>$loggedin_user,'status'=>'5'])->result_array();
+
+        $all_rfps = array_column($all_inprogress_rfps,'id');
+
+        $this->db->where_in('rfp_id', $all_rfps);
+        $all_data = $this->db->get('rfp_bid')->result_array();
+        
+        pr($all_data);
+        // pr($all_inprogress_rfps);
+        qry(1);
+    }
 
 }    

@@ -1299,6 +1299,8 @@ section p span.block strong i{color: rgb(49,176,213);width: 16px;
 .rfp-additional label{display: inline-block;width:25%;color: #1f262d;font-weight: 400;font-size:16px;}
 .rfp-info label{width:auto !important;}
 .rfp-history span{width: 50%;float: left;}
+.from_login_user .timeline-panel{background: #e6eaee none repeat scroll 0 0 !important;}
+.non_user ..timeline-panel{background: rgb(234, 234, 234) none repeat scroll 0 0 !important;}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

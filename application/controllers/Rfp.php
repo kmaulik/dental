@@ -386,13 +386,31 @@ class Rfp extends CI_Controller {
 					if($res){
 						$this->session->set_flashdata('success', 'Step 1 of 3 completed - You can access the Draft Version anytime from the Dashboard');
 
+						$teeth_data = $rfp_arr['teeth_data'];
+						$other_treatment_cat_id = $rfp_arr['other_treatment_cat_id'];
+
 						// ----- If Dentition Type Not Change then redirect to summary page otherwise goto 2nd step
-						if($rfp_arr['dentition_type'] == $this->input->post('dentition_type'))
-						{
-							redirect('rfp/edit/'.$id.'/3'); // Goto the Summary Page
-						}
-						else
-						{
+						if($rfp_arr['dentition_type'] == $this->input->post('dentition_type')) {
+
+							if($rfp_arr['dentition_type'] == 'primary' || $rfp_arr['dentition_type'] == 'permanent'){
+
+								if($teeth_data == null){
+									redirect('rfp/edit/'.$id.'/1');
+								}else{
+									redirect('rfp/edit/'.$id.'/3'); // Goto the Summary Page
+								}
+
+							}
+
+							if($rfp_arr['dentition_type'] == 'other'){
+								if($other_treatment_cat_id == null){
+									redirect('rfp/edit/'.$id.'/1');
+								}else{
+									redirect('rfp/edit/'.$id.'/3'); // Goto the Summary Page
+								}
+							}
+							
+						} else {
 							// If dentition type chnage then blank the field 
 							$condition=['id'	=>	decode($id)];
 							$data_upd=[
@@ -402,7 +420,7 @@ class Rfp extends CI_Controller {
 								'other_treatment_cat_id'	=>	'',
 								'other_treatment_cat_text'	=>	'',
 								];
-
+																					
 							$this->Rfp_model->update_record('rfp',$condition,$data_upd);
 							//-----------------
 							redirect('rfp/edit/'.$id.'/1'); // Goto the 2nd Step
@@ -414,8 +432,7 @@ class Rfp extends CI_Controller {
 						redirect('rfp/edit/'.$id);					
 					}
 				}
-			}
-			elseif($step == 1){				
+			} elseif($step == 1){				
 				//--------- For Check Step 1 is Success or not  ---------
 				if($rfp_arr['dentition_type'] != 'other') // If Type other than skip this validation 
 				{

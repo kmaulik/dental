@@ -344,9 +344,9 @@
     }
 
     function unread_notifications(){
-        bootbox.confirm('Are you sure',function(res){
+        bootbox.confirm('Are you sure to reset all unread notifications ?',function(res){
             if(res){
-                
+                window.location.href="<?php echo base_url().'home/reset_notification'; ?>";
             }
         });
     }

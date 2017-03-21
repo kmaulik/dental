@@ -356,10 +356,24 @@ class Dashboard extends CI_Controller {
     public function view_profile($user_id){
 
         $data['db_data'] = $this->Users_model->get_data(['id'=>decode($user_id)],true);
+        // pr($data['db_data'],1);
         $data['review_data'] = $this->Rfp_model->get_user_rating(decode($user_id));
         $data['overall_review']=$this->Rfp_model->get_overall_rating(decode($user_id));
         $data['encoded_user_id'] = $user_id;
-        
+
+        $sess_data = $this->session->userdata('client');
+        $sess_role_id = $sess_data['role_id'];
+
+        if($sess_role_id == '4'){
+            $data['allow_view'] = '1';
+        }else{
+            $res = $this->Rfp_model->check_if_user_view_profile(decode($user_id));
+            // qry();
+            // pr($res,1);
+        }
+
+        // pr($this->session->userdata('client'),1);
+
         $data['tab'] = $this->input->get('tab');
 
         if(!empty($data['db_data']['office_map_data'])){

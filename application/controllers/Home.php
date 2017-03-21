@@ -54,6 +54,14 @@ class Home extends CI_Controller {
 		echo json_encode(['status'=>'success','new_str'=>$new_str,'all_noti_cnt'=>$all_noti_cnt,'offset'=>(int)$offset]);
 	}
 
+	public function reset_notification(){
+		$res_data = $this->session->userdata('client');
+		$client_id = $res_data['id'];
+		$this->Rfp_model->update_record('notifications',['to_id'=>$client_id],['is_read'=>'1']);
+		$this->session->set_flashdata('success','All Notifications has been cleared.');
+		redirect('dashboard');
+	}
+
 	// ------------------------------------------------------------------------
 	// v! - Reminders Module
 	// ------------------------------------------------------------------------
