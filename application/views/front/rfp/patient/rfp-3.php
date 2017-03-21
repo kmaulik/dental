@@ -68,7 +68,8 @@
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
 					<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
-					<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-arrow-right"></i> Next</button>
+					<button type="submit" name="submit" class="btn btn-success submit_data" value="submit"><i class="fa fa-arrow-right"></i> Next</button>
+					<a class="btn btn-success send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
 				</div>
 			</div>
 		</form>
@@ -81,5 +82,10 @@
 <script>
 $('.NumbersAndDot').keyup(function () { 
     this.value = this.value.replace(/[^0-9.]/g,'');
+});
+
+$(".submit_data").click(function(event) {
+	$(".submit_data").hide();
+	$(".send_chat_loader").show();
 });
 </script>

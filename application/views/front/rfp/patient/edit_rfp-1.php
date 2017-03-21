@@ -189,7 +189,9 @@
 
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">
-					<button type="submit" class="btn btn-success"><i class="fa fa-arrow-right"></i> Next</button>
+					<button type="submit" class="btn btn-success submit_data"><i class="fa fa-arrow-right"></i> Next</button>
+					<a class="btn btn-success send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
+
 				</div>
 			</div>
 		</form>
@@ -287,6 +289,11 @@
 		});
 		//------- End For Range Picker -------------
 	});
+
+$(".submit_data").click(function(event) {
+	$(".submit_data").hide();
+	$(".send_chat_loader").show();
+});
 
 </script>
 

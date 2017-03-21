@@ -66,8 +66,8 @@ class Users extends CI_Controller {
 
             $avtar['msg']='';
             $path = "uploads/avatars/";
-            //2 MB File Size
-            $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 2097152);
+            //10 MB File Size
+            $avtar = $this->filestorage->FileInsert($path, 'avatar', 'image', 10485760);
             //----------------------------------------
             if ($avtar['status'] == 0) {
                $this->session->set_flashdata('message', ['message'=> $avtar['msg'],'class'=>'alert alert-danger']);
