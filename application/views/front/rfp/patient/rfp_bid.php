@@ -295,24 +295,24 @@
 <script>
 
 $(function () {
- //------------- For Star Rating ----------------
-$("#rating").val('0.5'); 
-$(".star-rating #rateYo").rateYo({
-    halfStar: true,
-    rating: 0.5,
-     onSet: function (rating, rateYoInstance) {
+	//------------- For Star Rating ----------------
+	$("#rating").val('0.5'); 
+	$(".star-rating #rateYo").rateYo({
+	    halfStar: true,
+	    rating: 0.5,
+	    onSet: function (rating, rateYoInstance) {
 			$(".point").show();
 			$("#rating").val(rating);
 		}
-  });
+	  });
 
-$(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
+	$(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
 
-	var rating = data.rating;
-	$(".point").show();
-	$(".point").text(rating +" Star");
-});
- //------------- End Star Rating ----------------
+		var rating = data.rating;
+		$(".point").show();
+		$(".point").text(rating +" Star");
+	});
+	//------------- End Star Rating ----------------
 });
 
 

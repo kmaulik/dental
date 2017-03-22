@@ -39,6 +39,7 @@ class Rfp extends CI_Controller {
         $data['title'] = 'Admin View RFP';
         $data['heading'] = 'View RFP Page';  
         $data['rfp_id'] = decode($rfp_id);
+
         $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
         // pr($data['record'],1);
         $data['subview'] = 'admin/rfp/view';
@@ -192,10 +193,92 @@ class Rfp extends CI_Controller {
 
 
     public function move_to_private(){
+
+        $rfp_id = $this->input->post('rfp_id');
+        $rfp_data = $this->db->get_where('rfp',['id'=>$rfp_id])->row_array();
+        // pr($rfp_data,1);
         $rfp_images = $this->input->post('rfp_images');
+
         if(!empty($rfp_images)){
-            
+
+
+            $private_img_path_arr = [];
+            $private_img_path = $rfp_data['private_img_path'];
+
+            if(!empty($private_img_path)){
+                $private_img_path_arr = explode('|',$private_img_path);                
+            }
+            $new_res_arr = array_merge($private_img_path_arr,$rfp_images);
+
+            // ------------------------------------------------------------------------
+            $public_img_path_arr = [];
+            $public_img_path = $rfp_data['img_path'];
+            if(!empty($public_img_path)){
+                $public_img_path_arr = explode('|',$public_img_path);
+            }
+            // ------------------------------------------------------------------------
+
+            $diff_arr = array_diff($public_img_path_arr, $new_res_arr);
+            $public_img_str = '';
+            if(!empty($diff_arr)){
+                $public_img_str = implode('|', $diff_arr);
+            }
+
+            $rfp_images_str = '';
+            if(!empty($new_res_arr)){
+                $rfp_images_str = implode('|', $new_res_arr);
+            }
+
+            $this->db->update('rfp',['private_img_path'=>$rfp_images_str,'img_path'=>$public_img_str], array('id' => $rfp_id));
+            $this->session->set_flashdata('message', ['message'=>'Images status has been saved to private.','class'=>'success']);
+            redirect('admin/rfp/view/'.encode($rfp_id));
         }
     }
+
+    public function move_to_public(){
+        $rfp_id = $this->input->post('rfp_id');
+        $rfp_data = $this->db->get_where('rfp',['id'=>$rfp_id])->row_array();
+        // pr($rfp_data,1);
+        $rfp_images = $this->input->post('rfp_images');   
+
+        // pr($rfp_images,1);
+
+        if(!empty($rfp_images)){
+            
+            $public_img_path_arr = [];
+            $public_img_path = $rfp_data['img_path'];
+
+            if(!empty($public_img_path)){
+                $public_img_path_arr = explode('|',$public_img_path);
+            }
+            $new_res_arr = array_merge($public_img_path_arr,$rfp_images);
+
+            // ------------------------------------------------------------------------
+            $private_img_path_arr = [];
+            $private_img_path = $rfp_data['private_img_path'];
+            if(!empty($private_img_path)){
+                $private_img_path_arr = explode('|',$private_img_path);
+            }
+            // -----------------------------------------------------------------------
+
+            $diff_arr = array_diff($private_img_path_arr, $new_res_arr);
+            $private_img_str = '';
+            if(!empty($diff_arr)){
+                $private_img_str = implode('|', $diff_arr);
+            }
+
+            $rfp_images_str = '';
+            if(!empty($new_res_arr)){
+                $rfp_images_str = implode('|', $new_res_arr);
+            }
+
+            $this->db->update('rfp',['private_img_path'=>$private_img_str,'img_path'=>$rfp_images_str], array('id' => $rfp_id));
+            $this->session->set_flashdata('message', ['message'=>'Images status has been saved to private.','class'=>'success']);
+            redirect('admin/rfp/view/'.encode($rfp_id));
+
+        }
+        // pr($rfp_images,1);
+    }
+     
 
 }

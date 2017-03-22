@@ -373,8 +373,7 @@ class Dashboard extends CI_Controller {
             $data['allow_view'] = '1';
         }else{
             $res = $this->Rfp_model->check_if_user_view_profile(decode($user_id));
-            // qry();
-            // pr($res,1);
+                        
         }
 
         // pr($this->session->userdata('client'),1);
