@@ -288,7 +288,7 @@ class Rfp extends CI_Controller {
 				if($res){
 					$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
 					if($this->input->post('prev')){
-						redirect('rfp/edit/'.encode(encode($this->session->userdata['rfp_data']['rfp_last_id'])).'/1'); // Go to 2nd step (Treatment Plan Details)
+						redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1'); // Go to 2nd step (Treatment Plan Details)
 					}else{
 						redirect('rfp/add/3'); // Goto 4th step (Summary Page - Final)
 					}	
