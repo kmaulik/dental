@@ -325,8 +325,9 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
 							<input type="hidden" id="total_img" value="1">
-							<a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
-							<button type="submit" class="btn btn-success submit_data"><i class="fa fa-arrow-right"></i> Next</button>
+							<!-- <a href="<?=base_url('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']))?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a> -->
+							<button type="submit" name="prev" value="prev" class="btn btn-success submit_data"><i class="fa fa-arrow-left"></i> Prev</button>
+							<button type="submit" name="next" value="next" class="btn btn-success submit_data"><i class="fa fa-arrow-right"></i> Next</button>
 							<a class="btn btn-success send_chat_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
 						</div>
 					</div>

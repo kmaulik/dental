@@ -156,7 +156,6 @@ class Rfp extends CI_Controller {
 			} 
 			else 
 			{
-				
 				/*------------ For teeth and Treatment category data -------- */
 				
 				$teeth=[];
@@ -262,7 +261,11 @@ class Rfp extends CI_Controller {
 				
 				if($res){
 					$this->session->set_flashdata('success', 'Step 2 of 3  completed - Treatment Plan Information Updated Successfully');
-					redirect('rfp/add/2');
+					if($this->input->post('prev')){
+						redirect('rfp/edit/'.$id); // Go to 1st step (Basic Details)
+					}else{
+						redirect('rfp/add/2');
+					}	
 				} else {
 					$this->session->set_flashdata('error', 'Error Into Create Treatment Plan');
 					redirect('rfp/add/1');
@@ -275,7 +278,7 @@ class Rfp extends CI_Controller {
 				redirect('rfp/add');
 			}	
 
-			if($this->input->post('submit')){
+			if($this->input->post('prev') || $this->input->post('next')){
 				$rfp_step_3=array(
 					'insurance_provider' => $this->input->post('insurance_provider'),
 					'treatment_plan_total' => $this->input->post('treatment_plan_total'),
@@ -284,9 +287,11 @@ class Rfp extends CI_Controller {
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 				if($res){
 					$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
-					//$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
-					//$this->session->unset_userdata('rfp_data');
-					redirect('rfp/add/3');
+					if($this->input->post('prev')){
+						redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
+					}else{
+						redirect('rfp/add/3'); // Goto 4th step (Summary Page - Final)
+					}	
 				} else {
 					redirect('rfp/add/2');
 					$this->session->set_flashdata('error', 'Error Into Create Financial Information');
@@ -395,18 +400,18 @@ class Rfp extends CI_Controller {
 							if($rfp_arr['dentition_type'] == 'primary' || $rfp_arr['dentition_type'] == 'permanent'){
 
 								if($teeth_data == null){
-									redirect('rfp/edit/'.$id.'/1');
+									redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
 								}else{
-									redirect('rfp/edit/'.$id.'/3'); // Goto the Summary Page
+									redirect('rfp/edit/'.$id.'/3'); // Goto 4th step (Summary Page)
 								}
 
 							}
 
 							if($rfp_arr['dentition_type'] == 'other'){
 								if($other_treatment_cat_id == null){
-									redirect('rfp/edit/'.$id.'/1');
+									redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
 								}else{
-									redirect('rfp/edit/'.$id.'/3'); // Goto the Summary Page
+									redirect('rfp/edit/'.$id.'/3'); // Goto 4th step (Summary Page)
 								}
 							}
 							
@@ -423,7 +428,7 @@ class Rfp extends CI_Controller {
 																					
 							$this->Rfp_model->update_record('rfp',$condition,$data_upd);
 							//-----------------
-							redirect('rfp/edit/'.$id.'/1'); // Goto the 2nd Step
+							redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
 						}	
 						//------ End If Dentition Type Not Change
 						
@@ -471,6 +476,7 @@ class Rfp extends CI_Controller {
 					$this->load->view('front/layouts/layout_main',$data);
 				}else{
 					//pr($_FILES,1);
+					//pr($_POST,1);
 					/*------------ For teeth and Treatment category data -------- */ 
 					$teeth=[];
 					$teeth_cat_array=[];
@@ -638,10 +644,15 @@ class Rfp extends CI_Controller {
 					if($res){
 						// IF Success
 						$this->session->set_flashdata('success', 'Step 2 of 3  completed - Treatment Plan Information Updated Successfully');						
-						if($rfp_arr['insurance_provider'] != '' && $rfp_arr['insurance_provider'] != ''){
-							redirect('rfp/edit/'.$id.'/3');
+						// Check for event prev or next
+						if($this->input->post('prev')){
+							redirect('rfp/edit/'.$id); // Go to 1st step (Basic Details)
 						}else{
-							redirect('rfp/edit/'.$id.'/2');
+							if($rfp_arr['insurance_provider'] != '' && $rfp_arr['insurance_provider'] != ''){
+								redirect('rfp/edit/'.$id.'/3'); // Go to 4th step (summary page - final)
+							}else{
+								redirect('rfp/edit/'.$id.'/2'); // Go to 3rd step(Financial info page)
+							}
 						}
 					} else{
 						// If Error
@@ -652,7 +663,7 @@ class Rfp extends CI_Controller {
 			}  
 			elseif($step == 2) {
 
-				if($this->input->post('submit')){
+				if($this->input->post('prev') || $this->input->post('next')){
 					$rfp_step_3=array(
 						'insurance_provider' => $this->input->post('insurance_provider'),
 						'treatment_plan_total' => $this->input->post('treatment_plan_total')
@@ -661,7 +672,11 @@ class Rfp extends CI_Controller {
 					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 					if($res){
 						$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
-						redirect('rfp/edit/'.$id.'/3');
+						if($this->input->post('prev')){
+							redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
+						}else{
+							redirect('rfp/edit/'.$id.'/3'); // Go to 4th step (summary page - final)
+						}
 					} else {
 						$this->session->set_flashdata('error', 'Error Into Update Financial Information');
 						redirect('rfp/edit/'.$id.'/2');
@@ -891,8 +906,8 @@ class Rfp extends CI_Controller {
         
         if($this->session->userdata('client')['role_id'] == '4') // Check For Doctor Role (4)
         {
-        	 //---------- Only Open RFP View By Doctor (Status = 3)-------
-        	 $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'status >=' => '3'],'1');
+        	 //---------- Only Open RFP View By Doctor (Status >= 3)-------
+        	 $data['record']=$this->Rfp_model->rfp_result_with_distance('rfp',['id' => decode($rfp_id),'status >=' => '3'],'1');
         	 if(empty($data['record'])){
         	 	show_404();
         	 } else {
@@ -1730,30 +1745,4 @@ class Rfp extends CI_Controller {
     	redirect('rfp/search_rfp');
     }
 
-    public function edit_rfp_redirect($rfp_id){
-		$res_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true);
-		// pr($res_data);
-		if(!empty($res_data)){
-			
-			$dentition_type = $res_data['dentition_type'];
-			$message_part_2 = $res_data['message'];
-			$teeth_data = $res_data['teeth_data'];
-			$other_treatment_cat_id = $res_data['other_treatment_cat_id'];
-
-			if($dentition_type == 'primary' || $dentition_type == 'permanent'){
-				if($teeth_data == null){
-					redirect('rfp/edit/'.encode($rfp_id).'/1');
-				}else{
-					redirect('rfp/edit/'.encode($rfp_id).'/3');
-				}
-			}
-
-			if($dentition_type == 'other'){
-				if($other_treatment_cat_id == null){
-					redirect('rfp/edit/'.encode($rfp_id).'/1');
-				}
-			}
-
-		} // END of IF condition
-    }
 }

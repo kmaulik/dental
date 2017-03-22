@@ -70,7 +70,7 @@ class Rfp_model extends CI_Model {
         }else{ 
             return $query->result_array();
         }
-    }
+    }   
 
     /**
      * @uses : This function is used to insert record
@@ -575,5 +575,19 @@ class Rfp_model extends CI_Model {
         }
 
     } // END of Function
+
+    //------------------ Calculate Distance b/w rfp and doctor for view rpf -----------
+    public function rfp_result_with_distance($table, $condition = null,$single='') {
+        $this->db->select('*,( 3959 * acos( cos( radians(' . $this->session->userdata['client']['latitude'] . ') ) * cos( radians( rfp.latitude ) ) * cos( radians( rfp.longitude ) - radians(' . $this->session->userdata['client']['longitude'] . ') ) + sin( radians(' . $this->session->userdata['client']['latitude'] . ') ) * sin( radians( rfp.latitude ) ) ) ) AS distance');
+        if (!is_null($condition)) {
+            $this->db->where($condition);
+        }
+        $query = $this->db->get($table);
+        if($single){
+            return $query->row_array();
+        }else{ 
+            return $query->result_array();
+        }
+    }
 
 }    

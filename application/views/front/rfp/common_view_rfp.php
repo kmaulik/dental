@@ -41,7 +41,14 @@
 						?>
 					</span>
 				</div>
-				
+				<!-- ======= For Display distance to doctor ======= -->
+				<?php if(isset($record['distance'])) :?>
+					<div class="col-sm-6">
+						<span class="title">Distance (Miles) : </span>
+						<span><?=round($record['distance'],2)?></span>
+					</div>
+				<?php endif; ?>
+				<!-- ======= End For Display distance to doctor ======= -->
 				<?php 
 					if(!empty($rfp_bid)) {						
 				?>
