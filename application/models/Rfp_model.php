@@ -258,7 +258,8 @@ class Rfp_model extends CI_Model {
 
         $this->db->where('rfp.rfp_valid_date >= CURDATE()'); // For check rfp valid date >= curdate
         $this->db->group_by('rfp.id');
-        $this->db->order_by('rfp.id',$sort_data);
+        $this->db->order_by('rfp_valid_days',$sort_data);
+        //$this->db->order_by('rfp.id',$sort_data);
         $this->db->limit($limit,$offset);
         $query = $this->db->get();
         return $query->result_array();

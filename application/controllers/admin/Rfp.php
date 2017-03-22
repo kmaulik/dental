@@ -108,7 +108,7 @@ class Rfp extends CI_Controller {
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
                 
                 $subject_mail = config('site_name').' - Congratulation your  "'.$record['title'].'" is released';
-                $message .= ' <a href="'.base_url().'dashboard"> click here'.'</a>';
+                $message .= ' <a href="'.base_url()."".$noti_url.'"> click here </a>';
             }else{ 
 
                 $status='2';
@@ -116,7 +116,7 @@ class Rfp extends CI_Controller {
                 $noti_url = 'rfp/edit/'.encode($rfp_id).'/3';
 
                 $subject_mail = config('site_name').' - Question regarding  "'.$record['title'].'"';
-                $message .= ' <a href="'.base_url().'rfp/view_rfp/'.encode($rfp_id).'"> click here'.'</a>';
+                $message .= ' <a href="'.base_url()."".$noti_url.'"> click here </a>';
             }
 
             if(!empty($record['admin_remarks'])){
