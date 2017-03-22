@@ -435,19 +435,63 @@
 							<label>Further Information for our Agents : </label><?=$record['message'] ?> 
 						</div>
 						
+						<form method="post" action="<?php echo base_url().'admin/rfp/move_to_private'; ?>" >
+							<div class="col-sm-12 col_custom">
+								<label>Attachment : </label>
+								<?php 
+									$attach_arr= explode("|",$record['img_path']);
+									// Check Attachment found or not 								
+									if(isset($attach_arr[0]) && $attach_arr[0] != '') : ?>
+									<?php 
+										foreach($attach_arr as $attach) : 										
+									?>
+										<div class="thumbnail">
+											<div class="thumb">
+												<?php $ext=explode(".",$attach); 
+												if(isset($ext) && $ext[1] == 'pdf') { ?>
+													<img src="<?=DEFAULT_IMAGE_PATH.'document-file.jpg'?>" alt="" style="height:150px;width:150px;">
+												<?php } else { ?>
+													<img src="<?=base_url('uploads/rfp/'.$attach)?>" alt="" style="height:150px;width:150px;">
+												<?php } ?>
+												<div class="caption-overflow">
+													<span>
+														<?php if(isset($ext) && $ext[1] != 'pdf') { ?>
+														<a href="<?=base_url('uploads/rfp/'.$attach)?>" data-popup="lightbox" rel="gallery" class="btn border-white text-white btn-flat btn-icon btn-rounded"><i class="icon-plus3"></i></a>
+														<?php } ?>
+														<a href="<?=base_url('uploads/rfp/'.$attach)?>" target="_blank" class="btn border-white text-white btn-flat btn-icon btn-rounded ml-5"><i class="icon-link2"></i></a>
+													</span>
+												</div>
+											</div>
+											<input type="checkbox" value="<?php echo $attach; ?>" name="rfp_images[]" class="styled" >
+										</div>
+
+									<?php endforeach; ?>
+								<?php else : ?>
+									N/A	
+								<?php endif;?>
+							</div>
+							<input type="hidden" name="">
+							<input type="submit" class="btn btn-primary" value="Move to Private">
+							<br/>							
+							<br/>
+						</form>
+
 						<div class="col-sm-12 col_custom">
-							<label>Attachment : </label>
-							<?php $attach_arr= explode("|",$record['img_path']);
-									// Check Attachment found or not 
-							if(isset($attach_arr[0]) && $attach_arr[0] != '') : ?>
-								<?php foreach($attach_arr as $attach) : ?>
+							<label>Attachment (Private) : </label>
+							<?php 
+								$attach_arr= explode("|",$record['private_img_path']);
+								// Check Attachment found or not 								
+								if(isset($attach_arr[0]) && $attach_arr[0] != '') : ?>
+								<?php 
+									foreach($attach_arr as $attach) : 										
+								?>
 									<div class="thumbnail">
 										<div class="thumb">
 											<?php $ext=explode(".",$attach); 
 											if(isset($ext) && $ext[1] == 'pdf') { ?>
-											<img src="<?=DEFAULT_IMAGE_PATH.'document-file.jpg'?>" alt="" style="height:150px;width:150px;">
+												<img src="<?=DEFAULT_IMAGE_PATH.'document-file.jpg'?>" alt="" style="height:150px;width:150px;">
 											<?php } else { ?>
-											<img src="<?=base_url('uploads/rfp/'.$attach)?>" alt="" style="height:150px;width:150px;">
+												<img src="<?=base_url('uploads/rfp/'.$attach)?>" alt="" style="height:150px;width:150px;">
 											<?php } ?>
 											<div class="caption-overflow">
 												<span>

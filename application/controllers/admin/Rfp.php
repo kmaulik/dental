@@ -113,7 +113,7 @@ class Rfp extends CI_Controller {
 
                 $status='2';
                 $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';
-                $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
+                $noti_url = 'rfp/edit/'.encode($rfp_id).'/3';
 
                 $subject_mail = config('site_name').' - Question regarding  "'.$record['title'].'"';
                 $message .= ' <a href="'.base_url().'rfp/view_rfp/'.encode($rfp_id).'"> click here'.'</a>';
@@ -188,6 +188,14 @@ class Rfp extends CI_Controller {
     public function fetch_pre_drafted_text(){
         $data = config($this->input->post('key'));
         echo $data;
+    }
+
+
+    public function move_to_private(){
+        $rfp_images = $this->input->post('rfp_images');
+        if(!empty($rfp_images)){
+            
+        }
     }
 
 }
