@@ -512,6 +512,9 @@ tr.hover-timeline:hover{background: #fff !important;}
 }
 /********************************* For Chatting history css ****************************************/
 
+#frmrfp .send_chat_loader{    
+    line-height: 2 !important;
+}
 
 #topMain.nav-pills li.active a {
     color: #687482;
@@ -1299,10 +1302,55 @@ section p span.block strong i{color: rgb(49,176,213);width: 16px;
 .rfp-additional label{display: inline-block;width:25%;color: #1f262d;font-weight: 400;font-size:16px;}
 .rfp-info label{width:auto !important;}
 .rfp-history span{width: 50%;float: left;}
-.from_login_user .timeline-panel{background: #e6eaee none repeat scroll 0 0 !important;}
-.non_user ..timeline-panel{background: rgb(234, 234, 234) none repeat scroll 0 0 !important;}
+li.from_login_user div.timeline-panel{background: #e0eaf5 !important;}
+li.non_user div.timeline-panel{background: #c7edfc !important;} 
+li.from_login_user > .timeline-panel:after {
+    position: absolute;
+    top: 20px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid #e0eaf5;
+    border-right: 0 solid #e0eaf5;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
+li.from_login_user > .timeline-panel:before {
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid #e0eaf5;
+    border-right: 0 solid #e0eaf5;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
+li.non_user > .timeline-panel:before {
+    position: absolute;
+    top: 20px;
+    right: -15px;
+    display: inline-block;
+    border-top: 15px solid transparent;
+    border-left: 15px solid  #c7edfc;
+    border-right: 0 solid #c7edfc;
+    border-bottom: 15px solid transparent;
+    content: " ";
+}
+li.non_user > .timeline-panel:after {
+    position: absolute;
+    top: 20px;
+    right: -14px;
+    display: inline-block;
+    border-top: 14px solid transparent;
+    border-left: 14px solid  #c7edfc;
+    border-right: 0 solid  #c7edfc;
+    border-bottom: 14px solid transparent;
+    content: " ";
+}
 #permanent table tr td{padding: 8px 4px;}
 #permanent table tr td .checkbox{  margin: 0 7px 3px;}
+
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

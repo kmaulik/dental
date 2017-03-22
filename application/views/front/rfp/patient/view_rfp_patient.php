@@ -42,11 +42,13 @@
 					<!-- Check For Submit RFP Or Not -->
 					<?php if(isset($confirm_rfp) && $confirm_rfp == '1') : ?>
 					<form action="" method="POST">
-						<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a>
+						<!-- <a href="<?=base_url('rfp/edit/'.encode($record['id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a> -->
 						<?php if($record['is_paid'] == 0) :?>
-							<a class="btn btn-success" data-toggle="modal" data-target=".promotional_code"><i class="fa fa-check"></i> Make a Payment</a>
+							<a class="btn btn-success" data-toggle="modal" data-target=".promotional_code"><i class="fa fa-check"></i> Submit</a>
 						<?php else : ?>
-							<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-check"></i> Submit</button>
+							<?php if($record['status'] == 2) :?> <!-- If Status is submit pending (2) then visible button -->
+								<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-check"></i> Resubmit</button>
+							<?php endif; ?>
 						<?php endif; ?>
 					</form>	
 					<?php else : ?>

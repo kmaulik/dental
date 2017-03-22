@@ -26,7 +26,7 @@
     <!-- content area -->
     
     <div class="panel panel-flat">
-       <!--  <div class="panel-heading text-right">
+     <!--    <div class="panel-heading text-right">
             <a href="<?php echo site_url('admin/email_template/add'); ?>" class="btn btn-success btn-labeled"><b><i class=" icon-plus-circle2"></i></b> Add New Email Template</a>
         </div> -->
         <table class="table datatable-basic">

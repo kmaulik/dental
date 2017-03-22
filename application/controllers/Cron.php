@@ -397,6 +397,46 @@ class Cron extends CI_Controller {
 	}
 	/* ------------------ End Send message according to search filter ---------------- */
 
+	/*--------------- For Send Message Notification to Patient (12 Days)------------------------ */
+	public function patient_notification_12_days(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
+		$this->db->from('rfp r');
+		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('r.status','3'); // 3 Means status open
+		$this->db->where('r.rfp_valid_date >= CURDATE()'); // For check rfp valid date >= curdate
+		$this->db->having('rfp_create_days','11'); // After 12 days from approve the rfp 
+		$data = $this->db->get()->result_array();
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Patient (12 Days)--------------------- */
+
+	/*--------------- For Send Message Notification to Patient (20 Days) ------------------------ */
+	public function patient_notification_20_days(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
+		$this->db->from('rfp r');
+		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('r.status','3'); // 3 Means status open
+		$this->db->where('r.rfp_valid_date >= CURDATE()'); // For check rfp valid date >= curdate
+		$this->db->where('r.is_extended','1'); // 1 Means Extend This RFP
+		$this->db->having('rfp_create_days','19'); // After 20 days from approve the rfp 
+		$data = $this->db->get()->result_array();
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Patient (20 Days)--------------------- */
+
+	/*--------------- For Send Message Notification to Patient (25 Days) ------------------------ */
+	public function patient_notification_25_days(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
+		$this->db->from('rfp r');
+		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('r.status','3'); // 3 Means status open
+		$this->db->having('rfp_create_days','24'); // After 24 days from approve the rfp 
+		$data = $this->db->get()->result_array();
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Patient (25 Days)--------------------- */
+
+
 }
 
 

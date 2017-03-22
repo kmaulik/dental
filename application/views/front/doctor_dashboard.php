@@ -195,7 +195,7 @@
 	                                                    if(!empty($w_rfp['chat_data'])) :
 	                                                        foreach($w_rfp['chat_data'] as $chat) :                                                            
 	                                                ?>
-	                                                    <li class="timeline-inverted">
+	                                                    <li class="timeline-inverted <?php if($this->session->userdata('client')['id'] == $chat['from_id']){ echo 'from_login_user'; }else{ echo 'non_user'; } ?>">
 	                                                        <div class="timeline-badge warning"><img src="<?php if($chat['sender_avatar'] != '')
 	                                                            { echo base_url('uploads/avatars/'.$chat['sender_avatar']); } 
 	                                                            else 

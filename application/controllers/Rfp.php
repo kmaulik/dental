@@ -312,11 +312,12 @@ class Rfp extends CI_Controller {
 					$this->session->set_flashdata('success', 'RFP Created Successfully');
 					//$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
 					$this->session->unset_userdata('rfp_data');
-					redirect('rfp');
+					//redirect('rfp');
 				} else {
 					$this->session->set_flashdata('error', 'Error Into Confirm RFP');
-					redirect('rfp/add/3');
+					//redirect('rfp/add/3');
 				}	
+				redirect('rfp/add/3');
 			}
 			else{
 
@@ -696,11 +697,10 @@ class Rfp extends CI_Controller {
 				$res=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1]);
 				if($res){
 					$this->session->set_flashdata('success', 'RFP Updated Successfully');
-					redirect('rfp');
 				} else {
-					redirect('rfp/edit/'.$id.'/3');
 					$this->session->set_flashdata('error', 'Error Into Confirm RFP');
 				}	
+				redirect('rfp/edit/'.$id.'/3');
 			}
 			else{
 
