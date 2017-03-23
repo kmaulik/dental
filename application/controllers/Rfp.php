@@ -876,6 +876,7 @@ class Rfp extends CI_Controller {
 		$cat_data =  $this->input->get('treatment_cat_id') ? $this->input->get('treatment_cat_id') :'';
 		$sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
 		$favorite_data= $this->input->get('favorite_search') ? $this->input->get('favorite_search') :'All';
+		$bid_data = $this->input->get('bid_search') ? $this->input->get('bid_search') :'All';
 		$saved_filter= $this->input->get('saved_filter') ? $this->input->get('saved_filter') :'';
 		//------- /Filter RFP ----
 		$category_data='';
@@ -885,14 +886,14 @@ class Rfp extends CI_Controller {
 			}
 		}
 			
-		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data.'&saved_filter='.$saved_filter;
-		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data,$favorite_data);
+		$config['base_url'] = base_url().'rfp/search_rfp?search='.$search_data.'&date='.$date_data.$category_data.'&sort='.$sort_data.'&favorite_search='.$favorite_data.'&bid_search='.$bid_data.'&saved_filter='.$saved_filter;
+		$config['total_rows'] = $this->Rfp_model->search_rfp_count($search_data,$date_data,$cat_data,$favorite_data,$bid_data);
 		//qry(1);
 		$config['per_page'] = 10;
 		$offset = $this->input->get('per_page');
 		$config = array_merge($config,pagination_front_config());       
 		$this->pagination->initialize($config);
-		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data,$favorite_data);
+		$data['rfp_data']=$this->Rfp_model->search_rfp_result($config['per_page'],$offset,$search_data,$date_data,$cat_data,$sort_data,$favorite_data,$bid_data);
 		//pr($data['rfp_data']);
 		// qry(1);
 		$data['subview']="front/rfp/doctor/search_rfp";
@@ -1678,6 +1679,7 @@ class Rfp extends CI_Controller {
     					'search_data'				=>	$this->input->post('search_data'),
     					'search_date'				=>	$this->input->post('search_date'),
     					'search_sort'				=>	$this->input->post('search_sort'),
+    					'search_bid'				=>	$this->input->post('search_bid'),
     					'search_favorite'			=>	$this->input->post('search_favorite'),
     					'search_treatment_cat_id'	=>	$this->input->post('search_treatment_cat_id'),
     					'created_at'				=>	date("Y-m-d H:i:s"),
@@ -1703,6 +1705,7 @@ class Rfp extends CI_Controller {
     					'search_data'				=>	$this->input->post('search_data'),
     					'search_date'				=>	$this->input->post('search_date'),
     					'search_sort'				=>	$this->input->post('search_sort'),
+    					'search_bid'				=>	$this->input->post('search_bid'),
     					'search_favorite'			=>	$this->input->post('search_favorite'),
     					'search_treatment_cat_id'	=>	$this->input->post('search_treatment_cat_id'),
     				];

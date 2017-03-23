@@ -22,7 +22,7 @@
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
-									<input type="text" name="search" id="search" class="form-control" placeholder="Search Transaction Id , RFP Title Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+									<input type="text" name="search" id="search" class="form-control" placeholder="Search Transaction Id , RFP Title Wise , Patient Name" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 									<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
 										<em>Filter Payment History From Here</em>
 									</span>
@@ -57,8 +57,9 @@
 							<tr>
 								<th>Transaction #</th>
 								<th>RFP Title</th>
-								<th>Actual Price. ($)</th>
-								<th>Payable Price. ($)</th>
+								<th>Patient Name</th>
+								<th>Actual Price ($)</th>
+								<th>Payment Value ($)</th>
 								<th>Discount (%)</th>
 								<th>Pay Date</th>
 							</tr>
@@ -68,7 +69,8 @@
 								<?php foreach ($transaction_list as $key => $record) : ?>
 									<tr>
 										<td><?=$record['paypal_token']?></td>
-										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank"><?=$record['rfp_title']?></a></td>
+										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank"><?=character_limiter($record['rfp_title'],50)?></a></td>
+										<td><?=$record['patient_name']?></td>
 										<td><?=$record['actual_price']?></td>
 										<td><?=$record['payable_price']?></td>
 										<td><?=$record['discount']?></td>

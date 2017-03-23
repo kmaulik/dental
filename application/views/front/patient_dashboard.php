@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
 
- 
 <section class="page-header page-header-xs">
 	<div class="container">
 		<h1>Dashboard</h1>
@@ -162,9 +161,9 @@
 											<?php if($active_rfp['treatment_plan_total'] != '' && $active_rfp['min_bid_amt'] != '') :?>
 												<?php $Total_save = 100 - round((($active_rfp['min_bid_amt']*100) / $active_rfp['treatment_plan_total']),2); ?>
 												<?php if($Total_save > 0) :?>
-													<span class="label label-success total_save">+<?=$Total_save?> %</span>
+													<span class="label label-success total_save">+<?=round($Total_save,2)?> %</span>
 												<?php else :?>
-													<span class="label label-danger total_save"><?=$Total_save?> %</span>
+													<span class="label label-danger total_save"><?=round($Total_save,2)?> %</span>
 												<?php endif; ?>
 											<?php else : ?>
 												N/A
@@ -232,9 +231,9 @@
 																<?php if($active_rfp['treatment_plan_total'] != '' && $bid_data['amount'] != '') :?>
 																	<?php $Total_save = 100 - round((($bid_data['amount']*100) / $active_rfp['treatment_plan_total']),2); ?>
 																	<?php if($Total_save > 0) :?>
-																		<span class="label label-success total_save">+<?=$Total_save?> %</span>
+																		<span class="label label-success total_save">+<?=round($Total_save,2)?> %</span>
 																	<?php else :?>
-																		<span class="label label-danger total_save"><?=$Total_save?> %</span>
+																		<span class="label label-danger total_save"><?=round($Total_save,2)?> %</span>
 																	<?php endif; ?>
 																<?php else : ?>
 																	N/A
@@ -313,7 +312,7 @@
 																</div>
 																<!-- ============= End Congratulation Box === -->
 																<!-- ============= Chat Conversation ===== -->
-																<ul class="timeline">
+																<ul class="timeline timline_bid_<?=$bid_data['id']?>">
 																<!-- For Appointment -->	
 																<?php if(!empty($bid_data['appointment_data'])) :?>
 																	<li class="timeline-inverted appointment-fix">
@@ -692,7 +691,8 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myLargeModalLabel">Send Message</h4>
 			</div>
-			<form action="<?=base_url('rfp/send_message')?>" method="POST" id="frmmsg">
+			<form method="POST" id="frmmsg" name="frmmsg">
+				<input type="hidden" name="is_msg_app" id="is_msg_app"> <!-- Use for modal popup open for appointment -->
 				<input type="hidden" name="rfp_id" id="msg_rfp_id">
 				<input type="hidden" name="rfp_title" id="msg_rfp_title">
 				<input type="hidden" name="rfp_bid_id" id="msg_rfp_bid_id">
@@ -712,7 +712,8 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 							<div class="form-group">
-								<input type="submit" name="submit" class="btn btn-info" value="Submit">
+								<input type="submit" name="submit" class="btn btn-info send_msg_btn" value="Submit">
+								<a class="btn btn-info send_msg_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
 								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
 							</div>	
 						</div>	
@@ -1092,6 +1093,7 @@ $(".btn_extend").click(function(e){
 //---------------- Send Message ------------------
 function send_msg(rfp_key,bid_key){
 	var rfp_data = <?php echo json_encode($active_rfp_list); ?>;
+	$("#is_msg_app").val(''); // For knowing this message from not appointment 
 	$("#msg_rfp_id").val(rfp_data[rfp_key]['id']);
 	$("#msg_rfp_title").val(rfp_data[rfp_key]['title']);
 	$("#msg_rfp_bid_id").val(rfp_data[rfp_key]['bid_data'][bid_key]['id']);
@@ -1203,6 +1205,7 @@ function send_msg_for_change_app(){
 	var app_data = <?php echo json_encode($appointment_list); ?>;
 	
 	var key = $("#app_key").val();
+	$("#is_msg_app").val('1');
 	$("#msg_rfp_id").val(app_data[key]['id']);
 	$("#msg_rfp_title").val(app_data[key]['title']);
 	$("#msg_rfp_bid_id").val(app_data[key]['rfp_bid_id']);
@@ -1249,7 +1252,7 @@ $(".send_chat_msg").click(function(e){
     			<?php } ?>
 
     			var msg_block ='<li class="timeline-inverted"><div class="timeline-badge warning"><img src="'+uavatar+'"></div><div class="timeline-panel"><div class="timeline-heading"><h5 class="timeline-title">'+uname+'</h5></div><div class="timeline-body"><p>'+chat_msg+'</p></div></div></li>';
-    			$(".timeline .chat_text_box").before(msg_block);
+    			$(".timline_bid_"+bid_id+" .chat_text_box ").before(msg_block);
     		}
     		
     		$(".send_chat_msg").show();
@@ -1294,6 +1297,55 @@ $(".send_chat_review").click(function(e){
     
 });    
 //--------------------- End Submit Review From Chatting --------------
+
+
+//--------------- For send message from appointment modal & timeline popup modal -----------------
+$("#frmmsg").submit(function(e) {
+	e.preventDefault();
+	var bid_id = $("#msg_rfp_bid_id").val();
+	var chat_msg = $("#message").val();
+	if(chat_msg != ''){
+		$(".send_msg_btn").hide();
+		$(".send_msg_loader").show();
+		$.post("<?=base_url('rfp/send_message')?>",$("#frmmsg").serialize(),function(data){
+			if(data){
+							
+				//---------------- For Add Message in timeline ---------------
+				
+				var uname= "<?=$this->session->userdata('client')['fname'].' '.$this->session->userdata('client')['lname']?>";
+
+				<?php if($this->session->userdata('client')['avatar'] != '') { ?>
+					var uavatar= "<?php echo base_url('uploads/avatars/'.$this->session->userdata('client')['avatar']); ?>";
+				<?php }else { ?>
+					var uavatar= "<?php echo DEFAULT_IMAGE_PATH.'user/user-img.jpg';  ?>";
+				<?php } ?>
+
+				var msg_block ='<li class="timeline-inverted"><div class="timeline-badge warning"><img src="'+uavatar+'"></div><div class="timeline-panel"><div class="timeline-heading"><h5 class="timeline-title">'+uname+'</h5></div><div class="timeline-body"><p>'+chat_msg+'</p></div></div></li>';
+				$(".timline_bid_"+bid_id+" .chat_text_box ").before(msg_block);
+				//----------------- End For Add Message in timeline ---------------
+
+				$(".modal").removeClass("fade").modal("hide");
+				$("#frmmsg input[name='reset']").click();
+				$(".send_msg_btn").show();
+				$(".send_msg_loader").hide();
+				// --------- Check for send message from appointment or not  -----------
+				if($("#is_msg_app").val() != ''){
+					var app_key = $("#app_key").val();
+					console.log(app_key);
+					$(".manage_appointment").modal('show');	
+					view_appointment(app_key);
+					$("#is_msg_app").val('');
+				}
+				// --------- End Check for send message from appointment or not  -----------
+				_toastr("Message Send Sucessfully","top-right","success",false);
+			}
+			else{
+				_toastr("Error Into Send Message. Please Try Again!","top-right","warning",false);
+			}
+		});
+	}
+	
+});
 
 
 //--------------- For Message Form Validation --------------

@@ -279,7 +279,10 @@
             </a>
         </div>  
     </div>
-    <!-- /SIDE PANEL -->    
+    <!-- /SIDE PANEL -->   
+
+   
+
 
 <!--  Custom Scroll Bar Style and Script -->
 <link href="<?= DEFAULT_CSS_PATH ?>custom_scrollbar.css" rel="stylesheet" type="text/css" />

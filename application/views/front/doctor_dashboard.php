@@ -1271,7 +1271,11 @@
 							due_1 = after_discount;
 							due_2 = 0
 						}
-							
+						
+						due_1 = due_1.toFixed(2);
+						due_2 = due_2.toFixed(2);
+						after_discount = after_discount.toFixed(2);
+						
 						$('.due_1_price').html('$ '+due_1);
 						$('.due_2_price').html('$ '+due_2);
 

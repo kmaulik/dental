@@ -138,7 +138,7 @@ class Rfp_model extends CI_Model {
 
    
     /* --------------- For Doctor Search RFP --------- */
-    public function search_rfp_count($search_data,$date_data,$category_data,$favorite_data) {
+    public function search_rfp_count($search_data,$date_data,$category_data,$favorite_data,$bid_data) {
         
         //-------- For Multiple Category search --------------
         $str='';
@@ -186,6 +186,16 @@ class Rfp_model extends CI_Model {
             }
         }
 
+        //----------- For Without bid RFP Filter ---------
+        if($bid_data != '' && $bid_data != 'All'){
+            if($bid_data == 'Include'){
+                $this->db->where('rb.rfp_id is NOT NULL', NULL, FALSE);
+            }elseif($bid_data == 'Exclude'){
+                $this->db->where('rb.rfp_id IS NULL', NULL, FALSE);
+            }
+        }
+        
+
 
         $this->db->having($having_data);
 
@@ -199,7 +209,7 @@ class Rfp_model extends CI_Model {
         return $res_data;
     }
 
-    public function search_rfp_result($limit,$offset,$search_data,$date_data,$category_data,$sort_data,$favorite_data){
+    public function search_rfp_result($limit,$offset,$search_data,$date_data,$category_data,$sort_data,$favorite_data,$bid_data){
         
         
         //-------- For Multiple Category search --------------
@@ -247,6 +257,15 @@ class Rfp_model extends CI_Model {
                 $this->db->where('rf.rfp_id is NOT NULL', NULL, FALSE);
             }elseif($favorite_data == 'Exclude'){
                 $this->db->where('rf.rfp_id IS NULL', NULL, FALSE);
+            }
+        }
+
+       //----------- For Without bid RFP Filter ---------
+        if($bid_data != '' && $bid_data != 'All'){
+            if($bid_data == 'Include'){
+                $this->db->where('rb.rfp_id is NOT NULL', NULL, FALSE);
+            }elseif($bid_data == 'Exclude'){
+                $this->db->where('rb.rfp_id IS NULL', NULL, FALSE);
             }
         }
 
