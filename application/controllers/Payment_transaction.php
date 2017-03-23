@@ -3,13 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Payment_transaction extends CI_Controller {
 
-	 public function __construct() {
+	public function __construct() {
         parent::__construct();          
         if(!isset($this->session->userdata['client'])) redirect('login');   
         $this->load->model(array('Payment_transaction_model'));
     }
-	public function history()
-	{
+
+	public function history(){
+		
 		//------- Filter Transaction ----
 		$search_data= $this->input->get('search') ? $this->input->get('search') :'';
 		$date_data= $this->input->get('date') ? $this->input->get('date') :'';

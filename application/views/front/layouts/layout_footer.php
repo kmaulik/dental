@@ -7,10 +7,14 @@
             <div class="col-md-4 col-sm-4">
 
                 <!-- Footer Logo -->
-                <a href="<?=base_url('')?>"><img class="footer-logo" src="<?= DEFAULT_IMAGE_PATH ?>/logo-footer.png" alt="" /></a>
 
+                <a href="<?=base_url('')?>">
+                    <img src="<?= DEFAULT_IMAGE_PATH ?>logo.png" alt="" />
+                </a>
+                <br/>
+                <br/>
                 <p>
-                    Incredibly beautiful responsive Bootstrap Template for Corporate and Creative Professionals.
+                    With experts in both dental health and technology, this dental option tool was built with the patient in mind; not only is this tool quick and easy, but it also provides high quality dental care options.
                 </p>
 
                 <h2><?=config('phone');?></h2>
@@ -36,10 +40,10 @@
                     </a>
                     <?php endif; ?>
                     <?php if(config('youtube_link') != '') :?>
-                    <a href="<?=config('youtube_link');?>" class="social-icon social-icon-sm social-icon-border social-youtube pull-left" data-toggle="tooltip" data-placement="top" title="YouTube">
+                    <!-- <a href="<?=config('youtube_link');?>" class="social-icon social-icon-sm social-icon-border social-youtube pull-left" data-toggle="tooltip" data-placement="top" title="YouTube">
                         <i class="icon-youtube"></i>
                         <i class="icon-youtube"></i>
-                    </a>
+                    </a> -->
                     <?php endif; ?>
                 </div>
                 <!-- /Social Icons -->
@@ -52,44 +56,20 @@
 
                 <div class="row">
 
-                    <div class="col-md-5 hidden-sm hidden-xs">
-                        <h4 class="letter-spacing-1">RECENT NEWS</h4>
-                        <ul class="list-unstyled footer-list half-paddings">
-                            <li>
-                                <a class="block" href="#">New CSS3 Transitions this Year</a>
-                                <small>June 29, 2015</small>
-                            </li>
-                            <li>
-                                <a class="block" href="#">Inteligent Transitions In UX Design</a>
-                                <small>June 29, 2015</small>
-                            </li>
-                            <li>
-                                <a class="block" href="#">Lorem Ipsum Dolor</a>
-                                <small>June 29, 2015</small>
-                            </li>
-                            <li>
-                                <a class="block" href="#">New CSS3 Transitions this Year</a>
-                                <small>June 29, 2015</small>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-3 hidden-sm hidden-xs">
+                    <div class="col-md-6 hidden-sm hidden-xs">
                         <h4 class="letter-spacing-1">EXPLORE US</h4>
                         <ul class="list-unstyled footer-list half-paddings noborder">
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> About Us</a></li>
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> About Me</a></li>
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> About Our Team</a></li>
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Services</a></li>
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Careers</a></li>
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Gallery</a></li>
+                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>                    
+                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Meet the Team</a></li>                                                                        
                             <li><a class="block" href="<?=base_url('faq')?>"><i class="fa fa-angle-right"></i> FAQ</a></li>
                         </ul>
                     </div>
 
                     <div class="col-md-4">
                         <h4 class="letter-spacing-1">SECURE PAYMENT</h4>
-                        <p>Donec tellus massa, tristique sit amet condim vel, facilisis quis sapien. Praesent id enim sit amet.</p>
+                        <p>
+                            Payments on this site are processed securely by PayPal. PayPal uses industry-leading encryption and fraud prevention tools and do not share your financial information with the merchant. After making a payment, you will receive a confirmation email.
+                        </p>
                         <p> <!-- see <?= DEFAULT_IMAGE_PATH ?>/cc/ for more icons -->
                             <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Visa.png" alt="" />
                             <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Mastercard.png" alt="" />

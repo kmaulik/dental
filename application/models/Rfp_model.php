@@ -129,7 +129,7 @@ class Rfp_model extends CI_Model {
         if (!is_null($condition)) {
             $this->db->where($condition);
         }
-        $this->db->order_by('id','desc');
+        $this->db->order_by('status');
         $this->db->limit($limit,$offset);
         $query = $this->db->get($table);
         return $query->result_array();
@@ -565,16 +565,24 @@ class Rfp_model extends CI_Model {
         $loggedin_user = $this->session->userdata('client')['id'];
         $all_inprogress_rfps =  $this->db->select('id')->get_where('rfp',['patient_id'=>$loggedin_user,'status'=>'5'])->result_array();
 
+        $is_allow = '0';
+
         if(!empty($all_inprogress_rfps)){
             
             $all_rfps = array_column($all_inprogress_rfps,'id');
             $this->db->where_in('rfp_id', $all_rfps);
-            $all_data = $this->db->get_where('rfp_bid')->result_array();
+            $all_data = $this->db->get_where('rfp_bid',['status'=>'2'])->result_array();
 
-        }else{
-            
-        }
+            if(!empty($all_data)){
+                $all_doctors = array_column($all_data,'doctor_id');
+                $all_doctors = array_unique($all_doctors);
 
+                if(in_array($user_id, $all_doctors)){
+                    $is_allow = '1';
+                }
+            }
+        }        
+        return $is_allow;
     } // END of Function
 
     //------------------ Calculate Distance b/w rfp and doctor for view rpf -----------

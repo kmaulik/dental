@@ -17,6 +17,7 @@
 				<!-- ============ Filter Payment History =========== -->
 				<form action="" method="GET" id="filter_transaction">
 					<div class="row">
+						
 						<div class="col-lg-5 col-md-12">
 							<label>Filter Data</label>
 							<div class="form-group">
@@ -29,17 +30,20 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="col-lg-3 col-md-5">
 							<label>Filter Date Wise</label>
 							<input type="text" name="date" class="form-control rangepicker" value="<?=$this->input->get('date') ? $this->input->get('date') :''?>" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31" readonly>
 						</div>
+
 						<div class="col-lg-2 col-md-3 sorting">
 							<label>Sort Transaction</label>
 							<select name="sort" class="form-control" id="sort">
 								<option value="desc">Latest</option>
 								<option value="asc">Oldest</option>
 							</select>
-						</div>	
+						</div>
+
 						<div class="col-lg-2 col-md-4">
 							<label>&nbsp;</label>
 							<input type="submit" name="btn_search" class="btn btn-info" value="Search">

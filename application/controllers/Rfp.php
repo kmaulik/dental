@@ -1689,7 +1689,7 @@ class Rfp extends CI_Controller {
     	}else{
     		$this->session->set_flashdata('error', 'Error Into Save Search Filter, Please Try Again!');
     	}
-    	redirect('rfp/search_rfp');
+    	redirect('rfp/view_filter_data/'.encode($res));
     }
 
 
@@ -1697,6 +1697,8 @@ class Rfp extends CI_Controller {
     * Edit Filter data from search rfp doctor side 
     **/
     public function update_filter_data(){
+    	
+    	$filter_id = $this->input->post('search_filter_id');
 
     	$filter_array = [
     					'filter_name'				=>	$this->input->post('filter_name'),
@@ -1713,7 +1715,8 @@ class Rfp extends CI_Controller {
     	}else{
     		$this->session->set_flashdata('error', 'Error Into Update Search Filter, Please Try Again!');
     	}
-    	redirect('rfp/search_rfp');
+    	
+    	redirect('rfp/view_filter_data/'.encode($filter_id));
     }
 
 

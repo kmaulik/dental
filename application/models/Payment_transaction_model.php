@@ -98,9 +98,11 @@ class Payment_transaction_model extends CI_Model {
      */
     public function get_payment_transaction_front_count($search_data,$date_data) {
         $this->db->join('rfp','pt.rfp_id=rfp.id');
+        
         if ($search_data != '') {
             $this->db->where('rfp.title LIKE "%' . $search_data . '%" OR pt.paypal_token LIKE "%'. $search_data .'%"', NULL);
         }
+
         if($date_data != ''){
             $date=explode(" ",$date_data);
             $this->db->where('date_format(pt.created_at,"%Y-%m-%d") >=', $date[0]);
@@ -126,6 +128,9 @@ class Payment_transaction_model extends CI_Model {
         $this->db->order_by('id',$sort_data);
         $this->db->limit($limit,$offset);
         $query = $this->db->get('payment_transaction pt');
+
+        // qry(1);
+        
         return $query->result_array();
     }
 }

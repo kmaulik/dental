@@ -518,7 +518,11 @@
 								<?php foreach($patient_rfp_list as $key=>$record) : ?>
 									<tr>
 										<td><?=$key+1;?></td>
-										<td><?=$record['title']?></td>
+										<td>
+											<?php
+												echo character_limiter($record['title'],20);
+											?>
+										</td>
 										<td><?=$record['fname']?></td>
 										<td><?=$record['lname']?></td>
 										<td><?=rfp_status_label($record['status'])?></td>

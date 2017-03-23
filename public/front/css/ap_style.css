@@ -1375,6 +1375,34 @@ li.non_user > .timeline-panel:after {
     -webkit-box-shadow: none;
     background-color: #C1C1C1;
 }
+#topMain.nav-pills > li.notification_side {
+    margin-top: 0;
+}
+#header #topNav #topMain>li.notification_side>a {
+    background: #fff;
+    color: #000;
+    padding-left: 0px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+body #header #topNav #topMain>li.notification_side>a span {
+    display: inline-block !important;
+}
+.post_number {
+    background: #ff7a76 none repeat scroll 0 0;
+    border-radius: 50px;
+    font-size: 10px;
+    position: absolute;
+    right: inherit;
+    height: 20px;
+    width: 20px;
+    line-height: 18px;
+    text-align: center;
+    color: #fff;
+    top: -8px;
+    padding: 0px;
+    left: 104px;
+}
 }
 @media (min-width:768px) and (max-width:991px){
   .wrapper_inner_box {

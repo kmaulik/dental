@@ -370,10 +370,9 @@ class Dashboard extends CI_Controller {
         $sess_role_id = $sess_data['role_id'];
 
         if($sess_role_id == '4'){
-            $data['allow_view'] = '1';
+            $data['allow_view'] = 1;
         }else{
-            $res = $this->Rfp_model->check_if_user_view_profile(decode($user_id));
-                        
+            $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile(decode($user_id));
         }
 
         // pr($this->session->userdata('client'),1);
@@ -408,7 +407,7 @@ class Dashboard extends CI_Controller {
             
             $data['map'] = $this->googlemaps->create_map();        
             $data['latlong_location'] = $center_map_str;
-            // pr($data['map'],1);
+
             // ------------------------------------------------------------------------
         }
 

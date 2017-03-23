@@ -1,9 +1,12 @@
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
+<script type="text/javascript" src="<?php echo DEFAULT_JS_PATH.'vague.js'; ?>"></script>
 
 <?php 
 	if(!empty($map)){
 		echo $map['js'];
+
+		echo $allow_view;
 	}
 ?>
 
@@ -40,19 +43,23 @@
 			</ul>
 			
 			<div class="tab-content">
-				<!-- PERSONAL INFO TAB -->
+				<!-- 
+					PERSONAL INFO TAB 
+					my_custom_strong
+					my_custom_strong_1
+				-->
 				<div class="tab-pane fade <?php if($tab == ''){ echo 'in active'; }?>" id="info">
 					<div class="form-group">
 						<span class="title">Name : </span>
-						<span class="desc"> <?=$db_data['fname'] ." ".$db_data['lname']?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_1'; } ?>"> <?=$db_data['fname'] ." ".$db_data['lname']?></span>
 					</div>
 					<div class="form-group">
 						<span class="title">Email : </span>
-						<span class="desc"> <?=$db_data['email_id']?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_2'; } ?>"> <?=$db_data['email_id']?></span>
 					</div>
 					<div class="form-group">
 						<span class="title">Street : </span>
-						<span class="desc"> <?=$db_data['street']?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_3'; } ?>"> <?=$db_data['street']?></span>
 					</div>
 					<div class="form-group">
 						<span class="title">City : </span>
@@ -81,7 +88,7 @@
 					</div>
 					<div class="form-group">
 						<span class="title">Gender : </span>
-						<span class="desc"> <?=ucfirst($db_data['gender'])?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_4'; } ?>"> <?=ucfirst($db_data['gender'])?></span>
 					</div>
 					<div class="form-group">
 						<span class="title">Phone : </span>
@@ -89,7 +96,13 @@
 					</div>
 					<div class="form-group">
 						<span class="title">Birth Date : </span>
-						<span class="desc"> <?=date("m-d-Y",strtotime($db_data['birth_date']))?></span>
+						<span class="desc">								
+							<?php
+								$birthday = new DateTime($db_data['birth_date']);
+								$interval = $birthday->diff(new DateTime);
+								echo $interval->y.' years';
+							?>
+						</span>
 					</div>
 					<div class="form-group">
 						<span class="title">Public Email : </span>
@@ -218,3 +231,51 @@
 	</div>
 </section>
 <!-- / -->
+
+<script type="text/javascript">
+	
+	var vague_1 = $('.blur_1').Vague({
+	    intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,  // Force absolute path to the SVG filter,
+	    animationOptions: {
+	     	duration: 1000,
+	     	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_1.blur();
+
+	var vague_2 = $('.blur_2').Vague({
+	    intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	    animationOptions: {
+	     	duration: 1000,
+	     	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_2.blur();
+
+	var vague_3 = $('.blur_3').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_3.blur();
+
+	var vague_4 = $('.blur_4').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_4.blur();
+
+</script>
