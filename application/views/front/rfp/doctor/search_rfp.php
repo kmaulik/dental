@@ -134,7 +134,24 @@ span.time {
 			<!-- /ALERT -->					
 			<div class="col-sm-12">
 				<form action="" method="GET" id="search_rfp">
+					<!-- =========== For Saved Filter =================== -->
 					<div class="row">
+						<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
+							<label>Saved Filter </label>
+							<select name="saved_filter" class="form-control" id="saved_filter">
+								<option value="">Select Saved Filter</option>
+								<?php foreach($search_filter_list as $search_filter) : ?>
+									<option value="<?=$search_filter['id']?>" <?php if($this->input->get('saved_filter') != '' && $search_filter['id'] == $this->input->get('saved_filter')) { echo "selected"; } ?>><?=$search_filter['filter_name']?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+							<label class="space">&nbsp;</label>
+							<a class="btn btn-success filter_btn" onclick="saved_filter()">Save Filter</a>
+						</div>
+					</div>
+					<!-- ================== End for saved filter ============= -->	
+					<div class="row">	
 						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 							<label>Filter Data</label>
 							<div class="form-group">
@@ -151,14 +168,22 @@ span.time {
 							<label>Filter Date Wise</label>
 							<input type="text" name="date" id="filter_date" class="form-control rangepicker" value="<?=$this->input->get('date') ? $this->input->get('date') :''?>" data-format="yyyy-mm-dd" data-from="2015-01-01" data-to="2016-12-31" readonly>
 						</div> -->
-						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 sorting">
+						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sorting">
 							<label>Sort</label>
 							<select name="sort" class="form-control" id="sort">
 								<option value="desc">Latest RFP</option>
 								<option value="asc">Oldest RFP</option>
 							</select>
 						</div>	
-						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 sorting">
+						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sorting">
+							<label>Bid</label>
+							<select name="bid_search" class="form-control" id="bid_search">
+								<option value="All">All</option>
+								<option value="Include">Include Bid</option>
+								<option value="Exclude">Exclude Bid</option>
+							</select>
+						</div>	
+						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sorting">
 							<label>Favorite</label>
 							<select name="favorite_search" class="form-control" id="favorite_search">
 								<option value="All">All</option>
@@ -180,21 +205,6 @@ span.time {
 							<input type="reset" name="reset" class="btn btn-default" value="Reset" id="reset">
 						</div>
 
-						<!-- =========== For Saved Filter =================== -->
-						<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
-							<label>Saved Filter </label>
-							<select name="saved_filter" class="form-control" id="saved_filter">
-								<option value="">Select Saved Filter</option>
-								<?php foreach($search_filter_list as $search_filter) : ?>
-									<option value="<?=$search_filter['id']?>" <?php if($this->input->get('saved_filter') != '' && $search_filter['id'] == $this->input->get('saved_filter')) { echo "selected"; } ?>><?=$search_filter['filter_name']?></option>
-								<?php endforeach; ?>
-							</select>
-						</div>
-						<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
-							<label class="space">&nbsp;</label>
-							<a class="btn btn-success filter_btn" onclick="saved_filter()">Save Filter</a>
-						</div>
-						<!-- ================== End for saved filter ============= -->	
 					</div>	
 				</form>
 					
@@ -309,6 +319,7 @@ span.time {
 				<input type="hidden" name="search_data" id="search_data">
 				<input type="hidden" name="search_date" id="search_date">
 				<input type="hidden" name="search_sort" id="search_sort">
+				<input type="hidden" name="search_bid" id="search_bid">
 				<input type="hidden" name="search_favorite" id="search_favorite">
 				<input type="hidden" name="search_treatment_cat_id" id="search_treatment_cat_id">
 				
@@ -358,11 +369,13 @@ $(document).ready(function() {
 
 
 $("#sort").val("<?=$this->input->get('sort')?$this->input->get('sort'):'desc'?>");
+$("#bid_search").val("<?=$this->input->get('bid_search')?$this->input->get('bid_search'):'All'?>");
 $("#favorite_search").val("<?=$this->input->get('favorite_search')?$this->input->get('favorite_search'):'All'?>");
 $("#reset").click(function(){
 	$('input[name=search]').val('');
 	$('input[name=date]').val('');
 	$("#sort").val('desc');
+	$("#bid_search").val('All');
 	$("#favorite_search").val('All');
 	$("#treatment_cat_id").val('');
 	$("#search_rfp").submit();
@@ -394,6 +407,7 @@ function saved_filter(){
 	$("#search_data").val($("#search").val());
 	$("#search_date").val($("#filter_date").val());
 	$("#search_sort").val($("#sort").val());
+	$("#search_bid").val($("#bid_search").val());
 	$("#search_favorite").val($("#favorite_search").val());
 	$("#search_treatment_cat_id").val($("#treatment_cat_id").val());
 
@@ -410,6 +424,7 @@ $("#saved_filter").change(function(e) {
 				$("#search").val(data['search_data']);
 				$("#filter_date").val(data['search_date']);
 				$("#sort").val(data['search_sort']);
+				$("#bid_search").val(data['search_bid']);
 				$("#favorite_search").val(data['search_favorite']);
 				var treat_cat_id = data['search_treatment_cat_id'].split(',');
 				$("#treatment_cat_id").val(treat_cat_id);

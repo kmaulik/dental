@@ -480,6 +480,9 @@ tr.hover-timeline:hover{background: #fff !important;}
     margin-top: -7px;
     padding-right: 0px !important;
 }
+.send_msg_loader i{
+    padding-right: 0px;
+}
 @media (max-width: 767px) {
    ul.timeline:before {
         left: 40px;

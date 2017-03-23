@@ -61,7 +61,7 @@
                     <th>Payee Name</th>
                     <th>RFP Title</th> 
                     <th>Actual Price ($)</th> 
-                    <th>Payable Price ($)</th> 
+                    <th>Payment Value ($)</th> 
                     <th>Discount (%)</th>                     
                     <th>Created Date</th>                        
                 </tr>
