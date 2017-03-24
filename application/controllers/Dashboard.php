@@ -38,7 +38,7 @@ class Dashboard extends CI_Controller {
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
 
             $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
-             //pr($data['won_rfps'],1);
+            //pr($data['won_rfps'],1);
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { 

@@ -265,6 +265,20 @@
 																		<a href="<?=base_url('messageboard/message/'.encode($bid_data['rfp_id']).'/'.encode($bid_data['doctor_id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View Message"><i class="fa fa-eye"></i></a> 	
 																	<?php endif; ?>
 																	<!-- End all Message button-->
+
+																	<!-- For Fix & View Appointment -->
+																	<?php if(!empty($bid_data['appointment_data'])) :?>
+																		<?php $app_confirm = 0; ?>
+																		<?php foreach($bid_data['appointment_data'] as $app_data) :?>
+																			<?php if($app_data['is_selected'] == 1) {	$app_confirm = 1;	}?>
+																		<?php endforeach; ?>
+																		<?php if($app_confirm == 1) :?>
+																			<a class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View Appointment" onclick="confirm_active_rfp_app(<?=$bid_data['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
+																		<?php else : ?>	
+																			<a class="label label-danger" data-toggle="tooltip" data-placement="top" data-original-title="Confirm Appointment" onclick="confirm_active_rfp_app(<?=$bid_data['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
+																		<?php endif; ?>
+																	<?php endif; ?>
+																	<!-- End For Fix & View Appointment --> 
 																<?php endif; ?>
 																<!-- End Message & Review Button-->	
 
@@ -313,15 +327,21 @@
 																<!-- ============= End Congratulation Box === -->
 																<!-- ============= Chat Conversation ===== -->
 																<ul class="timeline timline_bid_<?=$bid_data['id']?>">
+
 																<!-- For Appointment -->	
 																<?php if(!empty($bid_data['appointment_data'])) :?>
-																	<li class="timeline-inverted appointment-fix">
-																		<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($bid_data['appointment_data']['appointment_date']))?>
-																		<span>Appointment Time :</span> <?=$bid_data['appointment_data']['appointment_time']?></p>
-																		<p><span>Doctor Comment : </span><?=$bid_data['appointment_data']['doc_comments']?></p>
-																	</li>	
+																	<?php foreach($bid_data['appointment_data'] as $app_data) :?>
+																		<?php if($app_data['is_selected'] == 1) :?>
+																			<li class="timeline-inverted appointment-fix">
+																				<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($app_data['appointment_date']))?>
+																				<span>Appointment Time :</span> <?=$app_data['appointment_time']?></p>
+																				<p><span>Doctor Comment : </span><?=$app_data['doc_comments']?></p>
+																			</li>
+																		<?php endif;?>	
+																	<?php endforeach;?>		
 																<?php endif; ?>	
 																<!-- End Appointment -->
+
                                                                 <?php if(!empty($bid_data['chat_data'])) :?>    
     																<?php foreach($bid_data['chat_data'] as $chat) : ?>
     															        <li class="timeline-inverted <?php if($this->session->userdata('client')['id'] == $chat['from_id']){ echo 'from_login_user'; }else{ echo 'non_user'; } ?>">
@@ -467,7 +487,11 @@
 										<td><?php if($appointment_time) { echo $appointment_time; } else { echo 'N/A';} ?></td>
 										<td><?=isset($appointment['created_at'])?date("m-d-Y",strtotime($appointment['created_at'])):'N/A'; ?></td>
 										<td>
-											<a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
+											<?php if($appointment_date) : ?>
+												<a class="label label-info" title="View Appointment" id="rfp_id_<?=$appointment['id']?>" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
+											<?php else : ?>
+												<a class="label label-danger" title="Confirm Appointment" id="rfp_id_<?=$appointment['id']?>" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-calendar"></i></a>
+											<?php endif; ?>	
 										</td>
 									</tr>
 								<?php endforeach; ?>	
@@ -1126,6 +1150,11 @@ $('.doctor_review').on('hidden.bs.modal', function (e) {
     $("#rateYo").rateYo().rateYo("rating", '0.5');
 }); 
 //----------------- End For modal popup close then reset review value ----------
+
+//--------------- Appointment Confirm Or View from Active rfp section -------
+function confirm_active_rfp_app(rfp_id){
+	$("#rfp_id_"+rfp_id).click();
+}
 
 // ----------- For View Appointment by patient -----------
 

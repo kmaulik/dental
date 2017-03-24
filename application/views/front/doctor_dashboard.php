@@ -146,8 +146,13 @@
 	                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Hide Timeline"> <i class="fa fa-eye-slash"></i></a>
 	                                                    	
 	                                                    	<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
-	                                                    		<i class="fa fa-eye"></i>
-	                                                    	</a>	
+	                                                    		<i class="fa fa-eye"></i></a>
+
+	                                                    	<!-- For Check Appointment is schedule or not (If not schedule by doctor then display appointment option)-->
+	                                                    	<?php if(empty($w_rfp['appointment_data'])) :?>
+	                                                    		<a class="label label-danger" title="Manage Appointment" onclick="schedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
+	                                                    	<?php endif; ?>	
+	                                                    	<!-- End For Check Appointment is schedule or not -->
 	                                                    <?php
 														}
 													}
@@ -183,11 +188,15 @@
 										        <ul class="timeline">
 													<!-- For Appointment -->	
 													<?php if(!empty($w_rfp['appointment_data'])) :?>
-														<li class="timeline-inverted appointment-fix">
-															<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($w_rfp['appointment_data']['appointment_date']))?>
-															<span>Appointment Time :</span> <?=$w_rfp['appointment_data']['appointment_time']?></p>
-															<p><span>Doctor Comment : </span><?=$w_rfp['appointment_data']['doc_comments']?></p>
-														</li>	
+														<?php foreach($w_rfp['appointment_data'] as $app_data) :?>
+															<?php if($app_data['is_selected'] == 1) :?>
+																<li class="timeline-inverted appointment-fix">
+																	<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($app_data['appointment_date']))?>
+																	<span>Appointment Time :</span> <?=$app_data['appointment_time']?></p>
+																	<p><span>Doctor Comment : </span><?=$app_data['doc_comments']?></p>
+																</li>
+															<?php endif;?>	
+														<?php endforeach;?>	
 													<?php endif; ?>	
 													<!-- End Appointment -->
 																
@@ -287,7 +296,7 @@
                                                     <td>
                                                         <!-- === If Appointment not set then display the manage appointment button otherwise view == -->
                                                         <?php if($appointment['appointment_id'] == '') :?>
-                                                            <a class="label label-info" title="Manage Appointment" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-hand-o-right"></i></a>
+                                                            <a class="label label-danger" title="Manage Appointment" id="rfp_id_<?=$appointment['id']?>" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-calendar"></i></a>
                                                         <?php else : ?>
                                                             <a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
                                                             <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
@@ -1306,6 +1315,12 @@
 			$(".coupan-msg").css("color", "red");	
 		}
 	});
+
+	//--------------- Appointment schedule from won rfp section -------
+	function schedule_won_rfp_app(rfp_id){
+		$("#rfp_id_"+rfp_id).click();
+	}
+
 
     // ----------- For Select Appointment option -----------
     function select_appointment_option(key){
