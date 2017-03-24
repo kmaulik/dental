@@ -91,11 +91,18 @@
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Coupon Code</label>
-								<div class="fancy-file-upload fancy-file-success">
+								<!-- <div class="fancy-file-upload fancy-file-success">
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 									<span class="button" id="apply-code">Apply Code</span>
+								</div> -->
+								<div class="col-sm-9">
+									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 								</div>
+								<div class="col-sm-3">
+									<a href="#" class="btn btn-info" id="apply-code">Apply Code </a>
+								</div>	
 								<span class="coupan-msg"></span>	
+
 							</div>
 						</div>
 
@@ -110,7 +117,7 @@
 				<div class="modal-footer">
 					<div class="col-sm-12">
 						<div class="form-group">
-							<input type="submit" name="submit" class="btn btn-info" value="Make Payment">
+							<input type="submit" name="submit" class="btn btn-info make-payment" value="Make Payment">
 							<input type="reset" name="reset" class="btn btn-default cancel-payment" value="Cancel">
 						</div>	
 					</div>	
@@ -124,6 +131,12 @@
 
 
 <script>
+
+$('#apply-code').keypress(function(e){
+    if(e.which == 13){//Enter key pressed
+        $('#apply-code').click();//Trigger search button click event
+    }
+});
 
 
 $("#apply-code").click(function(){

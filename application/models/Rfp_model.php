@@ -438,13 +438,12 @@ class Rfp_model extends CI_Model {
                 /*------- End Chat Data ----- */
 
                 /*------- For Fix Appointment timeline Data ---------- */
-                $this->db->select('a.*,as.appointment_date,TIME_FORMAT(as.appointment_time, "%h : %i %p") as appointment_time');
+                $this->db->select('a.*,as.appointment_date,TIME_FORMAT(as.appointment_time, "%h : %i %p") as appointment_time,as.is_selected');
                 $this->db->join('appointment_schedule as','a.id = as.appointment_id');
                 $this->db->where('a.rfp_id',$rfp_data['rfp_id']);
                 $this->db->where('a.doc_id',$rfp_data['doctor_id']);
                 $this->db->where('a.is_cancelled','0');
-                $this->db->where('as.is_selected','1');
-                $appointment_data=$this->db->get('appointments a')->row_array();
+                $appointment_data=$this->db->get('appointments a')->result_array();
                 $res[$i]['appointment_data']=$appointment_data;
                 /*------- End For Fix Appointment timeline Data ------- */
 
@@ -501,13 +500,12 @@ class Rfp_model extends CI_Model {
                 /*------ End Chat Timeline --*/
 
                 /*------- For Appointment timeline --*/
-                $this->db->select('a.*,as.appointment_date,TIME_FORMAT(as.appointment_time, "%h : %i %p") as appointment_time');
+                $this->db->select('a.*,as.appointment_date,TIME_FORMAT(as.appointment_time, "%h : %i %p") as appointment_time,as.is_selected');
                 $this->db->join('appointment_schedule as','a.id = as.appointment_id');
                 $this->db->where('a.rfp_id',$chat['rfp_id']);
                 $this->db->where('a.doc_id',$chat['doctor_id']);
                 $this->db->where('a.is_cancelled','0');
-                $this->db->where('as.is_selected','1');
-                $appointment_data=$this->db->get('appointments a')->row_array();
+                $appointment_data=$this->db->get('appointments a')->result_array();
                 $result[$key]['bid_data'][$k]['appointment_data']=$appointment_data;
                 /*------- End Appointment timeline --*/
             }
