@@ -135,7 +135,7 @@
 					data-endelementdelay="0.1"
 					data-endspeed="500"
 					style="z-index: 2; color:#fff; font-size:65px; line-height:85px; font-weight:bold; letter-spacing:0; text-shadow:none;">
-						Creating a Bright Future <br />
+						Making Smiles Brighter <br />
 						Together
 				</div>
 
@@ -151,8 +151,7 @@
 					data-endelementdelay="0.1"
 					data-endspeed="500"
 					style="z-index: 3; font-size:20px; color:#fff; font-weight:300; text-shadow:none;">
-						If you dream of designing a new home that takes full advantage, <br />
-						our team is the best in this field.
+						Choose the right dental professional near you to protect your smile.
 				</div>
 
 				<div class="tp-caption sfb tp-resizeme"
@@ -182,7 +181,9 @@
 					data-endelementdelay="0.1"
 					data-endspeed="500"
 					style="z-index: 6; max-width: auto; max-height: auto; white-space: nowrap;">
-						<a class="btn btn-default btn-lg scrollTo" href="#appointment">MAKE AN APPOINTMENT &nbsp; <i class="fa fa-angle-right"></i></a>
+						<a class="btn btn-default btn-lg " href="<?php echo base_url().'registration/user'; ?>"> REQUEST A QUOTE &nbsp; 
+							<i class="fa fa-angle-right"></i>
+						</a>
 				</div>
 			</li>
 
@@ -195,7 +196,7 @@
 <hr class="nomargin" /><!-- 1px line separator -->
 
 <!-- BUTTON CALLOUT -->
-<a href="#" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
+<a href="<?php echo base_url().'contact_us'; ?>" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
 	<span class="font-lato size-30">
 		Do you have questions? 
 		<strong>Contact us &raquo;</strong>
@@ -214,11 +215,13 @@
 				<!-- <h2>Health and Medical</h2> -->
 				<h2>Find Dental Options in Your Area</h2>
 				<p>We spend significant time vetting highly qualified professionals to provide dental plan options tailored to you.</p>
-				<a class="btn btn-danger btn-lg" href="#">VIEW OUR SERVICES</a>
+				<a class="btn btn-danger btn-lg" href="<?php echo base_url().'registration/user'; ?>">
+					VIEW OUR SERVICES
+				</a>
 			</div>
 
-			<div class="col-lg-8 col-md-8 col-sm-12">
-				<h3 class="weight-300">What We Can Do for <span>You</span></h3>
+			<div class="col-lg-8 col-md-8 col-sm-12 services">
+				<h3 class="weight-900"><span><b>What We Can Do for You</b></span></h3>
 
 				<p>
 					Our experienced dentists, oral surgeons, orthodontists, and dental hygienists have provided services to 
@@ -233,11 +236,19 @@
 				<hr />
 
 				<ul class="list-unstyled list-icons">
-					<li><i class="fa fa-check"></i> Nobis nemore epicuri pro ea</li>
-					<li><i class="fa fa-check"></i> Qui dicunt singulis dissentias an</li>
-					<li><i class="fa fa-check"></i> Ea vis diceret constituam</li>
-					<li><i class="fa fa-check"></i> Mei no autem idque integre, sumo facilis</li>
-					<li><i class="fa fa-check"></i> Est quodsi labitur moderatius an</li>
+					<li><i class="fa fa-check"></i>General Dentistry </li>
+					<li><i class="fa fa-check"></i>Extractions & Wisdom Teeth </li>
+					<li><i class="fa fa-check"></i>Crowns & Veneers </li>
+					<li><i class="fa fa-check"></i>Root Canals </li>
+					<li><i class="fa fa-check"></i>Dentures & Partials </li>
+					<li><i class="fa fa-check"></i>Teeth Cleaning & Whitening</li>
+				</ul>
+				<ul class="list-unstyled list-icons">
+					<li><i class="fa fa-check"></i>Fillings</li>
+					<li><i class="fa fa-check"></i>Pediatric Denistry</li>
+					<li><i class="fa fa-check"></i>Implants</li>
+					<li><i class="fa fa-check"></i>Teeth Straightening Options</li>
+					<li><i class="fa fa-check"></i>Additional Dental Services </li>
 				</ul>
 
 			</div>
@@ -254,8 +265,8 @@
 	<div class="container">
 
 		<div class="text-center">
-			<h2 class="size-40 weight-300">Price Local Dental Options</h2>
-			<a class="btn btn-danger btn-lg" href="#">GET A QUOTE</a>
+			<h2 class="size-40 weight-300">Compare Local Dental Options</h2>
+			<a class="btn btn-danger btn-lg" href="<?php echo base_url().'registration/user'; ?>">REQUEST A QUOTE</a>
 		</div>
 
 	</div>
@@ -270,11 +281,13 @@
 			<div class="col-md-4">
 				
 				<div class="heading-title heading-border-bottom heading-color">
-					<h3>Dental Professionals You Can Trust</h3>
+					<h3>QUALITY DENTAL SERVICES</h3>
 				</div>
 				
 				<p>
-					Finding the best dentist for your unique dental needs is a challenge. And that’s what we offer – the best.
+					Finding the best dental professional for you and your family is a challenge. And that’s only what we offer – the best. 
+					The YourToothFairy team draws together dental professionals who have spent years working in the dental services industry 
+					and have the experience to meet your service standards.
 				</p>
 				
 				<!-- <a href="#">
@@ -292,10 +305,12 @@
 
 			<div class="col-md-4">
 				<div class="heading-title heading-border-bottom heading-color">
-					<h3>Compare Dental Plans</h3>
+					<h3>COMPARE DENTAL PLANS</h3>
 				</div>
 				<p>					
-					Read reviews for dental professionals, explore services offered, choose your plan and review your experience.
+					Our website evaluates your dental needs, carefully considers dental services, and offers multiple plan options in your 
+					area — all while providing optimum service and support at a known cost. Our website allows patients to read service reviews, 
+					explore options, and select a plan.
 				</p>
 
 				<!-- <a href="#">
@@ -316,7 +331,10 @@
 					<h3>SAVE MONEY AND TIME</h3>
 				</div>
 				<p>
-					Our tool allows you to quickly and easily compare costs of dental services near you.
+					Not only does our website provide you with many different dental plans and options, but it allows you to quickly 
+					and easily compare costs of those dental plans. Matching your unique dental needs directly with a local professional 
+
+					will save you both time and money.
 				</p>
 
 				<!-- <a href="#">
@@ -370,7 +388,7 @@
 <?php } ?>
 
 <!-- BUTTON CALLOUT -->
-<a href="#" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
+<a href="<?php echo base_url().'contact_us'; ?>" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
 	<span class="font-lato size-30">
 		Do you have questions? 
 		<strong>Contact us &raquo;</strong>

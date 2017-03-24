@@ -51,7 +51,7 @@
 
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="won_rfps">
-					<div class="table-responsive">
+					<div class="table-responsive rfp_table_layout col-md-12">
 						<table class="table table-hover chatting">
 							<thead>
 								<tr>
@@ -165,7 +165,7 @@
 	                                                            </div>
 										                    	<span>Have accepted</span>
 										                    </div>
-										                    <div class="timeline-msg">$3333</div>
+										                    <div class="timeline-msg">$<?php echo ucfirst($w_rfp['amount']); ?></div>
 										                    <div class="right-section">
 	                                                            <div class="profile-image-border">
 	                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
@@ -245,13 +245,13 @@
 				</div>
 				<div class="tab-pane fade" id="schedule_rfps">
 					<!-- Doctor's Manage Appointment -->
-                    <div class="row appointment-list">
+                    <div class="row appointment-list col-md-12">
                         <!-- <div class="col-md-12">
                             <h4> Manage Appointment </h4>
                             <hr/>
                         </div>   -->
                         <div class="col-md-12">
-                            <div class="table-responsive">
+                            <div class="table-responsive rfp_table_layout">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
@@ -312,46 +312,48 @@
                     </div>  
                     <!-- // ENDS here Appointment -->
 				</div>
-				<div class="tab-pane fade" id="rfp_bids">					
-					<div class="table-responsive">
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th>RFP Title</th>
-									<th>Bid Price</th>
-									<th>Status</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php 													
-									if(!empty($total_rfp_bids)){
-										foreach($total_rfp_bids as $total_bids){										
-								?>
+				<div class="tab-pane fade" id="rfp_bids">
+					<div class="col-md-12">
+						<div class="table-responsive rfp_table_layout">
+							<table class="table table-hover">
+								<thead>
 									<tr>
-										<td><?php echo $total_bids['title']; ?></td>
-										<td><?php echo $total_bids['amount']; ?></td>
-										<td><?php echo rfp_status_label($total_bids['rfp_status']); ?></td>
-										<td>
-											<a href="<?php echo base_url().'rfp/view_rfp/'.encode($total_bids['rfp_id']); ?>" 
-											   class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
-												<i class="fa fa-eye"></i>
-											</a>
-										</td>
+										<th>RFP Title</th>
+										<th>Bid Price</th>
+										<th>Status</th>
+										<th>Action</th>
 									</tr>
-								<?php } } else { ?>
-									<tr>
-										<td colspan="4" class="text-center"><b>No RFP Bid Found</b></td>
-									</tr>
-								<?php }?>
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									<?php 													
+										if(!empty($total_rfp_bids)){
+											foreach($total_rfp_bids as $total_bids){										
+									?>
+										<tr>
+											<td><?php echo $total_bids['title']; ?></td>
+											<td><?php echo $total_bids['amount']; ?></td>
+											<td><?php echo rfp_status_label($total_bids['rfp_status']); ?></td>
+											<td>
+												<a href="<?php echo base_url().'rfp/view_rfp/'.encode($total_bids['rfp_id']); ?>" 
+												   class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+													<i class="fa fa-eye"></i>
+												</a>
+											</td>
+										</tr>
+									<?php } } else { ?>
+										<tr>
+											<td colspan="4" class="text-center"><b>No RFP Bid Found</b></td>
+										</tr>
+									<?php }?>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 				<div class="tab-pane fade" id="favorite_rfp">
 					<div class="col-md-12">
 						<!-- ============== Favorite RFP Table =============== -->
-						<div class="table-responsive">
+						<div class="table-responsive rfp_table_layout">
 							<table class="table table-hover">
 								<thead>
 									<tr>
@@ -399,7 +401,7 @@
 				<hr/>
 			</div>	
 			<div class="col-md-12">
-				<div class="table-responsive">
+				<div class="table-responsive rfp_table_layout">
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -466,7 +468,7 @@
 				<hr/>
 			</div>	
 			<div class="col-md-12">
-				<div class="table-responsive">
+				<div class="table-responsive rfp_table_layout">
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -542,7 +544,7 @@
 				<hr/>
 			</div>	
 			<div class="col-md-12">
-				<div class="table-responsive">
+				<div class="table-responsive rfp_table_layout">
 					<table class="table table-hover">
 						<thead>
 							<tr>

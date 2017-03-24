@@ -51,37 +51,32 @@
             </div>
             <!-- /col #1 -->
 
-            <!-- col #2 -->
-            <div class="col-md-8 col-sm-8">
-
-                <div class="row">
-
-                    <div class="col-md-6 hidden-sm hidden-xs">
-                        <h4 class="letter-spacing-1">EXPLORE US</h4>
-                        <ul class="list-unstyled footer-list half-paddings noborder">
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>                    
-                            <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Meet the Team</a></li>                                                                        
-                            <li><a class="block" href="<?=base_url('faq')?>"><i class="fa fa-angle-right"></i> FAQ</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-4">
-                        <h4 class="letter-spacing-1">SECURE PAYMENT</h4>
-                        <p>
-                            Payments on this site are processed securely by PayPal. PayPal uses industry-leading encryption and fraud prevention tools and do not share your financial information with the merchant. After making a payment, you will receive a confirmation email.
-                        </p>
-                        <p> <!-- see <?= DEFAULT_IMAGE_PATH ?>/cc/ for more icons -->
-                            <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Visa.png" alt="" />
-                            <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Mastercard.png" alt="" />
-                            <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Maestro.png" alt="" />
-                            <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/PayPal.png" alt="" />
-                        </p>
-                    </div>
-
-                </div>
+            <!-- col #1 -->
+            <div class="col-md-4 col-sm-4 column2-footer">                 
+                <h4 class="letter-spacing-1">EXPLORE US</h4>
+                <ul class="list-unstyled footer-list half-paddings noborder">
+                    <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>
+                    <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Meet the Team</a></li>
+                    <li><a class="block" href="<?=base_url('faq')?>"><i class="fa fa-angle-right"></i> FAQ</a></li>
+                    <li><a class="block" href="<?=base_url('terms-condition')?>"><i class="fa fa-angle-right"></i> Terms & Conditions</a></li>
+                    <li><a class="block" href="<?=base_url('privacy-policy')?>"><i class="fa fa-angle-right"></i> Privacy Policy</a></li>
+                </ul>                
             </div>
-            <!-- /col #2 -->
+            <!-- /col #1 -->
 
+            <!-- col #2 -->
+            <div class="col-md-4 col-sm-4">
+                <h4 class="letter-spacing-1">SECURE PAYMENT</h4>
+                <p>
+                    Payments on this site are processed securely by PayPal. PayPal uses industry-leading encryption and fraud prevention tools and do not share your financial information with the merchant. After making a payment, you will receive a confirmation email.
+                </p>
+                <p> <!-- see <?= DEFAULT_IMAGE_PATH ?>/cc/ for more icons -->
+                    <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Visa.png" alt="" />
+                    <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Mastercard.png" alt="" />
+                    <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Maestro.png" alt="" />
+                    <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/PayPal.png" alt="" />
+                </p>
+            </div>
         </div>
 
     </div>
@@ -94,7 +89,7 @@
                 <li><a href="#">Privacy</a></li>
             </ul>
 
-            © All Rights Reserved, Company LTD
+            © All Rights Reserved, Dental Plans LLC
         </div>
     </div>
 
