@@ -160,7 +160,7 @@ class Dashboard extends CI_Controller {
                 // $this->form_validation->set_rules('country_id', 'country', 'required');
                 $this->form_validation->set_rules('state_id', 'state', 'required');
                 $this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
-                                             ['validate_zipcode'=>'Please Enter Valid Zipcode']);
+                                             ['validate_zipcode'=>'Please, verify your ZIP Code.']);
                 $this->form_validation->set_rules('phone', 'phone', 'required|min_length[6]|max_length[15]');
                 $this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
                                                 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
@@ -175,8 +175,8 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('current_password', 'Current Password', 
                                                   'trim|required|in_list['.$decode_pass.']',
                                                   ['in_list'=>'Current password is Wrong!!']);
-                $this->form_validation->set_rules('password', 'New Password', 'trim|required|matches[re_password]');
-                $this->form_validation->set_rules('re_password', 'Retype Password', 'trim|required');
+                $this->form_validation->set_rules('password', 'New Password', 'trim|required|matches[re_password]|min_length[5]|max_length[12]',array('min_length' => 'For Security, your password field must be at least 5 characters in length'));
+                $this->form_validation->set_rules('re_password', 'Retype Password', 'trim|required|min_length[5]|max_length[12]');
             }            
         }
 
@@ -266,7 +266,7 @@ class Dashboard extends CI_Controller {
 
             if($tab == 'avatar'){
                 $location='uploads/avatars/';
-                $res=$this->filestorage->FileInsert($location,'img_avatar','image','20000000',$data['db_data']['avatar']);
+                $res=$this->filestorage->FileInsert($location,'img_avatar','image','2097152',$data['db_data']['avatar']);
 
                 if($res['msg'] != '' && $res['status'] == '1'){
                     $file_name = $res['msg'];
@@ -274,7 +274,8 @@ class Dashboard extends CI_Controller {
                     $this->session->set_flashdata('success','Avatar has been successfully changed.');
                     redirect('dashboard/edit_profile');
                 }else{
-                    $this->session->set_flashdata('error','Something went wrong. Please try again.');
+                   // $this->session->set_flashdata('error','Something went wrong. Please try again.');
+                    $this->session->set_flashdata('error',$res['msg']);
                     redirect('dashboard/edit_profile');
                 }
             }

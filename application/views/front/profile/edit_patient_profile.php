@@ -23,7 +23,7 @@
 
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb breadcrumb-inverse">
-			<li><a href="#">Home</a></li>
+			<li><a href="<?=base_url('')?>">Home</a></li>
 			<li><a href="#">Edit Profile</a></li>
 			<li class="active"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></li>
 		</ol><!-- /breadcrumbs -->
@@ -167,7 +167,7 @@
 						<div class="margiv-top10">
 							<input type="hidden" name="tab" value="info">
 							<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save Changes </button>
-							<a href="#" class="btn btn-default">Cancel </a>
+							<button type="reset" class="btn btn-default">Cancel</button>
 						</div>
 					</form>
 				</div>
@@ -215,7 +215,7 @@
 						<div class="margiv-top10">
 							<input type="hidden" name="tab" value="avatar">
 							<button type="submit" class="btn btn-primary">Save Changes </button>
-							<a href="#" class="btn btn-default">Cancel </a>
+							<button type="reset" class="btn btn-default">Cancel</button>
 						</div>
 
 					</form>
@@ -260,7 +260,7 @@
 								<i class="fa fa-check"></i>
 								Change Password
 							</button>
-							<a href="#" class="btn btn-primary">Cancel</a>
+							<button type="reset" class="btn btn-default">Cancel</button>
 						</div>
 
 					</form>

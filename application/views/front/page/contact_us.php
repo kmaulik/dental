@@ -3,8 +3,7 @@
 		<h1>CONTACT US</h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
-			<li><a href="#">Home</a></li>
-			<li><a href="#">Page</a></li>
+			<li><a href="<?=base_url('')?>">Home</a></li>
 			<li class="active">Contact Us</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
