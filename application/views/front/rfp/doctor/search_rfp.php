@@ -111,6 +111,7 @@ span.time {
 </section>
 
 <!-- -->
+<?php $current_filter_name = ''; ?>
 <section>
 	<div class="container">
 
@@ -132,6 +133,18 @@ span.time {
 				</div>
 			<?php endif; ?>
 			<!-- /ALERT -->					
+			<?php 
+				$saved_filter = $this->input->get('saved_filter');
+				if(!empty($saved_filter)){
+					$btn_label = 'Edit Filter';
+					$form_aciton = 'rfp/update_filter_data';
+				}else{
+					$btn_label = 'Save Filter';
+					$form_aciton = 'rfp/save_filter_data';
+				}
+				// rfp/update_filter_data
+				// rfp/save_filter_data
+			?>
 			<div class="col-sm-12">
 				<form action="" method="GET" id="search_rfp">
 					<!-- =========== For Saved Filter =================== -->
@@ -141,13 +154,13 @@ span.time {
 							<select name="saved_filter" class="form-control" id="saved_filter">
 								<option value="">Select Saved Filter</option>
 								<?php foreach($search_filter_list as $search_filter) : ?>
-									<option value="<?=$search_filter['id']?>" <?php if($this->input->get('saved_filter') != '' && $search_filter['id'] == $this->input->get('saved_filter')) { echo "selected"; } ?>><?=$search_filter['filter_name']?></option>
+									<option value="<?=$search_filter['id']?>" <?php if($this->input->get('saved_filter') != '' && $search_filter['id'] == $this->input->get('saved_filter')) { $current_filter_name = $search_filter['filter_name']; echo "selected"; } ?>><?=$search_filter['filter_name']?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
 						<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
 							<label class="space">&nbsp;</label>
-							<a class="btn btn-success filter_btn" onclick="saved_filter()">Save Filter</a>
+							<a class="btn btn-success filter_btn" onclick="saved_filter()"><?php echo $btn_label; ?></a>
 						</div>
 					</div>
 					<!-- ================== End for saved filter ============= -->	
@@ -209,40 +222,6 @@ span.time {
 				</form>
 					
 				<?php if(count($rfp_data) > 0) :?>
-							
-						<!-- <div class="list-group success square no-side-border search_rfp">
-							<?php foreach($rfp_data as $record) :?>
-								<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="list-group-item">
-								<div class="rfp-left">
-									<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
-										<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite RFP"></span>
-									<?php else : ?>
-										<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite RFP"></span>
-									<?php endif; ?>
-									<img src="<?php if($record['avatar'] != '') 
-			                    		{ echo base_url('uploads/avatars/'.$record['avatar']); } 
-			                    	else 
-			                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="avatar img-circle" alt="Avatar">
-									<span class="name"><?=$record['fname']." ".$record['lname'];?></span>
-									<span class="subject">
-										<span class="label label-info"><?=ucfirst($record['dentition_type'])?></span> 
-										<span class="hidden-sm hidden-xs"><?=character_limiter(strip_tags($record['title']), 70);?></span>
-									</span>
-									<span class="distance">(<?=round($record['distance'],2)." Miles"?>)</span>
-									<?php if($record['bid_amt'] != '') :?>
-										<span class="bid_amt label label-info">$ <?=$record['bid_amt']?></span>
-									<?php endif;?>
-									<span class="total_bid label label-success">Total Bid : <?=$record['total_bid']?></span>
-								</div>	
-								<div class="rfp-right">
-									<?php if($record['img_path'] != '') :?>
-										<span class="attachment"><i class="fa fa-paperclip"></i></span>
-									<?php endif; ?>
-									<span class="time"><?=date("m-d-Y H:i a",strtotime($record['created_at']));?></span>
-								</div>
-								</a>
-							<?php endforeach; ?>	
-						</div> -->
 
 						<!-- ======== Table View For RFP Search ============= -->
 						<div class="table-responsive rfp_doctor_search">
@@ -313,15 +292,22 @@ span.time {
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myLargeModalLabel">Save Filter</h4>
 			</div>
-			<form action="<?=base_url('rfp/save_filter_data')?>" method="POST" id="frm_save_filter">
-				<input type="hidden" name="search_filter_id" id="search_filter_id">
-				<input type="hidden" name="search_filter_name" id="search_filter_name">
-				<input type="hidden" name="search_data" id="search_data">
-				<input type="hidden" name="search_date" id="search_date">
-				<input type="hidden" name="search_sort" id="search_sort">
-				<input type="hidden" name="search_bid" id="search_bid">
-				<input type="hidden" name="search_favorite" id="search_favorite">
-				<input type="hidden" name="search_treatment_cat_id" id="search_treatment_cat_id">
+			<form action="<?=base_url($form_aciton)?>" method="POST" id="frm_save_filter">
+				<?php
+					$all_cat = $this->input->get('treatment_cat_id'); 
+					$cat_arr = '';
+					if(!empty($all_cat)) {
+						$cat_arr = implode(",",$this->input->get('treatment_cat_id'));
+					}
+				?>
+				<input type="hidden" name="search_filter_id" id="search_filter_id" value="<?php echo $this->input->get('saved_filter'); ?>">
+				<input type="hidden" name="search_filter_name" id="search_filter_name" value="<?php echo $current_filter_name; ?>">
+				<input type="hidden" name="search_data" id="search_data" value="<?php echo $this->input->get('search'); ?>">
+				<input type="hidden" name="search_date" id="search_date" value="<?php echo $this->input->get(''); ?>">
+				<input type="hidden" name="search_sort" id="search_sort" value="<?php echo $this->input->get('sort'); ?>">
+				<input type="hidden" name="search_bid" id="search_bid" value="<?php echo $this->input->get('bid_search'); ?>">
+				<input type="hidden" name="search_favorite" id="search_favorite" value="<?php echo $this->input->get('favorite_search'); ?>">
+				<input type="hidden" name="search_treatment_cat_id" id="search_treatment_cat_id" value="<?=$cat_arr?>">
 				
 				<!-- body modal -->
 				<div class="modal-body">
@@ -329,7 +315,7 @@ span.time {
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Filter Name</label>
-								<input type="text" id="filter_name" class="form-control" name="filter_name">
+								<input type="text" id="filter_name" class="form-control" name="filter_name" value="<?php echo $current_filter_name; ?>">
 							</div>
 						</div>	
 						
@@ -360,18 +346,19 @@ $(document).ready(function() {
 	if(data)
 	{
 		$("#saved_filter").val(data);
-		//$("#saved_filter").change();	
-		//$("#search_rfp .btn_search").click();
+		$("#saved_filter").change();
 	}
 	//-------------------------------------------------------------	
-	$("#saved_filter").change();
+	
 });
 
 
 $("#sort").val("<?=$this->input->get('sort')?$this->input->get('sort'):'desc'?>");
 $("#bid_search").val("<?=$this->input->get('bid_search')?$this->input->get('bid_search'):'All'?>");
 $("#favorite_search").val("<?=$this->input->get('favorite_search')?$this->input->get('favorite_search'):'All'?>");
+
 $("#reset").click(function(){
+	$("#saved_filter").val('');
 	$('input[name=search]').val('');
 	$('input[name=date]').val('');
 	$("#sort").val('desc');
@@ -384,7 +371,7 @@ $("#reset").click(function(){
 //-------------- For Saved Filter ------------
 function saved_filter(){
 
-	if($("#search_filter_name").val() != ''){
+	if($("#saved_filter").val() != ''){
 		//------ Update Filter Data -----
 		$("#filter_name").val($("#search_filter_name").val());
 		$(".saved_filter .modal-title").html("Update Filter");
@@ -419,29 +406,30 @@ $("#saved_filter").change(function(e) {
 		$.post("<?=base_url('rfp/fetch_filter_data')?>",{ 'filter_id' : filter_val},function(data){
 			if(data)
 			{
-				$("#search_filter_id").val(data['id']);
-				$("#search_filter_name").val(data['filter_name']);
-				$("#search").val(data['search_data']);
-				$("#filter_date").val(data['search_date']);
-				$("#sort").val(data['search_sort']);
-				$("#bid_search").val(data['search_bid']);
-				$("#favorite_search").val(data['search_favorite']);
-				var treat_cat_id = data['search_treatment_cat_id'].split(',');
-				$("#treatment_cat_id").val(treat_cat_id);
-				$('#treatment_cat_id').trigger('change.select2');
+				var new_str = '';
+				new_str += '?saved_filter='+data['id'];
+				new_str += '&search='+data['search_data'];
+				new_str += '&sort='+data['search_sort'];
+				new_str += '&bid_search='+data['search_bid'];
+				new_str += '&favorite_search='+data['search_favorite'];
+
+				if(data['search_treatment_cat_id'] != null){
+					var treat_cat_id = data['search_treatment_cat_id'].split(',');
+					$.each(treat_cat_id, function( index, value ) {
+						if(value != ''){
+					 		new_str += '&treatment_cat_id[]='+value;
+						}
+					});
+				}
+
 				$(".filter_btn").html('Edit Filter');
-				$('#frm_save_filter').attr('action', "<?=base_url('rfp/update_filter_data')?>");
-				$(".alert-message").html('');
-				//$("#search_rfp .btn_search").click();
+				window.location.href="<?php echo base_url().'rfp/search_rfp'; ?>"+new_str;
 			}
 
 		},'json');
 	}
 	else{
-		$("#search_filter_id").val('');
-		$("#search_filter_name").val('');
-		$(".filter_btn").html('Save Filter');
-		$('#frm_save_filter').attr('action', "<?=base_url('rfp/save_filter_data')?>");
+		window.location.href="<?php echo base_url().'rfp/search_rfp'; ?>"
 	}
 });
 
