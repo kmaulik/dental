@@ -196,12 +196,12 @@
 <hr class="nomargin" /><!-- 1px line separator -->
 
 <!-- BUTTON CALLOUT -->
-<a href="<?php echo base_url().'contact_us'; ?>" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
+<!-- <a href="<?php echo base_url().'contact_us'; ?>" class="btn btn-xlg btn-info size-20 fullwidth nomargin noradius padding-40">
 	<span class="font-lato size-30">
 		Do you have questions? 
 		<strong>Contact us &raquo;</strong>
 	</span>
-</a>
+</a> -->
 <!-- /BUTTON CALLOUT -->
 
 

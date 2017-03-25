@@ -68,7 +68,7 @@
             <div class="col-md-4 col-sm-4">
                 <h4 class="letter-spacing-1">SECURE PAYMENT</h4>
                 <p>
-                    Payments on this site are processed securely by PayPal. PayPal uses industry-leading encryption and fraud prevention tools and do not share your financial information with the merchant. After making a payment, you will receive a confirmation email.
+                    Payments on this site are processed securely by PayPal. PayPal uses industry-leading encryption and fraud prevention tools and does not share your financial information with the merchant. After making a payment, you will receive a confirmation email.
                 </p>
                 <p> <!-- see <?= DEFAULT_IMAGE_PATH ?>/cc/ for more icons -->
                     <img src="<?= DEFAULT_IMAGE_PATH ?>/cc/Visa.png" alt="" />

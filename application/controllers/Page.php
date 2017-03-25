@@ -9,7 +9,7 @@ class Page extends CI_Controller {
     }
 
     /*------------ For Cms Page Dynamic Content fetch from database @DHK */
-    function index($slug=''){
+    function index($slug=''){        
     	$data['cms_data']=$this->Cms_model->get_result('cms_page',['slug' => $slug,'is_deleted' => '0', 'is_blocked' => '0']);
     	if(isset($data['cms_data'][0]) && $data['cms_data'][0] != ''){
     		$data['subview']="front/page/cms_page";

@@ -179,9 +179,9 @@
                                     </li>
                                 <?php endif;?>
 
-                                <li class="dropdown <?php if($this->uri->segment(1)=='blog') echo 'active'; ?>">
+                                <!-- <li class="dropdown <?php if($this->uri->segment(1)=='blog') echo 'active'; ?>">
                                     <a href="<?=base_url('blog')?>">BLOG</a>
-                                </li>
+                                </li> -->
                                 <li class="dropdown <?php if($this->uri->segment(1)=='faq') echo 'active'; ?>">
                                     <a href="<?=base_url('faq')?>">FAQ</a>
                                 </li>
