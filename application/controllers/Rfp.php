@@ -51,7 +51,7 @@ class Rfp extends CI_Controller {
 			$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
 											 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
 			$this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
-											 ['validate_zipcode'=>'Please Enter Valid Zipcode']);
+											 ['validate_zipcode'=>'Please, verify your ZIP Code.']);
 			$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 			$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 			$this->form_validation->set_rules('allergies', 'allergies', 'required');
@@ -343,7 +343,7 @@ class Rfp extends CI_Controller {
 				$this->form_validation->set_rules('birth_date', 'birth date', 'required|callback_validate_birthdate',
 												 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
 				$this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
-											 ['validate_zipcode'=>'Please Enter Valid Zipcode']);
+											 ['validate_zipcode'=>'Please, verify your ZIP Code.']);
 				$this->form_validation->set_rules('title', 'RFP title', 'required'); 
 				$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 				$this->form_validation->set_rules('allergies', 'allergies', 'required');

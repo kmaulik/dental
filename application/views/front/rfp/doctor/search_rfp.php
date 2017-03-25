@@ -364,7 +364,7 @@ $(document).ready(function() {
 		//$("#search_rfp .btn_search").click();
 	}
 	//-------------------------------------------------------------	
-	$("#saved_filter").change();					
+	$("#saved_filter").change();
 });
 
 
@@ -432,6 +432,7 @@ $("#saved_filter").change(function(e) {
 				$(".filter_btn").html('Edit Filter');
 				$('#frm_save_filter').attr('action', "<?=base_url('rfp/update_filter_data')?>");
 				$(".alert-message").html('');
+				//$("#search_rfp .btn_search").click();
 			}
 
 		},'json');

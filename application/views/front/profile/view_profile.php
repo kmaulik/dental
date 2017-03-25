@@ -84,7 +84,7 @@
 					</div>
 					<div class="form-group">
 						<span class="title">Zipcode : </span>
-						<span class="desc"> <?=$db_data['zipcode']?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_6'; } ?>"> <?=$db_data['zipcode']?></span>
 					</div>
 					<div class="form-group">
 						<span class="title">Gender : </span>
@@ -92,10 +92,10 @@
 					</div>
 					<div class="form-group">
 						<span class="title">Phone : </span>
-						<span class="desc"> <?=$db_data['phone']?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_5'; } ?>"> <?=$db_data['phone']?></span>
 					</div>
 					<div class="form-group">
-						<span class="title">Birth Date : </span>
+						<span class="title">Age : </span>
 						<span class="desc">								
 							<?php
 								$birthday = new DateTime($db_data['birth_date']);
@@ -277,5 +277,27 @@
 	});
 
 	vague_4.blur();
+
+	var vague_5 = $('.blur_5').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_5.blur();
+
+	var vague_6 = $('.blur_6').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_6.blur();
 
 </script>

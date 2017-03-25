@@ -21,13 +21,13 @@ class Registration extends CI_Controller {
 
         $this->form_validation->set_rules('fname', 'first name', 'required');  
         $this->form_validation->set_rules('lname', 'last name', 'required');      
-        $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]');
-        $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
+        $this->form_validation->set_rules('email_id', 'email', 'required|valid_email|is_unique[users.email_id]',array('is_unique' => 'The Email is already in use - please, use the login screen. If you need to reset your password check here <a href="'.base_url('faq').'">FAQ Password reset</a>'));
+        $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]',array('min_length' => 'For Security, your password field must be at least 5 characters in length'));
         $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|matches[password]');                
         $this->form_validation->set_rules('birth_date', 'Birth Date', 'callback_validate_birthdate',
                                             ['validate_birthdate'=>'Date should be in MM-DD-YYYY Format.']);
         $this->form_validation->set_rules('zipcode', 'zipcode', 'callback_validate_zipcode',
-                                             ['validate_zipcode'=>'Please Enter Valid Zipcode']);
+                                             ['validate_zipcode'=>'Please, verify your ZIP Code.']);
         $this->form_validation->set_rules('gender', 'Gender', 'trim|required');
         $this->form_validation->set_rules('phone', 'phone', 'min_length[6]|max_length[15]');
         $this->form_validation->set_rules('agree', 'terms and condition', 'required');
@@ -201,7 +201,7 @@ class Registration extends CI_Controller {
     */    
     public function resetpwd($id='0'){
         $this->session->unset_userdata('client');
-        $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]');
+        $this->form_validation->set_rules('password', 'password', 'required|min_length[5]|max_length[12]',array('min_length' => 'For Security, your password field must be at least 5 characters in length'));
         $this->form_validation->set_rules('c_password', 'confirm password', 'required|matches[password]');
 
         if($this->form_validation->run() == FALSE)
