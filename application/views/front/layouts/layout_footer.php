@@ -4,7 +4,7 @@
         <div class="row margin-top-60 margin-bottom-40 size-13">
 
             <!-- col #1 -->
-            <div class="col-md-4 col-sm-4">
+            <div class="col-md-4 col-sm-5">
 
                 <!-- Footer Logo -->
 
@@ -52,7 +52,7 @@
             <!-- /col #1 -->
 
             <!-- col #1 -->
-            <div class="col-md-4 col-sm-4 column2-footer">                 
+            <div class="col-md-4 col-sm-3 column2-footer">                 
                 <h4 class="letter-spacing-1">EXPLORE US</h4>
                 <ul class="list-unstyled footer-list half-paddings noborder">
                     <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>

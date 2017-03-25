@@ -15,7 +15,7 @@
 
 <!-- -->
 <section>
-	<div class="container">
+	<div class="container bid_detail">
 		<div class="row">
 			<!-- ALERT -->
 			<?php if($this->session->flashdata('success')) : ?>

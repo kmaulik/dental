@@ -16,7 +16,7 @@
 	<div class="container">
 		<div class="row">
 			<!-- FORM -->
-			<div class="col-md-8 col-sm-8">
+			<div class="col-md-8 col-sm-6">
 
 				<h3>Contact Inquiry</h3>
 
@@ -101,7 +101,7 @@
 
 
 			<!-- INFO -->
-			<div class="col-md-4 col-sm-4">
+			<div class="col-md-4 col-sm-6">
 
 				<h2>Visit Us</h2>
 

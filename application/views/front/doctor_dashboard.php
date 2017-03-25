@@ -41,16 +41,19 @@
 		<div class="row">
 			
 			<div class="alert-message"></div>
-
+	
+			<?php
+				$cur_tab = $this->input->get('tab');
+			?>
 			<ul class="nav nav-tabs nav-top-border">
-				<li class="active"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
-				<li><a href="#schedule_rfps" data-toggle="tab">Appointments</a></li>
-				<li><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
-				<li><a href="#favorite_rfp" data-toggle="tab">Favorite RFP</a></li>
+				<li class="<?php if($cur_tab == ''){ echo 'active'; } ?>"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
+				<li class="<?php if($cur_tab == 'appointment'){ echo 'active'; } ?>"><a href="#schedule_rfps" data-toggle="tab">Appointments</a></li>
+				<li class=""><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
+				<li class=""><a href="#favorite_rfp" data-toggle="tab">Favorite RFP</a></li>
 			</ul>
 
 			<div class="tab-content">
-				<div class="tab-pane fade in active" id="won_rfps">
+				<div class="tab-pane fade <?php if($cur_tab == ''){ echo 'in active'; } ?>" id="won_rfps">
 					<div class="table-responsive rfp_table_layout col-md-12">
 						<table class="table table-hover chatting">
 							<thead>
@@ -252,7 +255,7 @@
 						</table>
 					</div>
 				</div>
-				<div class="tab-pane fade" id="schedule_rfps">
+				<div class="tab-pane fade <?php if($cur_tab == 'appointment'){ echo 'in active'; } ?>" id="schedule_rfps">
 					<!-- Doctor's Manage Appointment -->
                     <div class="row appointment-list col-md-12">
                         <!-- <div class="col-md-12">

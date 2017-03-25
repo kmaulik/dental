@@ -1270,7 +1270,7 @@ class Rfp extends CI_Controller {
         						);
 
 			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
-       		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab<a href="'.base_url().'dashboard'.'">click here</a>');
+       		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'"> click here</a>');
 	    	redirect('dashboard');
     	}
     }	

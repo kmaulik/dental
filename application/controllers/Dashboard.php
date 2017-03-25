@@ -663,7 +663,7 @@ class Dashboard extends CI_Controller {
                         'rfp_id' => $rfp_id,
                         'noti_type'=>'patient_appointment_confirm',
                         'noti_msg'=>'Appointment has been confirmed by the patient for <b>'.$rfp_data['title'].'</b>',
-                        'noti_url'=>'dashboard'
+                        'noti_url'=>'dashboard?tab=appointment'
                     ];
         $this->Notification_model->insert_rfp_notification($noti_data);
         // ------------------------------------------------------------------------
