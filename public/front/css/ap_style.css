@@ -1365,6 +1365,12 @@ li.non_user > .timeline-panel:after {
     vertical-align: middle;
 }
 .faq_page .table td:first-child{width:25%;} 
+.rfp_table_layout table tr td.timeline-click {
+    cursor: pointer;
+}
+.table-hover>tbody>tr:hover {
+    background-color: rgba(153, 153, 153, 0.26);
+}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

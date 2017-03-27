@@ -62,9 +62,10 @@
 								<th>Transaction #</th>
 								<th>RFP Title</th>
 								<th>Patient Name</th>
-								<th>Actual Price ($)</th>
-								<th>Payment Value ($)</th>
-								<th>Discount (%)</th>
+								<th>Total Bid Value ($)</th>
+								<th>Total Fee ($)</th>
+								<th>Initial Payment ($)</th>
+								<th>Remaining Fees Due ($)</th>
 								<th>Pay Date</th>
 							</tr>
 						</thead>
@@ -75,9 +76,10 @@
 										<td><?=$record['paypal_token']?></td>
 										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank"><?=character_limiter($record['rfp_title'],50)?></a></td>
 										<td><?=$record['patient_name']?></td>
+										<td><?=$record['bid_amt']?></td>
 										<td><?=$record['actual_price']?></td>
 										<td><?=$record['payable_price']?></td>
-										<td><?=$record['discount']?></td>
+										<td><?php if($record['remain_amt'] != '') {	echo $record['remain_amt']; }else { echo "0"; }?></td>
 										<td><?=date("m-d-Y",strtotime($record['created_at']))?></td>
 									</tr>
 								<?php endforeach; ?>

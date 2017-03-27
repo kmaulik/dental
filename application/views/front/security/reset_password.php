@@ -71,7 +71,7 @@
 
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
 
-							<input type="submit" class="btn btn-primary" name="submit" value="Sumbit">
+							<input type="submit" class="btn btn-primary" name="submit" value="Submit">
 
 						</div>
 
