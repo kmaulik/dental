@@ -298,7 +298,7 @@
             lname: {required: 'Please provide a Last Name' },
             email_id: {
                 required: 'Please provide a Email Address' ,
-                remote:"Email already exists. Please enter other email address"
+                remote:"( Each email address may be used only for one profile.) This Email is already in use, please, use a different address or <a href='<?php echo base_url().'contact_us';?>'> Contact Us </a>"
             }, 
             //address:{required: 'Please provide a Address' },
             street:{required: 'Please provide a Street' },

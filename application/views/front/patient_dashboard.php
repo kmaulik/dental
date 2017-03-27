@@ -833,7 +833,7 @@
 						</div>	
 						<div class="col-sm-12 patient_schedule">
 							<div class="form-group">
-								<label>Appointment Schedule : <span></span></label>
+								<label>Your Patient's Appointment Preference : <span></span></label>
 								<div class="table-responsive appointment_schedule_table">
 									<table class="table">
 										<thead>
@@ -855,7 +855,7 @@
 												<?php endfor; ?>
 											</tr>
 											<tr>
-												<th>AfterNoon</th>
+												<th>Afternoon</th>
 												<?php for($i=1;$i<=6;$i++) :?>
 													<th><input type="checkbox" id="A_<?=$i?>" name="appointment_schedule[]" value="A_<?=$i?>" disabled></th>
 												<?php endfor; ?>
@@ -867,7 +867,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Comment :</label>
+								<label>Message from Your Patient :</label>
 								<span id="appointment_rfp_comment"></span>
 							</div>
 						</div>	
@@ -960,7 +960,7 @@
 											<?php endfor; ?>
 										</tr>
 										<tr>
-											<th>AfterNoon</th>
+											<th>Afternoon</th>
 											<?php for($i=1;$i<=6;$i++) :?>
 												<th><input type="checkbox" name="appointment_schedule[]" value="A_<?=$i?>"></th>
 											<?php endfor; ?>

@@ -30,15 +30,11 @@ class Dashboard extends CI_Controller {
             $data['treatment_category'] = $this->Treatment_category_model->get_result('treatment_category',$where);
             $data['rfp_data_fav'] = $this->Rfp_model->get_user_fav_rfp($user_id,'30'); // list of fav rfps                    
             $data['won_rfps'] = $this->Rfp_model->get_user_won_rfp($user_id);
-
             $data['total_rfp_bids'] = $this->Rfp_model->get_bids_rfp($user_id);
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
-
             $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
-
-            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment
-            //pr($data['won_rfps'],1);
+            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment            
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { 
@@ -372,7 +368,7 @@ class Dashboard extends CI_Controller {
 
         if($sess_role_id == '4'){
             $data['allow_view'] = 1;
-        }else{
+        }else{            
             $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile(decode($user_id));
         }
 

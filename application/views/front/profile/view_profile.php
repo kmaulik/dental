@@ -17,7 +17,9 @@
 		<ol class="breadcrumb breadcrumb-inverse">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">View Profile</a></li>
-			<li class="active"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></li>
+			<li class="active <?php if($allow_view == '0'){ echo 'blur_8'; } ?>">
+				<?php echo $db_data['fname'].' '.$db_data['lname']; ?>
+			</li>
 		</ol><!-- /breadcrumbs -->
 
 	</div>
@@ -31,8 +33,8 @@
 		<!-- RIGHT -->
 		<div class="col-lg-9 col-md-9 col-sm-8 col-lg-push-3 col-md-push-3 col-sm-push-4 margin-bottom-80">			
 			<ul class="nav nav-tabs nav-top-border">
-				<li class="<?php if($tab == ''){ echo 'active'; }?>"><a href="#info" data-toggle="tab">Personal Info</a></li>	
-				<li><a href="#review" data-toggle="tab">Review</a></li>
+				<li class=""><a href="#info" data-toggle="tab">Personal Info</a></li>	
+				<li class="<?php if($tab == ''){ echo 'active'; }?>"><a href="#review" data-toggle="tab">Review</a></li>
 				<?php if(!empty($map)){ ?>
 					<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>">
 						<a href="<?php echo base_url().'dashboard/view_profile/'.$encoded_user_id.'/?tab=office_map'; ?>">
@@ -48,7 +50,7 @@
 					my_custom_strong
 					my_custom_strong_1
 				-->
-				<div class="tab-pane fade <?php if($tab == ''){ echo 'in active'; }?>" id="info">
+				<div class="tab-pane fade" id="info">
 					<div class="form-group">
 						<span class="title">Name : </span>
 						<span class="desc <?php if($allow_view == '0'){ echo 'blur_1'; } ?>"> <?=$db_data['fname'] ." ".$db_data['lname']?></span>
@@ -116,7 +118,7 @@
 				<!-- /PERSONAL INFO TAB -->
 
 				<!-- Review TAB -->
-				<div class="tab-pane fade" id="review">
+				<div class="tab-pane fade <?php if($tab == ''){ echo 'in active'; }?>" id="review">
 					<?php if(count($review_data) > 0 ) : ?>
 						<?php foreach($review_data as $key => $review) : ?>
 							<div class="the-box no-border store-list">
@@ -195,13 +197,15 @@
 		<!-- LEFT -->
 		<div class="col-lg-3 col-md-3 col-sm-4 col-lg-pull-9 col-md-pull-9 col-sm-pull-8">
 			<div class="thumbnail text-center">				
-				<?php if($db_data['avatar'] == '') { ?>
-					<img src="<?php echo base_url(); ?>uploads/default/no_image_found.jpg" alt="" />
-				<?php }else{ ?>
+				<?php if($db_data['avatar'] != '' && $allow_view == '1') { ?>
 					<img src="<?php echo base_url(); ?>uploads/avatars/<?= $db_data['avatar'] ?>" alt="" />
+				<?php }else{ ?>
+					<img src="<?php echo base_url(); ?>uploads/default/no_image_found.jpg" alt="" />
 				<?php } ?>
 
-				<h2 class="size-18 margin-top-10 margin-bottom-0"><?php echo $db_data['fname'].' '.$db_data['lname']; ?></h2>
+				<h2 class="size-18 margin-top-10 margin-bottom-0 <?php if($allow_view == '0') { echo 'blur_7';} ?>">
+					<?php echo $db_data['fname'].' '.$db_data['lname']; ?>
+				</h2>
 				<!-- <h3 class="size-11 margin-top-0 margin-bottom-10 text-muted">DEVELOPER</h3> -->
 			</div>	
 
@@ -299,5 +303,27 @@
 	});
 
 	vague_6.blur();
+
+	var vague_7 = $('.blur_7').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_7.blur();
+
+	var vague_8 = $('.blur_8').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_8.blur();
 
 </script>

@@ -1123,6 +1123,7 @@ class Rfp extends CI_Controller {
     						'rfp_id'=>$rfp_id,
     						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
     						'price'=>'0',
+    						'is_second'=>'1',
     						'created_at'=>date('Y-m-d H:i:s')
     						);
     	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
@@ -1153,7 +1154,7 @@ class Rfp extends CI_Controller {
 
     public function make_doctor_payment(){
     	
-    	// pr($_POST,1);		
+    	// pr($_POST,1);
 
        	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
@@ -1249,6 +1250,7 @@ class Rfp extends CI_Controller {
         						'rfp_id'=>$rfp_id,
         						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
         						'price'=>$due_2,
+        						'is_second'=>'1',
         						'created_at'=>date('Y-m-d H:i:s')
         						);
         	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
@@ -1345,14 +1347,14 @@ class Rfp extends CI_Controller {
 	        						'rfp_id'=>$doc_payment_data['rfp_id'],
 	        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
 	        						'price'=>$due_2,
+	        						'is_second'=>'1',
 	        						'created_at'=>date('Y-m-d H:i:s')
 	        						);
 	        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);	        	
-
+	        	
 	        	// ------------------------------------------------------------------------
         		// Insert into Next Schdule payment (billing_schedule)
 	        	// ------------------------------------------------------------------------
-
 	        	$transaction_arr =  array(
 	        							'user_id'=>$user_data['id'],
 	        							'rfp_id'=>$doc_payment_data['rfp_id'],

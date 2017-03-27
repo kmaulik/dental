@@ -416,7 +416,7 @@ class Rfp_model extends CI_Model {
     
     public function get_user_won_rfp($user_id){
         $this->db->select('rfp_bid.*,rfp.patient_id, rfp.title,rfp.dentition_type,rfp.created_at as rfp_created,rfp.status as rfp_status,rfp.treatment_plan_total,
-                          users.fname,users.lname,users.email_id');
+                          users.fname,users.lname,users.email_id,users.avatar');
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
         $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'6']);
@@ -585,11 +585,13 @@ class Rfp_model extends CI_Model {
         $is_allow = '0';
 
         if(!empty($all_inprogress_rfps)){
-            
+
             $all_rfps = array_column($all_inprogress_rfps,'id');
+
+
             $this->db->where_in('rfp_id', $all_rfps);
             $all_data = $this->db->get_where('rfp_bid',['status'=>'2'])->result_array();
-
+                        
             if(!empty($all_data)){
                 $all_doctors = array_column($all_data,'doctor_id');
                 $all_doctors = array_unique($all_doctors);

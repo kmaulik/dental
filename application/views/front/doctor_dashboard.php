@@ -67,9 +67,10 @@
 							<tbody>
 								<?php 
 									if(!empty($won_rfps)) {
-										foreach($won_rfps as $w_rfp) {										
-											$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();										
-											// $rfp_status_data = $this->Rfp_model->return_status($w_rfp['rfp_id']);
+										foreach($won_rfps as $w_rfp) {
+
+											$u_data = $this->session->userdata('client');
+											$all_billing_data = $this->db->get_where('billing_schedule',['rfp_id'=>$w_rfp['rfp_id']])->result_array();
 
 											$amt = $w_rfp['amount']; // Bid price										
 											$percentage = config('doctor_fees');
@@ -141,7 +142,6 @@
 															echo '<span class="label label-warning">Payment is under review</span>';													
 	                                                    }else{
 	                                                    ?>
-
 														    <a class="label label-info a_show_<?php echo $won_rfp_id; ?>" 
 	                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();" data-toggle="tooltip" data-placement="top" data-original-title="Timeline"> <i class="fa fa-wechat"></i></a>
 
@@ -168,17 +168,25 @@
 										            <ul class="verticle-timeline">
 										                <li>
 										                    <div class="left-section">
-	                                                            <div class="profile-image-border">
-	                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+	                                                            <div class="profile-image-border">	                                                            
+	                                                            	<?php if(empty($w_rfp['avatar'])){ ?>
+	                                                                	<img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+	                                                                <?php }else{ ?>
+																		<img src="<?php echo base_url().'uploads/avatars/'.$w_rfp['avatar']; ?>">
+	                                                                <?php } ?>	                                                                
 	                                                            </div>
-										                    	<span>Have accepted</span>
+										                    	<span><?php echo $w_rfp['fname'].' '.$w_rfp['lname']; ?>  has accepted</span>
 										                    </div>
 										                    <div class="timeline-msg">$<?php echo ucfirst($w_rfp['amount']); ?></div>
 										                    <div class="right-section">
 	                                                            <div class="profile-image-border">
-	                                                                <img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+	                                                            	<?php if(empty($u_data['avatar'])){ ?>
+	                                                                	<img src="<?php echo base_url().'uploads/default/user-img.jpg'; ?>">
+	                                                                <?php }else{ ?>
+																		<img src="<?php echo base_url().'uploads/avatars/'.$u_data['avatar']; ?>">
+	                                                                <?php } ?>
 	                                                            </div>
-										                    	<span>Has Confirmed</span>
+										                    	<span><?php echo $u_data['fname'].' '.$u_data['lname']; ?> has Confirmed</span>
 										                    </div>
 										                </li>
 										            </ul>
@@ -905,7 +913,7 @@
 						</div>
 						<div class="col-sm-12 patient_schedule">
 							<div class="form-group">
-								<label>Appointment Schedule : <span></span></label>
+								<label>Your Patient's Appointment Preference : <span></span></label>
 								<div class="table-responsive appointment_schedule_table">
 									<table class="table">
 										<thead>
@@ -927,7 +935,7 @@
 												<?php endfor; ?>
 											</tr>
 											<tr>
-												<th>AfterNoon</th>
+												<th>Afternoon</th>
 												<?php for($i=1;$i<=6;$i++) :?>
 													<th><input type="checkbox" id="Call_A_<?=$i?>" name="appointment_schedule[]" value="A_<?=$i?>" disabled></th>
 												<?php endfor; ?>
@@ -1010,7 +1018,7 @@
 						</div>
 					   <div class="col-sm-12 patient_schedule">
 							<div class="form-group">
-								<label>Appointment Schedule : <span></span></label>
+								<label>Your Patient's Appointment Preference : <span></span></label>
 								<div class="table-responsive appointment_schedule_table">
 									<table class="table">
 										<thead>
@@ -1032,7 +1040,7 @@
 												<?php endfor; ?>
 											</tr>
 											<tr>
-												<th>AfterNoon</th>
+												<th>Afternoon</th>
 												<?php for($i=1;$i<=6;$i++) :?>
 													<th><input type="checkbox" id="A_<?=$i?>" name="appointment_schedule[]" value="A_<?=$i?>" disabled></th>
 												<?php endfor; ?>
