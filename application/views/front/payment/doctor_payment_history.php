@@ -79,7 +79,7 @@
 										<td><?=$record['bid_amt']?></td>
 										<td><?=$record['actual_price']?></td>
 										<td><?=$record['payable_price']?></td>
-										<td><?php if($record['remain_amt'] != '') {	echo $record['remain_amt']; }else { echo "0"; }?></td>
+										<td><?=$record['remaining_payment']?></td>
 										<td><?=date("m-d-Y",strtotime($record['created_at']))?></td>
 									</tr>
 								<?php endforeach; ?>

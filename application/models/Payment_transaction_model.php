@@ -145,7 +145,7 @@ class Payment_transaction_model extends CI_Model {
         $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name,rb.amount as bid_amt');
         $this->db->join('rfp','pt.rfp_id=rfp.id');
         $this->db->join('rfp_bid rb','pt.rfp_id=rb.rfp_id and pt.user_id=rb.doctor_id');
-        $this->db->join('billing_schedule bs','pt.rfp_id=bs.rfp_id and pt.user_id=bs.doctor_id and transaction_id IS NULL');
+       // $this->db->join('billing_schedule bs','pt.rfp_id=bs.rfp_id and pt.user_id=bs.doctor_id and transaction_id IS NULL');
         
         if ($search_data != '') {
             $this->db->having('rfp.title LIKE "%' . $search_data . '%" OR pt.paypal_token LIKE "%'. $search_data .'%" OR patient_name LIKE "%'. $search_data .'%"', NULL);
@@ -162,10 +162,10 @@ class Payment_transaction_model extends CI_Model {
     }
 
     public function get_payment_transaction_doctor_result($limit,$offset,$search_data,$date_data,$sort_data) {
-        $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name,rb.amount as bid_amt,bs.price as remain_amt');
+        $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name,rb.amount as bid_amt');
         $this->db->join('rfp','pt.rfp_id=rfp.id');
         $this->db->join('rfp_bid rb','pt.rfp_id=rb.rfp_id and pt.user_id=rb.doctor_id');
-        $this->db->join('billing_schedule bs','pt.rfp_id=bs.rfp_id and pt.user_id=bs.doctor_id and transaction_id IS NULL','LEFT');
+        // $this->db->join('billing_schedule bs','pt.rfp_id=bs.rfp_id and pt.user_id=bs.doctor_id','LEFT');
 
          if ($search_data != '') {
             $this->db->having('rfp.title LIKE "%' . $search_data . '%" OR pt.paypal_token LIKE "%'. $search_data .'%" OR patient_name LIKE "%'. $search_data .'%"', NULL);
@@ -178,10 +178,19 @@ class Payment_transaction_model extends CI_Model {
         $this->db->where('user_id',$this->session->userdata['client']['id']);
         $this->db->order_by('id',$sort_data);
         $this->db->limit($limit,$offset);
-        $query = $this->db->get('payment_transaction pt');
+        $query = $this->db->get('payment_transaction pt')->result_array();
 
-        //qry(1);
-        
-        return $query->result_array();
+        if(!empty($query)){
+            foreach ($query as $key=>$que) {
+                $bill_schedule_data = $this->db->get_where('billing_schedule',['rfp_id'=>$que['rfp_id'],'is_second'=>'1'])->row_array();
+                
+                if($que['payable_price'] == $bill_schedule_data['price']){
+                    $query[$key]['remaining_payment'] = '0';
+                }else{
+                    $query[$key]['remaining_payment'] = $bill_schedule_data['price'];
+                }
+            }
+        }       
+        return $query;
     }
 }
