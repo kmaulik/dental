@@ -151,11 +151,27 @@
 	                                                    	<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
 	                                                    		<i class="fa fa-eye"></i></a>
 
-	                                                    	<!-- For Check Appointment is schedule or not (If not schedule by doctor then display appointment option)-->
+                                                			<!-- For Check Appointment is schedule or not (If not schedule by doctor then display appointment option)-->
 	                                                    	<?php if(empty($w_rfp['appointment_data'])) :?>
 	                                                    		<a class="label label-danger" title="Manage Appointment" onclick="schedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
-	                                                    	<?php endif; ?>	
-	                                                    	<!-- End For Check Appointment is schedule or not -->
+	     													<?php endif; ?>	
+                                                    		<!-- End For Check Appointment is schedule or not -->
+
+                                                    		
+                                                			<!-- For Reschedule appointment -->
+	                                                    	<?php if(!empty($w_rfp['appointment_data'])) :?>
+	                                                    		<?php $reschedule_app = 0; ?>	
+																<?php foreach($w_rfp['appointment_data'] as $app_data) :?>
+																	<?php if($app_data['is_selected'] == 1) {
+																		$reschedule_app = 1;
+																	} ?>	
+																<?php endforeach;?>	
+
+																<?php if($reschedule_app == 1) :?>
+																	<a onclick="reschedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)" class="label label-warning" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
+																<?php endif; ?>
+															<?php endif; ?>	
+															<!-- End For Reschedule appointment -->	
 	                                                    <?php
 														}
 													}
@@ -312,6 +328,8 @@
                                                             <a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
                                                             <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
                                                                 <a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>    
+                                                            <?php else :?>
+                                                            	<a href="<?=base_url('dashboard/reschedule_appointment/'.encode($appointment['appointment_id']))?>" id="resch_rfp_id_<?=$appointment['id']?>" class="label label-warning reschedule_appointment" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
                                                             <?php endif; ?>
                                                         <?php endif;?>
                                                         <!-- == End == -->
@@ -1344,6 +1362,11 @@
 		$("#rfp_id_"+rfp_id).click();
 	}
 
+	//--------------- Appointment Reschedule from won rfp section -------
+	function reschedule_won_rfp_app(rfp_id){
+		$("#resch_rfp_id_"+rfp_id).click();
+	}
+
 
     // ----------- For Select Appointment option -----------
     function select_appointment_option(key){
@@ -1565,6 +1588,18 @@
     	});
     });
     //------------------------- End Delete Appointment ---------------
+
+//-------------------------- Reschedule Appointment ------------------
+    $(document).on( "click",".reschedule_appointment", function(e) {  
+    	e.preventDefault();
+        var lHref = $(this).attr('href');
+    	bootbox.confirm('Are you sure to reschedule appointment ?' ,function(res){
+    		if(res){
+    			window.location.href = lHref; 
+    		}	
+    	});
+    });
+    //------------------------- End Reschedule Appointment ---------------
 
     //--------------- For manage Appointment Form Validation --------------
     $("#frm_manage_appointment").validate({

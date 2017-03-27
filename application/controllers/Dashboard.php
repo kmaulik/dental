@@ -34,7 +34,7 @@ class Dashboard extends CI_Controller {
             $data['review_list']=$this->Rfp_model->get_user_rating($user_id); // Fetch All Review Doctor Wise
             $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
-            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment            
+            $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment           
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { 
@@ -704,6 +704,37 @@ class Dashboard extends CI_Controller {
             $this->session->set_flashdata('success','Appointment Deleted Successfully');
         }else{
             $this->session->set_flashdata('error','Error Into Delete Appointment');
+        }
+        redirect('dashboard');
+    }
+
+     /*
+    * Reschedule Appointment
+    */
+    public function reschedule_appointment($app_id){
+
+        $appointment_id = decode($app_id);
+        $appointment_data = $this->Rfp_model->get_result('appointments',['id'=>$appointment_id],true);                
+        $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$appointment_data['rfp_id']],true); // fetch RFP data
+
+        // ------------------------------------------------------------------------
+        $noti_data = [
+                        'from_id'=>$this->session->userdata('client')['id'],
+                        'to_id'=>$rfp_data['patient_id'],
+                        'rfp_id' => $rfp_data['id'],
+                        'noti_type'=>'doc_appointment_delete',
+                        'noti_msg'=>'Appointment has been rescheduled by the doctor for <b>'.$rfp_data['title'].'</b>',
+                        'noti_url'=>'dashboard'
+                    ];
+        $this->Notification_model->insert_rfp_notification($noti_data);
+        // ------------------------------------------------------------------------
+
+        //$res=$this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $appointment_id]);
+        $res=$this->Rfp_model->delete_record('appointments',['id' => $appointment_id]);
+        if($res)  {
+            $this->session->set_flashdata('success','Appointment Rescheduled Successfully');
+        }else{
+            $this->session->set_flashdata('error','Error Into Reschedule Appointment');
         }
         redirect('dashboard');
     }
