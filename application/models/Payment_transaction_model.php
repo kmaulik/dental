@@ -92,11 +92,11 @@ class Payment_transaction_model extends CI_Model {
 
 
      /**
-     * @uses : this function is used to count rows of payment history based on table in transaction list page For Front User
+     * @uses : this function is used to count rows of payment history based on table in transaction list page For Patient User
      * @param : @table 
-     * @author : HPA
+     * @author : DHK
      */
-    public function get_payment_transaction_front_count($search_data,$date_data) {
+    public function get_payment_transaction_patient_count($search_data,$date_data) {
         $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name');
         $this->db->join('rfp','pt.rfp_id=rfp.id');
         
@@ -114,7 +114,7 @@ class Payment_transaction_model extends CI_Model {
         return $res_data;
     }
 
-    public function get_payment_transaction_front_result($limit,$offset,$search_data,$date_data,$sort_data) {
+    public function get_payment_transaction_patient_result($limit,$offset,$search_data,$date_data,$sort_data) {
         $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name');
         $this->db->join('rfp','pt.rfp_id=rfp.id');
          if ($search_data != '') {
@@ -134,5 +134,54 @@ class Payment_transaction_model extends CI_Model {
         
         return $query->result_array();
     }
+
+
+       /**
+     * @uses : this function is used to count rows of payment history based on table in transaction list page For Doctor User
+     * @param : @table 
+     * @author : DHK
+     */
+    public function get_payment_transaction_doctor_count($search_data,$date_data) {
+        $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name,rb.amount as bid_amt');
+        $this->db->join('rfp','pt.rfp_id=rfp.id');
+        $this->db->join('rfp_bid rb','pt.rfp_id=rb.rfp_id and pt.user_id=rb.doctor_id');
+        $this->db->join('billing_schedule bs','pt.rfp_id=bs.rfp_id and pt.user_id=bs.doctor_id and transaction_id IS NULL');
+        
+        if ($search_data != '') {
+            $this->db->having('rfp.title LIKE "%' . $search_data . '%" OR pt.paypal_token LIKE "%'. $search_data .'%" OR patient_name LIKE "%'. $search_data .'%"', NULL);
+        }
+
+        if($date_data != ''){
+            $date=explode(" ",$date_data);
+            $this->db->where('date_format(pt.created_at,"%Y-%m-%d") >=', $date[0]);
+            $this->db->where('date_format(pt.created_at,"%Y-%m-%d") <=', $date[2]);
+        }
+        $this->db->where('user_id',$this->session->userdata['client']['id']);
+        $res_data = $this->db->get('payment_transaction pt')->num_rows();
+        return $res_data;
+    }
+
+    public function get_payment_transaction_doctor_result($limit,$offset,$search_data,$date_data,$sort_data) {
+        $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name,rb.amount as bid_amt,bs.price as remain_amt');
+        $this->db->join('rfp','pt.rfp_id=rfp.id');
+        $this->db->join('rfp_bid rb','pt.rfp_id=rb.rfp_id and pt.user_id=rb.doctor_id');
+        $this->db->join('billing_schedule bs','pt.rfp_id=bs.rfp_id and pt.user_id=bs.doctor_id and transaction_id IS NULL','LEFT');
+
+         if ($search_data != '') {
+            $this->db->having('rfp.title LIKE "%' . $search_data . '%" OR pt.paypal_token LIKE "%'. $search_data .'%" OR patient_name LIKE "%'. $search_data .'%"', NULL);
+        }
+        if($date_data != ''){
+            $date=explode(" ",$date_data);
+            $this->db->where('date_format(pt.created_at,"%Y-%m-%d") >=', $date[0]);
+            $this->db->where('date_format(pt.created_at,"%Y-%m-%d") <=', $date[2]);
+        }
+        $this->db->where('user_id',$this->session->userdata['client']['id']);
+        $this->db->order_by('id',$sort_data);
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get('payment_transaction pt');
+
+        //qry(1);
+        
+        return $query->result_array();
+    }
 }
-?>

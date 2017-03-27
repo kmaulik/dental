@@ -37,84 +37,6 @@
 			
 		</div>
 
-		<!-- <div class="row">
-
-			<div class="col-md-4">
-				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
-					<div class="front">
-						<div class="box1">
-							<div class="box-icon-title">
-								<i class="fa fa-tint"></i>
-								<h2>Fully Reposnive</h2>
-							</div>
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-						</div>
-					</div>
-
-					<div class="back">
-						<div class="box2">
-							<h4>BACK SIDE</h4>
-							<hr />
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-							<a href="#" class="btn btn-translucid btn-lg btn-block">PURCHASE NOW</a>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="col-md-4">
-
-				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
-					<div class="front">
-						<div class="box1">
-							<div class="box-icon-title">
-								<i class="fa fa-random"></i>
-								<h2>Clean Design</h2>
-							</div>
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-						</div>
-					</div>
-
-					<div class="back">
-						<div class="box2">
-							<h4>BACK SIDE</h4>
-							<hr />
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-							<a href="#" class="btn btn-translucid btn-lg btn-block">PURCHASE NOW</a>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="col-md-4">
-
-				<div class="box-flip box-icon box-icon-center box-icon-round box-icon-large text-center">
-					<div class="front">
-						<div class="box1">
-							<div class="box-icon-title">
-								<i class="fa fa-cogs"></i>
-								<h2>Multipurpose</h2>
-							</div>
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-						</div>
-					</div>
-
-					<div class="back">
-						<div class="box2">
-							<h4>BACK SIDE</h4>
-							<hr />
-							<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
-							<a href="#" class="btn btn-translucid btn-lg btn-block">PURCHASE NOW</a>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-		</div> -->
-
 		<!-- Active RFP For this patient Table -->
 		<div class="row active_rfp">
 			<div class="col-md-12 firrst_ul">
@@ -130,7 +52,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th></th>
+								<!-- <th></th> -->
 								<th>#</th>
 								<th>RFP Title</th>
 								<th>User Name</th>
@@ -145,19 +67,19 @@
 						<tbody>
 							<?php if(count($active_rfp_list) > 0) :?>
 								<?php foreach($active_rfp_list as $key=>$active_rfp) :?>
-									<tr class="<?php if($key >= 3) { echo "active_rfp_data"; } ?>">
-										<td>
+									<tr class="<?php if($key >= 3) { echo "active_rfp_data"; } ?>" data-active-id="<?=$key?>">
+										<!-- <td>
 											<?php if(count($active_rfp['bid_data']) > 0) :?>
 												<a id="view_bid_data_<?=$key?>" class="view_bid_data" data-id="<?=$key?>" ><i class="fa fa-plus"></i></a>
 												<a id="hide_bid_data_<?=$key?>" class="hide_bid_data" data-id="<?=$key?>"><i class="fa fa-minus"></i></a>
 											<?php endif; ?>
-										</td>
-										<td><?=$key+1?></td>
-										<td><?=character_limiter($active_rfp['title'],20)?></td>
-										<td><?=$active_rfp['fname']." ".$active_rfp['lname']?></td>
-										<td><?=rfp_status_label($active_rfp['status']); ?></td>
-										<td><?=$active_rfp['total_bid']?></td>
-										<td>
+										</td> -->
+										<td class="timeline-click"><?=$key+1?></td>
+										<td class="timeline-click"><?=character_limiter($active_rfp['title'],20)?></td>
+										<td class="timeline-click"><?=$active_rfp['fname']." ".$active_rfp['lname']?></td>
+										<td class="timeline-click"><?=rfp_status_label($active_rfp['status']); ?></td>
+										<td class="timeline-click"><?=$active_rfp['total_bid']?></td>
+										<td class="timeline-click">
 											<?php if($active_rfp['treatment_plan_total'] != '' && $active_rfp['min_bid_amt'] != '') :?>
 												<?php $Total_save = 100 - round((($active_rfp['min_bid_amt']*100) / $active_rfp['treatment_plan_total']),2); ?>
 												<?php if($Total_save > 0) :?>
@@ -169,8 +91,8 @@
 												N/A
 											<?php endif; ?>
 										</td>
-										<td><?=isset($active_rfp['rfp_valid_date'])?date("m-d-Y",strtotime($active_rfp['rfp_valid_date'])):'N/A'?></td>
-										<td>
+										<td class="timeline-click"><?=isset($active_rfp['rfp_valid_date'])?date("m-d-Y",strtotime($active_rfp['rfp_valid_date'])):'N/A'?></td>
+										<td class="timeline-click">
 											<?php if($active_rfp['is_extended'] == 1) :?>	
 											Yes
 											<?php else : ?>
@@ -179,6 +101,14 @@
 										</td>
 										<td>
 											<a href="<?=base_url('rfp/view_rfp/'.encode($active_rfp['id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
+											
+											<!-- For Expand / Compress Timeline -->
+											<?php if(count($active_rfp['bid_data']) > 0) :?>
+												<a id="view_bid_data_<?=$key?>" class="label label-info view_bid_data" data-id="<?=$key?>" data-toggle="tooltip" data-placement="top" data-original-title="Expand"><i class="fa fa-plus"></i></a>
+												<a id="hide_bid_data_<?=$key?>" class="label label-info hide_bid_data" data-id="<?=$key?>" data-toggle="tooltip" data-placement="top" data-original-title="Collapse"><i class="fa fa-minus"></i></a>
+											<?php endif; ?>
+											<!-- End For Expand / Compress Timeline -->
+
 											<!-- For Check valid date set and valid date >= today and patient validity not extend then display extend button--> 
 											<?php if($active_rfp['status'] == 3 &&  $active_rfp['rfp_valid_date'] != '' && $active_rfp['rfp_valid_date'] >= date("Y-m-d") && $active_rfp['is_extended'] == 0) :?>
 												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($active_rfp['id']))?>" class="label label-primary rfp-price btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days"><i class="fa fa-arrows"></i></a>
@@ -742,7 +672,7 @@
 							<div class="form-group">
 								<input type="submit" name="submit" class="btn btn-info send_msg_btn" value="Submit">
 								<a class="btn btn-info send_msg_loader" style="display:none;"><i class="fa fa-spinner fa-spin"></i> Loading...</a>
-								<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+								<input type="reset" name="reset" class="btn btn-default send_msg_btn_cancel" value="Cancel" onclick="$('.close').click()">
 							</div>	
 						</div>	
 				</div>	
@@ -821,6 +751,9 @@
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
+						<div class="col-sm-12 desc-text">
+							<h5><span>Please, select one of the following appointments and confirm (submit) to the doctor.</span></h5>
+						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Doctor Name : <span id="appointment_user_name"></span></label>
@@ -1117,6 +1050,18 @@ $(".btn_extend").click(function(e){
 });
 //-------------- End For Winner Select & Cancel -------------------------
 
+//--------------- For Clickable row to expand/compress the data ------------
+$(".timeline-click").click(function(e) {
+	var key = $(this).parent().data('active-id');
+	if($("#view_bid_data_"+key).is(":visible")){
+		$("#view_bid_data_"+key).click();
+	}
+	else{
+		$("#hide_bid_data_"+key).click();
+	}
+});
+//--------------- End For Clickable row to expand/compress the data ------------
+
 
 //---------------- Send Message ------------------
 function send_msg(rfp_key,bid_key){
@@ -1222,6 +1167,12 @@ function view_appointment(key){
 			$("#schedule_selected_"+(key+1)).prop("checked", true);
 			$("#frm_choose_app .send_msg_app").hide();
 			$("#frm_choose_app .submit_btn").hide();
+			$(".manage_appointment .modal-title").html("View Appointment");
+			$(".manage_appointment .desc-text").hide();
+		}
+		else{
+			$(".manage_appointment .modal-title").html("Appointment Confirmation!");
+			$(".manage_appointment .desc-text").show();
 		}
 		//------------------
 	});
@@ -1331,6 +1282,18 @@ $(".send_chat_review").click(function(e){
 });    
 //--------------------- End Submit Review From Chatting --------------
 
+//----------- Check for cancel message from appointment or not  -------
+$(".send_msg_btn_cancel").click(function(event) {
+	if($("#is_msg_app").val() != ''){
+		var app_key = $("#app_key").val();
+		//console.log(app_key);
+		$(".manage_appointment").modal('show');	
+		$("#is_msg_app").val('');
+		view_appointment(app_key);
+	}
+});
+// --------- End Check for cancel message from appointment or not  -----------
+
 
 //--------------- For send message from appointment modal & timeline popup modal -----------------
 $("#frmmsg").submit(function(e) {
@@ -1358,7 +1321,8 @@ $("#frmmsg").submit(function(e) {
 				//----------------- End For Add Message in timeline ---------------
 
 				$(".modal").removeClass("fade").modal("hide");
-				$("#frmmsg input[name='reset']").click();
+				// $("#frmmsg input[name='reset']").click();
+				$('#frmmsg #message').val('');
 				$(".send_msg_btn").show();
 				$(".send_msg_loader").hide();
 				// --------- Check for send message from appointment or not  -----------
