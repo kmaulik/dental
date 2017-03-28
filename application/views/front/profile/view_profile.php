@@ -5,8 +5,6 @@
 <?php 
 	if(!empty($map)){
 		echo $map['js'];
-
-		echo $allow_view;
 	}
 ?>
 
