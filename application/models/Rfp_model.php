@@ -576,18 +576,15 @@ class Rfp_model extends CI_Model {
     } 
     //----------------- End For fetch Total Review and average review for particualr doctor wise ------------
 
-    public function check_if_user_view_profile($user_id){
-
-
-        $loggedin_user = $this->session->userdata('client')['id'];
-        $all_inprogress_rfps =  $this->db->select('id')->get_where('rfp',['patient_id'=>$loggedin_user,'status'=>'5'])->result_array();
+    public function check_if_user_view_profile($patient_id,$doc_id){
+        
+        $all_inprogress_rfps =  $this->db->select('id')->get_where('rfp',['patient_id'=>$patient_id,'status'=>'5'])->result_array();
 
         $is_allow = '0';
 
         if(!empty($all_inprogress_rfps)){
 
             $all_rfps = array_column($all_inprogress_rfps,'id');
-
 
             $this->db->where_in('rfp_id', $all_rfps);
             $all_data = $this->db->get_where('rfp_bid',['status'=>'2'])->result_array();
@@ -596,7 +593,7 @@ class Rfp_model extends CI_Model {
                 $all_doctors = array_column($all_data,'doctor_id');
                 $all_doctors = array_unique($all_doctors);
 
-                if(in_array($user_id, $all_doctors)){
+                if(in_array($doc_id, $all_doctors)){
                     $is_allow = '1';
                 }
             }

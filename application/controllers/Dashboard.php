@@ -368,8 +368,9 @@ class Dashboard extends CI_Controller {
 
         if($sess_role_id == '4'){
             $data['allow_view'] = 1;
-        }else{            
-            $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile(decode($user_id));
+        }else{       
+            $patient_id = $this->session->userdata('client')['id'];
+            $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile($patient_id,decode($user_id));
         }
 
         // pr($this->session->userdata('client'),1);
