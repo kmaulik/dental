@@ -162,13 +162,14 @@
 							<?php echo form_error('teeth[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div> -->
 						<!-- For Teeth Image -->
-						<div class="col-sm-12">
+						<div class="col-sm-12">							
 							<div class="teeth-bg">
 								<?php for($i=1;$i<=32;$i++) : ?>
 									<span id="t<?=$i?>">
 										<span class="checkbox-wrapper">
 											<label>
-												<input type="checkbox" value="<?=$i?>" name="teeth[]" class="toggle_cat" <?php if(empty($teeth_post)){if(isset($teeth_arr) && in_array($i,$teeth_arr1)) {echo "checked"; } }else{echo set_checkbox('teeth',$i); } ?>>
+												<input type="checkbox" value="<?=$i?>" name="teeth[]" class="toggle_cat" <?php if(!$_POST){ if(isset($teeth_arr) && in_array($i,$teeth_arr1)) {echo "checked"; } }else{echo set_checkbox('teeth',$i); } ?>>
+												<!-- <input type="checkbox" value="<?=$i?>" name="teeth[]" class="toggle_cat" <?php //if(!isset($_POST['teeth'])){ if(isset($teeth_arr) && in_array($i,$teeth_arr1)) {echo "checked"; } }else{echo set_checkbox('teeth',$i); } ?>> -->
 												<span class="checked-bg"></span>
 											</label>
 										</span>
@@ -182,7 +183,7 @@
 				 <!-- For Edit Time Display the already select category  -->
 					<div class="list_treatment_category">						
 						<!-- For Edit Data -->
-						<?php if(empty($teeth_post)){ ?> 
+						<?php if(!$_POST){ ?> 
 							<?php if($record['dentition_type'] != 'other' && !empty($teeth_arr)):?>
 								<?php foreach($teeth_arr as $key=>$val) :?>
 									<div class="treatment_cat_<?=$key?>">	
@@ -233,7 +234,10 @@
 						<!-- END Edit Data -->
 						<!-- For Validation Time Data -->	
 						<?php } else { ?>
-								<?php foreach($teeth_post as $k=>$val) :?>
+								<?php 
+									if(!empty($teeth_post)) :
+										foreach($teeth_post as $k=>$val) :
+								?>
 									<?php 
 										$post_cat_id = $this->input->post('treatment_cat_id_'.$val);
 										$post_cat_text = $this->input->post('treat_cat_text_'.$val);  
@@ -284,7 +288,10 @@
 										<?php echo form_error('treatment_cat_id_'.$val.'[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
 										<hr/>	
 									</div>	
-								<?php endforeach; ?>
+								<?php 
+									endforeach; 
+									endif;
+								?>
 						<?php } ?>
 						<!-- END Validation Time Data -->	
 					</div>	
@@ -326,8 +333,9 @@
 						<div class="row">	
 							<div class="col-md-12 col-sm-12">
 								<div class="form-group">
-									<label>Treatment Description</label> 
-									<textarea name="other_description" class="form-control" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
+
+									<label>Treatment Description</label> 									
+									<textarea name="other_description" class="form-control" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php if(isset($_POST['other_description'])){ echo $_POST['other_description']; }else{ echo $record['other_description']; } ?></textarea>
 								</div>
 								<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
 							</div>
