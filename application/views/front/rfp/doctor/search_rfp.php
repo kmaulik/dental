@@ -160,7 +160,7 @@ span.time {
 						</div>
 						<div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
 							<label class="space">&nbsp;</label>
-							<a class="btn btn-success filter_btn" onclick="saved_filter()"><?php echo $btn_label; ?></a>
+							<a class="btn btn-success filter_btn" onclick="saved_filter_func()"><?php echo $btn_label; ?></a>
 						</div>
 					</div>
 					<!-- ================== End for saved filter ============= -->	
@@ -369,7 +369,7 @@ $("#reset").click(function(){
 });
 
 //-------------- For Saved Filter ------------
-function saved_filter(){
+function saved_filter_func(){
 
 	if($("#saved_filter").val() != ''){
 		//------ Update Filter Data -----

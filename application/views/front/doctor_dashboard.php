@@ -965,7 +965,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Comment :</label>
+								<label>Message from Your Patient :</label>
 								<span id="call_app_rfp_comment"></span>
 							</div>
 						</div>	
@@ -1070,7 +1070,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>Comment :</label>
+								<label>Message from Your Patient :</label>
 								<span id="appointment_rfp_comment"></span>
 							</div>
 						</div>	

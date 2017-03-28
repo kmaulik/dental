@@ -215,7 +215,7 @@
 															</td>
 														</tr>
 														<!-- ============ Chat History for winner ============= -->
-														<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
+														<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) : ?>
 															<tr class="hover-timeline chatting chat_data_<?=$key?>_<?=$k?>" style="display:none;">
 																<td colspan="8">
 											                    <!-- ============ Avatar ======== -->
@@ -230,7 +230,7 @@
         												                    	   else 
         												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>">
                                                                                 </div>
-                                                                                <span>Has Requested</span>
+                                                                                <span><?=$active_rfp['fname']." ".$active_rfp['lname']?> has Requested</span>
                                                                             </div>
     																		<div class="timeline-msg">$<?=$bid_data['amount']?></div>
     																		
@@ -242,10 +242,10 @@
         												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>">
                                                                                 </div>
 
-                                                                                <span>Has Confirmed</span>
+                                                                                <span><?php echo $bid_data['user_name']; ?>   has Confirmed</span>
                                                                             </div>
 																		</li>
-																	</ul>
+																	</ul>																
 																</div>
 																<!-- ============ End Avatar ==== -->
 																<!-- ============= Congratulation Box ===== -->
