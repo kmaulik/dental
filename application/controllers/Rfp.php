@@ -1467,6 +1467,7 @@ class Rfp extends CI_Controller {
 		        $subject=config('site_name').' - Thank you For Create RFP';    
 		        $this->email->from(config('contact_email'), config('sender_name'))
 		                    ->to($this->session->userdata['client']['email_id'])
+		                   // ->reply_to(config('contact_email'))
 		                    ->subject($subject)
 		                    ->message($html_content);
 

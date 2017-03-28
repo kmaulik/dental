@@ -83,9 +83,9 @@
 											<?php if($active_rfp['treatment_plan_total'] != '' && $active_rfp['min_bid_amt'] != '') :?>
 												<?php $Total_save = 100 - round((($active_rfp['min_bid_amt']*100) / $active_rfp['treatment_plan_total']),2); ?>
 												<?php if($Total_save > 0) :?>
-													<span class="label label-success total_save">+<?=round($Total_save,2)?> %</span>
+													<span class="label label-success total_save">+<?=round($Total_save)?> %</span>
 												<?php else :?>
-													<span class="label label-danger total_save"><?=round($Total_save,2)?> %</span>
+													<span class="label label-danger total_save"><?=round($Total_save)?> %</span>
 												<?php endif; ?>
 											<?php else : ?>
 												N/A
@@ -124,7 +124,7 @@
 												<thead>
 													<th>Name</th>
 													<th>Rating</th>
-													<th>Bid Amount</th>
+													<th>Bid Value ($)</th>
 													<th>% Saving</th>
 													<th>Distance (Miles.)</th>
 													<th>Action</th>
@@ -169,9 +169,9 @@
 																<?php if($active_rfp['treatment_plan_total'] != '' && $bid_data['amount'] != '') :?>
 																	<?php $Total_save = 100 - round((($bid_data['amount']*100) / $active_rfp['treatment_plan_total']),2); ?>
 																	<?php if($Total_save > 0) :?>
-																		<span class="label label-success total_save">+<?=round($Total_save,2)?> %</span>
+																		<span class="label label-success total_save">+<?=round($Total_save)?> %</span>
 																	<?php else :?>
-																		<span class="label label-danger total_save"><?=round($Total_save,2)?> %</span>
+																		<span class="label label-danger total_save"><?=round($Total_save)?> %</span>
 																	<?php endif; ?>
 																<?php else : ?>
 																	N/A

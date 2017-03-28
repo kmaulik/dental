@@ -232,7 +232,7 @@ span.time {
 									<th>RPF Title</th>
 									<th>Age</th>
 									<th>Distance (Miles.)</th>
-									<th>Bid Amt ($)</th>
+									<th>Bid Value ($)</th>
 									<th>Total Bid</th>
 									<th>Remaining Days</th>
 									<!-- <th>Created On</th> -->

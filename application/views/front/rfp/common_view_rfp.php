@@ -53,7 +53,7 @@
 					if(!empty($rfp_bid)) {						
 				?>
 					<div class="col-sm-6">						
-						<span class="title">Bid amount : </span>
+						<span class="title">Bid Value ($) : </span>
 						<span><?php echo '$ '.$rfp_bid['amount']; ?></span>
 					</div>
 

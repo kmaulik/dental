@@ -59,7 +59,7 @@
 							<thead>
 								<tr>
 									<th>RFP Title</th>
-									<th>Bid Price</th>
+									<th>Bid Value ($)</th>
 									<th>Status</th>
 									<th>Action</th>
 								</tr>
@@ -357,7 +357,7 @@
 								<thead>
 									<tr>
 										<th>RFP Title</th>
-										<th>Bid Price</th>
+										<th>Bid Value ($)</th>
 										<th>Status</th>
 										<th>Action</th>
 									</tr>
