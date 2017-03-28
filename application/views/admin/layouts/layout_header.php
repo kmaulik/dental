@@ -16,6 +16,9 @@
     <link href="<?php echo DEFAULT_ADMIN_CSS_PATH . "custom.css"; ?>" rel="stylesheet" type="text/css">  
     <!-- /global stylesheets -->
     
+    <link href="<?= DEFAULT_CSS_PATH ?>tooth.css" rel="stylesheet" type="text/css" />
+
+    
     <style type="text/css">
         .note-group-select-from-files {display: none; }
         .for_pointer{ cursor: pointer; }        

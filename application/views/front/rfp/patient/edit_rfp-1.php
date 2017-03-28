@@ -76,7 +76,7 @@
 					<div class="form-group">
 						<label>Birth Date</label>	
 						<input type="text" name="birth_date" id="birth_date" data-format="mm-dd-yyyy" class="form-control datepicker" 
-							  placeholder="MM-DD-YYYY" onchange="fetch_definition_type()" value="<?php if($this->input->post('birth_date') != '') { echo $this->input->post('birth_date'); } else { if(isset($record['birth_date'])) { echo date("m-d-Y",strtotime($record['birth_date'])); } else { 
+							  placeholder="MM-DD-YYYY" value="<?php if($this->input->post('birth_date') != '') { echo $this->input->post('birth_date'); } else { if(isset($record['birth_date'])) { echo date("m-d-Y",strtotime($record['birth_date'])); } else { 
 							  	if(set_value('birth_date') != '') { echo set_value('birth_date'); }
 							  	else { echo date("m-d-Y",strtotime($this->session->userdata['client']['birth_date'])); }}} ?>" >
 						<small class="text-muted block">Please Select Date in MM-DD-YYYY Format</small>	
@@ -100,18 +100,19 @@
 					</div>
 					<?php echo form_error('title','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
-				<div class="col-md-6 col-sm-6 dentition_type">
+				<!-- <div class="col-md-6 col-sm-6 dentition_type">
 					<div class="form-group">
 						<label>Dentition Type</label>	
 						<select name="dentition_type" class="form-control" id="dentition_type">
 							<option value=""> Select Dentition Type</option>
-							<!-- <option value="primary">Primary</option>
+							<option value="primary">Primary</option>
 							<option value="permanent">Permanent</option>
-							<option value="other">Other</option> -->	
+							<option value="other">Other</option>	
 						</select>
 					</div>
 					<?php echo form_error('dentition_type','<div class="alert alert-mini alert-danger">','</div>'); ?>	
-				</div>
+				</div> -->
+				<input type="hidden" name="dentition_type" id="dentition_type" value="permanent">
 			</div>
 
 			<!-- Range Picker -->
@@ -218,34 +219,6 @@
 	});
 
 	//------ For Check Age and display dentition type -----------------------
-	fetch_definition_type();
-	function fetch_definition_type(){
-		if($("#birth_date").val() != '')
-		{
-			//$(".dentition_type").show();
-			var birthdate = $("#birth_date").val().split('-');
-			var birth_date=birthdate[2]+"-"+birthdate[0]+"-"+birthdate[1];
-			dob = new Date(birth_date);
-			var today = new Date();
-			var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
-			console.log('Your Age is : '+age);
-			if(age > 18) 
-			{
-				var data='<option value=""> Select Dentition Type</option><option value="permanent">Permanent</option><option value="other">Others, e.g. Dentures, Bracelets</option>';
-				$("#dentition_type").html(data);
-			}else{
-				var data='<option value=""> Select Dentition Type</option><option value="primary">Primary</option><option value="permanent">Permanent</option><option value="other">Others, e.g. Dentures, Bracelets</option>';				
-				$("#dentition_type").html(data);
-			}
-			$("#dentition_type").val("<?php if($this->input->post('dentition_type') != '') { echo $this->input->post('dentition_type'); } else { echo (isset($record['dentition_type'])? $record['dentition_type'] : set_value('dentition_type')); } ?>");
-		}
-		else{
-			//$(".dentition_type").hide();
-			$("#dentition_type").html('');
-		}	
-		
-	}
-
 	$(window).ready(function() {
 		//------- For Range Picker -------------
 		loadScript(plugin_path + 'jquery/jquery-ui.min.js', function() { /** jQuery UI **/

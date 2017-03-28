@@ -1371,6 +1371,8 @@ li.non_user > .timeline-panel:after {
 .table-hover>tbody>tr:hover {
     background-color: rgba(153, 153, 153, 0.26);
 }
+
+
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

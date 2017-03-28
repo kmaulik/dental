@@ -61,7 +61,7 @@
 					<!-- // ENDs comment  -->
 					<?php if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); } ?>
 					<div class="row">
-						<div class="col-md-12 col-sm-12" id="primary">
+						<!-- <div class="col-md-12 col-sm-12" id="primary">
 							<div class="form-group">
 								<div class="table-responsive">	
 									<table class="table table-bordered table_custom_data">
@@ -116,8 +116,8 @@
 								</div>	
 							</div>
 							<?php echo form_error('teeth[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>		
-						<div class="col-md-12 col-sm-12" id="permanent">
+						</div>		 -->
+						<!-- <div class="col-md-12 col-sm-12" id="permanent">
 							<div class="form-group">
 								<div class="table-responsive">	
 									<table class="table table-bordered">
@@ -160,7 +160,23 @@
 								</div>	
 							</div>
 							<?php echo form_error('teeth[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						</div> -->
+						<!-- For Teeth Image -->
+						<div class="col-sm-12">
+							<div class="teeth-bg">
+								<?php for($i=1;$i<=32;$i++) : ?>
+									<span id="t<?=$i?>">
+										<span class="checkbox-wrapper">
+											<label>
+												<input type="checkbox" value="<?=$i?>" name="teeth[]" class="toggle_cat" <?php if(empty($teeth_post)){if(isset($teeth_arr) && in_array($i,$teeth_arr1)) {echo "checked"; } }else{echo set_checkbox('teeth',$i); } ?>>
+												<span class="checked-bg"></span>
+											</label>
+										</span>
+									</span>
+								<?php endfor; ?>
+							</div>
 						</div>
+						<!-- End For Teeth Image -->
 					</div>	
 
 				 <!-- For Edit Time Display the already select category  -->
@@ -307,17 +323,16 @@
 					<!-- ========== End For Dynamic Select2 ============ -->
 
 					<!-- For Other Treatment Category -->
-					
-						<div id="other">
-							<div class="row">	
-								<div class="col-md-12 col-sm-12">
-									<div class="form-group">
-										<label>Treatment Description</label> 
-										<textarea name="other_description" class="form-control" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
-									</div>
-									<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
+						<div class="row">	
+							<div class="col-md-12 col-sm-12">
+								<div class="form-group">
+									<label>Treatment Description</label> 
+									<textarea name="other_description" class="form-control" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php echo (isset($record['other_description'])? $record['other_description'] : set_value('other_description')); ?></textarea>
 								</div>
+								<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
 							</div>
+						</div>
+						<!-- <div id="other">
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="form-group">
@@ -346,7 +361,7 @@
 								</div>
 							</div>	
 							<?php echo form_error('other_treatment_cat_id[]','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>	
+						</div>	 -->
 					
 					<!-- End For Other Treatment Category -->
 
@@ -454,33 +469,33 @@
 
 	var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
 
-	fetch_definition_data();
-	function fetch_definition_data(){
+	// fetch_definition_data();
+	// function fetch_definition_data(){
 
-		$("#primary").hide();
-		$("#permanent").hide();
-		$("#other").hide();
+	// 	$("#primary").hide();
+	// 	$("#permanent").hide();
+	// 	$("#other").hide();
 
-		if($("#dentition_type").val() == 'primary'){
-			$("#permanent input[type='checkbox']").attr('checked', false);
-			$("input[name='other_description']").val('');
-			$("#primary").show();
-		}
-		else if($("#dentition_type").val() == 'permanent'){
-			$("#primary input[type='checkbox']").attr('checked', false);
-			$("input[name='other_description']").val('');
-			$("#permanent").show();
-		}
-		else if($("#dentition_type").val() == 'other'){
-			$("#permanent input[type='checkbox']").attr('checked', false);
-			$("#primary input[type='checkbox']").attr('checked', false);
-			$("#other").show();
-		} else {
-			$("#permanent input[type='checkbox']").attr('checked', false);
-			$("#primary input[type='checkbox']").attr('checked', false);
-			$("input[name='other_description']").val('');
-		}
-	}
+	// 	if($("#dentition_type").val() == 'primary'){
+	// 		$("#permanent input[type='checkbox']").attr('checked', false);
+	// 		$("input[name='other_description']").val('');
+	// 		$("#primary").show();
+	// 	}
+	// 	else if($("#dentition_type").val() == 'permanent'){
+	// 		$("#primary input[type='checkbox']").attr('checked', false);
+	// 		$("input[name='other_description']").val('');
+	// 		$("#permanent").show();
+	// 	}
+	// 	else if($("#dentition_type").val() == 'other'){
+	// 		$("#permanent input[type='checkbox']").attr('checked', false);
+	// 		$("#primary input[type='checkbox']").attr('checked', false);
+	// 		$("#other").show();
+	// 	} else {
+	// 		$("#permanent input[type='checkbox']").attr('checked', false);
+	// 		$("#primary input[type='checkbox']").attr('checked', false);
+	// 		$("input[name='other_description']").val('');
+	// 	}
+	// }
 
 
 	function delete_img(obj){

@@ -100,62 +100,25 @@
 				</h4>
 				<?php $teeth_arr1=array(); ?>						
 				<?php if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); } ?>
-				<?php if($record['dentition_type'] == 'primary') :?>
-					<div class="col-sm-12">
-						<div class="table-responsive">	
-								<table class="table table-bordered teeth">
-									<thead>
-										<tr>
-											<th colspan="16">Primary Dentition</th>
-										</tr>
-										<tr>
-											<th colspan="8">upper right</th>
-											<th colspan="8">upper left</th>
-										</tr>
-									</thead>
-									<tfoot>
-										<tr>
-											<th colspan="8">lower right</th>
-											<th colspan="8">lower left</th>
-										</tr>
-									</tfoot>
-									<tbody>
-										<tr>
-											<td></td>
-											<td></td>
-											<td></td>
-											<?php for($i=0,$k=65;$i<10;$i++) : ?>
-											<td>
-												<label class="checkbox">
-													<input type="checkbox" disabled value="<?=chr($k+$i);?>" name="teeth[]" <?php if(in_array(chr($k+$i),$teeth_arr1)) { echo "checked"; }?>><i></i> <?=chr($k+$i);?>
-												</label>
-											</td>	
-											<?php endfor; ?>
-											<td></td>
-											<td></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td></td>
-											<td></td>
-											<td></td>
-											<?php for($i=0,$k=84;$i<10;$i++) : ?>
-											<td>
-												<label class="checkbox">
-													<input type="checkbox" disabled value="<?=chr($k-$i);?>" name="teeth[]" <?php if(in_array(chr($k-$i),$teeth_arr1)) { echo "checked"; }?>><i></i><?=chr($k-$i);?>
-												</label>
-											</td>
-											<?php endfor; ?>
-											<td></td>
-											<td></td>
-											<td></td>
-											</tr>
-									</tbody>	
-								</table>
-						</div>
-					</div>	
-				<?php elseif($record['dentition_type'] == 'permanent') :?>	
-					<div class="col-sm-12">
+				
+				<!-- For Teeth Image -->
+				<div class="col-sm-12">
+					<div class="teeth-bg">
+						<?php for($i=1;$i<=32;$i++) : ?>
+							<span id="t<?=$i?>">
+								<span class="checkbox-wrapper">
+									<label>
+										<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="toggle_cat" <?php if(in_array($i,$teeth_arr1)) { echo "checked"; }?>>
+										<span class="checked-bg"></span>
+									</label>
+								</span>
+							</span>
+						<?php endfor; ?>
+					</div>
+				</div>
+				<!-- End For Teeth Image -->
+
+					<!-- <div class="col-sm-12">
 						<div class="table-responsive">	
 								<table class="table table-bordered teeth">
 									<thead>
@@ -195,14 +158,12 @@
 									</tbody>	
 								</table>
 						</div>	
-					</div>
+					</div> -->
 				<!-- Other Treatment Category Type -->	
-				<?php elseif($record['dentition_type'] == 'other') :?>
-					<div class="col-sm-12">
-						<label>Treatment Description : </label> <?=$record['other_description'] ?> 	
-					</div>
+			
+					
 					<!-- ===== For Other Treatment Category === -->
-					<div class="col-sm-12">
+					<!-- <div class="col-sm-12">
 						<label>Treatment Category</label>
 						<ul>
 							<?php $other_category=explode(",",$record['other_treatment_cat_id']); ?>
@@ -214,17 +175,17 @@
 								<li> N/A</li>
 							<?php endif;?>	
 						</ul>
-					</div>
+					</div> -->
 					<!-- ===== End Other Treatment Category === -->	
 					<!-- ===== For Check Other Manual Category Exist or not === -->
-					<?php if($record['other_treatment_cat_text'] != '') :?>
-					<div class="col-sm-12 manual_category">
+					
+					<!-- <div class="col-sm-12 manual_category">
 						<label>Manual Category</label> 
 							<?= $record['other_treatment_cat_text'];?>
-					</div>	
-					<?php endif; ?>
+					</div>	 -->
+					
 					<!-- ===== End Check Other Manual Category Exist or not === -->
-				<?php endif;?>
+			
 				<!-- End Other Treatment Category Type -->	
 
 				<?php if(!empty($teeth_arr)) : ?>
@@ -254,6 +215,10 @@
 					<?php endforeach; ?>
 				<?php endif; ?>
 
+				<div class="col-sm-12">
+					<label>Treatment Description : </label> <?php if($record['other_description'] != '') { echo $record['other_description']; } else { echo 'N/A'; } ?> 	
+				</div>
+
 			</div>	
 			<!--  /Treatment Plan  -->
 
@@ -261,7 +226,7 @@
 			<div class="rfp-additional">
 				<h4 class="rfp-title">Additional Section</h4>
 				<div class="col-sm-12">
-					<label>Further Information for our Agents : </label><?=$record['message'] ?> 
+					<label>Further Information for our Agents : </label><?php if($record['message'] != '') { echo $record['message']; } else { echo 'N/A'; } ?> 
 				</div>
 				
 				<div class="col-sm-12 col_custom">

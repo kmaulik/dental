@@ -118,11 +118,9 @@ class Rfp extends CI_Controller {
 			if(!isset($this->session->userdata['rfp_data'])){
 				redirect('rfp/add');
 			}
-			// If Type other than skip this validation 
-			if($this->session->userdata['rfp_data']['dentition_type'] != 'other') {
-				$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
 				//----- For Check Treatment Category Validation ------
 				if($this->input->post('teeth') != ''){
+					$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
 					foreach($this->input->post('teeth') as $key=>$val){
 						$treat_cat_id = $this->input->post('treatment_cat_id_'.$val);
 						$treat_cat_text = $this->input->post('treat_cat_text_'.$val);
@@ -132,18 +130,16 @@ class Rfp extends CI_Controller {
 						}
 					}
 				}
-				//------------------------------------	
-			} else {
+				else {
 
-				$other_treatment_cat_id = $this->input->post('other_treatment_cat_id');
-				$other_treatment_cat_text = $this->input->post('other_treatment_cat_text');
-				if($other_treatment_cat_id == '' && $other_treatment_cat_text == '')
-				{
-					$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
+					$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
+					// $other_treatment_cat_id = $this->input->post('other_treatment_cat_id');
+					// $other_treatment_cat_text = $this->input->post('other_treatment_cat_text');
+					// if($other_treatment_cat_id == '' && $other_treatment_cat_text == '')
+					// {
+					// 	$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
+					// }
 				}
-
-				//$this->form_validation->set_rules('other_description', 'Description', 'required');
-			}
 	
 			$this->form_validation->set_rules('message', 'message', 'max_length[500]');
 
@@ -172,9 +168,9 @@ class Rfp extends CI_Controller {
 					$teeth_data=json_encode($teeth);
 					$teeth_cat_array=array_unique($teeth_cat_array);
 				} 
-				else{
-					$teeth_cat_array=$this->input->post('other_treatment_cat_id');
-				}
+				// else{
+				// 	$teeth_cat_array=$this->input->post('other_treatment_cat_id');
+				// }
 				/*------------ For teeth and Treatment category data -------- */ 
 
 				//-------------- For Multiple File Upload  ----------
@@ -251,8 +247,8 @@ class Rfp extends CI_Controller {
 					'teeth_data' 				=> $teeth_data,
 					'teeth_category'			=> implode(",",$teeth_cat_array),
 					'other_description' 		=> $this->input->post('other_description'),
-					'other_treatment_cat_id'	=> implode(",",$this->input->post('other_treatment_cat_id')),
-					'other_treatment_cat_text'	=> $this->input->post('other_treatment_cat_text'),
+					// 'other_treatment_cat_id'	=> implode(",",$this->input->post('other_treatment_cat_id')),
+					// 'other_treatment_cat_text'	=> $this->input->post('other_treatment_cat_text'),
 					'message' 					=> $this->input->post('message'),
 					'img_path' 					=> $img_path,
 					);
@@ -440,11 +436,9 @@ class Rfp extends CI_Controller {
 				}
 			} elseif($step == 1){				
 				//--------- For Check Step 1 is Success or not  ---------
-				if($rfp_arr['dentition_type'] != 'other') // If Type other than skip this validation 
-				{
-					$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
 					//----- For Check Treatment Category Validation ------
 					if($this->input->post('teeth') != ''){
+						$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
 						foreach($this->input->post('teeth') as $key=>$val){
 							$treat_cat_id = $this->input->post('treatment_cat_id_'.$val);
 							$treat_cat_text = $this->input->post('treat_cat_text_'.$val);
@@ -454,18 +448,16 @@ class Rfp extends CI_Controller {
 							}
 						}
 					}
-					//------------------------------------------
-				} 
-				else{
+					else{
 					
-					$other_treatment_cat_id = $this->input->post('other_treatment_cat_id');
-					$other_treatment_cat_text = $this->input->post('other_treatment_cat_text');
-					if($other_treatment_cat_id == '' && $other_treatment_cat_text == '')
-					{
-						$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
-					}
+						$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
+						// $other_treatment_cat_id = $this->input->post('other_treatment_cat_id');
+						// $other_treatment_cat_text = $this->input->post('other_treatment_cat_text');
+						// if($other_treatment_cat_id == '' && $other_treatment_cat_text == '')
+						// {
+						// 	$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
+						// }
 
-					//$this->form_validation->set_rules('other_description', 'Description', 'required');
 				}
 				$this->form_validation->set_rules('message', 'message', 'max_length[500]');				
 
@@ -494,9 +486,9 @@ class Rfp extends CI_Controller {
 						$teeth_data=json_encode($teeth);
 						$teeth_cat_array=array_unique($teeth_cat_array);
 					} 
-					else{
-						$teeth_cat_array=$this->input->post('other_treatment_cat_id');
-					}
+					// else{
+					// 	$teeth_cat_array=$this->input->post('other_treatment_cat_id');
+					// }
 					/*------------ For teeth and Treatment category data -------- */ 
 
 					// ------------------------------------------------------------------------
@@ -630,13 +622,13 @@ class Rfp extends CI_Controller {
 
 					$rfp_data['other_description']=$this->input->post('other_description');
 
-					$other_treatment_cat_id = $this->input->post('other_treatment_cat_id');					
-					$rfp_data['other_treatment_cat_id'] = null;
-					if(!empty($other_treatment_cat_id)){
-						$rfp_data['other_treatment_cat_id']=implode(",",$this->input->post('other_treatment_cat_id'));
-					}
+					//$other_treatment_cat_id = $this->input->post('other_treatment_cat_id');					
+					//$rfp_data['other_treatment_cat_id'] = null;
+					// if(!empty($other_treatment_cat_id)){
+					// 	$rfp_data['other_treatment_cat_id']=implode(",",$this->input->post('other_treatment_cat_id'));
+					// }
 
-					$rfp_data['other_treatment_cat_text']=$this->input->post('other_treatment_cat_text');
+					//$rfp_data['other_treatment_cat_text']=$this->input->post('other_treatment_cat_text');
 					$rfp_data['message']=$this->input->post('message');
 
 

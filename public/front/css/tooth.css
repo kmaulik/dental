@@ -1,0 +1,429 @@
+/*********** For New Teeth Image (Developed By AC) *************/
+.teeth-bg{background:url("../images/teeth/teeth.png") no-repeat;background-size:100% 100%;height: 600px;
+    width: 400px;margin:0 auto;position:relative;}
+    input[type="checkbox"] {
+      background: #fff;
+      border: #7f83a2 1px solid;
+   }
+.teeth-bg #t1{background:url("../images/teeth/t1.png") no-repeat;position: absolute;top: 42.3%;left: 11%;height: 50px;width: 50px;display:block;}
+#t1 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t1-checked.png") no-repeat;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+.checkbox-wrapper label {
+    height: 50px;
+    width: 50px;
+}
+.checkbox-wrapper label input[type="checkbox"] {
+    opacity: 0;
+}
+.teeth-bg #t2{background:url("../images/teeth/t2.png") no-repeat;position: absolute;top: 35.3%;left: 48px;height: 50px;width: 50px;display:block;}
+#t2 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t2-checked.png") no-repeat;
+    height: 48px;
+    width: 50px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t2 .checkbox-wrapper label {
+    height: 46px;
+    width: 50px;
+}
+.teeth-bg #t3{background: url(../images/teeth/t3.png) no-repeat;position: absolute;top: 27.8%;left: 58px;height: 46px;width: 52px;}
+#t3 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t3-checked.png") no-repeat;
+    height: 50px;
+    width: 49px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t3 .checkbox-wrapper label {
+    height: 50px;
+    width: 49px;
+}
+.teeth-bg #t4{    background: url(../images/teeth/t4.png) no-repeat;position: absolute;top: 23.2%;left: 74px;height: 29PX;width: 36PX;}
+#t4 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t4-checked.png") no-repeat;
+    height: 30px;
+    width: 50px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t4 .checkbox-wrapper label {
+    height: 28px;
+    width: 50px;
+}
+.teeth-bg #t5{background: url(../images/teeth/t5.png) no-repeat;position: absolute;top: 17.5%;left: 86px;height: 34px;width: 45PX;}
+#t5 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t5-checked.png") no-repeat;
+    height: 35px;
+    width: 41px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t5 .checkbox-wrapper label {
+    height: 30px;
+    width: 41px;
+}
+.teeth-bg #t6{background: url(../images/teeth/t6.png) no-repeat;position: absolute;top: 12.9%;left: 25.3%;height: 38px;width: 37PX;}
+#t6 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t6-checked.png") no-repeat;
+    height: 38px;
+    width: 36px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t6 .checkbox-wrapper label {
+    height: 34px;
+    width: 36px;
+}
+.teeth-bg #t7{background: url(../images/teeth/t7.png) no-repeat;position: absolute;top: 9.9%;left: 32.3%;height: 31px;width: 34PX;}
+#t7 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t7-checked.png") no-repeat;
+    height: 32px;
+    width: 32px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t7 .checkbox-wrapper label {
+    height: 30px;
+    width: 32px;
+}
+.teeth-bg #t8{background: url(../images/teeth/t8.png) no-repeat;position: absolute;top: 7.5%;left: 39.8%;height: 37px;width: 40PX;}
+#t8 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t8-checked.png") no-repeat;
+    height: 36px;
+    width: 50px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t8 .checkbox-wrapper label {
+    height: 34px;
+    width: 50px;
+}
+.teeth-bg #t9{background: url(../images/teeth/t9.png) no-repeat;position: absolute;top: 7.5%;left: 49.9%;height: 37px;width: 40PX;}
+#t9 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t9-checked.png") no-repeat;
+    height: 36px;
+    width: 50px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t9 .checkbox-wrapper label {
+    height: 34px;
+    width: 50px;
+}
+.teeth-bg #t10{background: url(../images/teeth/t10.png) no-repeat;position: absolute;top: 9.7%;left: 59.4%;height: 33px;width: 34PX;}
+#t10 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t10-checked.png") no-repeat;
+    height: 34px;
+    width: 33px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t10 .checkbox-wrapper label {
+    height: 29px;
+    width: 33px;
+}
+.teeth-bg #t11{background: url(../images/teeth/t11.png) no-repeat;position: absolute;top: 12.9%;left: 65.7%;height: 37px;width: 34PX;}
+#t11 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t11-checked.png") no-repeat;
+    height: 36px;
+    width: 32px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t11 .checkbox-wrapper label {
+    height: 32px;
+    width: 32px;
+}
+.teeth-bg #t12{background: url(../images/teeth/t12.png) no-repeat;position: absolute;top: 17.4%;left: 67.9%;height: 35px;width: 44PX;}
+#t12 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t12-checked.png") no-repeat;
+    height: 34px;
+    width: 43px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t12 .checkbox-wrapper label {
+    height: 32px;
+    width: 43px;
+}
+.teeth-bg #t13{background: url(../images/teeth/t13.png) no-repeat;position: absolute;top: 22.9%;left: 71.4%;height: 33px;width: 41PX;}
+#t13 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t13-checked.png") no-repeat;
+    height: 33px;
+    width: 38px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t13 .checkbox-wrapper label {
+    height: 30px;
+    width: 38px;
+}
+.teeth-bg #t14{background: url(../images/teeth/t14.png) no-repeat;position: absolute;top: 27.5%;left: 72.7%;height: 54px;width: 50PX;}
+#t14 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t14-checked.png") no-repeat;
+    height: 50px;
+    width: 49px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t14 .checkbox-wrapper label {
+    height: 47px;
+    width: 49px;
+}
+.teeth-bg #t15{background: url(../images/teeth/t15.png) no-repeat;position: absolute;top: 34.7%;left: 298px;height: 50px;width: 56PX;}
+#t15 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t15-checked.png") no-repeat;
+    height: 50px;
+    width: 55px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+.teeth-bg #t16{background: url(../images/teeth/t16.png) no-repeat;position: absolute;top: 41.5%;left: 75.8%;height: 53px;width: 55PX;}
+#t16 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t16-checked.png") no-repeat;
+    height: 50px;
+    width: 55px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+.teeth-bg #t17{background: url(../images/teeth/t17.png) no-repeat;position: absolute;top: 52.5%;left: 77.8%;height: 44px;width: 40PX;}
+#t17 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t17-checked.png") no-repeat;
+    height: 44px;
+    width: 40px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t17 .checkbox-wrapper label {
+    height: 44px;
+    width: 40px;
+}
+.teeth-bg #t18{background: url(../images/teeth/t18.png) no-repeat;position: absolute;top: 59.7%;left: 76.5%;height: 52px;width: 46PX;}
+#t18 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t18-checked.png") no-repeat;
+    height: 52px;
+    width: 46px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t18 .checkbox-wrapper label {
+    height: 52px;
+    width: 46px;
+}
+.teeth-bg #t19{background: url(../images/teeth/t19.png) no-repeat;position: absolute;top: 67.7%;left: 73.2%;height: 52px;width: 50PX;}
+#t19 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t19-checked.png") no-repeat;
+    height: 53px;
+    width: 50px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t19 .checkbox-wrapper label {
+    height: 52px;
+    width: 50px;
+}
+.teeth-bg #t20{background: url(../images/teeth/t20.png) no-repeat;position: absolute;top:75.9%;left: 71.2%;height: 33px;width: 37PX;}
+#t20 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t20-checked.png") no-repeat;
+    height: 33px;
+    width: 37px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t20 .checkbox-wrapper label {
+    height: 33px;
+    width: 37px;
+}
+.teeth-bg #t21{background: url(../images/teeth/t21.png) no-repeat;position: absolute;top:80.5%;left: 66.8%;height: 35px;width: 34PX;}
+#t21 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t21-checked.png") no-repeat;
+    height: 35px;
+    width: 34px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t21 .checkbox-wrapper label {
+    height: 35px;
+    width: 34px;
+}
+.teeth-bg #t22{background: url(../images/teeth/t22.png) no-repeat;position: absolute;top:84.6%;left: 61.9%;height: 32px;width: 30PX;}
+#t22 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t22-checked.png") no-repeat;
+    height: 32px;
+    width: 30px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t22 .checkbox-wrapper label {
+    height: 32px;
+    width: 30px;
+}
+.teeth-bg #t23{background: url(../images/teeth/t23.png) no-repeat;position: absolute;top:86.4%;left: 56%;height: 33px;width: 28PX;}
+#t23 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t23-checked.png") no-repeat;
+    height: 33px;
+    width: 28px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t23 .checkbox-wrapper label {
+    height: 33px;
+    width: 28px;
+}
+.teeth-bg #t24{background: url(../images/teeth/t24.png) no-repeat;position: absolute;top:88%;left: 50%;height: 28px;width: 28PX;}
+#t24 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t24-checked.png") no-repeat;
+    height: 28px;
+    width: 28px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t24 .checkbox-wrapper label {
+    height: 28px;
+    width: 28px;
+}
+.teeth-bg #t25{background: url(../images/teeth/t25.png) no-repeat;position: absolute;top:87.8%;left: 43.2%;height: 28px;width: 28PX;}
+#t25 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t25-checked.png") no-repeat;
+    height: 28px;
+    width: 28px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t25 .checkbox-wrapper label {
+    height: 28px;
+    width: 28px;
+}
+.teeth-bg #t26{background: url(../images/teeth/t26.png) no-repeat;position: absolute;top:86.5%;left: 36.9%;height: 34px;width: 28PX;}
+#t26 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t26-checked.png") no-repeat;
+    height: 34px;
+    width: 28px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t26 .checkbox-wrapper label {
+    height: 34px;
+    width: 28px;
+}
+.teeth-bg #t27{background: url(../images/teeth/t27.png) no-repeat;position: absolute;top:84.5%;left: 30.5%;height: 33px;width: 29PX;}
+#t27 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t27-checked.png") no-repeat;
+    height: 33px;
+    width: 29px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t27 .checkbox-wrapper label {
+    height: 33px;
+    width: 29px;
+}
+.teeth-bg #t28{background: url(../images/teeth/t28.png) no-repeat;position: absolute;top:80.5%;left: 24.8%;height: 35px;width: 35PX;}
+#t28 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t28-checked.png") no-repeat;
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t28 .checkbox-wrapper label {
+    height: 35px;
+    width: 35px;
+}
+.teeth-bg #t29{background: url(../images/teeth/t29.png) no-repeat;position: absolute;top:75.6%;left: 19.5%;height: 35px;width: 37PX;}
+#t29 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t29-checked.png") no-repeat;
+    height: 35px;
+    width: 37px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t29 .checkbox-wrapper label {
+    height: 35px;
+    width: 37px;
+}
+.teeth-bg #t30{background: url(../images/teeth/t30.png) no-repeat;position: absolute;top:67.6%;left: 14.1%;height: 55px;width: 52PX;}
+#t30 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t30-checked.png") no-repeat;
+    height: 55px;
+    width: 52px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t30 .checkbox-wrapper label {
+    height: 55px;
+    width: 52px;
+}
+.teeth-bg #t31{background: url(../images/teeth/t31.png) no-repeat;position: absolute;top:59.6%;left: 12.1%;height: 51px;width: 48PX;}
+#t31 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t31-checked.png") no-repeat;
+    height: 51px;
+    width: 48px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t31 .checkbox-wrapper label {
+    height: 51px;
+    width: 48px;
+}
+.teeth-bg #t32{background: url(../images/teeth/t32.png) no-repeat;position: absolute;top:52.6%;left: 12.6%;height: 43px;width: 40PX;}
+#t32 .checkbox-wrapper input[type="checkbox"]:checked + .checked-bg{ 
+    background: url("../images/teeth/t32-checked.png") no-repeat;
+    height: 43px;
+    width: 40px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+#t32 .checkbox-wrapper label {
+    height: 43px;
+    width: 40px;
+}
+@media(max-width:400px){
+.teeth-bg {
+    background: url(img/teeth.png) no-repeat;
+    background-size: 100% 100%;
+    height: 500px;
+    width: 300px;
+    margin: 0 auto;
+    position: relative;
+}
+}
+/********** End For New Teeth Image (Developed By AC)*********/
