@@ -215,19 +215,19 @@
 						<div class="col-sm-6">
 							<label>RFP Status : </label> 
 							<?php if($record['status'] == 0) :?>
-								<span class="label label-default">Draft</span>
+								<span class="label label-default">Quote Request Draft</span>
 							<?php elseif($record['status'] == 1) : ?>
-								<span class="label label-primary">Pending</span>
+								<span class="label label-primary">Quote Request Pending</span>
 							<?php elseif($record['status'] == 2) : ?>
-								<span class="label label-danger">Submit Pending</span>
+								<span class="label label-danger">Patient Review</span>
 							<?php elseif($record['status'] == 3) : ?>
-								<span class="label label-info">Open</span>
+								<span class="label label-info">Quote Request Received</span>
 							<?php elseif($record['status'] == 4) : ?>
-								<span class="label label-warning">Waiting For Doctor Approval</span>	
+								<span class="label label-warning">Doctor Confirmation Pending</span>	
 							<?php elseif($record['status'] == 5) : ?>
-								<span class="label label-dark-blue">In-Progress</span>			
+								<span class="label label-dark-blue">Service in Progress</span>			
 							<?php elseif($record['status'] == 6) : ?>
-								<span class="label label-success">Close</span>			
+								<span class="label label-success">Closed</span>			
 							<?php endif; ?>
 						</div>
 					</div>	

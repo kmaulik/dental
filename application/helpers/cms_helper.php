@@ -362,19 +362,19 @@
 
     function rfp_status_label($rfp_status){
         if($rfp_status == 0) {
-            $status ='<span class="label label-default">Draft</span>';
+            $status ='<span class="label label-default">Quote Request Draft</span>';
         }elseif($rfp_status == 1) {
-             $status ='<span class="label label-primary">Pending</span>';
+             $status ='<span class="label label-primary">Quote Request Pending</span>';
         }elseif($rfp_status == 2) {
-             $status ='<span class="label label-danger">Submit Pending</span>';
+             $status ='<span class="label label-danger">Patient Review</span>';
         }elseif($rfp_status == 3) {
-             $status ='<span class="label label-info">Open</span>';
+             $status ='<span class="label label-info">Quote Request Received</span>';
         }elseif($rfp_status == 4) {
-             $status ='<span class="label label-warning">Waiting For Doctor Approval</span>';
+             $status ='<span class="label label-warning">Doctor Confirmation Pending</span>';
         }elseif($rfp_status == 5) {
-             $status ='<span class="label label-dark-blue">In-Progress</span>';
+             $status ='<span class="label label-dark-blue">Service in Progress</span>';
         }elseif($rfp_status == 6) {
-            $status ='<span class="label label-success">Close</span>';         
+            $status ='<span class="label label-success">Closed</span>';         
         } 
         return $status;
     }

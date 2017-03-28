@@ -133,7 +133,15 @@
 													<?php foreach($active_rfp['bid_data'] as $k=>$bid_data) :?> 
 														<tr>
 															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']))?>">
-																	<?=$bid_data['user_name']?>
+																	
+																	<!-- Check for allow doctor profile or not -->
+																	<?php if($bid_data['is_profile_allow'] == 1): ?>
+																		<?=$bid_data['user_name']?>
+																	<?php else :?>
+																		Click here to view the Doctor Reviews
+																	<?php endif;?>	
+																	<!-- End Check for allow doctor profile or not -->
+																	
 																	<!-- For Check who is winner -->	
 																	<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
 																		<span class="label label-success">Winner</span>

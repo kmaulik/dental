@@ -63,8 +63,8 @@
 								<th>RFP Title</th>
 								<th>Patient Name</th>
 								<th>Total Bid Value ($)</th>
-								<th>Total Fee ($)</th>
-								<th>Initial Payment ($)</th>
+								<th>Total Net Fee ($)</th>
+								<th>This Payment ($)</th>
 								<th>Remaining Fees Due ($)</th>
 								<th>Pay Date</th>
 							</tr>
@@ -72,12 +72,17 @@
 						<tbody>
 							<?php if(count($transaction_list) >  0) :?>
 								<?php foreach ($transaction_list as $key => $record) : ?>
+									<?php if($record['discount'] != 0) {
+										$total_fee = ($record['actual_price'] - (($record['actual_price']*$record['discount'])/100));
+									}else{
+										$total_fee = $record['actual_price'];
+									}?>
 									<tr>
 										<td><?=$record['paypal_token']?></td>
 										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank"><?=character_limiter($record['rfp_title'],50)?></a></td>
 										<td><?=$record['patient_name']?></td>
 										<td><?=$record['bid_amt']?></td>
-										<td><?=$record['actual_price']?></td>
+										<td><?=$total_fee?></td>
 										<td><?=$record['payable_price']?></td>
 										<td><?=$record['remaining_payment']?></td>
 										<td><?=date("m-d-Y",strtotime($record['created_at']))?></td>

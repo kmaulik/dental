@@ -30,7 +30,14 @@
 					<?=$this->session->flashdata('error');?>
 				</div>
 			<?php endif; ?>
-			<!-- /ALERT -->				
+			<!-- /ALERT -->	
+			<!-- For Back Button -->
+			<div class="col-sm-12">
+				<?php if(isset($rfp_bid_list[0]['id'])) :?>
+					<a href="<?=base_url('rfp/view_rfp/'.encode($rfp_bid_list[0]['id']))?>" class="btn btn-info pull-right"><i class="fa fa-arrow-left"></i> Return to RFP Details</a>
+				<?php endif;?>
+			</div>			
+			<!-- End For Back Button -->
 			<div class="col-sm-12 rfp-title bottom_space">
 				<h3 class=""><?=isset($rfp_bid_list[0]['title'])?$rfp_bid_list[0]['title']:''?></h3>
 			</div>
@@ -41,7 +48,7 @@
 						<div class="the-box no-border store-list">
 							 <div class="media">
 								<a class="pull-left" href="#fakelink">
-								<img alt="image" src="<?php if($bid_list['avatar'] != '') 
+								<img alt="image" src="<?php if($bid_list['avatar'] != '' && $bid_list['is_profile_allow'] == 1) 
 		                    		{ echo base_url('uploads/avatars/'.$bid_list['avatar']); } 
 		                    	else 
 		                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>" class="store-image img-responsive" style="height:120px;width:120px;"></a>
@@ -50,7 +57,14 @@
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
 										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong">
-											<strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong>
+											<!-- Check for allow doctor profile or not -->
+											<?php if($bid_list['is_profile_allow'] == 1): ?>
+												<strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong>
+											<?php else :?>
+												<strong>Click here to view the Doctor Reviews</strong>
+											<?php endif;?>	
+											<!-- End Check for allow doctor profile or not -->
+
 											<!-- For Check who is winner -->	
 											<?php if($bid_list['rfp_status'] >= 5 && $bid_list['bid_status'] == 2) :?>
 												<span class="label label-success">Winner</span>

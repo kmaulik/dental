@@ -757,12 +757,21 @@ class Rfp extends CI_Controller {
 	}
 	
 	/* 
-	*	View RFP Bid (Proposal) particular rfp wise (Patient Side)
+	*	 BView RFPid (Proposal) particular rfp wise (Patient Side)
 	*/
 	public function view_rfp_bid($rfp_id){
 
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
 		$data['is_rated_rfp']=$this->Rfp_model->get_result('rfp_rating',['rfp_id' => decode($rfp_id)]);
+		
+		//----- For check Patient view doctor profile or not ------
+		if(!empty($data['rfp_bid_list'])){
+			foreach($data['rfp_bid_list'] as $key=>$rfp_bid_data){
+				$user_id = $this->session->userdata('client')['id'];
+				$data['rfp_bid_list'][$key]['is_profile_allow']= $this->Rfp_model->check_if_user_view_profile($user_id,$rfp_bid_data['doctor_id']);
+			}
+		}
+		//----- End For check Patient view doctor profile or not ------
 		//pr($data['rfp_bid_list'],1);
 		$data['subview']="front/rfp/patient/rfp_bid";
 		$this->load->view('front/layouts/layout_main',$data);

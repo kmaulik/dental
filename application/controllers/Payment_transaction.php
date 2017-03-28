@@ -28,6 +28,7 @@ class Payment_transaction extends CI_Controller {
 			$config = array_merge($config,pagination_front_config());		
 			$this->pagination->initialize($config);
 			$data['transaction_list']=$this->Payment_transaction_model->get_payment_transaction_doctor_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);	
+			//pr($data['transaction_list'],1);
 			$data['subview']="front/payment/doctor_payment_history";
 			$this->load->view('front/layouts/layout_main',$data);
 

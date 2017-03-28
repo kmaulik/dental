@@ -489,6 +489,11 @@ class Rfp_model extends CI_Model {
 
             
             foreach($data as $k=>$chat){
+
+                //----- For check Patient view doctor profile or not ------
+                $result[$key]['bid_data'][$k]['is_profile_allow'] = $this->Rfp_model->check_if_user_view_profile($this->session->userdata('client')['id'],$chat['doctor_id']);
+                //----- For check Patient view doctor profile or not ------
+
                /*------- For Chat timeline --*/
                 $this->db->select('m.*,CONCAT(u.fname," ",u.lname) as sender_name,u.avatar as sender_avatar');
                 $this->db->join('users u','m.from_id = u.id');
