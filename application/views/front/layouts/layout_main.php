@@ -6,6 +6,8 @@
     if(!empty($client_login)) { 
         $unread_cnt = get_notifications_unread_count();
     }
+
+    // pr($all_notifications);
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]>          <html class="ie ie8"> <![endif]-->

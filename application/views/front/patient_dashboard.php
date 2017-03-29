@@ -936,7 +936,15 @@
 
 
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
-<script>
+
+<script type="text/javascript">
+	<?php 
+	    $view_appointment = $this->input->get('view_appointment');
+		if($view_appointment != ''){ 
+			$view_appointment = decode($view_appointment);
+	?> 
+		setTimeout(function(){ $("#rfp_id_<?php echo $view_appointment;?>").click(); }, 1000);
+	<?php } ?>
 
 $(function () {
  //------------- For Star Rating ----------------

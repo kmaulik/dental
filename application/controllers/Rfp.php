@@ -5,11 +5,12 @@ class Rfp extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		if(!isset($this->session->userdata['client']))
-        {
+		
+		if(!isset($this->session->userdata['client'])){
         	$this->session->set_userdata('redirect_url',  current_url());
         	redirect('login');
         }	
+
 		$this->load->helper(['paypal_helper']);	
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
@@ -1061,7 +1062,7 @@ class Rfp extends CI_Controller {
     }
 
     //------------- Make Payment by patient when create a RFP ---------
-    public function make_payment(){    	
+    public function make_payment(){
 		if($this->input->post('submit')) {
 			$final_price = config('patient_fees');
 			$discount=0;
@@ -1097,8 +1098,8 @@ class Rfp extends CI_Controller {
 		}		
     }
 
-    // ------------------------------------------------------------------------
 
+    // ------------------------------------------------------------------------
     public function doctor_discount_100($rfp_id,$coupan_code,$actual_price){
     	
     	$user_data = $this->session->userdata('client');
@@ -1148,14 +1149,11 @@ class Rfp extends CI_Controller {
     	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
 
     	// Need to redirect after this Step
-    	$this->session->set_flashdata('success','Your Payment was successful.');
-	    redirect('dashboard');
-    	die('Successfull.');
+    	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
+	   	redirect('dashboard?reload='.encode($rfp_id));    	
     }
 
     public function make_doctor_payment(){
-    	
-    	// pr($_POST,1);
 
        	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
@@ -1274,7 +1272,8 @@ class Rfp extends CI_Controller {
 
 			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
        		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'"> click here</a>');
-	    	redirect('dashboard');
+       		redirect('dashboard?reload='.encode($rfp_id));
+	    	// redirect('dashboard');
     	}
     }	
 
@@ -1372,12 +1371,11 @@ class Rfp extends CI_Controller {
 
 	        	// ------------------------------------------------------------------------
 
-	        	$this->session->set_flashdata('run_cron','yes');
-	        	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab<a href="'.base_url().'dashboard'.'">click here</a>');
-	        	redirect('dashboard');
-	        	// pr($payment_due_1);
-	        	// pr($doc_payment_data);
-	        	// pr($ins_data,1);
+	        	$url = base_url().'cron/check_status';
+    			$res = $this->unirest->get($url);
+
+	        	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
+	        	redirect('dashboard?reload='.encode($doc_payment_data['rfp_id']));
 			}else{
 				$this->session->set_flashdata('error','Something goes wrong. Please try again');
 	        	redirect('dashboard');

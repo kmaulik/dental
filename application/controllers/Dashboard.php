@@ -371,9 +371,7 @@ class Dashboard extends CI_Controller {
         }else{       
             $patient_id = $this->session->userdata('client')['id'];
             $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile($patient_id,decode($user_id));
-        }
-
-        // pr($this->session->userdata('client'),1);
+        }        
 
         $data['tab'] = $this->input->get('tab');
 
@@ -526,7 +524,7 @@ class Dashboard extends CI_Controller {
                             'rfp_id' => $rfp_data['id'],
                             'noti_type'=>'doc_confirm_by_call',
                             'noti_msg'=>'Appointment has been confirmed by the doctor based on call for <b>'.$rfp_data['title'].'</b>',
-                            'noti_url'=>'dashboard'
+                            'noti_url'=>'dashboard?view_appointment='.encode($rfp_data['id'])
                         ];
             $this->Notification_model->insert_rfp_notification($noti_data);
 
@@ -605,7 +603,7 @@ class Dashboard extends CI_Controller {
                             'rfp_id' => $rfp_data['id'],
                             'noti_type'=>'doc_appointment_create',
                             'noti_msg'=>$noti_msg,
-                            'noti_url'=>'dashboard'
+                            'noti_url'=>'dashboard?view_appointment='.encode($rfp_data['id'])
                         ];
             $this->Notification_model->insert_rfp_notification($noti_data);
             // ------------------------------------------------------------------------
@@ -661,7 +659,7 @@ class Dashboard extends CI_Controller {
                         'rfp_id' => $rfp_id,
                         'noti_type'=>'patient_appointment_confirm',
                         'noti_msg'=>'Appointment has been confirmed by the patient for <b>'.$rfp_data['title'].'</b>',
-                        'noti_url'=>'dashboard?tab=appointment'
+                        'noti_url'=>'dashboard?tab=appointment&schedule_rfp='.encode($rfp_id)
                     ];
         $this->Notification_model->insert_rfp_notification($noti_data);
         // ------------------------------------------------------------------------

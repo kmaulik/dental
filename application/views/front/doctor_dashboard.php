@@ -1,3 +1,13 @@
+<?php    
+    $url = base_url().'cron/check_status';
+    $res = $this->unirest->get($url);
+
+	$reload = $this->input->get('reload');
+	if($reload != ''){		
+		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
+		redirect('dashboard?schedule_rfp='.$reload);
+	}
+?>
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
 
@@ -325,9 +335,9 @@
                                                         <?php if($appointment['appointment_id'] == '') :?>
                                                             <a class="label label-danger" title="Manage Appointment" id="rfp_id_<?=$appointment['id']?>" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-calendar"></i></a>
                                                         <?php else : ?>
-                                                            <a class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
+                                                            <a id="rfp_id_<?=$appointment['id']?>" class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
                                                             <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
-                                                                <a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>    
+                                                                <a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>
                                                             <?php else :?>
                                                             	<a href="<?=base_url('dashboard/reschedule_appointment/'.encode($appointment['appointment_id']))?>" id="resch_rfp_id_<?=$appointment['id']?>" class="label label-warning reschedule_appointment" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
                                                             <?php endif; ?>
@@ -1122,18 +1132,19 @@
 		</div>
 	</div>
 </div>
-
-<?php
-	
-    $run_cron = $this->session->flashdata('run_cron');
-    $url = base_url().'cron/check_status';
-    $res = $this->unirest->get($url);
-?>	
 <!-- ================== /Modal Popup For Manage Appointment ========================= -->
 
 <script type="text/javascript" src="<?php echo DEFAULT_ADMIN_JS_PATH . "plugins/forms/validation/validate.min.js"; ?>"></script>
 
 <script type="text/javascript">
+
+	<?php 
+    	$schedule_rfp = $this->input->get('schedule_rfp');
+    	if($schedule_rfp != ''){ 
+    		$schedule_rfp = decode($schedule_rfp);
+   	?> 
+   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); }, 2000);
+    <?php } ?>    
 
     function submit_form(obj){
 
@@ -1623,4 +1634,7 @@
             $(element).removeClass(errorClass);
         },
     });
+
+    
+
 </script>

@@ -27,9 +27,16 @@
 <!-- -->
 <section>
 	<div class="container view_profile">
+		<!-- <div class="col-md-12">
+			<div class="pull-right">					
+				<a href="http://localhost/dental/rfp/view_rfp_bid/Mw%3D%3D" class="btn btn-info"><i class="fa fa-eye"></i> View Proposal</a>
+			</div>
+		</div> -->
 
 		<!-- RIGHT -->
 		<div class="col-lg-9 col-md-9 col-sm-8 col-lg-push-3 col-md-push-3 col-sm-push-4 margin-bottom-80">			
+
+
 			<ul class="nav nav-tabs nav-top-border">
 				<li class=""><a href="#info" data-toggle="tab">Personal Info</a></li>	
 				<li class="<?php if($tab == ''){ echo 'active'; }?>"><a href="#review" data-toggle="tab">Review</a></li>
@@ -106,11 +113,11 @@
 					</div>
 					<div class="form-group">
 						<span class="title">Public Email : </span>
-						<span class="desc"> <?php echo ($db_data['public_email'] == '') ? 'N/A':$db_data['public_email']; ?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_9'; } ?>"> <?php echo ($db_data['public_email'] == '') ? 'N/A':$db_data['public_email']; ?></span>
 					</div>
 					<div class="form-group">
 						<span class="title">Office address : </span>
-						<span class="desc"> <?php echo $db_data['office_description']; ?></span>
+						<span class="desc <?php if($allow_view == '0'){ echo 'blur_10'; } ?>"> <?php echo $db_data['office_description']; ?></span>
 					</div>
 				</div>	
 				<!-- /PERSONAL INFO TAB -->
@@ -323,5 +330,27 @@
 	});
 
 	vague_8.blur();
+
+	var vague_9 = $('.blur_9').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_9.blur();
+
+	var vague_10 = $('.blur_10').Vague({
+	   	intensity:      3,      // Blur Intensity
+	    forceSVGUrl:    false,   // Force absolute path to the SVG filter,	    
+	   	animationOptions: {
+	     	duration: 1000,
+	      	easing: 'linear' // here you can use also custom jQuery easing functions
+	    }
+	});
+
+	vague_10.blur();
 
 </script>

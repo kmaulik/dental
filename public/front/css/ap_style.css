@@ -1565,6 +1565,9 @@ section p span.block{margin-bottom:5px;}
 #info button,
 #info a{width: 100%;margin: 5px 0px; }
 span.title{width: 50%;}
+.column2-footer h4, .column2-footer ul {
+    padding-left: 0px;
+}
 }
 
 @media (min-width:481px) and (max-width:767px){
