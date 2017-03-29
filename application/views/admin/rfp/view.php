@@ -225,9 +225,11 @@
 							<?php elseif($record['status'] == 4) : ?>
 								<span class="label label-warning">Doctor Confirmation Pending</span>	
 							<?php elseif($record['status'] == 5) : ?>
-								<span class="label label-dark-blue">Service in Progress</span>			
+								<span class="label label-primary">Appointment Pending</span>			
 							<?php elseif($record['status'] == 6) : ?>
-								<span class="label label-success">Closed</span>			
+								<span class="label label-dark-blue">Service in Progress</span>
+							<?php elseif($record['status'] == 7) : ?>
+								<span class="label label-success">Closed</span>					
 							<?php endif; ?>
 						</div>
 					</div>	

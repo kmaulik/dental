@@ -119,7 +119,11 @@
 														if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
 															echo '<span class="label label-danger">Payment Error</span>';
 														}else{
-															echo '<span class="label label-primary">Service in Progress</span>';
+															if($w_rfp['rfp_status'] == '5') {
+																echo '<span class="label label-primary">Appointment Pending</span>';
+															}else{
+																echo '<span class="label label-dark-blue">Service in Progress</span>';
+															}
 														}
 													}
 												?>

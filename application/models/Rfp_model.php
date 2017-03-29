@@ -392,7 +392,7 @@ class Rfp_model extends CI_Model {
         $this->db->from('payment_transaction pt');
         $this->db->join('rfp','pt.rfp_id = rfp.id');
         $this->db->join('refund r','pt.id = r.payment_id','left');
-        $this->db->where_in('rfp.status',[3,4,5]); // 3,4 & 5 Means Open & Waiting for doctor approval & Pending (Winner) &  RFP
+        $this->db->where_in('rfp.status',[3,4,5,6]); // 3,4,5 & 6 Means Open & Waiting for doctor approval & Pending (Winner) &  RFP
         $this->db->where('pt.user_id',$this->session->userdata['client']['id']);
         $this->db->order_by('pt.created_at','desc');
         $query = $this->db->get();
@@ -419,7 +419,7 @@ class Rfp_model extends CI_Model {
                           users.fname,users.lname,users.email_id,users.avatar');
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
-        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'6']);
+        $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'7']);
         $res = $this->db->get('rfp_bid')->result_array();
 
         $i=0;
@@ -469,7 +469,7 @@ class Rfp_model extends CI_Model {
         $this->db->select('rfp.*,count(rb.rfp_id) as total_bid,min(rb.amount) as min_bid_amt,rr.rfp_id as is_rated');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.is_deleted=0','left');
         $this->db->join('rfp_rating rr','rfp.id = rr.rfp_id','left');
-        $this->db->where_in('rfp.status',['3','4','5']); // Rfp Status 3,4,5 then display
+        $this->db->where_in('rfp.status',['3','4','5','6']); // Rfp Status 3,4,5,6 then display
         $this->db->where('rfp.patient_id',$this->session->userdata['client']['id']);
         $this->db->where('rfp.is_deleted',0);
         $this->db->where('rfp.is_blocked',0);
@@ -529,7 +529,7 @@ class Rfp_model extends CI_Model {
         $this->db->where('rb.doctor_id',$user_id);
         $this->db->where('rb.status','2'); // RFP BID Status 2 means winner for this rfp
         $this->db->where('rb.is_deleted',0);
-        $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
+        $this->db->where_in('rfp.status',['5','6']); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
         $this->db->where('rfp.is_deleted',0);
         $this->db->where('rfp.is_blocked',0);
         $this->db->where('u.is_deleted',0);
@@ -552,7 +552,7 @@ class Rfp_model extends CI_Model {
         $this->db->join('users u','a.doc_id = u.id');
         $this->db->join('rfp_bid rb','a.rfp_id = rb.rfp_id and a.doc_id = rb.doctor_id');
         $this->db->where('rfp.patient_id',$user_id);
-        $this->db->where('rfp.status','5'); // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
+        $this->db->where_in('rfp.status',['5','6']);  // Status 5 Means Rfp is in In-progress so able to manage appointment by doctor
         $this->db->where('rfp.is_deleted',0);
         $this->db->where('rfp.is_blocked',0);
         $this->db->where('a.is_cancelled',0);
@@ -584,7 +584,7 @@ class Rfp_model extends CI_Model {
     //----- For check Patient view doctor profile or not ------
     public function check_if_user_view_profile($patient_id,$doc_id){
         
-        $all_inprogress_rfps =  $this->db->select('id')->get_where('rfp',['patient_id'=>$patient_id,'status'=>'5'])->result_array();
+        $all_inprogress_rfps =  $this->db->select('id')->where_in('status',['5','6'])->get_where('rfp',['patient_id'=>$patient_id])->result_array();
 
         $is_allow = '0';
 

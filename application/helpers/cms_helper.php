@@ -372,8 +372,10 @@
         }elseif($rfp_status == 4) {
              $status ='<span class="label label-warning">Doctor Confirmation Pending</span>';
         }elseif($rfp_status == 5) {
-             $status ='<span class="label label-dark-blue">Service in Progress</span>';
+             $status ='<span class="label label-primary">Appointment Pending</span>';
         }elseif($rfp_status == 6) {
+            $status ='<span class="label label-dark-blue">Service in Progress</span>';         
+        }elseif($rfp_status == 7) {
             $status ='<span class="label label-success">Closed</span>';         
         } 
         return $status;

@@ -507,6 +507,13 @@ class Dashboard extends CI_Controller {
                 }
             }
             
+            if($res){
+                //------------ Update RFP Status ------------
+                $where = ['id' => $this->input->post('rfp_id')];
+                $data_array = ['status' => 6]; // For chnage status 5 to 6 (Appointment Pending to Service InProgress)
+                $res=$this->Rfp_model->update_record('rfp',$where,$data_array);
+                //------------- End Update RFP Status ------
+            }
             // ------------------------------------------------------------------------
             $noti_data = [
                             'from_id'=>$this->session->userdata('client')['id'],
@@ -658,6 +665,11 @@ class Dashboard extends CI_Controller {
         $data_array = ['is_selected' => 1];
         $res=$this->Rfp_model->update_record('appointment_schedule',$where,$data_array);
 
+        //------------ Update RFP Status ------------
+        $where = ['id' => $rfp_id];
+        $data_array = ['status' => 6]; // For chnage status 5 to 6 (Appointment Pending to Service InProgress)
+        $res=$this->Rfp_model->update_record('rfp',$where,$data_array);
+        //------------- End Update RFP Status ------
         if($res)  {
             $this->session->set_flashdata('success','Appointment Selected Successfully');
         }else{
@@ -690,6 +702,11 @@ class Dashboard extends CI_Controller {
         //$res=$this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $appointment_id]);
         $res=$this->Rfp_model->delete_record('appointments',['id' => $appointment_id]);
         if($res)  {
+            //------------ Update RFP Status ------------
+            $where = ['id' => $appointment_data['rfp_id']];
+            $data_array = ['status' => 5]; // For chnage status 6 to 5 (Service InProgress to Appointment Pending)
+            $res=$this->Rfp_model->update_record('rfp',$where,$data_array);
+            //------------- End Update RFP Status ------
             $this->session->set_flashdata('success','Appointment Deleted Successfully');
         }else{
             $this->session->set_flashdata('error','Error Into Delete Appointment');
@@ -721,6 +738,11 @@ class Dashboard extends CI_Controller {
         //$res=$this->Rfp_model->delete_record('appointment_schedule',['appointment_id' => $appointment_id]);
         $res=$this->Rfp_model->delete_record('appointments',['id' => $appointment_id]);
         if($res)  {
+            //------------ Update RFP Status ------------
+            $where = ['id' => $rfp_data['id']];
+            $data_array = ['status' => 5]; // For chnage status 6 to 5 (Service InProgress to Appointment Pending)
+            $res=$this->Rfp_model->update_record('rfp',$where,$data_array);
+            //------------- End Update RFP Status ------
             $this->session->set_flashdata('success','Appointment Rescheduled Successfully');
         }else{
             $this->session->set_flashdata('error','Error Into Reschedule Appointment');
