@@ -256,7 +256,7 @@
 
 					<!--  Treatment Plan  -->
 					<div class="rfp-treatment">
-						<h4 class="rfp-title">Treatment Plan</h4>
+						<h4 class="rfp-title">Treatment Plan Information</h4>
 
 						<?php
 						if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); } ?>

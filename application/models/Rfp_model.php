@@ -581,6 +581,7 @@ class Rfp_model extends CI_Model {
     } 
     //----------------- End For fetch Total Review and average review for particualr doctor wise ------------
 
+    //----- For check Patient view doctor profile or not ------
     public function check_if_user_view_profile($patient_id,$doc_id){
         
         $all_inprogress_rfps =  $this->db->select('id')->get_where('rfp',['patient_id'=>$patient_id,'status'=>'5'])->result_array();
@@ -605,6 +606,7 @@ class Rfp_model extends CI_Model {
         }        
         return $is_allow;
     } // END of Function
+    //----- End For check Patient view doctor profile or not ------
 
     //------------------ Calculate Distance b/w rfp and doctor for view rpf -----------
     public function rfp_result_with_distance($table, $condition = null,$single='') {
@@ -619,5 +621,24 @@ class Rfp_model extends CI_Model {
             return $query->result_array();
         }
     }
+
+
+    //----- For check Doctor view RFP Details or not (based on RFP status 5 (In Progress) & doctor winner rfp bid)------
+    public function check_if_doctor_view_rfp_info($rfp_id,$doc_id){
+        $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
+        $this->db->where('rb.status','2'); // 2 Means winner rfp bid
+        $this->db->where('rb.doctor_id',$doc_id);
+        $this->db->where('rb.rfp_id',$rfp_id);
+        $this->db->where('rfp.status >= 5'); // 5 means rfp is in in-progress
+        $data=$this->db->get('rfp')->row_array();
+        if(!empty($data)){
+            $is_allow = 1;
+        }else{
+            $is_allow = 0;
+        }
+        return $is_allow;
+
+    }
+    //----- End For check Doctor view RFP Details or not (based on RFP status 5 (In Progress) & doctor winner rfp bid)------
 
 }    

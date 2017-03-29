@@ -238,7 +238,7 @@
         												                    	   else 
         												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>">
                                                                                 </div>
-                                                                                <span><?=$active_rfp['fname']." ".$active_rfp['lname']?> has Requested</span>
+                                                                                <span><?=$active_rfp['fname']." ".$active_rfp['lname']?> has requested</span>
                                                                             </div>
     																		<div class="timeline-msg">$<?=$bid_data['amount']?></div>
     																		
@@ -250,7 +250,7 @@
         												                    		{ echo DEFAULT_IMAGE_PATH."user/user-img.jpg"; }?>">
                                                                                 </div>
 
-                                                                                <span><?php echo $bid_data['user_name']; ?>   has Confirmed</span>
+                                                                                <span><?php echo $bid_data['user_name']; ?>   has confirmed</span>
                                                                             </div>
 																		</li>
 																	</ul>																

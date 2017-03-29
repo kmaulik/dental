@@ -10,7 +10,23 @@ class Dashboard extends CI_Controller {
         {
             $this->session->set_userdata('redirect_url',  current_url());
             redirect('login');
-        }   
+        }  
+        else{
+            //-------------------- For check role wise access function ------
+            if($this->session->userdata['client']['role_id'] == 4)
+            {
+                 $protected_methods = array('refund_request','choose_appointment_schedule');
+            }
+            else if($this->session->userdata['client']['role_id'] == 5)
+            {
+                 $protected_methods = array('save_dashboard_alert','delete_appointment','reschedule_appointment','change_filter_notify_status','delete_search_filter','save_map_address');
+                 
+            }
+            if(in_array($this->router->method, $protected_methods)){ 
+                redirect('dashboard');
+            }       
+            //-------------------- For check role wise access function ------   
+        } 
         $this->load->model(['Users_model','Country_model','Rfp_model','Treatment_category_model','Notification_model']);
         $this->load->library(['unirest','googlemaps']);        
     }
@@ -278,32 +294,6 @@ class Dashboard extends CI_Controller {
 
         }
     } // END of function edit_profile
-
-    // List of Won RFP and offer appointment and communication on it (Appointment Pending, Contact Patient, Payment Status)
-    // v! Doctor Profile Tab
-    public function rfp_bids(){
-        $loc_arr = array();
-        $user_data = $this->session->userdata('client');
-        $user_id = $user_data['id'];
-        $data['db_data'] = $this->Users_model->get_data(['id'=>$user_id],true);
-        $data['tab'] = 'info';
-
-        //------- Filter RFP ----
-        $search_data= $this->input->get('search') ? $this->input->get('search') :'';
-        $sort_data= $this->input->get('sort') ? $this->input->get('sort') :'desc';
-        $date_data = '';
-        //------- /Filter RFP ----        
-        $config['base_url'] = base_url().'dashboard/rfp_bids?search='.$search_data.'&date='.$date_data.'&sort='.$sort_data;
-        $config['total_rows'] = $this->Rfp_model->doctor_rfp_count($search_data,$date_data);
-        $config['per_page'] = 10;
-        $offset = $this->input->get('per_page');
-        $config = array_merge($config,pagination_front_config());       
-        $this->pagination->initialize($config);
-        $data['rfp_data']=$this->Rfp_model->doctor_rfp_result($config['per_page'],$offset,$search_data,$date_data,$sort_data);
-        
-        $data['subview']="front/profile/appointmetns";
-        $this->load->view('front/layouts/layout_main',$data);
-    }
 
     // v! - rfp_alert() function in bkp for 20_2 for RFP alert module
     public function remove_avatar($id){

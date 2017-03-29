@@ -140,7 +140,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Known Allergies</label> 
-						<textarea name="allergies" class="form-control" placeholder="Enter Allergies"><?php if($this->input->post('allergies') != '') { echo $this->input->post('allergies'); } else { echo (isset($record['allergies'])? $record['allergies'] : set_value('allergies')); } ?></textarea>
+						<textarea name="allergies" class="form-control" placeholder="If Yes, please specify if you have any sort of intolerance with any substance (medical or not)"><?php if($this->input->post('allergies') != '') { echo $this->input->post('allergies'); } else { echo (isset($record['allergies'])? $record['allergies'] : set_value('allergies')); } ?></textarea>
 					</div>
 					<?php echo form_error('allergies','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -150,7 +150,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Full Medication List</label> 
-						<textarea name="medication_list" class="form-control" placeholder="Enter Medication List"><?php if($this->input->post('medication_list') != '') { echo $this->input->post('medication_list'); } else { echo (isset($record['medication_list'])? $record['medication_list'] : set_value('medication_list')); } ?></textarea>
+						<textarea name="medication_list" class="form-control" placeholder="Please state here your medication (taken when and which frequency)."><?php if($this->input->post('medication_list') != '') { echo $this->input->post('medication_list'); } else { echo (isset($record['medication_list'])? $record['medication_list'] : set_value('medication_list')); } ?></textarea>
 					</div>
 					<?php echo form_error('medication_list','<div class="alert alert-mini alert-danger">','</div>'); ?>
 
@@ -161,7 +161,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Any heart problems including blood pressure ?</label> 
-						<textarea name="heart_problem" class="form-control" placeholder="Enter Heart Problem"><?php if($this->input->post('heart_problem') != '') { echo $this->input->post('heart_problem'); } else { echo (isset($record['heart_problem'])? $record['heart_problem'] : set_value('heart_problem')); } ?></textarea>
+						<textarea name="heart_problem" class="form-control" placeholder="If Yes, please specify what kind of condition do you have."><?php if($this->input->post('heart_problem') != '') { echo $this->input->post('heart_problem'); } else { echo (isset($record['heart_problem'])? $record['heart_problem'] : set_value('heart_problem')); } ?></textarea>
 					</div>
 					<?php echo form_error('heart_problem','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -172,7 +172,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Any history of chemo/radiation ?</label> 
-						<textarea name="chemo_radiation" class="form-control" placeholder="Enter Chemo/Radiation"><?php if($this->input->post('chemo_radiation') != '') { echo $this->input->post('chemo_radiation'); } else { echo (isset($record['chemo_radiation'])? $record['chemo_radiation'] : set_value('chemo_radiation')); } ?></textarea>
+						<textarea name="chemo_radiation" class="form-control" placeholder="If Yes, please specify which body area, when and what type was applied."><?php if($this->input->post('chemo_radiation') != '') { echo $this->input->post('chemo_radiation'); } else { echo (isset($record['chemo_radiation'])? $record['chemo_radiation'] : set_value('chemo_radiation')); } ?></textarea>
 					</div>
 					<?php echo form_error('chemo_radiation','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -182,7 +182,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Surgery occurred during the last two years.</label> 
-						<textarea name="surgery" class="form-control" placeholder="please describe in Brief type of surgery and date"><?php if($this->input->post('surgery') != '') { echo $this->input->post('surgery'); } else { echo (isset($record['surgery'])? $record['surgery'] : set_value('surgery')); } ?></textarea>
+						<textarea name="surgery" class="form-control" placeholder="Any type of surgery, minor or major. If yes, please, mention what and when."><?php if($this->input->post('surgery') != '') { echo $this->input->post('surgery'); } else { echo (isset($record['surgery'])? $record['surgery'] : set_value('surgery')); } ?></textarea>
 					</div>
 					<?php echo form_error('surgery','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	

@@ -1371,7 +1371,8 @@ li.non_user > .timeline-panel:after {
 .table-hover>tbody>tr:hover {
     background-color: rgba(153, 153, 153, 0.26);
 }
-
+.my-bid-doctor .bid-title span:first-child{width:14.5% !important;display: inline-block;}
+.my-bid-doctor .bid-title span:last-child{width:85%;display: inline-block;}
 
 /*************** ` start here 	*************/
 @media(max-width:1200px){
