@@ -53,7 +53,7 @@
 					
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
-							<h3 class="rfp-title rfp_h3">Treatment Plan</h3>
+							<h3 class="rfp-title rfp_h3">Treatment Plan Information</h3>
 						</div>
 					</div>
 					<!-- Posted Teeth values For validation and value selected for teeth and treatment category -->
@@ -379,6 +379,9 @@
 						</div>	
 					</div>	
 					<div class="row">
+						<div class="col-md-12">
+							<h4>In this section you optionally can share additional data for a better quote. Share if available an x-ray, existing treatment plan as PDF, or a “selfie” of your tooth that you need help with.</h4>
+						</div>	
 						<div class="col-md-12 col-sm-12">
 							<label>Further Information for our Agents</label> 
 							<div class="fancy-form">

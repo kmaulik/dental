@@ -69,7 +69,7 @@
 							<thead>
 								<tr>
 									<th>RFP Title</th>
-									<th>Bid Price</th>
+									<th>Bid Value ($)</th>
 									<th>Status</th>
 									<th>Action</th>
 								</tr>
@@ -119,7 +119,7 @@
 														if(in_array('DOCTOR_PAYMENT_ERROR',$check_transactions) == true){
 															echo '<span class="label label-danger">Payment Error</span>';
 														}else{
-															echo '<span class="label label-primary">In-progress</span>';
+															echo '<span class="label label-primary">Service in Progress</span>';
 														}
 													}
 												?>
@@ -134,8 +134,9 @@
 													   data-mybid="<?php echo $amt; ?>"
 													   data-rfpid="<?php echo encode($w_rfp['rfp_id']); ?>"
 													   onclick="show_modal_doctor(this)" data-toggle="tooltip" data-placement="top" data-original-title="Proceed">
-														<i class="fa fa-check"></i>
-													</a>
+														<i class="fa fa-check"></i></a>
+													<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+	                                                    		<i class="fa fa-eye"></i></a>
 												<?php }else{
 													
 														$show_pending_payment = 0;
@@ -212,7 +213,7 @@
 																		<img src="<?php echo base_url().'uploads/avatars/'.$u_data['avatar']; ?>">
 	                                                                <?php } ?>
 	                                                            </div>
-										                    	<span><?php echo $u_data['fname'].' '.$u_data['lname']; ?> has Confirmed</span>
+										                    	<span><?php echo $u_data['fname'].' '.$u_data['lname']; ?> has confirmed</span>
 										                    </div>
 										                </li>
 										            </ul>
@@ -367,7 +368,7 @@
 								<thead>
 									<tr>
 										<th>RFP Title</th>
-										<th>Bid Price</th>
+										<th>Bid Value ($)</th>
 										<th>Status</th>
 										<th>Action</th>
 									</tr>

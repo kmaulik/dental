@@ -9,8 +9,22 @@ class Rfp extends CI_Controller {
 		if(!isset($this->session->userdata['client'])){
         	$this->session->set_userdata('redirect_url',  current_url());
         	redirect('login');
-        }	
-
+        } else {
+        	//-------------------- For check role wise access function ------
+        	if($this->session->userdata['client']['role_id'] == 4)
+	        {
+	        	 $protected_methods = array('add', 'edit', 'action','view_rfp_bid','make_payment','paypal_payment','complete_transaction','choose_winner_doctor','cancel_winner_doctor','extend_rfp_validity');
+	        }
+	        else if($this->session->userdata['client']['role_id'] == 5)
+	        {
+	        	 $protected_methods = array('search_rfp', 'manage_bid', 'make_doctor_payment','save_filter_data','update_filter_data','view_filter_data');
+	        	 
+	        }
+	        if(in_array($this->router->method, $protected_methods)){ 
+    	 		redirect('rfp');
+    	 	}		
+	        //-------------------- For check role wise access function ------	
+        }
 		$this->load->helper(['paypal_helper']);	
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
@@ -22,7 +36,7 @@ class Rfp extends CI_Controller {
 		if($this->session->userdata['client']['role_id'] == 4) {
 			redirect('rfp/search_rfp');
 		}
-		else{
+		else if($this->session->userdata['client']['role_id'] == 5) {
 			redirect('dashboard'); // For Patient Dashboard
 		}
 		//------------------------------------------------------------------
@@ -914,6 +928,8 @@ class Rfp extends CI_Controller {
         	 if(empty($data['record'])){
         	 	show_404();
         	 } else {
+        	 	$doctor_id = $this->session->userdata('client')['id'];
+	        	$data['is_allow_rfp_info']= $this->Rfp_model->check_if_doctor_view_rfp_info(decode($rfp_id),$doctor_id);
 	        	$where=['rfp_id' => decode($rfp_id),'doctor_id' => $this->session->userdata('client')['id'],'is_deleted' => '0'];
 	        	$data['rfp_bid']=$this->Rfp_model->get_result('rfp_bid',$where,1);
 	        	$data['subview']="front/rfp/doctor/view_rfp_doctor";
@@ -1465,6 +1481,7 @@ class Rfp extends CI_Controller {
 		        $subject=config('site_name').' - Thank you For Create RFP';    
 		        $this->email->from(config('contact_email'), config('sender_name'))
 		                    ->to($this->session->userdata['client']['email_id'])
+		                   // ->reply_to(config('contact_email'))
 		                    ->subject($subject)
 		                    ->message($html_content);
 

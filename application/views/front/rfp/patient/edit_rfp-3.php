@@ -49,7 +49,7 @@
 				<div class="col-md-12 col-sm-12">	
 					<div class="form-group">
 						<label>Insurance Provider</label>
-						<textarea name="insurance_provider" class="form-control" placeholder="Enter Insurance Provider"><?php if($this->input->post('insurance_provider') != '') { echo $this->input->post('insurance_provider'); } else { echo (isset($record['insurance_provider'])? $record['insurance_provider'] : set_value('insurance_provider')); }?></textarea>
+						<textarea name="insurance_provider" class="form-control" placeholder="Optionally, you can share your Insurance Provider and Type with the doctor in this field."><?php if($this->input->post('insurance_provider') != '') { echo $this->input->post('insurance_provider'); } else { echo (isset($record['insurance_provider'])? $record['insurance_provider'] : set_value('insurance_provider')); }?></textarea>
 					</div>
 					<?php echo form_error('insurance_provider','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
@@ -58,7 +58,7 @@
 				<div class="col-md-12 col-sm-12">
 					<div class="form-group">
 						<label>Treatment Plan Total ($)</label>
-						<input type="text" name="treatment_plan_total" class="form-control NumbersAndDot" placeholder="Treatment Plan Total" value="<?php if($this->input->post('treatment_plan_total') != '') { echo $this->input->post('treatment_plan_total'); } else { echo (isset($record['treatment_plan_total'])? $record['treatment_plan_total'] : set_value('treatment_plan_total')); }?>" >
+						<input type="text" name="treatment_plan_total" class="form-control NumbersAndDot" placeholder="If you already have received an estimate or a budget, you may enter. We will calculate your potential saving per each quote against this value." value="<?php if($this->input->post('treatment_plan_total') != '') { echo $this->input->post('treatment_plan_total'); } else { echo (isset($record['treatment_plan_total'])? $record['treatment_plan_total'] : set_value('treatment_plan_total')); }?>" >
 					</div>
 					<?php echo form_error('treatment_plan_total','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>
