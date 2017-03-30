@@ -34,6 +34,8 @@
 
     <script type="text/javascript" src="<?= DEFAULT_PLUGINS_PATH ?>bootstrap.datepicker/js/bootstrap-datepicker.min.js"></script>
     
+    <script type="text/javascript" src="<?php echo base_url().'public/front/js/jquery.dynamic-url.js';?>"></script>    
+
     <script type="text/javascript" src="<?=DEFAULT_ADMIN_JS_PATH?>plugins/notifications/bootbox.min.js"></script>
     
 </head>

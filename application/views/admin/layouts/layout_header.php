@@ -16,6 +16,7 @@
     <link href="<?php echo DEFAULT_ADMIN_CSS_PATH . "custom.css"; ?>" rel="stylesheet" type="text/css">  
     <!-- /global stylesheets -->
     
+    <link rel="stylesheet" href="">
     <link href="<?= DEFAULT_CSS_PATH ?>tooth.css" rel="stylesheet" type="text/css" />
 
     

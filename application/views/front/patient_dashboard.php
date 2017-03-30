@@ -943,7 +943,7 @@
 		if($view_appointment != ''){ 
 			$view_appointment = decode($view_appointment);
 	?> 
-		setTimeout(function(){ $("#rfp_id_<?php echo $view_appointment;?>").click(); }, 1000);
+		setTimeout(function(){ $("#rfp_id_<?php echo $view_appointment;?>").click(); $.popVar("view_appointment"); }, 1000);
 	<?php } ?>
 
 $(function () {
