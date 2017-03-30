@@ -48,7 +48,6 @@ class Registration extends CI_Controller {
             }
             //--------------------------
 
-
             $rand=random_string('alnum',5);
             $a = explode('-',$this->input->post('birth_date'));
             $birth_date = $a[2].'-'.$a[0].'-'.$a[1];
@@ -94,7 +93,7 @@ class Registration extends CI_Controller {
                             ->subject($subject)
                             ->message($html_content);
                 $this->email->send();
-                $this->session->set_flashdata('success', 'Thank you for your registration, you will receive an activation link soon.'); 
+                $this->session->set_flashdata('success', 'Thank you for registering. Please check your email to validate your account.'); 
                 redirect('login');   
             } else {
                 $this->session->set_flashdata('error', 'Error Into Registration. Please Try Again !!'); 
@@ -115,11 +114,8 @@ class Registration extends CI_Controller {
             $this->db->set('is_verified',0); // 0 Means Account is Verified & Now Open For Login
             $this->db->where('activation_code',$id);
             $this->db->update('users');
-            $this->session->set_flashdata('success',
-            'Your Email is verified successfully, Now you can login to your Account.');
-        }
-        else
-        {
+            $this->session->set_flashdata('success','Your account has been successfully validated. Use your credentials to login to your account.');
+        }else{
             $this->session->set_flashdata('error',
             'Activation link is either invalid or expired.');  
         }
@@ -127,7 +123,7 @@ class Registration extends CI_Controller {
     }
 
     /*  Check For Forgot Password   @DHK*/
-    public function forgotpassword(){ 
+    public function forgotpassword(){
         $this->form_validation->set_rules('email_id', 'email', 'required|valid_email');
        
         if($this->form_validation->run() == FALSE){            

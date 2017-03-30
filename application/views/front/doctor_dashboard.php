@@ -1148,7 +1148,7 @@
     	if($schedule_rfp != ''){ 
     		$schedule_rfp = decode($schedule_rfp);
    	?> 
-   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); }, 2000);
+   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); $.popVar("schedule_rfp"); }, 2000);
     <?php } ?>    
 
     function submit_form(obj){

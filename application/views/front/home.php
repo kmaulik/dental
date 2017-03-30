@@ -95,7 +95,7 @@
 					data-endelementdelay="0.1"
 					data-endspeed="500"
 					style="z-index: 4; max-width: auto;">
-						<a class="btn btn-primary btn-lg" href="#">OUR SERVICES &nbsp; <i class="fa fa-angle-right"></i></a>
+						<a class="btn btn-primary btn-lg" href="<?php echo base_url().'what-we-can-do-for-you'; ?>">OUR SERVICES &nbsp; <i class="fa fa-angle-right"></i></a>
 				</div>
 
 				<div class="tp-caption sfb tp-resizeme"
@@ -166,7 +166,7 @@
 					data-endelementdelay="0.1"
 					data-endspeed="500"
 					style="z-index: 4; max-width: auto;">
-						<a class="btn btn-primary btn-lg" href="#">OUR SERVICES &nbsp; <i class="fa fa-angle-right"></i></a>
+						<a class="btn btn-primary btn-lg" href="<?php echo base_url().'what-we-can-do-for-you'; ?>">OUR SERVICES &nbsp; <i class="fa fa-angle-right"></i></a>
 				</div>
 
 				<div class="tp-caption sfb tp-resizeme"
