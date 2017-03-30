@@ -133,31 +133,23 @@ class Rfp extends CI_Controller {
 			if(!isset($this->session->userdata['rfp_data'])){
 				redirect('rfp/add');
 			}
-				//----- For Check Treatment Category Validation ------
-				if($this->input->post('teeth') != ''){
-					$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
-					foreach($this->input->post('teeth') as $key=>$val){
-						$treat_cat_id = $this->input->post('treatment_cat_id_'.$val);
-						$treat_cat_text = $this->input->post('treat_cat_text_'.$val);
-						if($treat_cat_id == '' && $treat_cat_text == '')
-						{
-							$this->form_validation->set_rules('treatment_cat_id_'.$val.'[]', 'teeth category', 'required');
-						}
+
+			//----- For Check Treatment Category Validation ------
+			if($this->input->post('teeth') != ''){
+				$this->form_validation->set_rules('teeth[]', 'teeth', 'required');
+				foreach($this->input->post('teeth') as $key=>$val){
+					$treat_cat_id = $this->input->post('treatment_cat_id_'.$val);
+					$treat_cat_text = $this->input->post('treat_cat_text_'.$val);
+					if($treat_cat_id == '' && $treat_cat_text == '')
+					{
+						$this->form_validation->set_rules('treatment_cat_id_'.$val.'[]', 'teeth category', 'required');
 					}
 				}
-				else {
-
-					$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
-					// $other_treatment_cat_id = $this->input->post('other_treatment_cat_id');
-					// $other_treatment_cat_text = $this->input->post('other_treatment_cat_text');
-					// if($other_treatment_cat_id == '' && $other_treatment_cat_text == '')
-					// {
-					// 	$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
-					// }
-				}
+			}
+			else {
+				$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
+			}
 	
-			$this->form_validation->set_rules('message', 'message', 'max_length[500]');
-
 			if($this->form_validation->run() == FALSE)
 			{  
 				$where = 'is_deleted !=  1 and is_blocked != 1';
@@ -168,7 +160,6 @@ class Rfp extends CI_Controller {
 			else 
 			{
 				/*------------ For teeth and Treatment category data -------- */
-				
 				$teeth=[];
 				$teeth_cat_array=[];
 				$teeth_data='';
@@ -183,89 +174,14 @@ class Rfp extends CI_Controller {
 					$teeth_data=json_encode($teeth);
 					$teeth_cat_array=array_unique($teeth_cat_array);
 				} 
-				// else{
-				// 	$teeth_cat_array=$this->input->post('other_treatment_cat_id');
-				// }
 				/*------------ For teeth and Treatment category data -------- */ 
-
-				//-------------- For Multiple File Upload  ----------
-			    
-			    
-			    $all_extensions = [];
-			    $all_size = [];
-			    $all_file_names = [];
-
-			    $error_cnt = 0;
-			    $img_path='';
-			    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
-			    {
-					$location='uploads/rfp/';					
-					foreach($_FILES['img_path']['name'] as $key=>$data){
-
-						$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
-						
-						$size = $_FILES['img_path']['size'][$key];
-						$ext = pathinfo($data, PATHINFO_EXTENSION);
-
-						array_push($all_extensions, $ext);
-						array_push($all_size, $size);
-						array_push($all_file_names, $res);
-
-						if($res != ''){
-							if($img_path == ''){
-								$img_path=$res;
-							}else{
-								$img_path=$img_path."|".$res;
-							}
-						}
-					} // END of foreach Loop
-
-					$total_size = byteFormat(array_sum($all_size),'MB');
-
-					// v! Check if size is larger than 10 MB
-					if($total_size > 10){						
-						foreach($all_file_names as $fname){
-							$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;							
-							if(file_exists($path)){
-								unlink($path);
-							}									
-						}
-						$error_cnt++;
-					} // END of If condition
-
-					// v! check if file extension is correct
-					$allowed_ext = ['jpg','jpeg','png','pdf'];
-					$all_extensions = array_unique($all_extensions);
-
-					foreach($all_extensions as $ext){
-						$ext = strtolower($ext);
-						if(in_array($ext,$allowed_ext) == false){
-							foreach($all_file_names as $fname){
-								$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
-								if(file_exists($path)){
-									unlink($path);
-								}		
-							}
-							$error_cnt++;
-						}
-					} // END of Foreach Loop
-
-					if($error_cnt != 0){
-						$this->session->set_flashdata('error', 'Error in file uploads. Please check total file size or file extensions.');
-						redirect('rfp/add/1');
-					}
-
-			    }				    
-			    //-----------------------
 		
 				$rfp_step_2=array(
 					'teeth_data' 				=> $teeth_data,
 					'teeth_category'			=> implode(",",$teeth_cat_array),
 					'other_description' 		=> $this->input->post('other_description'),
-					// 'other_treatment_cat_id'	=> implode(",",$this->input->post('other_treatment_cat_id')),
-					// 'other_treatment_cat_text'	=> $this->input->post('other_treatment_cat_text'),
-					'message' 					=> $this->input->post('message'),
-					'img_path' 					=> $img_path,
+					'treatment_plan_total' 		=> $this->input->post('treatment_plan_total'),
+					
 					);
 				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_2);
@@ -289,31 +205,108 @@ class Rfp extends CI_Controller {
 				redirect('rfp/add');
 			}	
 
-			if($this->input->post('prev') || $this->input->post('next')){
-				$rfp_step_3=array(
-					'insurance_provider' => $this->input->post('insurance_provider'),
-					'treatment_plan_total' => $this->input->post('treatment_plan_total'),
-					);
-				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
-				$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
-				if($res){
-					$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
-					if($this->input->post('prev')){
-						redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1'); // Go to 2nd step (Treatment Plan Details)
-					}else{
-						redirect('rfp/add/3'); // Goto 4th step (Summary Page - Final)
-					}	
-				} else {
-					redirect('rfp/add/2');
-					$this->session->set_flashdata('error', 'Error Into Create Financial Information');
-				}	
+			$this->form_validation->set_rules('message', 'message', 'max_length[500]');
 
-			}
-			else{
+			if($this->form_validation->run() == FALSE)
+			{  
 				$data['subview']="front/rfp/patient/rfp-3";
 				$this->load->view('front/layouts/layout_main',$data);
-			}
-		}  
+			} 
+			else{
+
+				if($this->input->post('prev') || $this->input->post('next'))
+				{
+					//-------------- For Multiple File Upload  ----------
+				    $all_extensions = [];
+				    $all_size = [];
+				    $all_file_names = [];
+
+				    $error_cnt = 0;
+				    $img_path='';
+				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
+				    {
+						$location='uploads/rfp/';					
+						foreach($_FILES['img_path']['name'] as $key=>$data){
+
+							$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+							
+							$size = $_FILES['img_path']['size'][$key];
+							$ext = pathinfo($data, PATHINFO_EXTENSION);
+
+							array_push($all_extensions, $ext);
+							array_push($all_size, $size);
+							array_push($all_file_names, $res);
+
+							if($res != ''){
+								if($img_path == ''){
+									$img_path=$res;
+								}else{
+									$img_path=$img_path."|".$res;
+								}
+							}
+						} // END of foreach Loop
+
+						$total_size = byteFormat(array_sum($all_size),'MB');
+
+						// v! Check if size is larger than 10 MB
+						if($total_size > 10){						
+							foreach($all_file_names as $fname){
+								$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;							
+								if(file_exists($path)){
+									unlink($path);
+								}									
+							}
+							$error_cnt++;
+						} // END of If condition
+
+						// v! check if file extension is correct
+						$allowed_ext = ['jpg','jpeg','png','pdf'];
+						$all_extensions = array_unique($all_extensions);
+
+						foreach($all_extensions as $ext){
+							$ext = strtolower($ext);
+							if(in_array($ext,$allowed_ext) == false){
+								foreach($all_file_names as $fname){
+									$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
+									if(file_exists($path)){
+										unlink($path);
+									}		
+								}
+								$error_cnt++;
+							}
+						} // END of Foreach Loop
+
+						if($error_cnt != 0){
+							$this->session->set_flashdata('error', 'Error in file uploads. Please check total file size or file extensions.');
+							redirect('rfp/add/2');
+						}
+
+			    	}				    
+				    //-----------------------
+					$rfp_step_3=array(
+							'insurance_provider' 		=> $this->input->post('insurance_provider'),
+							'message' 					=> $this->input->post('message'),
+							'img_path' 					=> $img_path,
+							);
+					$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
+					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
+					if($res){
+						$this->session->set_flashdata('success', 'Step 3 of 3  completed - Additional Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
+						if($this->input->post('prev')){
+							redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1'); // Go to 2nd step (Treatment Plan Details)
+						}else{
+							redirect('rfp/add/3'); // Goto 4th step (Summary Page - Final)
+						}	
+					} else {
+						redirect('rfp/add/2');
+						$this->session->set_flashdata('error', 'Error Into Create Additional Information');
+					}	
+				}else{
+					$data['subview']="front/rfp/patient/rfp-3";
+					$this->load->view('front/layouts/layout_main',$data);
+				}	
+			}  
+		}	
 		elseif($step == 3){
 			if($this->input->post('submit')){
 				
@@ -466,15 +459,8 @@ class Rfp extends CI_Controller {
 					else{
 					
 						$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
-						// $other_treatment_cat_id = $this->input->post('other_treatment_cat_id');
-						// $other_treatment_cat_text = $this->input->post('other_treatment_cat_text');
-						// if($other_treatment_cat_id == '' && $other_treatment_cat_text == '')
-						// {
-						// 	$this->form_validation->set_rules('other_treatment_cat_id[]', 'treatment category', 'required');
-						// }
-
 				}
-				$this->form_validation->set_rules('message', 'message', 'max_length[500]');				
+							
 
 				if($this->form_validation->run() == FALSE){  
 					$data['record']=$rfp_arr;
@@ -505,148 +491,16 @@ class Rfp extends CI_Controller {
 					// 	$teeth_cat_array=$this->input->post('other_treatment_cat_id');
 					// }
 					/*------------ For teeth and Treatment category data -------- */ 
-
-					// ------------------------------------------------------------------------
-					$final_str = '';										
-					$rfp_data_qry = $this->Rfp_model->get_result('rfp',['id'=>decode($id)],true);					
-					// ------------------------------------------------------------------------
-					
-				    //-------------- For Multiple File Upload  ----------
-				    
-				    $all_extensions = [];
-				    $all_size = [];
-				    $all_file_names = [];
-
-				    $error_cnt = 0;
-				    $total_file = explode("|",$rfp_data_qry['img_path']);
-				    $img_path='';
-				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
-				    	//----- Check For Max 10 file upload ----
-				    	if(count($total_file) >= 10){
-				    		$this->session->set_flashdata('error', 'Allowed Only 10 Attachments');
-							redirect('rfp/edit/'.$id.'/1');
-						}
-						//--------------
-						$location='uploads/rfp/';					
-						foreach($_FILES['img_path']['name'] as $key=>$data){
-
-							$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
-							
-							$size = $_FILES['img_path']['size'][$key];
-							$ext = pathinfo($data, PATHINFO_EXTENSION);
-
-							array_push($all_extensions, $ext);
-							array_push($all_size, $size);
-							array_push($all_file_names, $res);
-
-							if($res != ''){
-								if($img_path == ''){
-									$img_path=$res;
-								}else{
-									$img_path=$img_path."|".$res;
-								}
-							}
-						} // END of foreach Loop
-
-						$total_new_size = byteFormat(array_sum($all_size),'MB');
-
-						//----- Fetch Old File Size ----
-						$total_old_size=0;
-						if($rfp_data_qry['img_path'] != ''){
-							$old_img=explode("|",$rfp_data_qry['img_path']);
-							foreach($old_img as $img){
-								$file_name = FCPATH.'uploads/rfp/'.$img;
-								if(file_exists($file_name)) {
-								    $total_old_size= $total_old_size + filesize($file_name);	
-								}
-							}
-							$total_old_size= byteFormat($total_old_size,'MB');
-						}
-						
-						$total_size=$total_old_size+$total_new_size;
-						//----- Fetch Old File Size ----
-
-						
-
-
-						// v! Check if size is larger than 10 MB
-						if($total_size > 10){						
-							foreach($all_file_names as $fname){
-								$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
-								if(file_exists($path)){
-									unlink($path);
-								}															
-							}
-							$error_cnt++;
-						} // END of If condition
-
-						
-						// v! check if file extension is correct
-						$allowed_ext = ['jpg','jpeg','png','pdf'];
-						$all_extensions = array_unique($all_extensions);
-
-						foreach($all_extensions as $ext){
-							$ext = strtolower($ext);
-							if(in_array($ext,$allowed_ext) == false){
-								foreach($all_file_names as $fname){
-									$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
-									if(file_exists($path)){
-										unlink($path);
-									}		
-								}
-								$error_cnt++;
-							}
-						} // END of Foreach Loop
-						
-						if($error_cnt != 0){
-							$this->session->set_flashdata('error', 'Error in file uploads. Please check total file size or file extensions.');
-							redirect('rfp/edit/'.$id.'/1');
-						}
-
-				    }				    
-				   
-				    //-----------------------
-				   $rfp_data['img_path']=$img_path;
-
-					// Check new file select if not then assign old value
-					if($rfp_data['img_path'] == '') {
-						$rfp_data['img_path'] = $rfp_data_qry['img_path'];
-					}else{
-						
-						$old_arr = [];
-						$new_arr = [];
-
-						$new_str = $rfp_data['img_path'];
-						$old_str = $rfp_data_qry['img_path'];
-
-						if($old_str != ''){ $old_arr = explode('|',$old_str); }
-						if($new_str != ''){ $new_arr = explode('|',$new_str); }
-
-						if(!empty($new_arr) || !empty($old_arr)){
-							$final_arr = array_merge($new_arr,$old_arr);
-							$final_str = implode('|',$final_arr);
-						}
-
-						$rfp_data['img_path'] = $final_str;						 
-					}									
+								
 					$rfp_data['teeth_data']=$teeth_data;
 					$rfp_data['teeth_category'] = null;
 					if(!empty($teeth_cat_array)){
 						$rfp_data['teeth_category']	= implode(",",$teeth_cat_array);
 					}
 
-					$rfp_data['other_description']=$this->input->post('other_description');
-
-					//$other_treatment_cat_id = $this->input->post('other_treatment_cat_id');					
-					//$rfp_data['other_treatment_cat_id'] = null;
-					// if(!empty($other_treatment_cat_id)){
-					// 	$rfp_data['other_treatment_cat_id']=implode(",",$this->input->post('other_treatment_cat_id'));
-					// }
-
-					//$rfp_data['other_treatment_cat_text']=$this->input->post('other_treatment_cat_text');
-					$rfp_data['message']=$this->input->post('message');
-
-
+					$rfp_data['other_description'] = $this->input->post('other_description');
+					$rfp_data['treatment_plan_total'] = $this->input->post('treatment_plan_total');
+				
 					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_data);
 
 					if($res){
@@ -671,31 +525,165 @@ class Rfp extends CI_Controller {
 			}  
 			elseif($step == 2) {
 
-				if($this->input->post('prev') || $this->input->post('next')){
-					$rfp_step_3=array(
-						'insurance_provider' => $this->input->post('insurance_provider'),
-						'treatment_plan_total' => $this->input->post('treatment_plan_total')
-						);
-					$condition=['id' => decode($id)];
-					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
-					if($res){
-						$this->session->set_flashdata('success', 'Step 3 of 3  completed -Financial Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
-						if($this->input->post('prev')){
-							redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
-						}else{
-							redirect('rfp/edit/'.$id.'/3'); // Go to 4th step (summary page - final)
-						}
-					} else {
-						$this->session->set_flashdata('error', 'Error Into Update Financial Information');
-						redirect('rfp/edit/'.$id.'/2');
-					}	
+				$this->form_validation->set_rules('message', 'message', 'max_length[500]');
 
-				}
-				else{
+				if($this->form_validation->run() == FALSE)
+				{  
 					$data['record']=$rfp_arr;
 					$data['subview']="front/rfp/patient/edit_rfp-3";
 					$this->load->view('front/layouts/layout_main',$data);
-				}
+				}else{ 
+					if($this->input->post('prev') || $this->input->post('next')){
+
+						$final_str = '';										
+						$rfp_data_qry = $this->Rfp_model->get_result('rfp',['id'=>decode($id)],true);	
+						//-------------- For Multiple File Upload  ----------
+					    
+					    $all_extensions = [];
+					    $all_size = [];
+					    $all_file_names = [];
+
+					    $error_cnt = 0;
+					    $total_file = explode("|",$rfp_data_qry['img_path']);
+					    $img_path='';
+					    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
+					    	//----- Check For Max 10 file upload ----
+					    	if(count($total_file) >= 10){
+					    		$this->session->set_flashdata('error', 'Allowed Only 10 Attachments');
+								redirect('rfp/edit/'.$id.'/1');
+							}
+							//--------------
+							$location='uploads/rfp/';					
+							foreach($_FILES['img_path']['name'] as $key=>$data){
+
+								$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+								
+								$size = $_FILES['img_path']['size'][$key];
+								$ext = pathinfo($data, PATHINFO_EXTENSION);
+
+								array_push($all_extensions, $ext);
+								array_push($all_size, $size);
+								array_push($all_file_names, $res);
+
+								if($res != ''){
+									if($img_path == ''){
+										$img_path=$res;
+									}else{
+										$img_path=$img_path."|".$res;
+									}
+								}
+							} // END of foreach Loop
+
+							$total_new_size = byteFormat(array_sum($all_size),'MB');
+
+							//----- Fetch Old File Size ----
+							$total_old_size=0;
+							if($rfp_data_qry['img_path'] != ''){
+								$old_img=explode("|",$rfp_data_qry['img_path']);
+								foreach($old_img as $img){
+									$file_name = FCPATH.'uploads/rfp/'.$img;
+									if(file_exists($file_name)) {
+									    $total_old_size= $total_old_size + filesize($file_name);	
+									}
+								}
+								$total_old_size= byteFormat($total_old_size,'MB');
+							}
+							
+							$total_size=$total_old_size+$total_new_size;
+							//----- Fetch Old File Size ----
+
+							
+
+
+							// v! Check if size is larger than 10 MB
+							if($total_size > 10){						
+								foreach($all_file_names as $fname){
+									$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
+									if(file_exists($path)){
+										unlink($path);
+									}															
+								}
+								$error_cnt++;
+							} // END of If condition
+
+							
+							// v! check if file extension is correct
+							$allowed_ext = ['jpg','jpeg','png','pdf'];
+							$all_extensions = array_unique($all_extensions);
+
+							foreach($all_extensions as $ext){
+								$ext = strtolower($ext);
+								if(in_array($ext,$allowed_ext) == false){
+									foreach($all_file_names as $fname){
+										$path = $_SERVER['DOCUMENT_ROOT'].'/dental/uploads/rfp/'.$fname;
+										if(file_exists($path)){
+											unlink($path);
+										}		
+									}
+									$error_cnt++;
+								}
+							} // END of Foreach Loop
+							
+							if($error_cnt != 0){
+								$this->session->set_flashdata('error', 'Error in file uploads. Please check total file size or file extensions.');
+								redirect('rfp/edit/'.$id.'/2');
+							}
+
+					    }				    
+					   
+					    //-----------------------
+					    $rfp_data['img_path']=$img_path;
+
+						// Check new file select if not then assign old value
+						if($rfp_data['img_path'] == '') {
+							$rfp_data['img_path'] = $rfp_data_qry['img_path'];
+						}else{
+							
+							$old_arr = [];
+							$new_arr = [];
+
+							$new_str = $rfp_data['img_path'];
+							$old_str = $rfp_data_qry['img_path'];
+
+							if($old_str != ''){ $old_arr = explode('|',$old_str); }
+							if($new_str != ''){ $new_arr = explode('|',$new_str); }
+
+							if(!empty($new_arr) || !empty($old_arr)){
+								$final_arr = array_merge($new_arr,$old_arr);
+								$final_str = implode('|',$final_arr);
+							}
+
+							$rfp_data['img_path'] = $final_str;						 
+						}
+						//-------------- End For Multiple File Upload  ----------
+
+
+						$rfp_step_3=array(
+							'insurance_provider' 	=> 	$this->input->post('insurance_provider'),
+							'img_path'				=>	$rfp_data['img_path'],
+							'message'				=> 	$this->input->post('message'),
+							);
+						$condition=['id' => decode($id)];
+						$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
+						if($res){
+							$this->session->set_flashdata('success', 'Step 3 of 3  completed - Additional Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
+							if($this->input->post('prev')){
+								redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
+							}else{
+								redirect('rfp/edit/'.$id.'/3'); // Go to 4th step (summary page - final)
+							}
+						} else {
+							$this->session->set_flashdata('error', 'Error Into Update Additional Information');
+							redirect('rfp/edit/'.$id.'/2');
+						}	
+
+					}
+					else{
+						$data['record']=$rfp_arr;
+						$data['subview']="front/rfp/patient/edit_rfp-3";
+						$this->load->view('front/layouts/layout_main',$data);
+					}
+				}	
 			} 
 			elseif($step == 3){
 			if($this->input->post('submit')){

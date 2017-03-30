@@ -279,82 +279,6 @@
 								</div>
 							</div>
 							<!-- End For Teeth Image -->
-					
-							<!-- <div class="col-sm-12">
-								<div class="table-responsive">	
-										<table class="table table-bordered teeth">
-											<thead>
-												<tr>
-													<th colspan="16">Permanent Dentition</th>
-												</tr>
-												<tr>
-													<th colspan="8">upper right</th>
-													<th colspan="8">upper left</th>
-												</tr>
-											</thead>
-											<tfoot>
-												<tr>
-													<th colspan="8">lower right</th>
-													<th colspan="8">lower left</th>
-												</tr>
-											</tfoot>
-											<tbody>
-												<tr>
-													<?php for($i=1;$i<=16;$i++) : ?>
-													<td>
-														<div class="checkbox">
-															<label>
-																<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="styled" <?php if(in_array($i,$teeth_arr1)) { echo "checked"; }?>><?=$i?>
-															</label>
-														</div>
-													</td>
-													<?php endfor;?>
-												</tr>
-												<tr>
-													<?php for($i=32;$i>16;$i--) : ?>
-													<td>
-														<div class="checkbox">
-															<label>
-																<input type="checkbox" disabled value="<?=$i?>" name="teeth[]" class="styled" <?php if(in_array($i,$teeth_arr1)) { echo "checked"; }?>><?=$i?>
-															</label>
-														</div>
-													</td>
-													<?php endfor;?>
-												</tr>
-											</tbody>	
-										</table>
-								</div>	
-							</div> -->
-						
-							<!-- ===== For Other Treatment Category === -->
-							<!-- <div class="col-sm-12">
-								<label>Treatment Category</label>
-								<ul>
-									<?php 
-										$other_category = [];
-										if(!empty($record['other_treatment_cat_id'])){
-											$other_category=explode(",",$record['other_treatment_cat_id']); 
-										}
-									?>
-									<?php if(count($other_category) > 0) :?>
-										<?php foreach($other_category as $category) :?>
-											<li><?= fetch_row_data('treatment_category',['id' => $category],'title') ?> [<?= fetch_row_data('treatment_category',['id' => $category],'code') ?>]</li>
-										<?php endforeach; ?>
-									<?php else : ?>
-										<li> N/A</li>
-									<?php endif;?>	
-								</ul>
-							</div> -->
-							<!-- ===== End Other Treatment Category === -->	
-							<!-- ===== For Check Other Manual Category Exist or not === -->
-							
-							<!-- <div class="col-sm-12 manual_category">
-								<label>Manual Category : </label> 
-									<?= $record['other_treatment_cat_text'];?>
-							</div>	 -->
-							
-							<!-- ===== End Check Other Manual Category Exist or not === -->
-						
 
 						<?php if(!empty($teeth_arr)) : ?>
 							<?php foreach($teeth_arr as $key=>$val) :?>
@@ -386,16 +310,32 @@
 						<div class="col-sm-12">
 							<label>Treatment Description : </label> <?php if($record['other_description'] != '') { echo $record['other_description']; } else { echo 'N/A'; } ?> 	
 						</div>
+
+						<div class="col-sm-12">
+							<label>Treatment Plan Total : <?php if($record['treatment_plan_total'] != '')
+							{	echo "$ ".$record['treatment_plan_total'];	} 
+							else
+							{	echo "N/A";	}	
+							?></label> 
+						</div>
+
 					</div>	
 					<!--  /Treatment Plan  -->
+		
 
-					<!--  Additional Section -->
+					<!--  Additional Information  -->
 					<div class="rfp-additional">
-						<h4 class="rfp-title">Additional Section</h4>
+						<h4 class="rfp-title">Additional Information</h4>
 						<div class="col-sm-12">
-							<label>Further Information for our Agents : </label><?=$record['message'] ?> 
+							<label>Insurance Provider : </label> 
+							<?php if($record['insurance_provider'] != '') 
+							{	echo $record['insurance_provider'];	} 
+							else
+							{	echo "N/A";	}	
+							?>
 						</div>
-						
+
+						<!-- For Attachment -->
 						<form method="post" action="<?php echo base_url().'admin/rfp/move_to_private'; ?>" >
 							<div class="col-sm-12 col_custom">
 								<label>Attachment : </label>
@@ -486,29 +426,13 @@
 								<input type="submit" class="btn btn-primary" value="Move to Public">
 							<?php } ?>
 						</form>
-					</div>	
-					<!-- /Additional Section  -->					
+						<!-- End For Attachment -->
 
-					<!--  Financial Information  -->
-					<div class="rfp-history">
-						<h4 class="rfp-title">Financial Information</h4>
 						<div class="col-sm-12">
-							<label>Insurance Provider : </label> 
-							<?php if($record['insurance_provider'] != '') 
-							{	echo $record['insurance_provider'];	} 
-							else
-							{	echo "N/A";	}	
-							?>
-						</div>
-						<div class="col-sm-12">
-							<label>Treatment Plan Total : <?php if($record['treatment_plan_total'] != '')
-							{	echo "$ ".$record['treatment_plan_total'];	} 
-							else
-							{	echo "N/A";	}	
-							?></label> 
+							<label>Further Information for our Agents : </label><?=$record['message'] ?> 
 						</div>
 					</div>	
-					<!--  /Financial Information  -->
+					<!--  /Additional Information  -->
 				</div>
 			</div>
 		</div>
