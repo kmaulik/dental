@@ -53,7 +53,7 @@
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<ul class="process-steps nav nav-tabs nav-justified">
-								<li>
+								<li class="active">
 									<a onclick="$('#step-btn').val('0'); $('#frmrfp').submit();">1</a>
 									<h5>Account Details</h5>
 								</li>

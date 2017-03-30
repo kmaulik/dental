@@ -44,11 +44,11 @@
 			<div class="row">
 				<div class="col-md-12 col-sm-12">
 					<ul class="process-steps nav nav-tabs nav-justified">
-						<li>
+						<li class="active">
 							<a onclick="$('#step-btn').val('0'); $('#frmrfp').submit();" value="0">1</a>
 							<h5>Account Details</h5>
 						</li>
-						<li>
+						<li class="active">
 							<a onclick="$('#step-btn').val('1'); $('#frmrfp').submit();" value="1">2</a>
 							<h5>Consent</h5>
 						</li>
