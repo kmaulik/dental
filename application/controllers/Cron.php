@@ -259,7 +259,7 @@ class Cron extends CI_Controller {
 	/*----------------- For Send message according to search filter ----------------- */
 	public function send_mail_alert_doctor(){
 
-		//--------------------- Fetch Doctor User For rfp notofication --------
+		//--------------------- Fetch Doctor User For rfp notification --------
 		$this->db->from('users');
 		$this->db->where('role_id','4');
 		$this->db->where('is_blocked','0');
@@ -305,7 +305,7 @@ class Cron extends CI_Controller {
 		        $this->db->from('rfp');
 		        $this->db->join('users u','rfp.patient_id = u.id');
 
-		        if($category_data != ''){
+		        if(!empty($category_data)){
 		            $this->db->where("(".$str.") != 0");
 		        } 
 		        $this->db->having('rfp.distance_travel >= distance'); // For check Patient travel distance or not
@@ -431,7 +431,7 @@ class Cron extends CI_Controller {
 		$this->db->from('rfp r');
 		$this->db->join('users u','r.patient_id = u.id');
 		$this->db->where('r.status','3'); // 3 Means status open
-		$this->db->having('rfp_create_days','24'); // After 24 days from approve the rfp 
+		$this->db->having('rfp_create_days','24'); // After 25 days from approve the rfp 
 		$data = $this->db->get()->result_array();
 		pr($data,1);
 	}

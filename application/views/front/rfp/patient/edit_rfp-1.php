@@ -41,7 +41,7 @@
 	<div class="col-md-12">
 		<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
 			<!-- For Step View -->
-			<div class="row">
+			<!-- <div class="row">
 				<div class="col-md-12 col-sm-12">
 					<ul class="process-steps nav nav-tabs nav-justified">
 						<li class="active">
@@ -62,7 +62,37 @@
 						</li>
 					</ul>
 				</div>
+			</div> -->
+
+			<!-- For Step View -->
+			<div class="row process-wizard process-wizard-primary">
+				<div class="col-xs-3 process-wizard-step active">
+					<div class="text-center process-wizard-stepnum">1</div>
+					<div class="progress"><div class="progress-bar"></div></div>
+					<a class="process-wizard-dot"></a>
+					<div class="process-wizard-info text-center">Account Details</div>
+				</div>
+				<div class="col-xs-3 process-wizard-step">
+					<div class="text-center process-wizard-stepnum">2</div>
+					<div class="progress"><div class="progress-bar"></div></div>
+					<a onclick="$('#step-btn').val('1'); $('#frmrfp').submit();" class="process-wizard-dot"></a>
+					<div class="process-wizard-info text-center">Consent</div>
+				</div>
+				<div class="col-xs-3 process-wizard-step">
+					<div class="text-center process-wizard-stepnum">3</div>
+					<div class="progress"><div class="progress-bar"></div></div>
+					<a onclick="$('#step-btn').val('2'); $('#frmrfp').submit();" class="process-wizard-dot"></a>
+					<div class="process-wizard-info text-center">Result</div>
+				</div>
+				<div class="col-xs-3 process-wizard-step">
+					<div class="text-center process-wizard-stepnum">4</div>
+					<div class="progress"><div class="progress-bar"></div></div>
+					<a onclick="$('#step-btn').val('3'); $('#frmrfp').submit();" class="process-wizard-dot"></a>
+					<div class="process-wizard-info text-center">Summary</div>
+				</div>
 			</div>
+			<!-- End For Step View -->
+			
 			<input type="hidden" name="step-btn" id="step-btn" value="">
 			<!-- End For Step View -->
 

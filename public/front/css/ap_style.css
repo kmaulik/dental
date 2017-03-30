@@ -1374,7 +1374,22 @@ li.non_user > .timeline-panel:after {
 .my-bid-doctor .bid-title span:first-child{width:14.5% !important;display: inline-block;}
 .my-bid-doctor .bid-title span:last-child{width:85%;display: inline-block;}
 
-.process-steps.nav.nav-tabs.nav-justified{  background: none; };
+.process-steps.nav.nav-tabs.nav-justified{  background: none; }
+li.active a {
+    cursor: pointer !important;
+}
+
+/*ul.process-steps li:after, ul.process-steps li:before,
+ul.process-steps li:after, ul.process-steps li:after {
+    border-top: 1px dashed #999;
+}*/
+.process-wizard-primary > .process-wizard-step > .process-wizard-dot, .process-wizard-primary > .process-wizard-step > .progress > .progress-bar {
+    background: #ccc;
+}
+.process-wizard-primary > .process-wizard-step.active > .process-wizard-dot, .process-wizard-primary > .process-wizard-step > .progress > .progress-bar,
+.process-wizard-primary > .process-wizard-step.complete > .process-wizard-dot, .process-wizard-primary > .process-wizard-step > .progress > .progress-bar {
+    background: #31b0d5;
+}
 
 /*************** ` start here 	*************/
 @media(max-width:1200px){
