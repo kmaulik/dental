@@ -49,49 +49,26 @@
 	
 			<div class="col-md-12">
 				<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
-					<!-- For Step View -->
-					<!-- <div class="row">
-						<div class="col-md-12 col-sm-12">
-							<ul class="process-steps nav nav-tabs nav-justified">
-								<li class="active">
-									<a onclick="$('#step-btn').val('0'); $('#frmrfp').submit();">1</a>
-									<h5>Account Details</h5>
-								</li>
-								<li class="active">
-									<a>2</a>
-									<h5>Consent</h5>
-								</li>
-								<li>
-									<a onclick="$('#step-btn').val('2'); $('#frmrfp').submit();">3</a>
-									<h5>Result</h5>
-								</li>
-								<li>
-									<a onclick="$('#step-btn').val('3'); $('#frmrfp').submit();">4</a>
-									<h5>Summary</h5>
-								</li>
-							</ul>
-						</div>
-					</div> -->
-
+					
 					<!-- For Step View -->
 					<div class="row process-wizard process-wizard-primary">
 						<div class="col-xs-3 process-wizard-step complete">
 							<div class="text-center process-wizard-stepnum">1</div>
 							<div class="progress"><div class="progress-bar"></div></div>
 							<a onclick="$('#step-btn').val('0'); $('#frmrfp').submit();" class="process-wizard-dot"></a>
-							<div class="process-wizard-info text-center">Account Details</div>
+							<div class="process-wizard-info text-center">Basic Details</div>
 						</div>
 						<div class="col-xs-3 process-wizard-step active">
 							<div class="text-center process-wizard-stepnum">2</div>
 							<div class="progress"><div class="progress-bar"></div></div>
 							<a class="process-wizard-dot"></a>
-							<div class="process-wizard-info text-center">Consent</div>
+							<div class="process-wizard-info text-center">Treatment Information</div>
 						</div>
 						<div class="col-xs-3 process-wizard-step">
 							<div class="text-center process-wizard-stepnum">3</div>
 							<div class="progress"><div class="progress-bar"></div></div>
 							<a onclick="$('#step-btn').val('2'); $('#frmrfp').submit();" class="process-wizard-dot"></a>
-							<div class="process-wizard-info text-center">Result</div>
+							<div class="process-wizard-info text-center">Additional Information</div>
 						</div>
 						<div class="col-xs-3 process-wizard-step">
 							<div class="text-center process-wizard-stepnum">4</div>
