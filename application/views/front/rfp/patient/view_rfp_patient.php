@@ -208,6 +208,10 @@
 							<!-- For Teeth Image -->
 							<div class="col-sm-12">
 								<div class="teeth-bg">
+									<div class="upper-right">Upper Right</div>
+									<div class="upper-left">Upper left</div>
+									<div class="lower-right">Lower Right</div>
+									<div class="lower-left">Lower left</div>
 									<?php for($i=1;$i<=32;$i++) : ?>
 										<span id="t<?=$i?>">
 											<span class="checkbox-wrapper">
