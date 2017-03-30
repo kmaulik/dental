@@ -1374,6 +1374,8 @@ li.non_user > .timeline-panel:after {
 .my-bid-doctor .bid-title span:first-child{width:14.5% !important;display: inline-block;}
 .my-bid-doctor .bid-title span:last-child{width:85%;display: inline-block;}
 
+.process-steps.nav.nav-tabs.nav-justified{  background: none; };
+
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

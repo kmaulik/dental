@@ -40,6 +40,32 @@
 	<div class="col-md-12">
 		<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
 			
+			<!-- For Step View -->
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<ul class="process-steps nav nav-tabs nav-justified">
+						<li>
+							<a onclick="$('#step-btn').val('0'); $('#frmrfp').submit();" value="0">1</a>
+							<h5>Account Details</h5>
+						</li>
+						<li>
+							<a onclick="$('#step-btn').val('1'); $('#frmrfp').submit();" value="1">2</a>
+							<h5>Consent</h5>
+						</li>
+						<li class="active">
+							<a>3</a>
+							<h5>Result</h5>
+						</li>
+						<li>
+							<a onclick="$('#step-btn').val('3'); $('#frmrfp').submit();" value="3">4</a>
+							<h5>Summary</h5>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<input type="hidden" name="step-btn" id="step-btn" value="">
+			<!-- End For Step View -->
+
 			<div class="row">
 				<div class="col-sm-12">
 					<h3 class="rfp-title rfp_h3">Additional Information</h3>
@@ -61,27 +87,7 @@
 					<?php echo form_error('insurance_provider','<div class="alert alert-mini alert-danger">','</div>'); ?>
 				</div>	
 			</div>
-			<div class="row">
-				<div class="col-md-12 col-sm-12">
-					<label>Further Information for our Agents</label> 
-					<div class="fancy-form">
-						<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Share any comments you would like to provide to us."><?php if($this->input->post('message') != '') { echo $this->input->post('message'); } else { echo (isset($record['message'])? $record['message'] : set_value('message')); }?></textarea>
-						<i class="fa fa-comments"><!-- icon --></i>
-						<span class="fancy-hint size-11 text-muted">
-							<strong>Hint:</strong> 500 characters allowed!
-							<span class="pull-right">
-								<span id="textarea-chars-info"><span class="count-text_data">0</span>/500</span> Characters
-								<script>
-									var text_length=$(".char-count").val().length;
-									$(".count-text_data").html(text_length);
-								</script>
-							</span>
-						</span>
-					</div>	
-					<?php echo form_error('message','<div class="alert alert-mini alert-danger">','</div>'); ?>
-				</div>	
-			</div>	
-
+		
 			<?php if(isset($record['img_path']) && $record['img_path'] != '') :?>
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
@@ -136,6 +142,26 @@
 				</div>
 			</div>
 						
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<label>Further Information for our Agents</label> 
+					<div class="fancy-form">
+						<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Share any comments you would like to provide to us."><?php if($this->input->post('message') != '') { echo $this->input->post('message'); } else { echo (isset($record['message'])? $record['message'] : set_value('message')); }?></textarea>
+						<i class="fa fa-comments"><!-- icon --></i>
+						<span class="fancy-hint size-11 text-muted">
+							<strong>Hint:</strong> 500 characters allowed!
+							<span class="pull-right">
+								<span id="textarea-chars-info"><span class="count-text_data">0</span>/500</span> Characters
+								<script>
+									var text_length=$(".char-count").val().length;
+									$(".count-text_data").html(text_length);
+								</script>
+							</span>
+						</span>
+					</div>	
+					<?php echo form_error('message','<div class="alert alert-mini alert-danger">','</div>'); ?>
+				</div>	
+			</div>	
 			
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12 text-right">

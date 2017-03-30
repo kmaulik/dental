@@ -22,6 +22,7 @@
 <!-- -->
 <section class="view-rfp">
 	<div class="container">
+		<div class="row">
 		<!-- ALERT -->
 		<?php if($this->session->flashdata('success')) : ?>
 			<div class="alert alert-success margin-bottom-30">
@@ -36,25 +37,62 @@
 			</div>
 		<?php endif; ?>
 		<!-- /ALERT -->					
-		<div class="row">
+		
 			<div class="col-md-12">
-				<div class="pull-right">
-					<!-- Check For Submit RFP Or Not -->
-					<?php if(isset($confirm_rfp) && $confirm_rfp == '1') : ?>
-					<form action="" method="POST">
-						<!-- <a href="<?=base_url('rfp/edit/'.encode($record['id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a> -->
-						<?php if($record['is_paid'] == 0) :?>
-							<a class="btn btn-success" data-toggle="modal" data-target=".promotional_code"><i class="fa fa-check"></i> Submit</a>
-						<?php else : ?>
-							<?php if($record['status'] == 2) :?> <!-- If Status is submit pending (2) then visible button -->
-								<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-check"></i> Resubmit</button>
-							<?php endif; ?>
+				<form action="" method="POST" id="frmrfp">
+
+					<!-- For Step View -->
+					<?php if($record['status'] <= 2) :?>
+						<div class="row">
+							<div class="col-md-12 col-sm-12">
+								<ul class="process-steps nav nav-tabs nav-justified">
+									<li>
+										<a onclick="$('#step-btn').val('0'); $('#frmrfp').submit();">1</a>
+										<h5>Account Details</h5>
+									</li>
+									<li>
+										<a onclick="$('#step-btn').val('1'); $('#frmrfp').submit();">2</a>
+										<h5>Consent</h5>
+									</li>
+									<li>
+										<a onclick="$('#step-btn').val('2'); $('#frmrfp').submit();">3</a>
+										<h5>Result</h5>
+									</li>
+									<li class="active">
+										<a>4</a>
+										<h5>Summary</h5>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<input type="hidden" name="step-btn" id="step-btn" value="">
+						<!-- For View RFP Time Set form action for step -->
+						<?php if(isset($is_view_rfp) && $is_view_rfp == 1) : 
+							$form_url=base_url('rfp/edit/'.encode($record['id']).'/3'); ?>
+							<script>
+								$("#frmrfp").attr('action','<?=$form_url?>');
+							</script>
 						<?php endif; ?>
-					</form>	
-					<?php else : ?>
-					<a href="<?=base_url('rfp/view_rfp_bid/'.encode($record['id']))?>" class="btn btn-info"><i class="fa fa-eye"></i> View Proposal</a>
+						<!-- /For View RFP Time Set form action for step -->
 					<?php endif; ?>
-				</div>
+					<!-- End For Step View -->
+
+					<div class="pull-right">
+						<!-- Check For Submit RFP Or Not -->
+						<?php if($record['status'] <= 2) : ?>
+							<!-- <a href="<?=base_url('rfp/edit/'.encode($record['id']).'/2')?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Prev</a> -->
+							<?php if($record['is_paid'] == 0) :?>
+								<a class="btn btn-success" data-toggle="modal" data-target=".promotional_code"><i class="fa fa-check"></i> Submit</a>
+							<?php else : ?>
+								<?php if($record['status'] == 2) :?> <!-- If Status is submit pending (2) then visible button -->
+									<button type="submit" name="submit" class="btn btn-success" value="submit"><i class="fa fa-check"></i> Resubmit</button>
+								<?php endif; ?>
+							<?php endif; ?>
+						<?php else : ?>
+						<a href="<?=base_url('rfp/view_rfp_bid/'.encode($record['id']))?>" class="btn btn-info"><i class="fa fa-eye"></i> View Proposal</a>
+						<?php endif; ?>
+					</div>
+				</form>		
 			</div>	
 			<div class="col-md-12">
 				<h3 class="rfp-main-title"><?=$record['title']?></h3>

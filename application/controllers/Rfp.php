@@ -119,7 +119,12 @@ class Rfp extends CI_Controller {
 							);
 						$this->session->set_userdata('rfp_data',$rfp_data); // Store Last Insert Id & Dentition Type into Session
 						$this->session->set_flashdata('success', 'Step 1 of 3 completed - You can access the Draft Version anytime from the Dashboard');
-						redirect('rfp/add/1');
+						if($this->input->post('step-btn') != ''){
+							redirect('rfp/add/'.$this->input->post('step-btn'));
+						}else{
+							redirect('rfp/add/1');
+						}
+						
 					}else{
 						$this->session->set_flashdata('error', 'Error Into Create Basic Detail & Medical History');
 						redirect('rfp/add');
@@ -188,7 +193,14 @@ class Rfp extends CI_Controller {
 				
 				if($res){
 					$this->session->set_flashdata('success', 'Step 2 of 3  completed - Treatment Plan Information Updated Successfully');
-					if($this->input->post('prev')){
+					if($this->input->post('step-btn') != ''){
+						if($this->input->post('step-btn') == 0){
+							redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']));
+						}else{
+							redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/'.$this->input->post('step-btn'));
+						}
+					}
+					elseif($this->input->post('prev')){
 						redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id'])); // Go to 1st step (Basic Details)
 					}else{
 						redirect('rfp/add/2');
@@ -214,7 +226,7 @@ class Rfp extends CI_Controller {
 			} 
 			else{
 
-				if($this->input->post('prev') || $this->input->post('next'))
+				if($this->input->post('prev') || $this->input->post('next') || $this->input->post('step-btn') || $this->input->post('step-btn') == 0)
 				{
 					//-------------- For Multiple File Upload  ----------
 				    $all_extensions = [];
@@ -292,7 +304,14 @@ class Rfp extends CI_Controller {
 					$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 					if($res){
 						$this->session->set_flashdata('success', 'Step 3 of 3  completed - Additional Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
-						if($this->input->post('prev')){
+						if($this->input->post('step-btn') != ''){
+							if($this->input->post('step-btn') == 0){
+								redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']));
+							}else{
+								redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/'.$this->input->post('step-btn'));
+							}
+						}
+						elseif($this->input->post('prev')){
 							redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/1'); // Go to 2nd step (Treatment Plan Details)
 						}else{
 							redirect('rfp/add/3'); // Goto 4th step (Summary Page - Final)
@@ -308,7 +327,15 @@ class Rfp extends CI_Controller {
 			}  
 		}	
 		elseif($step == 3){
-			if($this->input->post('submit')){
+
+			if($this->input->post('step-btn') != ''){
+				if($this->input->post('step-btn') == 0){
+					redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']));
+				}else{
+					redirect('rfp/edit/'.encode($this->session->userdata['rfp_data']['rfp_last_id']).'/'.$this->input->post('step-btn'));
+				}
+			}
+			elseif($this->input->post('submit')){
 				
 				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 				$res=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1]);
@@ -321,11 +348,11 @@ class Rfp extends CI_Controller {
 					$this->session->set_flashdata('error', 'Error Into Confirm RFP');
 					//redirect('rfp/add/3');
 				}	
-				redirect('rfp/add/3');
+				redirect('rfp/add/3'); 
 			}
 			else{
 
-				$data['confirm_rfp']=1;
+				//$data['confirm_rfp']=1;
 				$data['record']=$this->Rfp_model->get_result('rfp',['id' => $this->session->userdata['rfp_data']['rfp_last_id'],'patient_id' => $this->session->userdata['client']['id'] ],'1');
 				$data['subview']="front/rfp/patient/view_rfp_patient";
 				$this->load->view('front/layouts/layout_main',$data);
@@ -336,7 +363,7 @@ class Rfp extends CI_Controller {
 
 	/* ---------------- For Update a RFP --------------- */
 	public function edit($id='',$step='0'){
-		$rfp_arr=$this->Rfp_model->get_result('rfp',['id' => decode($id)],'1');
+		$rfp_arr=$this->Rfp_model->get_result('rfp',['id' => decode($id),'status <=' => '2'],'1');
 		if($rfp_arr)
 		{
 			if($step == 0) // For First Page Of RFP
@@ -394,48 +421,17 @@ class Rfp extends CI_Controller {
 					$res=$this->Rfp_model->update_record('rfp',['id' => decode($id)],$rfp_step_1);
 
 					if($res){
-						$this->session->set_flashdata('success', 'Step 1 of 3 completed - You can access the Draft Version anytime from the Dashboard');
-
-						$teeth_data = $rfp_arr['teeth_data'];
-						$other_treatment_cat_id = $rfp_arr['other_treatment_cat_id'];
-
-						// ----- If Dentition Type Not Change then redirect to summary page otherwise goto 2nd step
-						if($rfp_arr['dentition_type'] == $this->input->post('dentition_type')) {
-
-							if($rfp_arr['dentition_type'] == 'primary' || $rfp_arr['dentition_type'] == 'permanent'){
-
-								if($teeth_data == null){
-									redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
-								}else{
-									redirect('rfp/edit/'.$id.'/3'); // Goto 4th step (Summary Page)
-								}
-
+						$this->session->set_flashdata('success', 'Step 1 of 3 completed - You can access the Draft Version anytime from the Dashboard');				
+						//-----------------
+						if($this->input->post('step-btn') != ''){
+							if($this->input->post('step-btn') == 0){
+								redirect('rfp/edit/'.$id);
+							}else{
+								redirect('rfp/edit/'.$id.'/'.$this->input->post('step-btn'));
 							}
-
-							if($rfp_arr['dentition_type'] == 'other'){
-								if($other_treatment_cat_id == null){
-									redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
-								}else{
-									redirect('rfp/edit/'.$id.'/3'); // Goto 4th step (Summary Page)
-								}
-							}
-							
-						} else {
-							// If dentition type chnage then blank the field 
-							$condition=['id'	=>	decode($id)];
-							$data_upd=[
-								'teeth_data'				=>	'',
-								'teeth_category'			=>	'',
-								'other_description'			=>	'',
-								'other_treatment_cat_id'	=>	'',
-								'other_treatment_cat_text'	=>	'',
-								];
-																					
-							$this->Rfp_model->update_record('rfp',$condition,$data_upd);
-							//-----------------
+						}else{
 							redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
 						}	
-						//------ End If Dentition Type Not Change
 						
 					}else{
 						$this->session->set_flashdata('error', 'Error Into Update Basic Detail & Medical History');
@@ -507,7 +503,14 @@ class Rfp extends CI_Controller {
 						// IF Success
 						$this->session->set_flashdata('success', 'Step 2 of 3  completed - Treatment Plan Information Updated Successfully');						
 						// Check for event prev or next
-						if($this->input->post('prev')){
+						if($this->input->post('step-btn') != ''){
+							if($this->input->post('step-btn') == 0){
+								redirect('rfp/edit/'.$id);
+							}else{
+								redirect('rfp/edit/'.$id.'/'.$this->input->post('step-btn'));
+							}
+						}
+						elseif($this->input->post('prev')){
 							redirect('rfp/edit/'.$id); // Go to 1st step (Basic Details)
 						}else{
 							if($rfp_arr['insurance_provider'] != '' && $rfp_arr['insurance_provider'] != ''){
@@ -533,7 +536,7 @@ class Rfp extends CI_Controller {
 					$data['subview']="front/rfp/patient/edit_rfp-3";
 					$this->load->view('front/layouts/layout_main',$data);
 				}else{ 
-					if($this->input->post('prev') || $this->input->post('next')){
+					if($this->input->post('prev') || $this->input->post('next') || $this->input->post('step-btn') || $this->input->post('step-btn') == 0){
 
 						$final_str = '';										
 						$rfp_data_qry = $this->Rfp_model->get_result('rfp',['id'=>decode($id)],true);	
@@ -667,7 +670,14 @@ class Rfp extends CI_Controller {
 						$res=$this->Rfp_model->update_record('rfp',$condition,$rfp_step_3);
 						if($res){
 							$this->session->set_flashdata('success', 'Step 3 of 3  completed - Additional Information Updated Successfully - Kindly Review your Information and submit your Treatment Plan');
-							if($this->input->post('prev')){
+							if($this->input->post('step-btn') != ''){
+								if($this->input->post('step-btn') == 0){
+									redirect('rfp/edit/'.$id);
+								}else{
+									redirect('rfp/edit/'.$id.'/'.$this->input->post('step-btn'));
+								}
+							}
+							elseif($this->input->post('prev')){
 								redirect('rfp/edit/'.$id.'/1'); // Go to 2nd step (Treatment Plan Details)
 							}else{
 								redirect('rfp/edit/'.$id.'/3'); // Go to 4th step (summary page - final)
@@ -686,7 +696,14 @@ class Rfp extends CI_Controller {
 				}	
 			} 
 			elseif($step == 3){
-			if($this->input->post('submit')){
+			if($this->input->post('step-btn') != ''){
+				if($this->input->post('step-btn') == 0){
+					redirect('rfp/edit/'.$id);
+				}else{
+					redirect('rfp/edit/'.$id.'/'.$this->input->post('step-btn'));
+				}
+			}
+			elseif($this->input->post('submit')){
 
 				$condition=['id' => decode($id)];
 				$res=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1]);
@@ -699,7 +716,7 @@ class Rfp extends CI_Controller {
 			}
 			else{
 
-				$data['confirm_rfp']=1;
+				//$data['confirm_rfp']=1;
 				$data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($id),'patient_id' => $this->session->userdata['client']['id'] ],'1');
 				$data['subview']="front/rfp/patient/view_rfp_patient";
 				$this->load->view('front/layouts/layout_main',$data);
@@ -925,6 +942,7 @@ class Rfp extends CI_Controller {
         }
        	elseif($this->session->userdata('client')['role_id'] == '5') // Check For Patient Role (5)
        	{
+       		$data['is_view_rfp'] = 1;
        		$data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id),'patient_id' => $this->session->userdata['client']['id'] ],'1');
        		 if(empty($data['record'])){
         	 	show_404();

@@ -40,7 +40,32 @@
 						
 	<div class="col-md-12">
 		<form method="post" action="" id="frmrfp" enctype="multipart/form-data">
-			
+			<!-- For Step View -->
+			<div class="row">
+				<div class="col-md-12 col-sm-12">
+					<ul class="process-steps nav nav-tabs nav-justified">
+						<li class="active">
+							<a>1</a>
+							<h5>Account Details</h5>
+						</li>
+						<li>
+							<a onclick="$('#step-btn').val('1'); $('#frmrfp').submit();" value="1">2</a>
+							<h5>Consent</h5>
+						</li>
+						<li>
+							<a onclick="$('#step-btn').val('2'); $('#frmrfp').submit();" value="2">3</a>
+							<h5>Result</h5>
+						</li>
+						<li>
+							<a onclick="$('#step-btn').val('3'); $('#frmrfp').submit();" value="3">4</a>
+							<h5>Summary</h5>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<input type="hidden" name="step-btn" id="step-btn" value="">
+			<!-- End For Step View -->
+
 			<?php if(!isset($record)) :?>
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
