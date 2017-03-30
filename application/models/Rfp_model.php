@@ -420,6 +420,7 @@ class Rfp_model extends CI_Model {
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
         $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'7']);
+        $this->db->order_by('rfp.status');
         $res = $this->db->get('rfp_bid')->result_array();
 
         $i=0;

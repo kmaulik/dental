@@ -1569,6 +1569,9 @@ span.title{width: 50%;}
 .column2-footer h4, .column2-footer ul {
     padding-left: 0px;
 }
+.check_label {
+    font-weight: normal;
+}
 }
 
 @media (min-width:481px) and (max-width:767px){

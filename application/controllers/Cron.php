@@ -13,6 +13,7 @@ class Cron extends CI_Controller {
 		
 	}
 
+	// second run ( after get_payments func )
 	public function check_status(){
 
 		$res_data = $this->Rfp_model->get_result('billing_schedule',['status'=>'0','transaction_id is not null'=>null]);
@@ -34,7 +35,7 @@ class Cron extends CI_Controller {
 						$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$res['rfp_id']],true);							
 						
 						// v! IF RFP's both payment is completed
-						if($rfp_data['status'] == '5'){
+						if($rfp_data['status'] == '6'){
 
 							// ----------------------------- Patient Notification -----------------------------
 					    	$noti_data = [
@@ -60,11 +61,11 @@ class Cron extends CI_Controller {
 					    	$this->Notification_model->insert_rfp_notification($noti_data);
 					    	// ------------------------------------------------------------------------
 
-							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'6']); // status : 6 - change waiting for doctor approval to close						
+							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'7']); // status : 6 - change waiting for doctor approval to close						
+						}else if($rfp_data['status'] == '5'){
+
 						}else{
-
 							// v! IF RFP's first payment is completed
-
 							// Update data into RFP_BID table change status to is_chat_started to 1 so messages can exchange on both end
 							// ------------------------------------------------------------------------
 							$doc_id = $res['doctor_id'];
@@ -81,7 +82,6 @@ class Cron extends CI_Controller {
 												'to_id'=>$doc_id,
 												'message'=>'( Auto-generated message ) You have been selected for '.$rfp_data['title'].' RFP.',
 												'created_at'=>date('Y-m-d H:i:s'),
-
 											);
 							$this->Rfp_model->insert_record('messages',$ins_data);
 							// ------------------------------------------------------------------------
@@ -110,7 +110,7 @@ class Cron extends CI_Controller {
 					    	$this->Notification_model->insert_rfp_notification($noti_data);
 					    	// -----------------------------------------------------------------------
 
-							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'5']); // status : 5 - chnage pending  to waiting for doctor approval
+							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'5']); 
 						}							
 
 						$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
@@ -153,6 +153,7 @@ class Cron extends CI_Controller {
 		}
 	}
 
+	// first run before check status
 	public function get_payments(){
 
 		$all_data = $this->Rfp_model->get_result('billing_schedule',['next_billing_date'=>date('Y-m-d'),'transaction_id is null'=>null,'status'=>'0']);

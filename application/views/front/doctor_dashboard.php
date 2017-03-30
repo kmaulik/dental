@@ -921,7 +921,7 @@
 			<!-- header modal -->
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myLargeModalLabel">Call Appointment</h4>
+				<h4 class="modal-title" id="myLargeModalLabel">Call & Confirm Appointment</h4>
 			</div>
 			<form action="<?=base_url('dashboard/call_appointment')?>" method="POST" id="frm_call_appointment">
 				<input type="hidden" name="rfp_id" id="call_app_rfp_id">

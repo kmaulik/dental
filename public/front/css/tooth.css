@@ -424,7 +424,73 @@
     height: 43px;
     width: 40px;
 }
+.upper-right {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  left: -50px;
+  position: absolute;
+  top: 12%;
+  font-size: 16px;
+}
+.lower-right {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  left: -50px;
+  position: absolute;
+  bottom: 12%;
+  font-size: 16px;
+}
+.upper-left {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  right: -50px;
+  position: absolute;
+  top: 12%;
+  font-size: 16px;
+}
+.lower-left {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  right: -50px;
+  position: absolute;
+  bottom: 12%;
+  font-size: 16px;
+}
+@media(max-width:550px){
+    .upper-right {
+  left: 0px;top: 12%;
+}
+.lower-right {
+  left: 0px;bottom: 13%;
+}
+.upper-left {
+  right: 0px; top: 10%;
+}
+.lower-left {
+  right: 0px;bottom: 13%;
+}
+}
 @media(max-width:400px){
+    .upper-right {
+    left: -20px;
+    top: 11%;
+    font-size: 14px;
+}
+.upper-left {
+    right: -10px;
+    top: 10%;
+    font-size: 14px;
+}
+.lower-right {
+    bottom: 13%;
+    left: -20px;
+    font-size: 14px;
+}
+.lower-left {
+    bottom: 13%;
+    right: -10px;
+    font-size: 14px;
+}
 .teeth-bg {
     background: url(../images/teeth/teeth.png) no-repeat;
     background-size: 100% 100%;
@@ -848,6 +914,32 @@
 #t32 .checkbox-wrapper label {
     height: 37px;
     width: 30px;
+}
+}
+@media(max-width:480px){
+    .upper-right {
+    left: 0;
+    width: 50px;
+    text-align: center;
+    top: 5%;
+}
+.upper-left {
+    right: 0;
+    text-align: center;
+    top: 5%;
+    width: 50px;
+}
+.lower-right {
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  text-align: center;
+}
+.lower-left {
+  bottom: 0;
+  right: 0;
+  width: 50px;
+  text-align: center;
 }
 }
 /********** End For New Teeth Image (Developed By AC)*********/
