@@ -378,87 +378,14 @@
 					<!-- End For Other Treatment Category -->
 
 					<div class="row">
-						<div class="col-sm-12">
-							<h3 class="rfp-title rfp_h3">Additional Section</h3>
-						</div>	
-					</div>	
-					<div class="row">
-						<div class="col-md-12">
-							<h4>In this section you optionally can share additional data for a better quote. Share if available an x-ray, existing treatment plan as PDF, or a “selfie” of your tooth that you need help with.</h4>
-						</div>	
-						<div class="col-md-12 col-sm-12">
-							<label>Further Information for our Agents</label> 
-							<div class="fancy-form">
-								<textarea rows="3" name="message" class="form-control char-count" data-maxlength="500" data-info="textarea-chars-info" placeholder="Share any comments you would like to provide to us."><?php if($this->input->post('message') != '') { echo $this->input->post('message'); } else { echo (isset($record['message'])? $record['message'] : set_value('message')); }?></textarea>
-								<i class="fa fa-comments"><!-- icon --></i>
-								<span class="fancy-hint size-11 text-muted">
-									<strong>Hint:</strong> 500 characters allowed!
-									<span class="pull-right">
-										<span id="textarea-chars-info"><span class="count-text_data">0</span>/500</span> Characters
-										<script>
-											var text_length=$(".char-count").val().length;
-											$(".count-text_data").html(text_length);
-										</script>
-									</span>
-								</span>
-							</div>	
-							<?php echo form_error('message','<div class="alert alert-mini alert-danger">','</div>'); ?>
-						</div>	
-					</div>	
-
-					<?php if(isset($record['img_path']) && $record['img_path'] != '') :?>
-						<div class="row">
-							<div class="col-md-12 col-sm-12">
-								<?php 
-									
-									$all_images_str = $record['img_path'];
-									if($all_images_str != ''){
-										$all_images = explode('|',$all_images_str);
-									}						
-									if(!empty($all_images)){
-										foreach($all_images as $key=>$img){
-									?>
-									<span class="rpf_attachment">
-										<?php $ext=explode(".",$img); 
-										if(isset($ext) && $ext[1] == 'pdf') { ?>
-											<img src="<?php echo DEFAULT_IMAGE_PATH.'document-file.jpg'?>" width="100px" height="50px">
-									    <?php } else { ?>
-											<img src="<?php echo base_url().'uploads/rfp/'.$img;?>" width="100px" height="50px">
-										<?php } ?>
-										<?php $file_name = 'uploads/rfp/'.$img;
-											if(file_exists($file_name)) {
-											    $file_size= filesize($file_name);	
-											}else{
-												$file_size= 0;	
-											}
-										?>
-										<a onclick="delete_img(this)" data-size="<?php echo $file_size;?>" data-img="<?php echo $img; ?>" data-rfpid="<?php echo $record['id']; ?>">
-											<i class="fa fa-close text-danger"></i>
-										</a>
-									</span>
-								<?php } } ?>
-							</div>
-						</div>
-					<?php endif; ?>
-
-					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="form-group">
-								<label>Attachment</label>
-								<div class="all_file_uploads">									
-									<div class="fancy-file-upload">
-										<i class="fa fa-upload"></i>
-										<input type="file" id="img_path_id_1" data-id="1" class="img_upload form-control" name="img_path[]"/>
-										<input type="text" id="img_path_txt_1" class="form-control" placeholder="no file selected" readonly="" />
-										<span class="button">Choose File</span>
-									</div>
-								</div>
-								<small class="text-muted block">Max Allow File : 10 & Max file size: 10 MB & Allow jpg, jpeg, png, pdf File</small>
-								<a class="btn btn-primary" onclick="add_more_img()">Add</a>
-								<a class="btn btn-danger" style="display:none" id="remove_btn" onclick="remove_img()">Remove</a>
+								<label>Treatment Plan Total ($)</label>
+								<input type="text" name="treatment_plan_total" class="form-control NumbersAndDot" placeholder="If you already have received an estimate or a budget, you may enter. We will calculate your potential saving per each quote against this value." value="<?php if($this->input->post('treatment_plan_total') != '') { echo $this->input->post('treatment_plan_total'); } else { echo (isset($record['treatment_plan_total'])? $record['treatment_plan_total'] : set_value('treatment_plan_total')); }?>" >
 							</div>
+							<?php echo form_error('treatment_plan_total','<div class="alert alert-mini alert-danger">','</div>'); ?>
 						</div>
-					</div>		
+					</div>			
 
 					<div class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12 text-right">
@@ -482,102 +409,10 @@
 <!-- / --> 
 <script type="text/javascript">
 
-	var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
-
-	// fetch_definition_data();
-	// function fetch_definition_data(){
-
-	// 	$("#primary").hide();
-	// 	$("#permanent").hide();
-	// 	$("#other").hide();
-
-	// 	if($("#dentition_type").val() == 'primary'){
-	// 		$("#permanent input[type='checkbox']").attr('checked', false);
-	// 		$("input[name='other_description']").val('');
-	// 		$("#primary").show();
-	// 	}
-	// 	else if($("#dentition_type").val() == 'permanent'){
-	// 		$("#primary input[type='checkbox']").attr('checked', false);
-	// 		$("input[name='other_description']").val('');
-	// 		$("#permanent").show();
-	// 	}
-	// 	else if($("#dentition_type").val() == 'other'){
-	// 		$("#permanent input[type='checkbox']").attr('checked', false);
-	// 		$("#primary input[type='checkbox']").attr('checked', false);
-	// 		$("#other").show();
-	// 	} else {
-	// 		$("#permanent input[type='checkbox']").attr('checked', false);
-	// 		$("#primary input[type='checkbox']").attr('checked', false);
-	// 		$("input[name='other_description']").val('');
-	// 	}
-	// }
-
-
-	function delete_img(obj){
-		var img_name = $(obj).attr('data-img');
-		var rfp_id = $(obj).attr('data-rfpid');
-		bootbox.confirm('Delete this image?' ,function(res){
-			if(res){
-				$.ajax({
-					url:'<?php echo base_url()."rfp/delete_img_rfp"; ?>',
-					method:'POST',
-					data:{img_name:img_name,rfp_id:rfp_id},
-					dataType:'JSON',
-					success:function(res){
-						if(res['success'] == true){
-							$(obj).parent().remove();
-						}
-					}
-				});
-			}
-		});
-	}
-
-	//-------------------------------------------------------------------------------------------------------------------------
-	function add_more_img(){
-		var total_img_upload = $('.fancy-file-upload').length;		
-		var olg_img = $('.rpf_attachment a').length;
-
-		var total_img= olg_img + total_img_upload ;
-		if(total_img < 10){
-			
-
-			var fancy_html = '';
-			fancy_html += '<div class="fancy-file-upload">';
-			fancy_html += '<i class="fa fa-upload"></i>';
-			fancy_html += '<input type="file" id="img_path_id_'+(total_img_upload+1)+'"  data-id="'+(total_img_upload+1)+'" class="form-control img_upload" name="img_path[]"/>';
-			fancy_html += '<input type="text" id="img_path_txt_'+(total_img_upload+1)+'" class="form-control" placeholder="no file selected" readonly="" />';
-			fancy_html += '<span class="button">Choose File</span>';
-			fancy_html += '</div>';
-
-			$('.all_file_uploads').append(fancy_html);
-
-			if($('.fancy-file-upload').length > 1){
-				$('#remove_btn').show();
-			}else{
-				$('#remove_btn').hide();
-			}			
-		}else{
-			bootbox.alert('Can not enter more than 10 attachment.');
-		}	
-	}
-
-	function remove_img(){
-		$('.fancy-file-upload').last().remove();
-		if($('.fancy-file-upload').length > 1){
-			$('#remove_btn').show();
-		}else{
-			$('#remove_btn').hide();
-		}
-	}
-
-	$(document).on('change','.img_upload',function(){		
-		var d_id = $(this).attr('data-id');
-		var files = $(this)[0].files;
-		var file_text= files.length+" files selected";
-		$('#img_path_txt_'+d_id).val(file_text);
+	//var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"];
+	$('.NumbersAndDot').keyup(function () { 
+	    this.value = this.value.replace(/[^0-9.]/g,'');
 	});
-
 
 	//----------- For Display Treatment Category ----------
 	$(".toggle_cat").click(function(e){
@@ -639,38 +474,6 @@
 			$("input[name=treat_cat_text_"+cat_chk_val+"]").val('');
 		}	
 	});	
-
-
-	// ===========Check Validation For teeth category ===============//
-	// $("#frmrfp").submit(function(e){
-	// 	$(".cat_error").remove();
-	// 	var validation_error=0;
-		
-	// 	$(".toggle_cat:checkbox:checked").each(function(key){
-	// 		var teeth_val = $(this).val();
-	// 		var category_val= $("#treatment_id_"+teeth_val).val();
-	// 		var treat_cat_text = $("input[name=treat_cat_text_"+teeth_val).val();
-	// 	  	if(category_val)
-	// 	  	{
-	// 	  		if(category_val.length > 5){
-	// 	  			var error_msg='<div class="alert alert-mini alert-danger cat_error">Only Select Max. 5 Category per Teeth.</div>';
-	// 		  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
-	// 		  		validation_error = 1;
-	// 	  		}
-	// 	  	}	
-	// 	  	else if(treat_cat_text == ''){
-	// 	  		var error_msg='<div class="alert alert-mini alert-danger cat_error">Select Atleast 1 Category For Teeth '+teeth_val+'.</div>';
-	// 	  		$(".treatment_cat_"+teeth_val+ " hr").before(error_msg);
-	// 	  		validation_error = 1;
-	// 	  	}
-
-	// 	});
-
-	// 	if(validation_error != 0){
-	// 		e.preventDefault();
-	// 	}
-	// });
-	// =========== END Check Validation For teeth category ===============//
 
 	$(".submit_data").click(function(event) {
 	$(".submit_data").hide();
