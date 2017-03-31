@@ -119,7 +119,7 @@
 						
 						<div class="form-group country_custom">
 							<label class="control-label">Country</label>
-							<select name="country_id" class="form-control select2_disable"  id="country_id">
+							<select name="country_id" class="form-control"  id="country_id">
 								<option value="" selected disabled>Select Country</option>
 								<?php foreach($country_list as $country) : ?>
 									<option disabled value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> ><?=$country['name']?></option>
@@ -317,9 +317,11 @@
 	document.getElementById('file').onchange = function () { $('#img_text').val(this.value); };
 
 	$('#country_id').val("<?php echo $db_data['country_id']; ?>");
+	$("#country_id").prop("disabled", true); // For Disable select option
 	$('#state_id').val("<?php echo $db_data['state_id']; ?>");
 
 	$(document).ready(function() {
+
         $('a[href="#office_map"]').click(function(e) {
             setTimeout(initialise, 1000);
         });

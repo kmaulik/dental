@@ -93,7 +93,7 @@
 						</div>	
 
 						<div class="form-group">
-							<select name="country_id" class="form-control select2_disable" id="country_id" data-id="select2_disable">
+							<select name="country_id" class="form-control" id="country_id" data-id="select2_disable">
 								<option value="" selected disabled>Select Country</option>
 								<?php foreach($country_list as $country) : ?>
 									<option disabled value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> >
@@ -149,6 +149,7 @@
 
 <script type="text/javascript">
 	$('#country_id').val('231');
+	$("#country_id").prop("disabled", true); // For Disable select option
 
 	$('.AlphaAndDotWithhypen').keyup(function () { 
     	this.value = this.value.replace(/[^A-Za-z.-\s]/g,'');
