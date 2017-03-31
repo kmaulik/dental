@@ -416,7 +416,7 @@ class Rfp_model extends CI_Model {
     
     public function get_user_won_rfp($user_id){
         $this->db->select('rfp_bid.*,rfp.patient_id, rfp.title,rfp.dentition_type,rfp.created_at as rfp_created,rfp.status as rfp_status,rfp.treatment_plan_total,
-                          users.fname,users.lname,users.email_id,users.avatar');
+                          users.fname,users.lname,users.email_id,users.avatar,rfp.rfp_close_date');
         $this->db->join('rfp','rfp.id=rfp_bid.rfp_id');
         $this->db->join('users','rfp.patient_id=users.id');
         $this->db->where(['rfp_bid.status'=>'2','rfp_bid.doctor_id'=>$user_id,'rfp.status !='=>'7']);
@@ -523,7 +523,7 @@ class Rfp_model extends CI_Model {
     /* ----------------------- Fetch RFP For Doctor Appointment (With RFP Status [5] & RFP Bid status [2]) ----------------------- */
     public function get_doctor_appointment_rfp($user_id){
         
-        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,u.phone,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at');
+        $this->db->select('rfp.id,rfp.title,rfp.appointment_schedule,rfp.appointment_comment,CONCAT(u.fname," ",u.lname) as user_name,u.phone,a.id as appointment_id,a.doc_id,a.doc_comments,a.is_cancelled,a.created_at,rfp.rfp_close_date');
         $this->db->join('users u','rfp.patient_id = u.id');
         $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
         $this->db->join('appointments a','rfp.id = a.rfp_id and a.is_cancelled = 0','left');
@@ -641,5 +641,35 @@ class Rfp_model extends CI_Model {
 
     }
     //----- End For check Doctor view RFP Details or not (based on RFP status 5 (In Progress) & doctor winner rfp bid)------
+
+    // ------------------------------------------------------------------------
+    // Case - 1 If apoointment is not schedule then RFP will be closed
+    // Case - 2 If apoointment is schedule but not confirm then RFP will be closed
+    // Case - 3 If apoointment is schedule and apoointment date is larger than 45 days duration then RFP WILL NOT be closed
+    // Case - 4 If apoointment is schedule and apoointment date is smaller than 45 days duration then RFP will be closed
+    // ------------------------------------------------------------------------
+    public function check_if_close_rfp($rfp_id){
+
+        $appintment_data = $this->db->get_where('appointments',['rfp_id'=>$rfp_id])->row_array();        
+        $ret_data['is_close'] = '1';
+
+        if(!empty($appintment_data)){
+
+            $confirm_app_data =  $this->db->get_where('appointment_schedule',['appointment_id'=>$appintment_data['id'],'is_selected'=>'1'])->row_array();
+
+            if(!empty($confirm_app_data)){
+                
+                $current_date = date('Y-m-d');
+                $appintment_date = $confirm_app_data['appointment_date'];
+
+                if($appintment_date > $current_date ){
+                    $ret_data['is_close'] = '0';
+                    $ret_data['next_date'] = date('Y-m-d',strtotime($appintment_date."+ 10 days"));
+                }
+            }
+        }
+
+        return $ret_data;
+    }
 
 }    

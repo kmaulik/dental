@@ -1668,4 +1668,16 @@ section.view-rfp .pull-right a{display:block; margin-bottom: 10px;}
   max-height: 100% !important;
 }
 #frmlogin{width:98%;}
+#topNav div.nav-main-collapse {
+    min-height: 270px;
+}
+.rfp-history .col-sm-12{    margin: 10px 0px !important;overflow: hidden;}
+.rfp-history .col-sm-12 label{    font-weight: 400 !important;color: #000;font-size: 15px;}
+.rfp-history span {width: 50%float: left;color: #666;font-family: inherit;}
+}
+@media(max-width:330px){
+    .panel-body {
+    padding: 0px;
+}
+.teeth-bg{margin-left: -15px !important;margin-bottom: 30px !important;}
 }

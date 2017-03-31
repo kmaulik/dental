@@ -10,6 +10,7 @@ class Test extends CI_Controller {
 		parent::__construct();
 		$this->load->helper(['paypal_helper']);	
         $this->load->library('unirest');
+        $this->load->model('Rfp_model');
         // $this->session->sess_destroy();
         // pr($this->session->all_userdata(),1);
 	}
@@ -20,6 +21,15 @@ class Test extends CI_Controller {
 		$this->load->view('test/newtest',$data);
 	}
 
+    /**
+     * undocumented function
+     *
+     * @return void
+     * @author 
+     **/
+    public function my_func(){
+        pr($this->Rfp_model->check_if_close_rfp('7'));
+    }
 
 	public function subscribe(){
         

@@ -148,7 +148,7 @@
 							</div>
 						</div>	
 						<!--  /Medical History  -->
-
+						
 						<!--  Treatment Plan  -->
 						<div class="rfp-treatment">
 							<h4 class="rfp-title">Treatment Plan Information</h4>
@@ -156,7 +156,7 @@
 							<?php if(isset($record['teeth_data'])) { $teeth_arr=json_decode($record['teeth_data']); $teeth_arr1=array_keys((array)$teeth_arr); } ?>
 							
 							<!-- For Teeth Image -->
-							<div class="col-sm-12">
+							<div class="">
 								<div class="teeth-bg">
 									<div class="upper-right">Upper Right</div>
 									<div class="upper-left">Upper left</div>

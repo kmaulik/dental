@@ -144,6 +144,7 @@
 												<?php }else{
 													
 														$show_pending_payment = 0;
+														// pr($all_billing_data);
 														foreach($all_billing_data as $bill_data){
 															if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
 															  $show_pending_payment++;
@@ -182,7 +183,7 @@
 																	} ?>	
 																<?php endforeach;?>	
 
-																<?php if($reschedule_app == 1) :?>
+																<?php if($reschedule_app == 1 && $w_rfp['rfp_close_date'] == null) :?>
 																	<a onclick="reschedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)" class="label label-warning" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
 																<?php endif; ?>
 															<?php endif; ?>	
@@ -343,7 +344,7 @@
                                                             <a id="rfp_id_<?=$appointment['id']?>" class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
                                                             <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
                                                                 <a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>
-                                                            <?php else :?>
+                                                            <?php elseif($appointment['rfp_close_date'] == null):?>
                                                             	<a href="<?=base_url('dashboard/reschedule_appointment/'.encode($appointment['appointment_id']))?>" id="resch_rfp_id_<?=$appointment['id']?>" class="label label-warning reschedule_appointment" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
                                                             <?php endif; ?>
                                                         <?php endif;?>

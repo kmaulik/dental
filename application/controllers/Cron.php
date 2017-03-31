@@ -10,147 +10,7 @@ class Cron extends CI_Controller {
 	}
 	
 	public function index(){
-		
-	}
-
-	// second run ( after get_payments func )
-	public function check_status(){
-
-		$res_data = $this->Rfp_model->get_result('billing_schedule',['status'=>'0','transaction_id is not null'=>null]);
-
-		// pr($res_data,1);
-		if(!empty($res_data)){
-			$return_arr = [];
-
-			foreach($res_data as $res){
-
-				$return_arr = GetTransactionDetails($res['transaction_id']);
-				$return_json = json_encode($return_arr);
-				$ack_transaction = strtoupper($return_arr['ACK']);				
-
-				if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
-					
-					if($return_arr['PAYMENTSTATUS'] == 'Completed'){
-
-						$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$res['rfp_id']],true);							
-						
-						// v! IF RFP's both payment is completed
-						if($rfp_data['status'] == '6'){
-
-							// ----------------------------- Patient Notification -----------------------------
-					    	$noti_data = [
-					    					'from_id'=>$res['doctor_id'],
-					    					'to_id'=>$rfp_data['patient_id'],
-					    					'rfp_id'=>$res['rfp_id'],
-					    					'noti_type'=>'rfp_close_notification',
-					    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
-					    					'noti_url'=>'dashboard'
-					    				];
-					    	$this->Notification_model->insert_rfp_notification($noti_data);
-					    	// ------------------------------------------------------------------------
-
-							// -----------------------------  Doctor Notification  -----------------------------
-					    	$noti_data = [
-					    					'from_id'=>$rfp_data['patient_id'],
-					    					'to_id'=>$res['doctor_id'],
-					    					'rfp_id'=>$res['rfp_id'],
-					    					'noti_type'=>'confirm_payment',
-					    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
-					    					'noti_url'=>'dashboard'
-					    				];
-					    	$this->Notification_model->insert_rfp_notification($noti_data);
-					    	// ------------------------------------------------------------------------
-
-							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'7']); // status : 6 - change waiting for doctor approval to close						
-						}else if($rfp_data['status'] == '5'){
-
-						}else{
-							// v! IF RFP's first payment is completed
-							// Update data into RFP_BID table change status to is_chat_started to 1 so messages can exchange on both end
-							// ------------------------------------------------------------------------
-							$doc_id = $res['doctor_id'];
-							$patient_id = $rfp_data['patient_id'];
-							$rfp_id = $res['rfp_id'];
-
-							$this->Rfp_model->update_record('rfp_bid',['doctor_id'=>$doc_id,'status'=>'2','rfp_id'=>$rfp_id],['is_chat_started'=>'1']);
-							// ------------------------------------------------------------------------
-							// Insert default message sent it to doctor by the system							
-							// ------------------------------------------------------------------------
-							$ins_data = array(
-												'rfp_id'=>$rfp_id,
-												'from_id'=>$patient_id,
-												'to_id'=>$doc_id,
-												'message'=>'( Auto-generated message ) You have been selected for '.$rfp_data['title'].' RFP.',
-												'created_at'=>date('Y-m-d H:i:s'),
-											);
-							$this->Rfp_model->insert_record('messages',$ins_data);
-							// ------------------------------------------------------------------------
-
-							// ----------------------------- Patient Notification -----------------------------
-					    	$noti_data = [
-					    					'from_id'=>$res['doctor_id'],
-					    					'to_id'=>$rfp_data['patient_id'],
-					    					'rfp_id'=>$res['rfp_id'],
-					    					'noti_type'=>'confirm_payment',
-					    					'noti_msg'=>'Congratulation..!! Doctor has confirmed the RFP - <b>'.$rfp_data['title'].'</b>.Please contact doctor for appointment.',
-					    					'noti_url'=>'dashboard'
-					    				];
-					    	$this->Notification_model->insert_rfp_notification($noti_data);
-					    	// ------------------------------------------------------------------------
-
-							// -----------------------------  Doctor Notification  -----------------------------
-					    	$noti_data = [
-					    					'from_id'=>$rfp_data['patient_id'],
-					    					'to_id'=>$res['doctor_id'],
-					    					'rfp_id'=>$res['rfp_id'],
-					    					'noti_type'=>'confirm_payment',
-					    					'noti_msg'=>'Congratulation..!! You\'re contract has been made with patient.',
-					    					'noti_url'=>'dashboard'
-					    				];
-					    	$this->Notification_model->insert_rfp_notification($noti_data);
-					    	// -----------------------------------------------------------------------
-
-							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'5']); 
-						}							
-
-						$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
-
-						$this->Rfp_model->update_record('payment_transaction',
-														['paypal_token'=>$res['transaction_id']],
-														['status'=>'1']);
-
-					}
-				} // END of IF condition				
-			}
-		}
-	}
-
-	public function check_agreement_status(){
-
-		// get_detail_billing_agreement
-		$res_data = $this->Rfp_model->get_result('billing_agreement',['status'=>'1']);		
-		pr($res_data,1);
-
-		if(!empty($res_data)){
-			foreach($res_data as $res){
 				
-				$billing_detail = get_detail_billing_agreement($res['billing_id']);				
-				$billing_detail_json = json_encode($billing_detail);
-				$ack_billing = strtoupper($billing_detail['ACK']);				
-
-				if($ack_billing == "SUCCESS" || $ack_billing == "SUCCESSWITHWARNING") {
-
-					$billing_status = $billing_detail['BILLINGAGREEMENTSTATUS'];
-
-					if($billing_status != 'Active'){
-						$billing_detail_json;
-						$this->Rfp_model->update_record('billing_agreement',['id'=>$res['id']],
-																			['status'=>'0']);
-					}					
-				}
-
-			} // End of Foreach Loop
-		}
 	}
 
 	// first run before check status
@@ -245,14 +105,171 @@ class Cron extends CI_Controller {
 		        			// ------------------------------------------------------------------------
 						}
 					}
-
 				}else{
 					// IF price is ZERO means there is only one due payment enter
-					$this->Rfp_model->update_record('rfp',['id'=>$a_data['rfp_id']],['status'=>'6']); // Close RFP after 45 days
+					$return_data = $this->Rfp_model->check_if_close_rfp($a_data['rfp_id']);
+
+					if($return_data['is_close'] == '1'){
+						$this->Rfp_model->update_record('rfp',['id'=>$a_data['rfp_id']],['status'=>'7']); // Close RFP after 45 days
+					}else{
+						$this->Rfp_model->update_record('rfp',['id'=>$a_data['rfp_id']],['rfp_close_date'=>$return_data['next_date']]); // Close RFP after appointment date + 10 days
+					}
 					$this->Rfp_model->update_record('billing_schedule',['rfp_id'=>$a_data['rfp_id'],'price'=>'0'],['status'=>'1']);
 				}
 
 			} // ForEACH ENs here
+		}
+	}
+
+	// second run ( after get_payments func )
+	public function check_status(){
+
+		$res_data = $this->Rfp_model->get_result('billing_schedule',['status'=>'0','transaction_id is not null'=>null,'next_billing_date'=>date('Y-m-d')]);
+
+		// pr($res_data,1);
+		if(!empty($res_data)){
+			$return_arr = [];
+
+			foreach($res_data as $res){
+
+				$return_arr = GetTransactionDetails($res['transaction_id']);
+				$return_json = json_encode($return_arr);
+				$ack_transaction = strtoupper($return_arr['ACK']);				
+
+				if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
+					
+					if($return_arr['PAYMENTSTATUS'] == 'Completed'){
+
+						$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$res['rfp_id']],true);
+						
+						
+						// v! IF RFP's both payment is completed
+						if($rfp_data['status'] == '6'){
+							
+							$return_data = $this->Rfp_model->check_if_close_rfp($res['rfp_id']);
+							pr($return_data);
+
+							if($return_data['is_close'] == '1'){
+								// ----------------------------- Patient Notification -----------------------------
+						    	$noti_data = [
+						    					'from_id'=>$res['doctor_id'],
+						    					'to_id'=>$rfp_data['patient_id'],
+						    					'rfp_id'=>$res['rfp_id'],
+						    					'noti_type'=>'rfp_close_notification',
+						    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
+						    					'noti_url'=>'dashboard'
+						    				];
+						    	$this->Notification_model->insert_rfp_notification($noti_data);
+						    	// ------------------------------------------------------------------------
+
+								// -----------------------------  Doctor Notification  -----------------------------
+						    	$noti_data = [
+						    					'from_id'=>$rfp_data['patient_id'],
+						    					'to_id'=>$res['doctor_id'],
+						    					'rfp_id'=>$res['rfp_id'],
+						    					'noti_type'=>'confirm_payment',
+						    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
+						    					'noti_url'=>'dashboard'
+						    				];
+						    	$this->Notification_model->insert_rfp_notification($noti_data);
+						    	// ------------------------------------------------------------------------
+
+								$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'7']); // status : 6 - change waiting for doctor approval to close
+							}else{
+								$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['rfp_close_date'=>$return_data['next_date']]); // Close RFP after appointment date + 10 days
+								qry();
+							}
+						}else if($rfp_data['status'] == '5'){
+							// ----------------------------- Patient Notification -----------------------------
+					    	$noti_data = [
+					    					'from_id'=>$res['doctor_id'],
+					    					'to_id'=>$rfp_data['patient_id'],
+					    					'rfp_id'=>$res['rfp_id'],
+					    					'noti_type'=>'rfp_close_notification',
+					    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
+					    					'noti_url'=>'dashboard'
+					    				];
+					    	$this->Notification_model->insert_rfp_notification($noti_data);
+					    	// ------------------------------------------------------------------------
+
+							// -----------------------------  Doctor Notification  -----------------------------
+					    	$noti_data = [
+					    					'from_id'=>$rfp_data['patient_id'],
+					    					'to_id'=>$res['doctor_id'],
+					    					'rfp_id'=>$res['rfp_id'],
+					    					'noti_type'=>'confirm_payment',
+					    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
+					    					'noti_url'=>'dashboard'
+					    				];
+					    	$this->Notification_model->insert_rfp_notification($noti_data);
+					    	// ------------------------------------------------------------------------
+
+							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'7']); // status : 5 - change appointment pending to close
+						}elseif($rfp_data['status'] <= '4'){
+							// v! IF RFP's first payment is completed
+							// Update data into RFP_BID table change status to is_chat_started to 1 so messages can exchange on both end
+							// ------------------------------------------------------------------------
+							$doc_id = $res['doctor_id'];
+							$patient_id = $rfp_data['patient_id'];
+							$rfp_id = $res['rfp_id'];
+
+							$this->Rfp_model->update_record('rfp_bid',['doctor_id'=>$doc_id,'status'=>'2','rfp_id'=>$rfp_id],['is_chat_started'=>'1']);
+							// ------------------------------------------------------------------------
+							// Insert default message sent it to doctor by the system							
+							// ------------------------------------------------------------------------
+							$ins_data = array(
+												'rfp_id'=>$rfp_id,
+												'from_id'=>$patient_id,
+												'to_id'=>$doc_id,
+												'message'=>'( Auto-generated message ) You have been selected for '.$rfp_data['title'].' RFP.',
+												'created_at'=>date('Y-m-d H:i:s'),
+											);
+							$this->Rfp_model->insert_record('messages',$ins_data);
+							// ------------------------------------------------------------------------
+
+							// ----------------------------- Patient Notification -----------------------------
+					    	$noti_data = [
+					    					'from_id'=>$res['doctor_id'],
+					    					'to_id'=>$rfp_data['patient_id'],
+					    					'rfp_id'=>$res['rfp_id'],
+					    					'noti_type'=>'confirm_payment',
+					    					'noti_msg'=>'Congratulation..!! Doctor has confirmed the RFP - <b>'.$rfp_data['title'].'</b>.Please contact doctor for appointment.',
+					    					'noti_url'=>'dashboard'
+					    				];
+					    	$this->Notification_model->insert_rfp_notification($noti_data);
+					    	// ------------------------------------------------------------------------
+
+							// -----------------------------  Doctor Notification  -----------------------------
+					    	$noti_data = [
+					    					'from_id'=>$rfp_data['patient_id'],
+					    					'to_id'=>$res['doctor_id'],
+					    					'rfp_id'=>$res['rfp_id'],
+					    					'noti_type'=>'confirm_payment',
+					    					'noti_msg'=>'Congratulation..!! You\'re contract has been made with patient.',
+					    					'noti_url'=>'dashboard'
+					    				];
+					    	$this->Notification_model->insert_rfp_notification($noti_data);
+					    	// -----------------------------------------------------------------------
+
+							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'5']); 
+						}
+
+						$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
+						$this->Rfp_model->update_record('payment_transaction',['paypal_token'=>$res['transaction_id']],['status'=>'1']);
+
+					}
+				} // END of IF condition				
+			}
+		}
+	}	
+
+	// Close RFp based on Rfp_close_date from rfp table
+	public function auto_close_rfp(){
+		$all_close_rfp = $this->db->get_where('rfp',['rfp_close_date'=>date('Y-m-d')])->result_array();
+		if(!empty($all_close_rfp)){
+			foreach($all_close_rfp as $close_rfp){
+				$this->Rfp_model->update_record('rfp',['id'=>$close_rfp['id']],['status'=>'7']);				
+			}
 		}
 	}
 
