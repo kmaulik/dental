@@ -21,6 +21,7 @@ class Test extends CI_Controller {
 		$this->load->view('test/newtest',$data);
 	}
 
+
     /**
      * undocumented function
      *
