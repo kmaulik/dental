@@ -13,7 +13,7 @@ class Cron extends CI_Controller {
 				
 	}
 
-	// first run before check status
+	// first run before check status ( For Use Second Payment - 45 Days Only)
 	public function get_payments(){
 
 		$all_data = $this->Rfp_model->get_result('billing_schedule',['next_billing_date'=>date('Y-m-d'),'transaction_id is null'=>null,'status'=>'0']);
@@ -410,7 +410,8 @@ class Cron extends CI_Controller {
 			}
 		}	
 		// --------------- End Edit filter table cron date ------------
-		pr($rfp_notify_data);
+		//pr($rfp_notify_data);
+		echo "Your cron - Alert notification for doctor execute successfully";
 		die;
 	}
 	/* ------------------ End Send message according to search filter ---------------- */
