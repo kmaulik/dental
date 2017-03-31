@@ -512,6 +512,9 @@ tr.hover-timeline:hover{background: #fff !important;}
         left: -14px;
         right: auto;
     }
+    .profile-edit-form {
+        padding: 15px !important;
+    }
 }
 /********************************* For Chatting history css ****************************************/
 
