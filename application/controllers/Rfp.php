@@ -1195,6 +1195,12 @@ class Rfp extends CI_Controller {
        	// fetch data from billing agrrement table for user id
     	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1'],true);
 
+    	
+       	$total_per_discount = 0;
+       	if($due_1 == 0 && $due_2 == 0){
+       		$this->doctor_discount_100($rfp_id,$coupan_code,$orignal_price);
+       	}
+
        	if($default_payment == 'manual'){
        		die('manual Payment Here');
        	}else if($default_payment == 'paypal_new'){
@@ -1203,11 +1209,7 @@ class Rfp extends CI_Controller {
        		$billing_data = '';
        	}
 
-       	$total_per_discount = 0;
        	
-       	if($due_1 == 0 && $due_2 == 0){
-       		$this->doctor_discount_100($rfp_id,$coupan_code,$orignal_price);
-       	}
 
        	if($coupan_code != ''){
        		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);
@@ -1299,7 +1301,7 @@ class Rfp extends CI_Controller {
         	$paypal_email = '';
         	if(!empty($agreement_data)){
         		$agreement_data = json_decode($agreement_data['meta_arr']);
-        		$paypal_email= $agreement_data->Email;
+        		$paypal_email= $agreement_data->EMAIL;
         	}
 
         	$transaction_arr =  array(
@@ -1415,7 +1417,7 @@ class Rfp extends CI_Controller {
 	        	$paypal_email = '';
 	        	if(!empty($agreement_data)){
 	        		$agreement_data = json_decode($agreement_data['meta_arr']);
-	        		$paypal_email= $agreement_data->Email;
+	        		$paypal_email= $agreement_data->EMAIL;
 	        	}
 	        	$transaction_arr =  array(
 	        							'user_id'=>$user_data['id'],

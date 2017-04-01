@@ -67,7 +67,7 @@ class Cron extends CI_Controller {
 				        	$paypal_email = '';
 				        	if(!empty($agreement_data)){
 				        		$agreement_data = json_decode($agreement_data['meta_arr']);
-				        		$paypal_email= $agreement_data->Email;
+				        		$paypal_email= $agreement_data->EMAIL;
 				        	}
 
 
@@ -102,7 +102,7 @@ class Cron extends CI_Controller {
 				        	$paypal_email = '';
 				        	if(!empty($agreement_data)){
 				        		$agreement_data = json_decode($agreement_data['meta_arr']);
-				        		$paypal_email= $agreement_data->Email;
+				        		$paypal_email= $agreement_data->EMAIL;
 				        	}
 
 							$transaction_arr =  array(
