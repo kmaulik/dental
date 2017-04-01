@@ -63,6 +63,14 @@ class Cron extends CI_Controller {
 							// ------------------------------------------------------------------------
 							// Insert datainto transaction for pending transaction
 							// ------------------------------------------------------------------------
+							$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$a_data['doctor_id'],'status'=>'1'],true);
+				        	$paypal_email = '';
+				        	if(!empty($agreement_data)){
+				        		$agreement_data = json_decode($agreement_data['meta_arr']);
+				        		$paypal_email= $agreement_data->Email;
+				        	}
+
+
 							$transaction_arr =  array(
 		        							'user_id'=>$a_data['doctor_id'],
 		        							'rfp_id'=>$a_data['rfp_id'],
@@ -73,6 +81,7 @@ class Cron extends CI_Controller {
 		        							'paypal_token'=>$ret_arr['TRANSACTIONID'],
 		        							'meta_arr'=>$ret_arr_json,
 		        							'status'=>$db_status,
+		        							'paypal_email'=>$paypal_email,
 		        							'created_at'=>date('Y-m-d H:i:s')
 		        						);
 		        			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
@@ -89,6 +98,13 @@ class Cron extends CI_Controller {
 																			  	['status'=>'0']);
 													
 							// ------------------------------------------------------------------------
+							$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$a_data['doctor_id'],'status'=>'1'],true);
+				        	$paypal_email = '';
+				        	if(!empty($agreement_data)){
+				        		$agreement_data = json_decode($agreement_data['meta_arr']);
+				        		$paypal_email= $agreement_data->Email;
+				        	}
+
 							$transaction_arr =  array(
 		        							'user_id'=>$a_data['doctor_id'],
 		        							'rfp_id'=>$a_data['rfp_id'],
@@ -99,6 +115,7 @@ class Cron extends CI_Controller {
 		        							'paypal_token'=>'DOCTOR_PAYMENT_ERROR',
 		        							'meta_arr'=>$ret_arr_json,
 		        							'status'=>'0',
+		        							'paypal_email'=>$paypal_email,
 		        							'created_at'=>date('Y-m-d H:i:s')
 		        						);
 		        			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);

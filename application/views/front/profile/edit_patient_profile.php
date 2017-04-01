@@ -323,7 +323,7 @@
 
 						<div class="form-group">
 							<label class="control-label">Default payment method</label>
-							<select name="default_payment" id="default_payment">
+							<select name="default_payment" id="default_payment" class="form-control">
 								<option value="paypal" <?php if($db_data['default_payment'] == 'paypal'){ echo 'selected'; } ?> > Paypal</option>
 								<option value="manual" <?php if($db_data['default_payment'] == 'manual'){ echo 'selected'; } ?> > Monthly Payment</option>
 							</select>

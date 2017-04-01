@@ -29,7 +29,7 @@ class Rfp extends CI_Controller {
 		$this->load->library('unirest');
 		$this->load->model(['Treatment_category_model','Rfp_model','Messageboard_model','Notification_model','Promotional_code_model']);		
 	}
-	
+
 	public function index(){
 		
 		//-------------- If Role Id (4 Means doctor then redirect to search rfp)
@@ -1191,11 +1191,16 @@ class Rfp extends CI_Controller {
        	$orignal_price = $this->input->post('orignal_price');
        	$default_payment = $this->input->post('payment_method');
 
+       	
+       	// fetch data from billing agrrement table for user id
+    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1'],true);
+
        	if($default_payment == 'manual'){
-       		die('manual karo');
+       		die('manual Payment Here');
        	}else if($default_payment == 'paypal_new'){
-       		cancel_billing_agreement($agreement_data['billing_id']);
-       		$this->Rfp_model->delete_record('billing_agreement',['id'=>$agreement_data['id']]);
+       		//cancel_billing_agreement($agreement_data['billing_id']);
+       		//$this->Rfp_model->delete_record('billing_agreement',['id'=>$agreement_data['id']]);
+       		$billing_data = '';
        	}
 
        	$total_per_discount = 0;
@@ -1214,8 +1219,7 @@ class Rfp extends CI_Controller {
        								 'due_1'=>$due_1,'due_2'=>$due_2,'orignal_price'=>$orignal_price,
        								 'actual_price'=>$actual_price]);
 
-       	// fetch data from billing agrrement table for user id
-    	$billing_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id,'status'=>'1'],true);
+       
 
     	// If empty create new agrrement with paypal ( Redirect to paypal if no agreement created )
     	if(empty($billing_data)){
@@ -1291,6 +1295,13 @@ class Rfp extends CI_Controller {
 	        // ------------------------------------------------------------------------
     		// Insert into transaction paylemt list (payment_transaction)
         	// ------------------------------------------------------------------------
+        	$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_data['id'],'status'=>'1'],true);
+        	$paypal_email = '';
+        	if(!empty($agreement_data)){
+        		$agreement_data = json_decode($agreement_data['meta_arr']);
+        		$paypal_email= $agreement_data->Email;
+        	}
+
         	$transaction_arr =  array(
         							'user_id'=>$user_data['id'],
         							'rfp_id'=>$rfp_id,
@@ -1301,11 +1312,12 @@ class Rfp extends CI_Controller {
         							'paypal_token'=>$payment_arr['TRANSACTIONID'],
         							'meta_arr'=>$payment_arr_json,
         							'status'=>'0',
+        							'paypal_email'=>$paypal_email,
         							'created_at'=>date('Y-m-d H:i:s')
         						);
 
 			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
-       		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'"> click here</a>');
+       		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab');
        		redirect('dashboard?reload='.encode($rfp_id));
 	    	// redirect('dashboard');
     	}
@@ -1352,7 +1364,17 @@ class Rfp extends CI_Controller {
         		// ------------------------------------------------------------------------
         		// Insert into Billing Agreement
         		// ------------------------------------------------------------------------
-        		$this->Rfp_model->delete_record('billing_agreement',['doctor_id'=>$user_data['id']]);
+
+    			// fetch data from billing agrrement table for user id
+				$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_data['id'],'status'=>'1'],true);
+				if(!empty($agreement_data)){
+					//--- For Check if agreement id is same then not cancel billing agreement (Create same account agreement then occur this situation) 
+					if($agreement_data['billing_id'] != $billing_id){
+						cancel_billing_agreement($agreement_data['billing_id']);	
+					}
+        			$this->Rfp_model->delete_record('billing_agreement',['doctor_id'=>$user_data['id']]);
+				}
+				
 				$ins_data = array(
         							'doctor_id'=>$user_data['id'],
         							'billing_id'=>$billing_id,
@@ -1389,6 +1411,12 @@ class Rfp extends CI_Controller {
 	        	// ------------------------------------------------------------------------
         		// Insert into Next Schdule payment (billing_schedule)
 	        	// ------------------------------------------------------------------------
+	        	$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_data['id'],'status'=>'1'],true);
+	        	$paypal_email = '';
+	        	if(!empty($agreement_data)){
+	        		$agreement_data = json_decode($agreement_data['meta_arr']);
+	        		$paypal_email= $agreement_data->Email;
+	        	}
 	        	$transaction_arr =  array(
 	        							'user_id'=>$user_data['id'],
 	        							'rfp_id'=>$doc_payment_data['rfp_id'],
@@ -1399,6 +1427,7 @@ class Rfp extends CI_Controller {
 	        							'paypal_token'=>$payment_due_1['PAYMENTINFO_0_TRANSACTIONID'],
 	        							'meta_arr'=>$payment_meta_arr,
 	        							'status'=>'0',
+	        							'paypal_email'=>$paypal_email,
 	        							'created_at'=>date('Y-m-d H:i:s')
 	        						);
 	        	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
@@ -1408,7 +1437,7 @@ class Rfp extends CI_Controller {
 	        	$url = base_url().'cron/check_status';
     			$res = $this->unirest->get($url);
 
-	        	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
+	        	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab');
 	        	redirect('dashboard?reload='.encode($doc_payment_data['rfp_id']));
 			}else{
 				$this->session->set_flashdata('error','Something goes wrong. Please try again');
@@ -1455,10 +1484,18 @@ class Rfp extends CI_Controller {
 		 $form .= '</form>';
 		 echo $form;
     }
-
+    
     //----------Complete Transaction and Insert data into Payment Transaction table & Update Status in RFP----- 
     public function complete_transaction(){
     	
+    	$paypal_data = '';
+    	$paypal_email = '';
+    	if($this->input->get('tx') != ''){
+    		$data=GetTransactionDetails($this->input->get('tx'));
+    		$paypal_email = $data['EMAIL'];
+    		$paypal_data = json_encode($data);
+    	}
+
     	//------ If refresh this page then redirect to RFP list ---
     	if(empty($this->session->userdata('payment_data'))){
     		redirect('rfp');
@@ -1474,6 +1511,8 @@ class Rfp extends CI_Controller {
     		'discount'				=> $this->session->userdata['payment_data']['discount'],
     		'promotional_code_id'	=> $this->session->userdata['payment_data']['promotinal_code_id'],
     		'paypal_token'			=> $this->input->get('tx'),
+    		'paypal_email'			=> $paypal_email,
+    		'meta_arr'				=> $paypal_data,
     		'created_at'			=> date("Y-m-d H:i:s"),
     	];
     	$res=$this->Payment_transaction_model->insert_record('payment_transaction',$pay_arr);

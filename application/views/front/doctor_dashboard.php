@@ -776,12 +776,17 @@
 							</div>
 
 						</div>
+						
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Your current payment type</label>
+								<?php if(!empty($agreement_data)) { 
+									$agree_data = json_decode($agreement_data['meta_arr']);
+									$paypal_email = $agree_data->EMAIL;	
+								 } ?>
 								<div class="col-sm-9">
-									<select name="payment_method">
-										<option value="paypal" <?php if($default_method == 'paypal'){ echo 'selected'; } ?>>Paypal</option>
+									<select name="payment_method" class="form-control">
+										<option value="paypal" <?php if($default_method == 'paypal'){ echo 'selected'; } ?>>Paypal <?=isset($paypal_email)?" - (".$paypal_email.")":''?></option>
 										<?php if(!empty($agreement_data)) { ?>
 										<option value="paypal_new" <?php if($db_data['default_payment'] == 'paypal_new'){ echo 'selected'; } ?> > New Paypal</option>
 										<?php } ?>

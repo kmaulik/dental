@@ -168,9 +168,11 @@ class Home extends CI_Controller {
 
 				$u_data = $this->session->userdata('client');
 				$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$u_data['id']],true);
-				
 				if(!empty($agreement_data)){
-					cancel_billing_agreement($agreement_data['billing_id']);
+					//--- For Check if agreement id is same then not cancel billing agreement (Create same account agreement then occur this situation) 
+					if($agreement_data['billing_id'] != $billing_id){
+						cancel_billing_agreement($agreement_data['billing_id']);
+					}	
 					$this->Rfp_model->delete_record('billing_agreement',['id'=>$agreement_data['id']]);
 				}
 
