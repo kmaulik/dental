@@ -34,7 +34,7 @@
 
 <!-- -->
 <section>	
-	<div class="container">
+	<div class="container">		
 		<!-- ALERT -->
 		<?php if($this->session->flashdata('success')) : ?>
 		<div class="alert alert-mini alert-success margin-bottom-30">
@@ -57,9 +57,10 @@
 				<li class="<?php if($tab == 'password'){ echo 'active'; }?>"><a href="#password" data-toggle="tab">Password</a></li>			
 				<?php if($this->session->userdata('client')['role_id'] == 4) :?> <!-- If Role (4) Dcotor Then display this map option-->
 				<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>">
-					<a href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map'; ?>">
-						Office Map
-					</a>					
+					<a href="<?php echo base_url().'dashboard/edit_profile/?tab=office_map'; ?>"> Office Map </a>
+				</li>
+				<li class="<?php if($tab == 'payment_method'){ echo 'active'; }?>">
+					<a href="#payment_method" data-toggle="tab">Manage Payment</a>
 				</li>
 				<?php endif; ?>
 			</ul>
@@ -125,9 +126,7 @@
 									<option disabled value="<?=$country['id']?>" <?php echo  set_select('country_id', $country['id']); ?> ><?=$country['name']?></option>
 								<?php endforeach; ?>
 							</select>	
-						</div>
-
-						
+						</div>						
 
 						<div class="form-group ">
 							<label class="control-label">Gender</label>
@@ -298,6 +297,52 @@
 				</div>
 				<!--  //Office Map TAB -->
 
+				<!-- Payment method TAB -->
+				<div class="tab-pane fade <?php if($tab == 'payment_method'){ echo 'in active'; }?>" id="payment_method">
+					
+					<div class="row">
+						<?php if(!empty($agreement_created)) { ?>
+							<?php $paypal_email = json_decode($agreement_created['meta_arr']); ?>
+							<div class="col-sm-8">
+								<h4>Your Current Paypal A/c : <?php echo $paypal_email->EMAIL; ?></h4>	
+							</div>	
+							<div class="col-sm-4">
+								<a href="<?php echo base_url().'home/create_manual_agreement'; ?>" class="btn btn-primary">Change Paypal A/c</a>
+							</div>	
+						<?php } else { ?>
+							<div class="col-sm-8">
+								<h4>You not set paypal account yet</h4>	
+							</div>	
+							<div class="col-sm-4">	
+								<a href="<?php echo base_url().'home/create_manual_agreement'; ?>" class="btn btn-primary">Create Agreement</a>
+							</div>		
+						<?php } ?>	
+					</div>	
+
+					<form  method="post">
+
+						<div class="form-group">
+							<label class="control-label">Default payment method</label>
+							<select name="default_payment" id="default_payment">
+								<option value="paypal" <?php if($db_data['default_payment'] == 'paypal'){ echo 'selected'; } ?> > Paypal</option>
+								<option value="manual" <?php if($db_data['default_payment'] == 'manual'){ echo 'selected'; } ?> > Monthly Payment</option>
+							</select>
+						</div>					
+						
+
+						<div class="margiv-top10">
+							<input type="hidden" name="tab" value="payment_method">
+							<button type="submit" class="btn btn-primary">
+								<i class="fa fa-check"></i>
+								Change Method
+							</button>
+							<button type="reset" class="btn btn-default">Cancel</button>
+						</div>
+
+					</form>
+				</div>
+				<!-- /Payment method TAB -->
+
 			</div>
 		</div>
 	
@@ -308,9 +353,8 @@
 <!-- / -->
 
 <script type="text/javascript">
-	
 
-	$('.AlphaAndDotWithhypen').keyup(function () { 
+	$('.AlphaAndDotWithhypen').keyup(function () {
     	this.value = this.value.replace(/[^A-Za-z.-\s]/g,'');
 	});
 	

@@ -41,7 +41,7 @@ class Test extends CI_Controller {
 
         //'-------------------------------------------------
         $resArray = CallShortcutExpressCheckout('37',$returnURL, $cancelURL);
-
+        
         // pr($resArray,1);
         $ack = strtoupper($resArray["ACK"]);
     	if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {

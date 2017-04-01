@@ -7,6 +7,7 @@
 		$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
 		redirect('dashboard?schedule_rfp='.$reload);
 	}
+	$default_method = $db_data['default_payment'];	
 ?>
 <link rel="stylesheet" href="<?=DEFAULT_CSS_PATH?>jquery.rateyo.min.css">
 <script src="<?=DEFAULT_JS_PATH?>jquery.rateyo.min.js"></script>
@@ -772,6 +773,21 @@
 									<a href="#" class="btn btn-info" id="apply-code">Apply Code </a>
 								</div>	
 								<span class="coupan-msg"></span>
+							</div>
+
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label>Your current payment type</label>
+								<div class="col-sm-9">
+									<select name="payment_method">
+										<option value="paypal" <?php if($default_method == 'paypal'){ echo 'selected'; } ?>>Paypal</option>
+										<?php if(!empty($agreement_data)) { ?>
+										<option value="paypal_new" <?php if($db_data['default_payment'] == 'paypal_new'){ echo 'selected'; } ?> > New Paypal</option>
+										<?php } ?>
+										<option value="manual" <?php if($default_method == 'manual'){ echo 'selected'; } ?>>Manual</option>
+									</select>
+								</div>								
 							</div>
 						</div>
 

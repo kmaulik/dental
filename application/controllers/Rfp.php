@@ -1174,11 +1174,14 @@ class Rfp extends CI_Controller {
     	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
 	   	redirect('dashboard?reload='.encode($rfp_id));    	
     }
+    
 
     public function make_doctor_payment(){
 
        	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
+
+       	$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id],true);
 
        	$rfp_id = decode($this->input->post('rfp_id'));
        	$coupan_code = $this->input->post('coupan_code');
@@ -1186,8 +1189,17 @@ class Rfp extends CI_Controller {
        	$due_2 = $this->input->post('due_2');       	
        	$actual_price = $this->input->post('total_due_modal');
        	$orignal_price = $this->input->post('orignal_price');
-       	$total_per_discount = 0;
+       	$default_payment = $this->input->post('payment_method');
 
+       	if($default_payment == 'manual'){
+       		die('manual karo');
+       	}else if($default_payment == 'paypal_new'){
+       		cancel_billing_agreement($agreement_data['billing_id']);
+       		$this->Rfp_model->delete_record('billing_agreement',['id'=>$agreement_data['id']]);
+       	}
+
+       	$total_per_discount = 0;
+       	
        	if($due_1 == 0 && $due_2 == 0){
        		$this->doctor_discount_100($rfp_id,$coupan_code,$orignal_price);
        	}

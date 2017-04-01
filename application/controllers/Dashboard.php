@@ -51,6 +51,7 @@ class Dashboard extends CI_Controller {
             $search_filter_where=['user_id' => $this->session->userdata('client')['id']];
             $data['search_filter_list']=$this->Rfp_model->get_result('custom_search_filter',$search_filter_where);
             $data['appointment_list']=$this->Rfp_model->get_doctor_appointment_rfp($user_id); // Fetch RFP For Appointment           
+            $data['agreement_data'] = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id],true);            
             $data['subview']="front/doctor_dashboard";
 
         } else if($this->session->userdata('client')['role_id'] == 5) { 
@@ -94,6 +95,8 @@ class Dashboard extends CI_Controller {
 
         if($get_tab == 'office_map'){
             $data['tab'] = 'office_map';
+        }elseif($get_tab == 'payment_method'){
+            $data['tab'] = 'payment_method';
         }else{
             $data['tab'] = 'info';
         }
@@ -160,6 +163,12 @@ class Dashboard extends CI_Controller {
         $data['latlong_location'] = $center_map_str;
         // ------------------------------------------------------------------------
 
+        // ------------------------------------------------------------------------
+
+        $data['agreement_created'] = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id],true);        
+        //pr($data['agreement_created'],1);
+        // ------------------------------------------------------------------------
+
         if($_POST){
             
             $tab = $this->input->post('tab');
@@ -179,7 +188,7 @@ class Dashboard extends CI_Controller {
                 $this->form_validation->set_rules('public_email', 'Public Email', 'valid_email');
             }
 
-            if($tab == 'avatar'){
+            if($tab == 'avatar' || $tab == 'payment_method'){
                 $this->form_validation->set_rules('tab', 'Tab', 'trim|required');
             }
             
@@ -292,6 +301,12 @@ class Dashboard extends CI_Controller {
                 }
             }
 
+            if($tab == 'payment_method'){                
+                $default_payment = $this->input->post('default_payment');                
+                $this->Users_model->update_user_data($user_id,['default_payment'=>$default_payment]);
+                $this->session->set_flashdata('success','Payment method has been successfully changed.');
+                redirect('dashboard/edit_profile?tab=payment_method');
+            }
         }
     } // END of function edit_profile
 
