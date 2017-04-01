@@ -1,13 +1,9 @@
 <footer id="footer">
     <div class="container">
-
         <div class="row margin-top-60 margin-bottom-40 size-13">
-
             <!-- col #1 -->
-            <div class="col-md-4 col-sm-5">
-
+            <div class="col-md-4 col-sm-5">                
                 <!-- Footer Logo -->
-
                 <a href="<?=base_url('')?>">
                     <img src="<?= DEFAULT_IMAGE_PATH ?>logo.png" alt="" />
                 </a>
@@ -55,8 +51,7 @@
             <div class="col-md-4 col-sm-3 column2-footer">                 
                 <h4 class="letter-spacing-1">EXPLORE US</h4>
                 <ul class="list-unstyled footer-list half-paddings noborder">
-                    <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>
-                    <li><a class="block" href="#"><i class="fa fa-angle-right"></i> Meet the Team</a></li>
+                    <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>                    
                     <li><a class="block" href="<?=base_url('faq')?>"><i class="fa fa-angle-right"></i> FAQ</a></li>
                     <li><a class="block" href="<?=base_url('terms-condition')?>"><i class="fa fa-angle-right"></i> Terms & Conditions</a></li>
                     <li><a class="block" href="<?=base_url('privacy-policy')?>"><i class="fa fa-angle-right"></i> Privacy Policy</a></li>
@@ -84,9 +79,9 @@
     <div class="copyright">
         <div class="container">
             <ul class="pull-right nomargin list-inline mobile-block">
-                <li><a href="#">Terms &amp; Conditions</a></li>
+                <li><a href="<?=base_url('terms-condition')?>">Terms &amp; Conditions</a></li>
                 <li>&bull;</li>
-                <li><a href="#">Privacy</a></li>
+                <li><a href="<?=base_url('privacy-policy')?>">Privacy</a></li>
             </ul>
 
             © All Rights Reserved, Dental Plans LLC
