@@ -1395,7 +1395,12 @@ ul.process-steps li:after, ul.process-steps li:after {
 }
 .coupen-code-div{clear: both;margin-bottom: 15px;overflow: hidden;}
 .current-paypal{margin:8px 0px;}
-
+.dropdown-ipad-view {
+    font-size: 14px;
+    padding: 5px 10px;
+    display: inline-block;
+    color: #666;
+}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

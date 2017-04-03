@@ -47,14 +47,14 @@
                 <!-- right -->
                 <ul class="top-links list-inline pull-right">
                     <?php if($this->session->userdata('client')) :?>
-                        <li class="text-welcome hidden-xs">Welcome <strong><?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?></strong></li>
+                        <li class="text-welcome">Welcome <strong><?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?></strong></li>
                         <li>
                             <?php $device = detect_device(); 
                             if($device == 'mobile') :?>
                                 <div class="dropdown">
                             <?php endif;?>
                             
-                                <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
+                                <a class="dropdown-toggle no-text-underline dropdown-ipad-view" data-toggle="dropdown" href="#"><i class="fa fa-user"></i> MY ACCOUNT</a>
                                 <ul class="dropdown-menu pull-right" role="menu">
                                     <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
                                     <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>   
@@ -69,10 +69,10 @@
                     
                         </li>    
                     <?php else :?>
-                        <li><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
+                        <li><a href="<?=base_url('login')?>"><i class="fa fa-lock"></i> LOGIN</a></li>
                         <li>
                             <a class="dropdown-toggle no-text-underline" href="<?=base_url('registration/user')?>">
-                                <i class="fa fa-user hidden-xs"></i>
+                                <i class="fa fa-user"></i>
                                 REGISTRATION
                             </a>
                         </li>
