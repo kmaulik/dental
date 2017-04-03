@@ -48,17 +48,26 @@
                 <ul class="top-links list-inline pull-right">
                     <?php if($this->session->userdata('client')) :?>
                         <li class="text-welcome hidden-xs">Welcome <strong><?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?></strong></li>
-                        <li class="my-account-toggle">
-                            <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
-                                <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>   
-                                <li><a tabindex="-1" href="<?=base_url('messageboard')?>"><i class="fa fa-envelope"></i> MESSAGE</a></li>    
-                                <li><a tabindex="-1" href="<?=base_url('payment_transaction/history')?>"><i class="fa fa-money"></i> PAYMENT & HISTORY</a></li>                         
-                                <li class="divider"></li>
-                                <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
-                            </ul>
-                        </li>
+                        <li>
+                            <?php $device = detect_device(); 
+                            if($device == 'mobile') :?>
+                                <div class="dropdown">
+                            <?php endif;?>
+                            
+                                <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                    <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
+                                    <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>   
+                                    <li><a tabindex="-1" href="<?=base_url('messageboard')?>"><i class="fa fa-envelope"></i> MESSAGE</a></li>    
+                                    <li><a tabindex="-1" href="<?=base_url('payment_transaction/history')?>"><i class="fa fa-money"></i> PAYMENT & HISTORY</a></li>                         
+                                    <li class="divider"></li>
+                                    <li><a tabindex="-1" href="<?=base_url('login/logout')?>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
+                                </ul>
+                            <?php if($device == 'mobile') :?>
+                                </div>
+                            <?php endif;?>
+                    
+                        </li>    
                     <?php else :?>
                         <li><a href="<?=base_url('login')?>"><i class="fa fa-lock hidden-xs"></i> LOGIN</a></li>
                         <li>
@@ -68,6 +77,8 @@
                             </a>
                         </li>
                     <?php endif;?>
+
+                   
                 </ul>       
             </div>
         </div>
@@ -355,21 +366,6 @@
             }
         });
     }
-
-    // $(".dropdown-toggle").click(function() {
-    //     $(".dropdown-menu").toggleClass('account-hide account-show');
-    // });
-
-   $(document).click(function() {
-        $(".dropdown-menu").removeClass('account-show');
-        $(".dropdown-menu").addClass('account-hide');
-
-    });
-
-   $(".my-account-toggle").click(function(event) {
-        $(".dropdown-menu").removeClass('account-hide');
-        $(".dropdown-menu").addClass('account-show');
-    });
 
 </script>
 

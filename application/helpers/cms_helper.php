@@ -381,6 +381,18 @@
         return $status;
     }
 
+    function detect_device(){
+        $CI = & get_instance();
+        $CI->load->library('user_agent');
+        $agent = $CI->agent->mobile();
+        // return 'mobile';
+        if ($agent != '') {
+            return 'mobile';
+        } else {
+            return 'pc';
+        }
+    }
+
 
 
 

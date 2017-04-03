@@ -45,7 +45,6 @@
 					<i class="fa fa-plus"></i>Create RFP
 				</a>	
 				</h4>	
-			
 			</div>	
 			<div class="col-md-12 rfp_table_layout">
 				<div class="table-responsive">
@@ -471,7 +470,7 @@
 								<th>Expire Date</th>
 								<th>Extended</th>
 								<th>Dentition Type</th>
-								<th style="width:235px;">Action</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -497,24 +496,28 @@
 										</td>
 										<td><?=$record['dentition_type']?></td>
 										<td>
-											<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+											<!-- <a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
 												<i class="fa fa-eye"></i><span>View</span>
-											</a>
+											</a> -->
+											<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
 											<!-- For Check Status == 3 && valid date set and valid date >= today and patient validity not extend then display extend button--> 
 											<?php if($record['status'] == 3 && $record['rfp_valid_date'] != '' && $record['rfp_valid_date'] >= date("Y-m-d") && $record['is_extended'] == 0) :?>
-												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days">
-												<i class="fa fa-arrows"></i><span>Extend</span>
+												<!-- <a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days">
+												<i class="fa fa-arrows"></i><span>Extend</span> </a>-->
+												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="label label-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days"><i class="fa fa-arrows"></i></a>
 											<?php endif; ?>
 											<!-- End Check Valid date -->
 
 											<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit & delete option -->
 											<?php if($record['status'] <= 2) : ?>
-												<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP">
+												<!-- <a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP">
 													<i class="fa fa-edit"></i><span>Edit</span>
-												</a>
-												<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP">
+												</a> -->
+												<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="label label-success" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP"><i class="fa fa-edit"></i></a>
+												<!-- <a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP">
 													<i class="fa fa-trash"></i><span>Delete</span>
-												</a>
+												</a> -->
+												<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="label label-danger btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP"><i class="fa fa-trash"></i></a>
 											<?php endif; ?>
 										</td>
 									</tr>
