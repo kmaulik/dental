@@ -48,9 +48,9 @@
                 <ul class="top-links list-inline pull-right">
                     <?php if($this->session->userdata('client')) :?>
                         <li class="text-welcome hidden-xs">Welcome <strong><?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?></strong></li>
-                        <li>
+                        <li class="my-account-toggle">
                             <a class="dropdown-toggle no-text-underline" data-toggle="dropdown" href="#"><i class="fa fa-user hidden-xs"></i> MY ACCOUNT</a>
-                            <ul class="dropdown-menu pull-right account-hide">
+                            <ul class="dropdown-menu pull-right">
                                 <li><a tabindex="-1" href="<?=base_url('dashboard')?>"><i class="fa fa-home"></i> DASHBOARD</a></li>
                                 <li><a tabindex="-1" href="<?=base_url('dashboard/edit_profile')?>"><i class="fa fa-user"></i> PROFILE</a></li>   
                                 <li><a tabindex="-1" href="<?=base_url('messageboard')?>"><i class="fa fa-envelope"></i> MESSAGE</a></li>    
@@ -356,8 +356,19 @@
         });
     }
 
-    $(".dropdown-toggle").click(function() {
-        $(".dropdown-menu").toggleClass('account-hide account-show');
+    // $(".dropdown-toggle").click(function() {
+    //     $(".dropdown-menu").toggleClass('account-hide account-show');
+    // });
+
+   $(document).click(function() {
+        $(".dropdown-menu").removeClass('account-show');
+        $(".dropdown-menu").addClass('account-hide');
+
+    });
+
+   $(".my-account-toggle").click(function(event) {
+        $(".dropdown-menu").removeClass('account-hide');
+        $(".dropdown-menu").addClass('account-show');
     });
 
 </script>
