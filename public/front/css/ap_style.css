@@ -1393,7 +1393,10 @@ ul.process-steps li:after, ul.process-steps li:after {
 .process-wizard-primary > .process-wizard-step.complete > .process-wizard-dot, .process-wizard-primary > .process-wizard-step > .progress > .progress-bar {
     background: #31b0d5;
 }
-
+.coupen-code-div{clear: both;margin-bottom: 15px;overflow: hidden;}
+.current-paypal{margin:8px 0px;}
+.account-hide{display: none;}
+.account-show{display: block;}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {
@@ -1677,6 +1680,7 @@ section.view-rfp .pull-right a{display:block; margin-bottom: 10px;}
 .rfp-history .col-sm-12{    margin: 10px 0px !important;overflow: hidden;}
 .rfp-history .col-sm-12 label{    font-weight: 400 !important;color: #000;font-size: 15px;}
 .rfp-history span {width: 50%float: left;color: #666;font-family: inherit;}
+.due_1_price,.due_2_price{    float: none !important;clear: both; display: inline-block;}
 }
 @media(max-width:330px){
     .panel-body {

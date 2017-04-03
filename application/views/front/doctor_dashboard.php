@@ -737,13 +737,13 @@
 						<div class="col-sm-8 margin-bottom-10">	
 														
 							<span class="clearfix due_1">
-								<span class="pull-right due_1_price">$0.00</span>
 								<span class="pull-left">Due payment 1 (will deduct instantly):</span>
+								<span class="pull-right due_1_price">$0.00</span>
 							</span>
 
 							<span class="clearfix due_2">
-								<span class="pull-right due_2_price">$0.00</span>
 								<span class="pull-left">Due payment 2 (will deduct after 45 days):</span>
+								<span class="pull-right due_2_price">$0.00</span>
 							</span>
 							
 							<hr>
@@ -759,17 +759,19 @@
 						<br/>
 						<br/>
 
-						<div class="col-sm-12">
+						<div class="coupen-code-div">
 							<div class="form-group">
-								<label>Coupon Code</label>
+								
 								<!-- <div class="fancy-file-upload fancy-file-success">
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 									<span class="button" id="apply-code">Apply Code</span>
 								</div> -->
 								<div class="col-sm-9">
+									<label>Coupon Code</label>
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 								</div>
 								<div class="col-sm-3">
+									<label>&nbsp;</label>
 									<a href="#" class="btn btn-info" id="apply-code">Apply Code </a>
 								</div>	
 								<span class="coupan-msg"></span>
@@ -777,14 +779,15 @@
 
 						</div>
 						
-						<div class="col-sm-12">
+						<div class="payment-type-div">
 							<div class="form-group">
-								<label>Your current payment type</label>
+								
 								<?php if(!empty($agreement_data)) { 
 									$agree_data = json_decode($agreement_data['meta_arr']);
 									$paypal_email = $agree_data->EMAIL;	
 								 } ?>
 								<div class="col-sm-9">
+									<label>Your current payment type</label>
 									<select name="payment_method" class="form-control">
 										<option value="paypal" <?php if($default_method == 'paypal'){ echo 'selected'; } ?>>Paypal <?=isset($paypal_email)?" - (".$paypal_email.")":''?></option>
 										<?php if(!empty($agreement_data)) { ?>

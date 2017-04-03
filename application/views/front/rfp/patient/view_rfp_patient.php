@@ -341,17 +341,18 @@
 								<h4>RFP Price : $ <?=config('patient_fees')?></h4>
 							</div>	
 						</div>
-						<div class="col-sm-12">
+						<div class="">
 							<div class="form-group">
-								<label>Coupon Code</label>
 								<!-- <div class="fancy-file-upload fancy-file-success">
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 									<span class="button" id="apply-code">Apply Code</span>
 								</div> -->
 								<div class="col-sm-9">
+									<label>Coupon Code</label>
 									<input type="text" class="form-control" name="coupan_code" id="coupan_code"/>
 								</div>
 								<div class="col-sm-3">
+									<label>&nbsp;</label>
 									<a href="#" class="btn btn-info" id="apply-code">Apply Code </a>
 								</div>	
 								<span class="coupan-msg"></span>	
