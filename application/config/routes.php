@@ -75,6 +75,8 @@ $route['terms-condition'] = 'page/index/terms-condition';
 $route['privacy-policy'] = 'page/index/privacy-policy';
 $route['contact_us'] = 'page/contact_us';
 $route['what-we-can-do-for-you'] = 'page/index/what-we-can-do-for-you';
+$route['who-we-are'] = 'page/index/who-we-are';
+
 /*--- End Route For Front --- */
 
 $route['default_controller'] = 'home';

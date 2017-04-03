@@ -51,7 +51,7 @@
             <div class="col-md-4 col-sm-3 column2-footer">                 
                 <h4 class="letter-spacing-1">EXPLORE US</h4>
                 <ul class="list-unstyled footer-list half-paddings noborder">
-                    <li><a class="block" href="#"><i class="fa fa-angle-right"></i>Who We Are</a></li>                    
+                    <li><a class="block" href="<?=base_url('who-we-are')?>"><i class="fa fa-angle-right"></i>Who We Are</a></li>                    
                     <li><a class="block" href="<?=base_url('faq')?>"><i class="fa fa-angle-right"></i> FAQ</a></li>
                     <li><a class="block" href="<?=base_url('terms-condition')?>"><i class="fa fa-angle-right"></i> Terms & Conditions</a></li>
                     <li><a class="block" href="<?=base_url('privacy-policy')?>"><i class="fa fa-angle-right"></i> Privacy Policy</a></li>
