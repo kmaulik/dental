@@ -56,10 +56,17 @@
                             </div>
                         </div>                     
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="col-lg-3 control-label">Address:</label>
                             <div class="col-lg-3">
                                 <textarea rows="4" name="address" class="form-control" placeholder="Your Address"><?php echo $user_data['address']; ?></textarea>
+                            </div>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Street:</label>
+                            <div class="col-lg-3">   
+                                <input type="text" name="street" class="form-control" value="<?php echo $user_data['street']; ?>" placeholder="Street name">
                             </div>
                         </div>
 
@@ -73,10 +80,22 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label">Country:</label>
                             <div class="col-lg-3">
-                                <select name="country_id" class="form-control select2" id="country_id">
+                                <select name="country_id" class="form-control select2" id="country_id" disabled>
                                         <option value="" selected disabled>Select Country</option>
                                         <?php foreach($country_list as $country) : ?>
                                         <option value="<?=$country['id']?>"><?=$country['name']?></option>
+                                    <?php endforeach; ?>
+                                </select>   
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">State:</label>
+                            <div class="col-lg-3">
+                                <select name="state_id" class="form-control select2" id="state_id">
+                                        <option value="" selected>Select State</option>
+                                        <?php foreach($state_list as $state) : ?>
+                                        <option value="<?=$state['id']?>"><?=$state['name']?></option>
                                     <?php endforeach; ?>
                                 </select>   
                             </div>
@@ -270,6 +289,7 @@
     });
     
     $("#country_id").val("<?php echo $user_data['country_id']; ?>");
+     $("#state_id").val("<?php echo $user_data['state_id']; ?>");   
     $("#gender").val("<?php echo $user_data['gender']; ?>");
 
 </script>

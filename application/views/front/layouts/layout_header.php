@@ -12,7 +12,7 @@
     <!-- WEB FONTS : use %7C instead of | (pipe) -->
     <link rel="shortcut icon" type="image/ico" href="<?= DEFAULT_IMAGE_PATH ?>favicon.png"/>
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400%7CRaleway:300,400,500,600,700%7CLato:300,400,400italic,600,700" rel="stylesheet" type="text/css" />
+    <link href="<?= DEFAULT_CSS_PATH ?>font.css" rel="stylesheet" type="text/css" />
 
     <!-- CORE CSS -->
     <link href="<?= DEFAULT_PLUGINS_PATH ?>bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />

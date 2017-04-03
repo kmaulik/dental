@@ -6,7 +6,7 @@
 
     <link rel="shortcut icon" type="image/ico" href="<?= DEFAULT_IMAGE_PATH ?>favicon.png"/>
     <!-- Global stylesheets -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="<?php echo DEFAULT_ADMIN_CSS_PATH . "font.css"; ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo DEFAULT_ADMIN_CSS_PATH . "icons/icomoon/styles.css"; ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo DEFAULT_ADMIN_CSS_PATH . "bootstrap.css"; ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo DEFAULT_ADMIN_CSS_PATH . "core.css"; ?>" rel="stylesheet" type="text/css">
