@@ -152,7 +152,7 @@ class Rfp extends CI_Controller {
 				}
 			}
 			else {
-				$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
+				$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please, select a minimum of one teeth or provide a treatment descritption!']);
 			}
 	
 			if($this->form_validation->run() == FALSE)
@@ -454,7 +454,7 @@ class Rfp extends CI_Controller {
 					}
 					else{
 					
-						$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please choose either atleast one tooth or provide treatment description']);
+						$this->form_validation->set_rules('other_description', 'Description', 'required',['required' => 'Please, select a minimum of one teeth or provide a treatment descritption!']);
 				}
 							
 
@@ -1122,7 +1122,7 @@ class Rfp extends CI_Controller {
 
 
     // ------------------------------------------------------------------------
-    public function doctor_discount_100($rfp_id,$coupan_code,$actual_price){
+    public function doctor_discount_100($rfp_id,$coupan_code_id,$actual_price){
     	
     	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
@@ -1162,7 +1162,7 @@ class Rfp extends CI_Controller {
     							'actual_price'=>$actual_price,
     							'payable_price'=>'0',
     							'discount'=>'100',
-    							'promotional_code_id'=>$coupan_code,
+    							'promotional_code_id'=>$coupan_code_id,
     							'paypal_token'=>'',
     							'meta_arr'=>'',
     							'status'=>'1',
@@ -1183,12 +1183,49 @@ class Rfp extends CI_Controller {
 
        	$agreement_data = $this->Rfp_model->get_result('billing_agreement',['doctor_id'=>$user_id],true);
 
+       	//--------------- Calcuate discount and find installment 1 & 2  -----------
+       	$rfp_id = decode($this->input->post('rfp_id'));
+
+       	$rfp_bid_data = $this->Rfp_model->get_result('rfp_bid',['rfp_id'=>$rfp_id,'doctor_id'=>$user_id],true);
+       	$amt = $rfp_bid_data['amount']; // Bid price								
+		$percentage = config('doctor_fees');
+		$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
+		$orignal_price=$payable_price;
+		$is_second_due = 0;
+
+	     $promotinal_code_id = 0;  	
+       	//---------- If coupan code is enter ---------
+       	if($this->input->post('coupan_code') != ''){
+			$data=$this->Promotional_code_model->fetch_coupan_data();
+			//--- Check code is valid and apply code limit for per user
+			if(isset($data['discount']) && $data['discount'] != '' && $data['per_user_limit'] > $data['total_apply_code']) {
+				$promotinal_code_id = $data['id'];
+				$discount = $data['discount'];
+				$payable_price = $payable_price - (($payable_price * $discount) /100);
+			}
+		}
+		//---------- End coupan code is enter ---------
+		$due_1 = config('doctor_initial_fees');
+		if($payable_price == 0){
+			$due_1 = 0;
+			$due_2 = 0;
+		}
+		elseif($payable_price > $due_1){
+			$due_2 = $payable_price - $due_1;
+			$is_second_due = 1;
+		}else{
+			$due_1 = $payable_price;
+			$due_2 = 0;
+		}
+
+		//--------------- End Calcuate discount and find installment 1 & 2  ------------
+
        	$rfp_id = decode($this->input->post('rfp_id'));
        	$coupan_code = $this->input->post('coupan_code');
-       	$due_1 = $this->input->post('due_1');
-       	$due_2 = $this->input->post('due_2');       	
-       	$actual_price = $this->input->post('total_due_modal');
-       	$orignal_price = $this->input->post('orignal_price');
+       	$due_1 = $due_1;
+       	$due_2 = $due_2;       	
+       	$actual_price = $payable_price;
+       	$orignal_price = $orignal_price;
        	$default_payment = $this->input->post('payment_method');
 
        	
@@ -1198,7 +1235,7 @@ class Rfp extends CI_Controller {
     	
        	$total_per_discount = 0;
        	if($due_1 == 0 && $due_2 == 0){
-       		$this->doctor_discount_100($rfp_id,$coupan_code,$orignal_price);
+       		$this->doctor_discount_100($rfp_id,$promotinal_code_id,$orignal_price);
        	}
 
        	if($default_payment == 'manual'){
@@ -1209,12 +1246,6 @@ class Rfp extends CI_Controller {
        		$billing_data = '';
        	}
 
-       	
-
-       	if($coupan_code != ''){
-       		$coupon_data = $this->Promotional_code_model->fetch_coupan_data($coupan_code);
-	    	$total_per_discount = (float)$coupon_data['discount'];
-       	}
 
        	$this->session->set_userdata('doc_payment_data',
        								['rfp_id'=>$rfp_id,'coupan_code'=>$coupan_code,
@@ -1309,8 +1340,8 @@ class Rfp extends CI_Controller {
         							'rfp_id'=>$rfp_id,
         							'actual_price'=>$orignal_price,
         							'payable_price'=>$due_1,
-        							'discount'=>(isset($coupon_data['discount'])) ? $coupon_data['discount']:0,
-        							'promotional_code_id'=>(isset($coupon_data['id'])) ? $coupon_data['id']:0,
+        							'discount'=>(isset($discount)) ? $discount:0,
+        							'promotional_code_id'=>(isset($promotinal_code_id)) ? $promotinal_code_id:0,
         							'paypal_token'=>$payment_arr['TRANSACTIONID'],
         							'meta_arr'=>$payment_arr_json,
         							'status'=>'0',
@@ -1652,8 +1683,9 @@ class Rfp extends CI_Controller {
 	    					'to_id'=>$rfp_bid_fetch['doctor_id'],
 	    					'rfp_id'=>decode($rfp_id),
 	    					'noti_type'=>'doc_won',
-	    					'noti_msg'=>'Congratulation..!! You\'ve won <b>'.$rfp_data['title'].'</b> from patient.',
-	    					'noti_url'=>'rfp/view_rfp/'.$rfp_id
+	    					'noti_msg'=> 'Congratulations! For  <b>'.$rfp_data['title'].'</b>, the patient selected your offer! Your Next Step: Confirm your Payment and Schedule an appointment.',
+	    					// 'noti_url'=>'rfp/view_rfp/'.$rfp_id
+	    					'noti_url'=> 'dashboard?proceed_rfp='.$rfp_id,
 	    				];
 	    	$this->Notification_model->insert_rfp_notification($noti_data);
 	    	// ------------------------------------------------------------------------

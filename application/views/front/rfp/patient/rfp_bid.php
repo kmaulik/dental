@@ -42,6 +42,9 @@
 				<h3 class=""><?=isset($rfp_bid_list[0]['title'])?$rfp_bid_list[0]['title']:''?></h3>
 			</div>
 			<div class="col-sm-12">
+				<h4 class="win-desc-text">Select the winning doctor during the bidding period by selecting this symbol <i class="fa fa-trophy"></i></h4>
+			</div>	
+			<div class="col-sm-12">
 				<!-- Bid List -->	
 				<?php if(count($rfp_bid_list) > 0) :  ?>
 					<?php foreach ($rfp_bid_list as $key => $bid_list) : ?>
@@ -241,12 +244,15 @@
 			<!-- header modal -->
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myLargeModalLabel">Appointment Schedule</h4>
+				<h4 class="modal-title" id="myLargeModalLabel">Patient’s Appointment Preference:</h4>
 			</div>
 			<form action="" method="POST" id="frm_doctor_appointment">
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
+						<div class="col-sm-12">
+							<h6 class="app-prefrence">Congratulation to your selection. In order to support you and the doctor, finding a matching appointment, kindly select your preferred availability in the near future. We will share this with your doctor - and the doctor office will revert back with you either through YourToothFairy with an appointment proposal which you can confirm.</h6>
+						</div>	
 						<div class="col-sm-12">
 							<!-- <label>Appointment</label>	 -->
 							<div class="table-responsive">

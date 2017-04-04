@@ -44,7 +44,7 @@
 			<!-- /ALERT -->
 
 			<div class="col-md-12">
-				<h1>WelCome To Dashboard</h1>	
+				<h1>Doctor Dashboard</h1>	
 			</div>		
 		</div>
 						
@@ -57,10 +57,10 @@
 				$cur_tab = $this->input->get('tab');
 			?>
 			<ul class="nav nav-tabs nav-top-border">
-				<li class="<?php if($cur_tab == ''){ echo 'active'; } ?>"><a href="#won_rfps" data-toggle="tab">Won RFPs</a></li>
+				<li class="<?php if($cur_tab == ''){ echo 'active'; } ?>"><a href="#won_rfps" data-toggle="tab">Bids Won</a></li>
 				<li class="<?php if($cur_tab == 'appointment'){ echo 'active'; } ?>"><a href="#schedule_rfps" data-toggle="tab">Appointments</a></li>
-				<li class=""><a href="#rfp_bids" data-toggle="tab">RFP Bids</a></li>
-				<li class=""><a href="#favorite_rfp" data-toggle="tab">Favorite RFP</a></li>
+				<li class=""><a href="#rfp_bids" data-toggle="tab">Placed Bids</a></li>
+				<li class=""><a href="#favorite_rfp" data-toggle="tab">Favorite Bids</a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -69,7 +69,7 @@
 						<table class="table table-hover chatting">
 							<thead>
 								<tr>
-									<th>RFP Title</th>
+									<th>Request Title</th>
 									<th>Bid Value ($)</th>
 									<th>Status</th>
 									<th>Action</th>
@@ -88,8 +88,7 @@
 
 											$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
 											$total_transaction_cnt = 0;
-
-											$is_second_due = 1;
+											
 											$due_1 = config('doctor_initial_fees');
 											$due_2 = 0;
 											$is_second_due = 0;
@@ -110,9 +109,14 @@
 											<td><?php echo ucfirst($w_rfp['amount']); ?></td>
 											<td>
 												<?php
-													if(empty($all_billing_data)){
-														echo rfp_status_label($w_rfp['rfp_status']);
-													}else{
+													if(empty($all_billing_data)){ 
+														if($w_rfp['rfp_status'] == '4') { ?>
+															<a onclick="$('.payment_rfp_<?=$w_rfp['rfp_id']?>').click();"> 
+														<?php } echo rfp_status_label($w_rfp['rfp_status']); 
+															if($w_rfp['rfp_status'] == '4') { ?>
+															</a>
+														<?php } ?>
+													<?php }else{
 														$check_transactions = array_column($all_billing_data,'transaction_id');													
 														$total_transaction_cnt = count(array_filter($check_transactions, function($x) {return !is_null($x); }));
 
@@ -131,7 +135,7 @@
 											</td>
 											<td>										
 												<?php if($w_rfp['rfp_status'] == '4' && empty($all_billing_data)) { ?>
-													<a class="label label-success"
+													<a class="label label-success payment_rfp_<?=$w_rfp['rfp_id']?>"
 													   data-is-second-due="<?php echo $is_second_due; ?>"
 													   data-due-one="<?php echo $due_1; ?>"
 													   data-due-two="<?php echo $due_2; ?>"
@@ -160,17 +164,17 @@
 	                                                    }else{
 	                                                    ?>
 														    <a class="label label-info a_show_<?php echo $won_rfp_id; ?>" 
-	                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();" data-toggle="tooltip" data-placement="top" data-original-title="Timeline"> <i class="fa fa-wechat"></i></a>
+	                                                          onclick="$('<?php echo $timeline_id; ?>').show(); $(this).hide(); $('.a_hide_<?php echo $won_rfp_id; ?>').show();" data-toggle="tooltip" data-placement="top" data-original-title="Message"> <i class="fa fa-wechat"></i></a>
 
 	                                                        <a class="label label-info a_hide_<?php echo $won_rfp_id; ?>" 
-	                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Hide Timeline"> <i class="fa fa-eye-slash"></i></a>
+	                                                          onclick="$('<?php echo $timeline_id; ?>').hide(); $(this).hide(); $('.a_show_<?php echo $won_rfp_id; ?>').show();" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Hide Message"> <i class="fa fa-wechat"></i></a>
 	                                                    	
 	                                                    	<a href="<?php echo base_url().'rfp/view_rfp/'.encode($w_rfp['rfp_id']); ?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
 	                                                    		<i class="fa fa-eye"></i></a>
 
                                                 			<!-- For Check Appointment is schedule or not (If not schedule by doctor then display appointment option)-->
 	                                                    	<?php if(empty($w_rfp['appointment_data'])) :?>
-	                                                    		<a class="label label-danger" title="Manage Appointment" onclick="schedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
+	                                                    		<a class="label label-danger schedule_app_<?=$w_rfp['rfp_id']?>" title="Manage Appointment" onclick="schedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
 	     													<?php endif; ?>	
                                                     		<!-- End For Check Appointment is schedule or not -->
 
@@ -227,7 +231,7 @@
 										        <div class="cong-msg">
 										            <p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
 										            <h2>Congratulation!!</h2>
-										            <h5>Your RFP was successful</h5>
+										            <h5>Your Request is successful, next step find agree an appointment.</h5>
 										        </div>
 										        <ul class="timeline">
 													<!-- For Appointment -->	
@@ -288,7 +292,7 @@
 								<?php }else{ ?>
 									<tr>
 										<td colspan="7" class="text-center">
-											<b>No RFP Found</b>
+											<b>Go to <a href="<?=base_url('rfp/search_rfp')?>" class="goto_rfp">Bid on Requests</a> to find new patient treatments plans to bid on - once you are selected as winner - you will these listed in this section</b>
 										</td>
 									</tr>
 								<?php } ?>
@@ -309,7 +313,7 @@
                                     <thead>
                                         <tr>
                                             <th>Patient Name</th>
-                                            <th>RFP Title</th>
+                                            <th>Request Title</th>
                                             <th>Appointment Date</th>
                                             <th>Appointment Time</th>
                                             <th>Created on</th>
@@ -356,7 +360,7 @@
                                         <?php }else{ ?>
                                             <tr>
                                                 <td colspan="5" class="text-center">
-                                                    <b>No Appointment Found</b>
+                                                    <b>Manage Patient Appointments on your won bids (Propose or Call / Confirm / Change)</b>
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -373,7 +377,7 @@
 							<table class="table table-hover">
 								<thead>
 									<tr>
-										<th>RFP Title</th>
+										<th>Request Title</th>
 										<th>Bid Value ($)</th>
 										<th>Status</th>
 										<th>Action</th>
@@ -397,7 +401,7 @@
 										</tr>
 									<?php } } else { ?>
 										<tr>
-											<td colspan="4" class="text-center"><b>No RFP Bid Found</b></td>
+											<td colspan="4" class="text-center"><b><a href="<?=base_url('rfp/search_rfp')?>" class="goto_rfp">Bid on Requests</a> and your active bids are listed in this section.</b></td>
 										</tr>
 									<?php }?>
 								</tbody>
@@ -413,7 +417,7 @@
 								<thead>
 									<tr>
 										<th></th>
-										<th>RFP Title</th>
+										<th>Request Title</th>
 										<th>Dentition Type</th>
 										<th>Created On</th>
 										<th>Action</th>
@@ -433,7 +437,7 @@
 											</tr>
 										<?php endforeach; ?>	
 									<?php else : ?>
-										<tr><td colspan="6" class="text-center"><b>No Favorite RFP Found</b></td></tr>
+										<tr><td colspan="6" class="text-center"><b>In the view of <a href="<?=base_url('rfp/search_rfp')?>" class="goto_rfp">Bid on Requests</a> you can mark your favorite Requests with <i class="fa fa-star"></i>. Search them and come back here to place a bid when you are ready.</b></td></tr>
 									<?php endif; ?>
 								</tbody>	
 							</table>	
@@ -452,7 +456,7 @@
 		<!-- Doctor's Filter For Search RFP -->
 		<div class="row rfp_radar_filter">			
 			<div class="col-md-12">
-				<h4> RFP Radar </h4>
+				<h4>Search & Email Notifications</h4>
 				<hr/>
 			</div>	
 			<div class="col-md-12">
@@ -499,7 +503,7 @@
 							<?php else :?>
 								<tr>
 									<td colspan="4" class="text-center">
-										<b>Go to Search <a href="<?=base_url('rfp/search_rfp')?>" class="goto_rfp">RFP</a> to create your filter</b>
+										<b>Save your <a href="<?=base_url('rfp/search_rfp')?>" class="goto_rfp">Bid on Requests</a> Searches! In this section you can manage your searches and define your Email Notification to receive updates on new treatment plans.</b>
 									</td>
 								</tr>
 							<?php endif;?>
@@ -519,7 +523,7 @@
 		<!-- Doctor's All Review -->
 		<div class="row review-list">
 			<div class="col-md-12">
-				<h4> Your Review </h4>
+				<h4> Your Reviews by Patient: </h4>
 				<hr/>
 			</div>	
 			<div class="col-md-12">
@@ -528,7 +532,7 @@
 						<thead>
 							<tr>
 								<th>Patient Name</th>
-								<th>RFP Title</th>
+								<th>Request Title</th>
 								<th>Rating</th>
 								<th>Review Date</th>
 								<th>Action</th>
@@ -603,7 +607,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>RFP Title</th>
+								<th>Request Title</th>
 								<th>User Name</th>
 								<th>RFP Status</th>
 								<th>Dentition Type</th>
@@ -676,7 +680,7 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label>RFP Title</label>
+								<label>Request Title</label>
 								<input type="text" id="rfp_title" class="form-control" disabled>
 							</div>
 						</div>	
@@ -913,7 +917,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>RFP Title : <span id="select_rfp_title"></span></label>
+								<label>Request Title : <span id="select_rfp_title"></span></label>
 							</div>
 						</div>	
 						<div class="col-sm-12">
@@ -966,7 +970,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>RFP Title : <span id="call_app_rfp_title"></span></label>
+								<label>Request Title : <span id="call_app_rfp_title"></span></label>
 							</div>
 						</div>
 						<div class="col-sm-12 patient_schedule">
@@ -1038,7 +1042,7 @@
 					<div class="col-sm-12">
 						<div class="form-group">
 							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
-							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="var rfp_id= $('#call_app_rfp_id').val(); $('.close').click(); $('.schedule_app_'+rfp_id).click();">
 						</div>	
 					</div>	
 				</div>	
@@ -1071,7 +1075,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
+								<label>Request Title : <span id="appointment_rfp_title"></span></label>
 							</div>
 						</div>
 					   <div class="col-sm-12 patient_schedule">
@@ -1154,7 +1158,7 @@
 						<div class="form-group">
 							<a class="btn btn-info btn_call" onclick="choose_call_option()"><i class="fa fa-phone"></i> Call</a>
 							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
-							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick="$('.close').click()">
+							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick=" var rfp_id= $('#appointment_rfp_id').val(); $('.close').click(); $('.schedule_app_'+rfp_id).click();">
 						</div>	
 					</div>	
 				</div>	
@@ -1173,8 +1177,18 @@
     	if($schedule_rfp != ''){ 
     		$schedule_rfp = decode($schedule_rfp);
    	?> 
-   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); $.popVar("schedule_rfp"); }, 2000);
-    <?php } ?>    
+   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); $.popVar("schedule_rfp"); }, 1000);
+    <?php } ?>
+
+    <?php 
+        $proceed_rfp = $this->input->get('proceed_rfp');
+        if($proceed_rfp != ''){ 
+            $proceed_rfp = decode($proceed_rfp);
+    ?> 
+        setTimeout(function(){ $(".payment_rfp_<?php echo $proceed_rfp;?>").click(); $.popVar("proceed_rfp"); }, 1000);
+    <?php } ?>
+
+
 
     function submit_form(obj){
 
@@ -1664,6 +1678,8 @@
             $(element).removeClass(errorClass);
         },
     });
+
+    
 
     
 

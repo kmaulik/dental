@@ -182,13 +182,13 @@
                                
                                  <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 4) :?>
                                     <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
-                                        <a href="<?=base_url('rfp/search_rfp')?>">RFP</a>
+                                        <a href="<?=base_url('rfp/search_rfp')?>">BID ON REQUESTS</a>
                                     </li>
                                 <?php endif;?>
 
                                 <?php if($this->session->userdata('client') && $this->session->userdata['client']['role_id']  == 5) :?>
                                     <li class="dropdown <?php if($this->uri->segment(1)=='rfp') echo 'active'; ?>"><!-- HOME -->
-                                        <a href="<?=base_url('rfp/add')?>">RFP</a>
+                                        <a href="<?=base_url('rfp/add')?>">REQUEST QUOTE</a>
                                     </li>
                                 <?php endif;?>
 
@@ -205,7 +205,7 @@
                                 <?php if(!empty($client_login)) { ?>                          
                                     <li class="notification_side">
                                         <a id="sidepanel_btn" href="#" class="fa fa-bell-o">
-                                            <span>NOTIFICATION</span>
+                                            <span>NOTIFICATIONS</span>
                                             <?php if($unread_cnt != 0) { ?>
                                                 <span class="post_number"><?php echo $unread_cnt; ?></span>
                                             <?php } ?>

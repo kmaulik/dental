@@ -1,11 +1,11 @@
 <section class="page-header page-header-xs">
 	<div class="container">
-		<h1> RFP Details </h1>
+		<h1> Treatment Plan </h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
 			<li><a href="<?=base_url('rfp/search_rfp');?>">Search RFP</a></li>
-			<li class="active">RFP Details</li>
+			<li class="active">Treatment Plan</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
 </section>

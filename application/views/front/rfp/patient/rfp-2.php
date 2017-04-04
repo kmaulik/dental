@@ -88,7 +88,12 @@
 							<h3 class="rfp-title">Treatment Plan Information</h3>
 						</div>
 					</div>
-
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<span class="teeth-desc">Select the tooth or teeth which require work. If it is another type of work, e.g. dentures, bracelets, please, use the solely the field Treatment Description: </span> 
+						</div>	
+					</div>	
 					<!-- Posted Teeth values For validation and value selected for teeth and treatment category -->
 					<?php  $teeth_post = $this->input->post('teeth'); ?>
 					<!-- // ENDs comment  -->

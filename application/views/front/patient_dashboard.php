@@ -32,7 +32,7 @@
 			<!-- /ALERT -->				
 
 			<div class="col-md-12">
-				<h1>WelCome To Dashboard</h1>	
+				<h1>Patient Dashboard</h1>	
 			</div>	
 			
 		</div>
@@ -40,9 +40,9 @@
 		<!-- Active RFP For this patient Table -->
 		<div class="row active_rfp">
 			<div class="col-md-12 firrst_ul">
-				<h4>Active RFP
+				<h4>Active Requests
 				<a href="<?=base_url('rfp/add');?>" class="custom_btn_plus">
-					<i class="fa fa-plus"></i>Create RFP
+					<i class="fa fa-plus"></i>Request a Quote
 				</a>	
 				</h4>	
 			</div>	
@@ -52,14 +52,14 @@
 						<thead>
 							<tr>
 								<!-- <th></th> -->
-								<th>#</th>
-								<th>RFP Title</th>
-								<th>User Name</th>
-								<th>RFP Status</th>
-								<th>Total Bid</th>
-								<th>% Saving of lowest bid</th>
+								<!-- <th>#</th> -->
+								<th>Request Title</th>
+								<!-- <th>User Name</th> -->
+								<th>Quote Status</th>
+								<th>Bids Received</th>
+								<!-- <th>% Saving of lowest bid</th> -->
 								<th>Expire Date</th>
-								<th>Extended</th>
+								<!-- <th>Extended</th> -->
 								<th>Action</th>
 							</tr>
 						</thead>
@@ -73,12 +73,12 @@
 												<a id="hide_bid_data_<?=$key?>" class="hide_bid_data" data-id="<?=$key?>"><i class="fa fa-minus"></i></a>
 											<?php endif; ?>
 										</td> -->
-										<td class="timeline-click"><?=$key+1?></td>
+										<!-- <td class="timeline-click"><?=$key+1?></td> -->
 										<td class="timeline-click"><?=character_limiter($active_rfp['title'],20)?></td>
-										<td class="timeline-click"><?=$active_rfp['fname']." ".$active_rfp['lname']?></td>
+										<!-- <td class="timeline-click"><?=$active_rfp['fname']." ".$active_rfp['lname']?></td> -->
 										<td class="timeline-click"><?=rfp_status_label($active_rfp['status']); ?></td>
 										<td class="timeline-click"><?=$active_rfp['total_bid']?></td>
-										<td class="timeline-click">
+										<!-- <td class="timeline-click">
 											<?php if($active_rfp['treatment_plan_total'] != '' && $active_rfp['min_bid_amt'] != '') :?>
 												<?php $Total_save = 100 - round((($active_rfp['min_bid_amt']*100) / $active_rfp['treatment_plan_total']),2); ?>
 												<?php if($Total_save > 0) :?>
@@ -89,36 +89,35 @@
 											<?php else : ?>
 												N/A
 											<?php endif; ?>
-										</td>
+										</td> -->
 										<td class="timeline-click"><?=isset($active_rfp['rfp_valid_date'])?date("m-d-Y",strtotime($active_rfp['rfp_valid_date'])):'N/A'?></td>
-										<td class="timeline-click">
+										<!-- <td class="timeline-click">
 											<?php if($active_rfp['is_extended'] == 1) :?>	
 											Yes
 											<?php else : ?>
 											No
 											<?php endif; ?>
-										</td>
+										</td> -->
 										<td>
 											<a href="<?=base_url('rfp/view_rfp/'.encode($active_rfp['id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
 											
 											<!-- For Expand / Compress Timeline -->
 											<?php if(count($active_rfp['bid_data']) > 0) :?>
-												<a id="view_bid_data_<?=$key?>" class="label label-info view_bid_data" data-id="<?=$key?>" data-toggle="tooltip" data-placement="top" data-original-title="Expand"><i class="fa fa-plus"></i></a>
-												<a id="hide_bid_data_<?=$key?>" class="label label-info hide_bid_data" data-id="<?=$key?>" data-toggle="tooltip" data-placement="top" data-original-title="Collapse"><i class="fa fa-minus"></i></a>
+												<a id="view_bid_data_<?=$key?>" class="label label-info view_bid_data" data-id="<?=$key?>" data-toggle="tooltip" data-placement="top" data-original-title="Expand"><i class="fa fa-angle-double-down"></i></a>
+												<a id="hide_bid_data_<?=$key?>" class="label label-info hide_bid_data" data-id="<?=$key?>" data-toggle="tooltip" data-placement="top" data-original-title="Collapse"><i class="fa fa-angle-double-up"></i></a>
 											<?php endif; ?>
 											<!-- End For Expand / Compress Timeline -->
 
 											<!-- For Check valid date set and valid date >= today and patient validity not extend then display extend button--> 
 											<?php if($active_rfp['status'] == 3 &&  $active_rfp['rfp_valid_date'] != '' && $active_rfp['rfp_valid_date'] >= date("Y-m-d") && $active_rfp['is_extended'] == 0) :?>
-												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($active_rfp['id']))?>" class="label label-primary rfp-price btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days"><i class="fa fa-arrows"></i></a>
+												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($active_rfp['id']))?>" class="label label-primary rfp-price btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend Request End by 7 days"><i class="fa fa-arrows-alt"></i></a>
 											<?php endif; ?>
 											<!-- End Check Valid date -->
 										</td>
 									</tr>
 									<!-- ======= For Bid Details ========= -->
 									<tr id="bid_data_<?=$key?>" class="bid_data">
-										<td></td>
-										<td colspan="8">
+										<td colspan="5">
 											<table class="table table-hover table-bordered">
 												<thead>
 													<th>Name</th>
@@ -191,7 +190,7 @@
 																<!-- Add Condition For Message & Review Button (RFP status winner(5) && bid status (2) winner then display)-->
 																<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
 																	<!-- If Review not given for this RFP then display the review button -->	
-																	<a class="label label-info" onclick="view_chat(<?=$key?>,<?=$k?>)" title="Timeline"><i class="fa fa-wechat"></i></a>
+																	<a class="label label-info" onclick="view_chat(<?=$key?>,<?=$k?>)"  data-toggle="tooltip" data-placement="top" data-original-title="Click on this area Expands Messages"><i class="fa fa-wechat"></i></a>
 																	<?php if($active_rfp['is_rated'] == '') : ?>
 																		<a class="label label-info rfp-price" id="rated_btn_<?=$bid_data['id']?>" onclick="send_review(<?=$key?>,<?=$k?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
 																	<?php endif; ?>
@@ -259,7 +258,7 @@
 																<div class="cong-msg">
 																	<p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
 																	<h2>Congratulation!!</h2>
-																	<h5>Your RFP Was successful</h5>
+																	<h5>Your Request is successful, next step find agree an appointment.</h5>
 																</div>
 																<!-- ============= End Congratulation Box === -->
 																<!-- ============= Chat Conversation ===== -->
@@ -329,7 +328,7 @@
     																				<div class="row">
     																					<div class="col-md-12">
     																						<div class="form-group">
-    																							<label for="exampleInputReview">Review <span class="astk">*</span></label>
+    																							<label for="exampleInputReview">Rate and Review your doctor <span class="astk">*</span></label>
     																							<textarea class="form-control txt txt-review" id="exampleInputReview" name="description" rows="4" style="margin-top: 0px; margin-bottom: 0px; height: 107px;"></textarea>
     																						</div><!-- /.form-group -->
     																					</div>
@@ -370,7 +369,7 @@
 								<?php endif; ?>	
 							<?php else :?>
 								<tr>
-									<td colspan="9">No Active RFP</td>
+									<td colspan="9">No Active Requests</td>
 								</tr>	
 							<?php endif; ?>	
 						</tbody>	
@@ -397,7 +396,7 @@
 						<thead>
 							<tr>
 								<th>Doctor Name</th>
-								<th>RFP Title</th>
+								<th>Request Title</th>
 								<th>Appointment Date</th>
 								<th>Appointment Time</th>
 								<th>Created on</th>
@@ -454,7 +453,7 @@
 		<!-- Patient's RFP List -->
 		<div class="row patient-rfp-list">
 			<div class="col-md-12">
-				<h4> Your RFP List </h4>
+				<h4> Your Quote Requests </h4>
 				<hr/>
 			</div>	
 			<div class="col-sm-12">
@@ -462,13 +461,13 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>Title</th>
+								<!-- <th>#</th> -->
+								<th>Request Title</th>
 								<th>First Name</th>
 								<th>Last Name</th>
 								<th>Status</th>
 								<th>Expire Date</th>
-								<th>Extended</th>
+								<!-- <th>Extended</th> -->
 								<th>Dentition Type</th>
 								<th>Action</th>
 							</tr>
@@ -477,7 +476,7 @@
 							<?php if(count($patient_rfp_list) > 0) :?>
 								<?php foreach($patient_rfp_list as $key=>$record) : ?>
 									<tr>
-										<td><?=$key+1;?></td>
+										<!-- <td><?=$key+1;?></td> -->
 										<td>
 											<?php
 												echo character_limiter($record['title'],20);
@@ -487,13 +486,13 @@
 										<td><?=$record['lname']?></td>
 										<td><?=rfp_status_label($record['status'])?></td>
 										<td><?=isset($record['rfp_valid_date'])?date("m-d-Y",strtotime($record['rfp_valid_date'])):'N/A'?></td>
-										<td>
+										<!-- <td>
 											<?php if($record['is_extended'] == 1) :?>	
 											Yes
 											<?php else : ?>
 											No
 											<?php endif; ?>
-										</td>
+										</td> -->
 										<td><?=$record['dentition_type']?></td>
 										<td>
 											<!-- <a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
@@ -504,7 +503,7 @@
 											<?php if($record['status'] == 3 && $record['rfp_valid_date'] != '' && $record['rfp_valid_date'] >= date("Y-m-d") && $record['is_extended'] == 0) :?>
 												<!-- <a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days">
 												<i class="fa fa-arrows"></i><span>Extend</span> </a>-->
-												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="label label-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days"><i class="fa fa-arrows"></i></a>
+												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="label label-primary btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend Request End by 7 days"><i class="fa fa-arrows-alt"></i></a>
 											<?php endif; ?>
 											<!-- End Check Valid date -->
 
@@ -552,7 +551,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>RFP Title</th>
+								<th>Request Title</th>
 								<th>User Name</th>
 								<th>RFP Status</th>
 								<th>Dentition Type</th>
@@ -616,7 +615,7 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label>RFP Title</label>
+								<label>Request Title</label>
 								<input type="text" id="rfp_title" class="form-control" disabled>
 							</div>
 						</div>	
@@ -762,9 +761,9 @@
 				<!-- body modal -->
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-sm-12 desc-text">
+						<!-- <div class="col-sm-12 desc-text">
 							<h5><span>Please, select one of the following appointments and confirm (submit) to the doctor.</span></h5>
-						</div>	
+						</div>	 -->
 						<div class="col-sm-12">
 							<div class="form-group">
 								<label>Doctor Name : <span id="appointment_user_name"></span></label>
@@ -772,7 +771,7 @@
 						</div>	
 						<div class="col-sm-12">
 							<div class="form-group">
-								<label>RFP Title : <span id="appointment_rfp_title"></span></label>
+								<label>Request Title : <span id="appointment_rfp_title"></span></label>
 							</div>
 						</div>	
 						<div class="col-sm-12 patient_schedule">
@@ -815,7 +814,9 @@
 								<span id="appointment_rfp_comment"></span>
 							</div>
 						</div>	
-
+						<div class="col-sm-12 desc-text">
+							<h5><span>Please, select and confirm your appointment:</span></h5>
+						</div>
 						<!-- For multiple Appointment manage --> 
 							<?php for($i=1;$i<=3;$i++) : ?>	
 								<div class="mul_schedule_<?=$i?> schedule_data">

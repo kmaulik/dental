@@ -230,7 +230,7 @@
 
 .cong-msg h2 {
     margin: 10px;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: bold;
     color: #fff;
 }
@@ -321,14 +321,14 @@
 
 .review-form label {
     font-weight: normal;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .cong-msg .check {
     display: inline-block;
-    height: 60px;
-    width: 60px;
-    line-height: 58px;
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
     border-radius: 50%;
     box-shadow: 1px 2px 20px -6px rgba(0, 0, 0, 1);
     background: rgb(39, 175, 214);
@@ -336,8 +336,8 @@
 }
 
 .cong-msg .check i {
-    font-size: 40px;
-    line-height: 62px;
+    font-size: 24px;
+    line-height: 50px;
     color: #fff;
     font-weight: lighter;
 }
@@ -857,6 +857,7 @@ section.page-header .breadcrumb a:hover {
 /************* List of RFP Bid & Review List **************/
 .rfp-title h3{
   text-align: center;
+  text-transform: capitalize;
 }
 .store-list{
   padding: 15px;
@@ -1184,7 +1185,7 @@ span.time {
   color: #5bc0de;
   display: inline-block;
   font-size: 18px;
-  margin-bottom: 0;
+  margin-bottom: 5px;
   width: 100%;
 }
 .custom_btn_plus i {
@@ -1196,7 +1197,7 @@ span.time {
   font-size: 12px;
 }
 .rfp_table_layout .table-responsive table tr.bid_data > td {
-  padding: 30px 0;
+  padding: 30px 30px;
 }
 .bid_data {
   border-top: 1px solid #ddd;
@@ -1401,6 +1402,24 @@ ul.process-steps li:after, ul.process-steps li:after {
     display: inline-block;
     color: #666;
 }
+.win-desc-text{color: #5bc0de;font-size: 18px;}
+.app-prefrence{color: #666;font-size: 15px;font-weight: 500;}
+.fa.fa-angle-double-down,
+.fa.fa-angle-double-up{font-size: 18px;vertical-align: middle;}
+.star-rating .point{font-size:18px !important;}
+.teeth-desc{color: #2e2e2e;font-size: 18px;}
+.nav-tabs {
+     background: transparent !important; 
+}
+.nav-tabs>li {
+    float: left;
+    margin-bottom: -1px;
+    background-color: rgba(0,0,0,0.2);
+    margin: 0 1px;
+    border: 0;
+}
+.nav-tabs>li.active{margin-left:0px;}
+.nav-tabs>li a{width: 100%;}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {
