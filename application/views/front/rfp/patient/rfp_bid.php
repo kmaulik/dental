@@ -3,12 +3,12 @@
 
 <section class="page-header page-header-xs">
 	<div class="container">
-		<h1> RFP Bid List </h1>
+	<h1> Request Bid List </h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
-			<li><a href="<?=base_url('rfp');?>">RFP List</a></li>
-			<li class="active">RFP Bid List</li>
+			<li><a href="<?=base_url('rfp');?>">Request List</a></li>
+			<li class="active">Request Bid List</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
 </section>
@@ -34,7 +34,7 @@
 			<!-- For Back Button -->
 			<div class="col-sm-12">
 				<?php if(isset($rfp_bid_list[0]['id'])) :?>
-					<a href="<?=base_url('rfp/view_rfp/'.encode($rfp_bid_list[0]['id']))?>" class="btn btn-info pull-right"><i class="fa fa-arrow-left"></i> Return to RFP Details</a>
+					<a href="<?=base_url('rfp/view_rfp/'.encode($rfp_bid_list[0]['id']))?>" class="btn btn-info pull-right"><i class="fa fa-arrow-left"></i> Return to Request Details</a>
 				<?php endif;?>
 			</div>			
 			<!-- End For Back Button -->
@@ -375,7 +375,7 @@ $(".confirm_winner").click(function(e) {
 $(".cancel_winner").click(function(e) {
 	e.preventDefault();
 	var lHref = $(this).attr('href');
-	bootbox.confirm('Are you sure to cancel winner for this rfp ?' ,function(res){
+	bootbox.confirm('Are you sure to cancel winner for this Request ?' ,function(res){
 		if(res){
 			window.location.href = lHref;
 		}

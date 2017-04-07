@@ -1490,6 +1490,14 @@ body #header #topNav #topMain>li.notification_side>a span {
     padding: 0px;
     left: 104px;
 }
+.my-bid-doctor .bid-title span:first-child {
+    width: 30% !important;
+    display: inline-block;
+}
+.my-bid-doctor .bid-title span:last-child {
+    width: 60%;
+    display: inline-block;
+}
 }
 
 @media (min-width:992px) and (max-width:1199px){
@@ -1619,6 +1627,16 @@ span.title{width: 50%;}
 .check_label {
     font-weight: normal;
 }
+.my-bid-doctor .bid-title span:last-child {
+    width: 50%;
+    display: inline-block;
+    float: left;
+}
+.my-bid-doctor .bid-title span:first-child {
+    width: 50% !important;
+    display: inline-block;
+}
+.my-bid-doctor .bid-title{clear:both;}
 }
 
 @media (min-width:481px) and (max-width:767px){

@@ -35,7 +35,7 @@
                     <th>Refund Status</th>
                     <th>Role</th> 
                     <th>Payee Name</th>
-                    <th>RFP Title</th> 
+                    <th>Request Title</th> 
                     <th>Amount ($)</th>                  
                     <th>Created Date</th> 
                     <th width="100px">Action</th>                       
@@ -66,7 +66,7 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>RFP Title</label>
+                                <label>Request Title</label>
                                 <input type="text" name="rfp_title" id="rfp_title" class="form-control" readonly>
                             </div>    
                         </div>

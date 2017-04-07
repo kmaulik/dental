@@ -61,7 +61,7 @@
 			<ul class="nav nav-tabs nav-top-border">
 				<li class="active">
 					<a href="#info" data-toggle="tab">
-						RFP Search Alert
+						Request Search Alert
 					</a>
 				</li>
 			</ul>
@@ -91,7 +91,7 @@
 							<label class="control-label">
 								<b> Note : </b> 
 							</label>
-							Save a RFp alert setting. Based on this setting you'll have notification in website and in email for yourselected search criteria.
+							Save a Request alert setting. Based on this setting you'll have notification in website and in email for yourselected search criteria.
 						</div>
 					</form>
 				</div>

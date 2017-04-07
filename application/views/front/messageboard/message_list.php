@@ -37,7 +37,7 @@
 	                <form action="#" method="GET" name="search">
 	                  <div class="row">
 	                    <div class="col-sm-9 col-md-10">
-	                      <input type="text" class="form-control" placeholder="Search RFP Title, UserName Wise" name="search" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+	                      <input type="text" class="form-control" placeholder="Search Request Title, UserName Wise" name="search" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 	                    </div>
 	                    <div class="col-sm-3 col-md-2">
 	                      <input type="submit" value="Search" class="btn btn-info" name="btn_search">
@@ -68,7 +68,7 @@
 											<?php if($record['unread_msg'] != '' || $record['unread_msg'] != 0) : ?>
 												<span class="badge badge-aqua"><strong><?=$record['unread_msg']?></strong></span> &nbsp;
 											<?php endif; ?>
-											<span class="hidden-xs">RFP : <?=$record['rfp_title']?></span>
+											<span class="hidden-xs">Request : <?=$record['rfp_title']?></span>
 										</span>
 									</div>	
 									<div class="message-right hidden-xs">

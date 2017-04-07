@@ -68,7 +68,7 @@
 	<div class="breadcrumb-line">
 		<ul class="breadcrumb">
 			<li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-			<li><a href="<?php echo site_url('admin/rfp'); ?>">RFP</a></li>
+			<li><a href="<?php echo site_url('admin/rfp'); ?>">Request</a></li>
 			<li class="active"><?php echo $heading; ?></li>
 		</ul>
 	</div>
@@ -192,7 +192,7 @@
 					<div class="rfp-basic">
 						<h4 class="rfp-title">Basic Details</h4>
 						<div class="col-sm-6">
-							<label>RFP Title : </label> <?=$record['title']?>
+							<label>Request Title : </label> <?=$record['title']?>
 						</div>
 						<div class="col-sm-6">
 							<label>Created By : </label> <?=fetch_username($record['patient_id'])?>
@@ -213,7 +213,7 @@
 							<label>Travel Distance : </label> <?=$record['distance_travel']." Miles"?>
 						</div>
 						<div class="col-sm-6">
-							<label>RFP Status : </label> 
+							<label>Request Status : </label> 
 							<?php if($record['status'] == 0) :?>
 								<span class="label label-default">Quote Request Draft</span>
 							<?php elseif($record['status'] == 1) : ?>
@@ -338,7 +338,7 @@
 						<!-- For Attachment -->
 						<form method="post" action="<?php echo base_url().'admin/rfp/move_to_private'; ?>" >
 							<div class="col-sm-12 col_custom">
-								<label>Attachment : </label>
+								<label>Attachment (Public): </label>
 								<?php 
 
 									$attach_arr = [];
@@ -427,7 +427,7 @@
 							<?php } ?>
 						</form>
 						<!-- End For Attachment -->
-
+						<br/>
 						<div class="col-sm-12">
 							<label>Further Information for our Agents : </label><?=$record['message'] ?> 
 						</div>
@@ -445,7 +445,7 @@
 		<div class="modal-content">
 			<div class="modal-header bg-primary">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h6 class="modal-title">History of RFP Reviews</h6>
+				<h6 class="modal-title">History of Request Reviews</h6>
 			</div>
 
 			<div class="modal-body">

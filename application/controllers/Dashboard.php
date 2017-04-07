@@ -762,7 +762,7 @@ class Dashboard extends CI_Controller {
         }else{
             $this->session->set_flashdata('error','Error Into Reschedule Appointment');
         }
-        redirect('dashboard');
+        redirect('dashboard?schedule_rfp='.encode($rfp_data['id']));
     }
 
     /*

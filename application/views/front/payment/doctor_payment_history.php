@@ -23,7 +23,7 @@
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
-									<input type="text" name="search" id="search" class="form-control" placeholder="Search Transaction Id , RFP Title Wise , Patient Name" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+									<input type="text" name="search" id="search" class="form-control" placeholder="Search Transaction Id , Request Title Wise , Patient Name" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 									<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
 										<em>Filter Payment History From Here</em>
 									</span>
@@ -60,7 +60,8 @@
 						<thead>
 							<tr>
 								<th>Transaction #</th>
-								<th>RFP Title</th>
+								<th>Payment Type</th>
+								<th>Request Title</th>
 								<th>Patient Name</th>
 								<th>Total Bid Value ($)</th>
 								<th>Total Net Fee ($)</th>
@@ -79,6 +80,12 @@
 									}?>
 									<tr>
 										<td><?=$record['paypal_token']?></td>
+										<td><?php if($record['payment_type'] == 1) :?>
+												<span class="label label-danger">MANUAL</span>
+											<?php else : ?>
+												<span class="label label-success">PAYPAL</span>
+											<?php endif; ?>
+										</td>
 										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank"><?=character_limiter($record['rfp_title'],50)?></a></td>
 										<td><?=$record['patient_name']?></td>
 										<td><?=$record['bid_amt']?></td>
@@ -90,7 +97,7 @@
 								<?php endforeach; ?>
 							<?php else : ?>
 								<tr>
-									<td colspan="5"><h4 class="text-center">No Transaction History</h4></td>	
+									<td colspan="9"><h4 class="text-center">No Transaction History</h4></td>	
 								</tr>	
 							<?php endif; ?>
 						</tbody>

@@ -67,7 +67,7 @@ class Rfp extends CI_Controller {
 											 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
 			$this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
 											 ['validate_zipcode'=>'Please, verify your ZIP Code.']);
-			$this->form_validation->set_rules('title', 'RFP title', 'required'); 
+			$this->form_validation->set_rules('title', 'Request Title', 'required'); 
 			$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 			$this->form_validation->set_rules('allergies', 'allergies', 'required');
 			$this->form_validation->set_rules('medication_list', 'Medication List', 'required');
@@ -340,12 +340,12 @@ class Rfp extends CI_Controller {
 				$condition=['id' => $this->session->userdata['rfp_data']['rfp_last_id']];
 				$res=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1]);
 				if($res){
-					$this->session->set_flashdata('success', 'RFP Created Successfully');
+					$this->session->set_flashdata('success', 'Request Created Successfully');
 					//$rfp_id = $this->session->userdata['rfp_data']['rfp_last_id'];
 					$this->session->unset_userdata('rfp_data');
 					//redirect('rfp');
 				} else {
-					$this->session->set_flashdata('error', 'Error Into Confirm RFP');
+					$this->session->set_flashdata('error', 'Error Into Confirm Request');
 					//redirect('rfp/add/3');
 				}	
 				redirect('rfp/add/3'); 
@@ -375,7 +375,7 @@ class Rfp extends CI_Controller {
 												 ['validate_birthdate'=>'Date should be in YYYY-MM-DD Format.']);
 				$this->form_validation->set_rules('zipcode', 'zipcode', 'required|callback_validate_zipcode',
 											 ['validate_zipcode'=>'Please, verify your ZIP Code.']);
-				$this->form_validation->set_rules('title', 'RFP title', 'required'); 
+				$this->form_validation->set_rules('title', 'Request Title', 'required'); 
 				$this->form_validation->set_rules('dentition_type', 'dentition type', 'required');
 				$this->form_validation->set_rules('allergies', 'allergies', 'required');
 				$this->form_validation->set_rules('medication_list', 'Medication List', 'required');
@@ -708,9 +708,9 @@ class Rfp extends CI_Controller {
 				$condition=['id' => decode($id)];
 				$res=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1]);
 				if($res){
-					$this->session->set_flashdata('success', 'RFP Updated Successfully');
+					$this->session->set_flashdata('success', 'Request Updated Successfully');
 				} else {
-					$this->session->set_flashdata('error', 'Error Into Confirm RFP');
+					$this->session->set_flashdata('error', 'Error Into Confirm Request');
 				}	
 				redirect('rfp/edit/'.$id.'/3');
 			}
@@ -739,7 +739,7 @@ class Rfp extends CI_Controller {
 				$update_array = array(
 					'is_deleted' => 1
 					);
-				$this->session->set_flashdata('success', 'RFP successfully deleted!');
+				$this->session->set_flashdata('success', 'Request successfully deleted!');
 			} 
 			$this->Rfp_model->update_record('rfp', $where, $update_array);
 		} else {
@@ -854,7 +854,7 @@ class Rfp extends CI_Controller {
 	        $email_config = mail_config();
 	        $this->email->initialize($email_config);
 	        $from_name =$this->session->userdata('client')['fname']." ".$this->session->userdata('client')['lname'];
-	        $subject=config('site_name').' - Message For '.$this->input->post('rfp_title').' RFP From '.$from_name;    
+	        $subject=config('site_name').' - Message For '.$this->input->post('rfp_title').' Request From '.$from_name;    
 	        $this->email->from(config('contact_email'), config('sender_name'))
 	                    ->to($user_data['email_id'])
 	                    ->subject($subject)
@@ -1126,7 +1126,7 @@ class Rfp extends CI_Controller {
     	
     	$user_data = $this->session->userdata('client');
        	$user_id = $user_data['id'];
-
+       	$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true);
     	// ------------------------------------------------------------------------
 		// Insert into Next Schdule payment (billing_schedule)
     	// ------------------------------------------------------------------------
@@ -1170,6 +1170,46 @@ class Rfp extends CI_Controller {
     						);
     	$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
 
+    	//------------------ Auto Generated Message  ----------------
+		$ins_data = array(
+							'rfp_id'=>$rfp_id,
+							'from_id'=>$rfp_data['patient_id'],
+							'to_id'=>$user_data['id'],
+							'message'=>'( Auto-generated message ) You have been selected for '.$rfp_data['title'].' RFP.',
+							'created_at'=>date('Y-m-d H:i:s'),
+						);
+		$this->Rfp_model->insert_record('messages',$ins_data);
+		//------------------ End Auto Generated Message ----------------
+
+		// ----------------------------- Patient Notification -----------------------------
+    	$noti_data = [
+    					'from_id'=>$user_data['id'],
+    					'to_id'=>$rfp_data['patient_id'],
+    					'rfp_id'=>$rfp_id,
+    					'noti_type'=>'confirm_payment',
+    					'noti_msg'=>'Congratulation..!! Doctor has confirmed the RFP - <b>'.$rfp_data['title'].'</b>.Please contact doctor for appointment.',
+    					'noti_url'=>'dashboard'
+    				];
+    	$this->Notification_model->insert_rfp_notification($noti_data);
+    	// ------------------------------------------------------------------------
+
+		// -----------------------------  Doctor Notification  -----------------------------
+    	$noti_data = [
+    					'from_id'=>$rfp_data['patient_id'],
+    					'to_id'=>$user_data['id'],
+    					'rfp_id'=>$rfp_id,
+    					'noti_type'=>'confirm_payment',
+    					'noti_msg'=>'Congratulation..!! You\'re contract has been made with patient.',
+    					'noti_url'=>'dashboard'
+    				];
+    	$this->Notification_model->insert_rfp_notification($noti_data);
+    	// -----------------------------------------------------------------------
+
+    	//----------------- Chnage RFP Bid is_chat_started Stauts -------------
+    	$this->Rfp_model->update_record('rfp_bid',['rfp_id'=>$rfp_id,'status'=>'2','doctor_id'=>$user_data['id']],['is_chat_started'=>'1']);
+    	//----------------- Chnage RFP Bid is_chat_started Stauts -------------
+
+
     	// Need to redirect after this Step
     	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab <a href="'.base_url().'dashboard'.'">click here</a>');
 	   	redirect('dashboard?reload='.encode($rfp_id));    	
@@ -1190,10 +1230,13 @@ class Rfp extends CI_Controller {
        	$amt = $rfp_bid_data['amount']; // Bid price								
 		$percentage = config('doctor_fees');
 		$payable_price = ($percentage * $amt)/100; // calculate 10% againts the bid of doctor
+		if($payable_price < config('doctor_initial_fees')){
+			$payable_price = config('doctor_initial_fees');
+		}
 		$orignal_price=$payable_price;
 		$is_second_due = 0;
 
-	     $promotinal_code_id = 0;  	
+	    $promotinal_code_id = 0;  	
        	//---------- If coupan code is enter ---------
        	if($this->input->post('coupan_code') != ''){
 			$data=$this->Promotional_code_model->fetch_coupan_data();
@@ -1207,6 +1250,9 @@ class Rfp extends CI_Controller {
 		//---------- End coupan code is enter ---------
 		$due_1 = config('doctor_initial_fees');
 		if($payable_price == 0){
+			if($due_1 > $orignal_price){
+				$orignal_price = $due_1; // Means Admin min amount
+			}
 			$due_1 = 0;
 			$due_2 = 0;
 		}
@@ -1214,8 +1260,15 @@ class Rfp extends CI_Controller {
 			$due_2 = $payable_price - $due_1;
 			$is_second_due = 1;
 		}else{
-			$due_1 = $payable_price;
+			// check IF Promotional Code Apply or not 
 			$due_2 = 0;
+			if($promotinal_code_id != 0){
+				$due_1 = $payable_price;	
+			}else{
+				// IF not apply then consider min price fixed by admin
+				$payable_price = $due_1;
+			}
+			
 		}
 
 		//--------------- End Calcuate discount and find installment 1 & 2  ------------
@@ -1239,7 +1292,97 @@ class Rfp extends CI_Controller {
        	}
 
        	if($default_payment == 'manual'){
-       		die('manual Payment Here');
+
+       		$rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_id],true);
+       		//--------------------- For Billing Schedule ---------------
+       		$due_1_arr = array(
+        						'doctor_id'=>$user_data['id'],
+        						'rfp_id'=>$rfp_id,
+        						'next_billing_date'=>date('Y-m-d'),
+        						'transaction_id'=> 'MANUAL',
+        						'price'=>$due_1,
+        						'is_manual'=>'1', // 1 Means Manual Payment 
+        						'status'=> '1',
+        						'created_at'=>date('Y-m-d H:i:s')
+        						);
+        	$this->Rfp_model->insert_record('billing_schedule',$due_1_arr);
+                	
+        	$due_2_arr =  array(
+        						'doctor_id'=>$user_data['id'],
+        						'rfp_id'=>$rfp_id,
+        						'next_billing_date'=>date('Y-m-d', strtotime("+45 days")),
+        						'transaction_id'=> 'MANUAL',
+        						'price'=>$due_2,
+        						'is_second'=>'1',
+        						'is_manual'=>'1', // 1 Means Manual Payment 
+        						'created_at'=>date('Y-m-d H:i:s')
+        						);
+        	$this->Rfp_model->insert_record('billing_schedule',$due_2_arr);
+       		//--------------------End For Biling Schedule --------------
+
+       		//---------------- For Payment Transaction --------------
+       		$transaction_arr =  array(
+        							'user_id'=>$user_data['id'],
+        							'rfp_id'=>$rfp_id,
+        							'actual_price'=>$orignal_price,
+        							'payable_price'=>$due_1,
+        							'discount'=>(isset($discount)) ? $discount:0,
+        							'promotional_code_id'=>(isset($promotinal_code_id)) ? $promotinal_code_id:0,
+        							'payment_type' => 1, // 1 Means Manual Payment 
+        							'status' => 0,
+        							'created_at'=>date('Y-m-d H:i:s')
+        						);
+
+			$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+			//---------------- End For Payment Transaction --------------
+
+			//------------------ Auto Generated Message  ----------------
+			$ins_data = array(
+								'rfp_id'=>$rfp_id,
+								'from_id'=>$rfp_data['patient_id'],
+								'to_id'=>$user_data['id'],
+								'message'=>'( Auto-generated message ) You have been selected for '.$rfp_data['title'].' Request.',
+								'created_at'=>date('Y-m-d H:i:s'),
+							);
+			$this->Rfp_model->insert_record('messages',$ins_data);
+			//------------------ End Auto Generated Message ----------------
+
+			// ----------------------------- Patient Notification -----------------------------
+	    	$noti_data = [
+	    					'from_id'=>$user_data['id'],
+	    					'to_id'=>$rfp_data['patient_id'],
+	    					'rfp_id'=>$rfp_id,
+	    					'noti_type'=>'confirm_payment',
+	    					'noti_msg'=>'Congratulation..!! Doctor has confirmed the Request - <b>'.$rfp_data['title'].'</b>.Please contact doctor for appointment.',
+	    					'noti_url'=>'dashboard'
+	    				];
+	    	$this->Notification_model->insert_rfp_notification($noti_data);
+	    	// ------------------------------------------------------------------------
+
+			// -----------------------------  Doctor Notification  -----------------------------
+	    	$noti_data = [
+	    					'from_id'=>$rfp_data['patient_id'],
+	    					'to_id'=>$user_data['id'],
+	    					'rfp_id'=>$rfp_id,
+	    					'noti_type'=>'confirm_payment',
+	    					'noti_msg'=>'Congratulation..!! You\'re contract has been made with patient.',
+	    					'noti_url'=>'dashboard'
+	    				];
+	    	$this->Notification_model->insert_rfp_notification($noti_data);
+	    	// -----------------------------------------------------------------------
+
+	    	//----------------- Chnage RFP Bid is_chat_started Stauts -------------
+	    	$this->Rfp_model->update_record('rfp_bid',['rfp_id'=>$rfp_id,'status'=>'2','doctor_id'=>$user_data['id']],['is_chat_started'=>'1']);
+	    	//----------------- Chnage RFP Bid is_chat_started Stauts -------------
+
+	    	//----------------------- Change RFP Status ------------------
+	    	$this->Rfp_model->update_record('rfp',['id'=>$rfp_id],['status'=>'5']); // status : 4 TO 5- Doctor Confirmation pending to appointment pending
+	    	//----------------------- End Change RFP Status --------------
+
+	    	$this->session->set_flashdata('success','Congratulations to your new patient, please, schedule an appointment, from the appointment management tab');
+       		redirect('dashboard?reload='.encode($rfp_id));
+
+
        	}else if($default_payment == 'paypal_new'){
        		//cancel_billing_agreement($agreement_data['billing_id']);
        		//$this->Rfp_model->delete_record('billing_agreement',['id'=>$agreement_data['id']]);
@@ -1551,16 +1694,17 @@ class Rfp extends CI_Controller {
     	$res=$this->Payment_transaction_model->insert_record('payment_transaction',$pay_arr);
     	if($res)
     	{
-    		$condition=['id' => $this->session->userdata['payment_data']['rfp_id']];
+    		$rfp_id = $this->session->userdata['payment_data']['rfp_id'];
+    		$condition=['id' => $rfp_id];
 			$update_status=$this->Rfp_model->update_record('rfp',$condition,['status'	=> 1 , 'is_paid' => 1]);
 			if($update_status){
-
+				$rfp_data = $this->Rfp_model->get_result('rfp',['id' => $rfp_id],true);
 				// ------------- Send Mail For Successfully RFP Created ------------
 		        /* Param 1 : 'Email Template Slug' , Param 2 : 'HTML Template File Name' */
 		        $html_content=mailer('contact_inquiry','AccountActivation'); 
 		        $username= $this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname'];
-		        $message = "Thank you, For Create RFP <br/>
-					<p>Your RFP has been successfully submitted.</p>";
+		        $message = "Your ".$rfp_data['title']." quote request has been successfully submitted. Our team will notify you when a quote from a dental professional has been reviewed. <br/>
+					<p>Your dental needs are unique, and we are confident our expert team will identify a fully vetted and reliable dental professional to fulfill your precise medical specifications.</p>";
 				
 		        $html_content = str_replace("@USERNAME@",$username,$html_content);
 		        $html_content = str_replace("@MESSAGE@",$message,$html_content);
@@ -1568,7 +1712,7 @@ class Rfp extends CI_Controller {
 
 		        $email_config = mail_config();
 		        $this->email->initialize($email_config);
-		        $subject=config('site_name').' - Thank you For Create RFP';    
+		        $subject=config('site_name').' - Your quote request has been submitted.';    
 		        $this->email->from(config('contact_email'), config('sender_name'))
 		                    ->to($this->session->userdata['client']['email_id'])
 		                   // ->reply_to(config('contact_email'))
@@ -1584,7 +1728,7 @@ class Rfp extends CI_Controller {
 			}else{
 				$this->session->unset_userdata('rfp_data');
 				$this->session->unset_userdata('payment_data');	
-				$this->session->set_flashdata('error', 'Error Into Change Payment & RFP Status, Please Contact to Admin');
+				$this->session->set_flashdata('error', 'Error Into Change Payment & Request Status, Please Contact to Admin');
 				redirect('rfp');
 			}
     	}
@@ -1770,9 +1914,9 @@ class Rfp extends CI_Controller {
     				];
     	$res=$this->Rfp_model->update_record('rfp',['id' => decode($rfp_id)],$rfp_array);
     	if($res){
-    		$this->session->set_flashdata('success', 'RFP Extended Successfully');
+    		$this->session->set_flashdata('success', 'Request Extended Successfully');
     	}else{
-    		$this->session->set_flashdata('error', 'Error Into Extend RFP, Please Try Again!');
+    		$this->session->set_flashdata('error', 'Error Into Extend Request, Please Try Again!');
     	}
     	redirect('rfp');
     }

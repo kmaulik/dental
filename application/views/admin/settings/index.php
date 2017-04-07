@@ -160,16 +160,16 @@
                            <hr/> 
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">RFP Approve Text Template</label>
+                            <label class="col-lg-3 control-label">Request Approve Text Template</label>
                             <div class="col-lg-6">
-                                <textarea name="rfp_approve_text" rows="3" placeholder="RFP Approve Text" class="form-control"><?php echo (isset($record['rfp_approve_text'])) ? $record['rfp_approve_text'] : set_value('rfp_approve_text'); ?></textarea>
+                                <textarea name="rfp_approve_text" rows="3" placeholder="Request Approve Text" class="form-control"><?php echo (isset($record['rfp_approve_text'])) ? $record['rfp_approve_text'] : set_value('rfp_approve_text'); ?></textarea>
                             </div>
                         </div> 
 
                         <div class="form-group">
-                            <label class="col-lg-3 control-label">RFP Dis-Approve Text Template</label>
+                            <label class="col-lg-3 control-label">Request Dis-Approve Text Template</label>
                             <div class="col-lg-6">
-                                <textarea name="rfp_dis_approve_text" rows="3" placeholder="RFP Dis-Approve Text" class="form-control"><?php echo (isset($record['rfp_dis_approve_text'])) ? $record['rfp_dis_approve_text'] : set_value('rfp_dis_approve_text'); ?></textarea>
+                                <textarea name="rfp_dis_approve_text" rows="3" placeholder="Request Dis-Approve Text" class="form-control"><?php echo (isset($record['rfp_dis_approve_text'])) ? $record['rfp_dis_approve_text'] : set_value('rfp_dis_approve_text'); ?></textarea>
                             </div>
                         </div> 
                         <!-- ============== End Pre Drafted Text Setting Section ============ -->
@@ -236,9 +236,9 @@ $("#frmsettings").validate({
         contact_email: {
             required: true,
         },
-        phone: {
-            required: true,
-        },
+        // phone: {
+        //     required: true,
+        // },
         contact_address: {
             required: true,
         },
@@ -287,9 +287,9 @@ $("#frmsettings").validate({
         contact_email: {
             required: "Please provide Contact Email",
         },
-        phone: {
-            required: "Please provide Contact Number",
-        },
+        // phone: {
+        //     required: "Please provide Contact Number",
+        // },
         contact_address: {
             required: "Please provide Contact Address",
         },

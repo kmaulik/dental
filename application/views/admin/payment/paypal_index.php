@@ -28,13 +28,13 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Transaction List</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Paypal Transaction List</h4>
         </div>
     </div>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li>Transaction List</li>
+            <li>Paypal Transaction List</li>
         </ul>
     </div>
 </div>
@@ -50,16 +50,33 @@
     <!-- content area -->
     
     <div class="panel panel-flat">
+
+         <!-- For Export Csv Icon -->
+        <div class="panel-heading text-right">
+            <form action="<?=base_url('admin/payment_transaction/paypal_export_csv')?>" name="export_csv_frm" id="export_csv_frm" method="post">
+                <input type="hidden" name="pay_search" id="pay_search">
+                <input type="hidden" name="pay_date" id="pay_date">
+                <a onclick="export_csv()" class="btn btn-success btn-labeled">
+                    <b><i class=" icon-download"></i></b>
+                    Export CSV
+                </a>
+            </form>
+        </div>
+        <!-- End For Export Csv Icon -->
+
         <input type="hidden" id="from_date" value="<?php if(isset($this->session->userdata['date_filter']['from_date']) &&  $this->session->userdata['date_filter']['from_date'] != '') { echo $this->session->userdata['date_filter']['from_date']; }?>">
         <input type="hidden" id="to_date" value="<?php if(isset($this->session->userdata['date_filter']['to_date']) &&  $this->session->userdata['date_filter']['to_date'] != '') { echo $this->session->userdata['date_filter']['to_date']; }?>">
+        <input type="hidden" id="filter_data" value="<?php if(isset($this->session->userdata['date_filter']['filter_data']) &&  $this->session->userdata['date_filter']['filter_data'] != '') { echo $this->session->userdata['date_filter']['filter_data']; }?>">
+        
         <table class="table datatable-basic">
             <thead>
                 <tr>
                     <th>ID.</th>
                     <th>Transaction #</th> 
+                    <th>Payment Type</th>
                     <th>Role</th> 
                     <th>Payee Name</th>
-                    <th>RFP Title</th> 
+                    <th>Request Title</th> 
                     <th>Actual Price ($)</th> 
                     <th>Payment Value ($)</th> 
                     <th>Discount (%)</th>                     
@@ -83,7 +100,7 @@ $(function () {
         dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
         order: [[0, "asc"]],
         ordering: false,
-        ajax: 'payment_transaction/list_transaction',
+        ajax: 'list_paypal_transaction',
         columns: [
         {
             data: "payment_id",
@@ -93,6 +110,21 @@ $(function () {
             sortable: false,
             data: "paypal_token",
             visible: true
+        },
+        {
+            sortable: false,
+            data: "payment_type",
+            visible: true,
+            render: function (data, type, full, meta) {
+                var action = '';
+                if(full.status == 0) {
+                    action += '<span class="label label-danger">Paypal</span>';  
+                }else{
+                    action += '<span class="label label-success">Paypal</span>';  
+                }    
+                return action;
+            }
+
         },
         {
             sortable: false,
@@ -150,6 +182,7 @@ $('.dataTables_length select').select2({
     var form_data ='';
     form_data +=  '<form action="" method="post" id="frm_date_range">';
     form_data +=  '<input type="hidden" name="date_search" value="1">';
+    form_data +=  '<input type="hidden" name="filter_search" id="filter_search">';
     form_data +=  '<div class="datepicker_filter">';
     form_data +=  '<input id="date_range" type="text" name="date_filter" class="daterange-basic">';
     form_data +=  '<span class="input-box"><i class="icon-calendar22"></i></span>'; 
@@ -162,7 +195,15 @@ $('.dataTables_length select').select2({
 
     if($("#from_date").val() != '' && $("#to_date").val() != ''){
         var filter_date = $("#from_date").val()+" - "+$("#to_date").val();
+        var filter_search = $("#filter_data").val();
+        $("input[type='search']").val(filter_search);
         $("#date_range").val(filter_date);
+
+        //------------ For Manual Keyup for search ---
+        $('#DataTables_Table_0_filter label input[type=search]')
+        .val(filter_search)
+        .trigger($.Event("keyup", { keyCode: 13 }));
+        //------------ End For Manual Keyup for search ---
     }
 
     //------ For Load Date Range Picker ----------
@@ -174,6 +215,8 @@ $('.dataTables_length select').select2({
 
     //------ For change Date ----------
     $("#date_range").change(function(){
+       var filter_search = $("input[type='search']").val();
+       $("#filter_search").val(filter_search);  
        $("#frm_date_range").submit();
     });
 
@@ -185,6 +228,15 @@ $('.dataTables_length select').select2({
  //------------------------------- End Date Picker ----------------------------------
 
 });
+
+function export_csv(){
+    var payment_search = $("#DataTables_Table_0_filter label input[type=search]").val();
+    var payment_date = $("#date_range").val();
+    $("#pay_search").val(payment_search);
+    $("#pay_date").val(payment_date);
+    $("#export_csv_frm").submit();
+        
+}
 
 // Auto hide Flash messages
 $('div.alert').delay(4000).slideUp(350);

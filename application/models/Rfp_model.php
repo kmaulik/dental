@@ -672,4 +672,35 @@ class Rfp_model extends CI_Model {
         return $ret_data;
     }
 
+
+    function send_close_rfp_notification($doc_id,$rfp_id){
+
+        $rfp_data = $this->get_result('rfp',['id'=>$rfp_id],true);
+        // ----------------------------- Patient Notification -----------------------------
+        $noti_data = [
+                        'from_id'=>$doc_id,
+                        'to_id'=>$rfp_data['patient_id'],
+                        'rfp_id'=>$rfp_id,
+                        'noti_type'=>'rfp_close_notification',
+                        'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
+                        'noti_url'=>'dashboard'
+                    ];
+        $this->insert_record('notifications',$noti_data);
+        // ------------------------------------------------------------------------
+
+        // -----------------------------  Doctor Notification  -----------------------------
+        $noti_data = [
+                        'from_id'=>$rfp_data['patient_id'],
+                        'to_id'=>$doc_id,
+                        'rfp_id'=>$rfp_id,
+                        'noti_type'=>'confirm_payment',
+                        'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
+                        'noti_url'=>'dashboard'
+                    ];
+        $this->insert_record('notifications',$noti_data);
+        // ------------------------------------------------------------------------
+        return true;
+
+    }
+
 }    

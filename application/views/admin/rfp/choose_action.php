@@ -4,15 +4,15 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - RFP action</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Request action</h4>
         </div>
     </div>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo site_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li><a href="<?php echo site_url('admin/rfp'); ?>">RFP</a></li>
-            <li><a href="<?php echo site_url('admin/rfp/view/'.encode($rfp_id)); ?>">View RFP Page</a></li>
-            <li class="active">RFP action</li>
+            <li><a href="<?php echo site_url('admin/rfp'); ?>">Request</a></li>
+            <li><a href="<?php echo site_url('admin/rfp/view/'.encode($rfp_id)); ?>">View Request Page</a></li>
+            <li class="active">Request action</li>
         </ul>
     </div>
 </div>

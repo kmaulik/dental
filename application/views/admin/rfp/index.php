@@ -11,13 +11,13 @@
 <div class="page-header page-header-default">
     <div class="page-header-content">
         <div class="page-title">
-            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - RFP List</h4>
+            <h4><i class="icon-arrow-left52 position-left"></i> <span class="text-semibold">Admin</span> - Request List</h4>
         </div>
     </div>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
             <li><a href="<?php echo base_url() . "admin/dashboard" ?>"><i class="icon-home2 position-left"></i> Admin</a></li>
-            <li>RFP</li>
+            <li>Request</li>
         </ul>
     </div>
 </div>
@@ -39,10 +39,10 @@
         <table class="table datatable-basic">
             <thead>
                 <tr>
-                    <th>RFP ID.</th>
-                    <th>RFP Title</th>
+                    <th>Request ID.</th>
+                    <th>Request Title</th>
                     <th>Patient Name</th>
-                    <th>Dentition Type</th>
+                    <!-- <th>Dentition Type</th> -->
                     <th>Status</th>                     
                     <th>Created Date</th>                        
                     <th width="100px">Action</th>
@@ -81,11 +81,11 @@ $(function () {
             data: "patient_name",
             visible: true
         },
-        {
-            sortable: false,
-            data: "dentition_type",
-            visible: true
-        },
+        // {
+        //     sortable: false,
+        //     data: "dentition_type",
+        //     visible: true
+        // },
         {
             data: "is_blocked",
             visible: true,

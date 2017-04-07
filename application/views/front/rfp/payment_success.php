@@ -8,8 +8,8 @@
 				<h3>Thank you, <?=$this->session->userdata['client']['fname']." ".$this->session->userdata['client']['lname']?>.</h3>
 
 				<p>
-					Your RFP has been successfully submitted. In a few moments you will receive an confirmation email from us.<br />
-					If you like, you can see RFP list <a href="<?=base_url('rfp')?>">click Here</a>.
+					Your Request has been successfully submitted. In a few moments you will receive an confirmation email from us.<br />
+					If you like, you can see Request list <a href="<?=base_url('rfp')?>">click Here</a>.
 				</p>
 
 				<hr />

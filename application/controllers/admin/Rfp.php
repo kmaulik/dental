@@ -36,8 +36,8 @@ class Rfp extends CI_Controller {
     */
     public function view($rfp_id){
 
-        $data['title'] = 'Admin View RFP';
-        $data['heading'] = 'View RFP Page';  
+        $data['title'] = 'Admin View Request';
+        $data['heading'] = 'View Request Page';  
         $data['rfp_id'] = decode($rfp_id);
 
         $data['record']=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],'1');
@@ -58,17 +58,17 @@ class Rfp extends CI_Controller {
                 $update_array = array(
                     'is_deleted' => 1
                     );
-                $this->session->set_flashdata('message', ['message'=>'RFP successfully deleted!','class'=>'success']);
+                $this->session->set_flashdata('message', ['message'=>'Request successfully deleted!','class'=>'success']);
             } elseif ($action == 'block') {
                 $update_array = array(
                     'is_blocked' => 1
                     );
-                $this->session->set_flashdata('message', ['message'=>'RFP successfully blocked!','class'=>'success']);
+                $this->session->set_flashdata('message', ['message'=>'Request successfully blocked!','class'=>'success']);
             } else {
                 $update_array = array(
                     'is_blocked' => 0
                     );
-                $this->session->set_flashdata('message', ['message'=>'RFP successfully unblocked!','class'=>'success']);
+                $this->session->set_flashdata('message', ['message'=>'Request successfully unblocked!','class'=>'success']);
             }
             $this->Rfp_model->update_record('rfp', $where, $update_array);
         } else {
@@ -94,7 +94,7 @@ class Rfp extends CI_Controller {
             $remarks = $this->input->post('remarks');
             $action = $this->input->post('action');
             $message = $this->input->post('message');
-
+            $msg = '';
             //------ For Extend the RFP Date ------
             $rfp_approve_date = NULL;
             $rfp_valid_date = NULL;
@@ -108,16 +108,26 @@ class Rfp extends CI_Controller {
                 $noti_msg = '<b>'.$record['title'].'</b> has been successfully approved and it is live.';
                 $noti_url = 'rfp/view_rfp/'.encode($rfp_id);
                 
-                $subject_mail = config('site_name').' - Congratulation your  "'.$record['title'].'" is released';
-                $message .= ' <a href="'.base_url()."".$noti_url.'"> click here </a>';
+                $subject_mail = config('site_name').' - Your "'.$record['title'].'" quote request has been published!';
+              
+
+                $msg = "Your '".$record['title']."' quote request has been published for dental professionals to review and submit their quotes. Once we receive a quote for you to review, we will notify you.<br><br>";
+                $msg .= "Please <a href='".base_url()."".$noti_url."'>click here</a> to frequently check your dental plan offers or simply login to your account.<br><br>";
+                $msg .= $message.'<br><br>';
+                $msg .= "You may review and select your preferred dental plan at any given time. You may also opt to extend the period your quote request is open for more dental plan quotes to be submitted.<br><br>";
             }else{ 
 
                 $status='2';
                 $noti_msg = '<b>'.$record['title'].'</b> was denied.For know the reason check your mail.';
                 $noti_url = 'rfp/edit/'.encode($rfp_id).'/3';
 
-                $subject_mail = config('site_name').' - Question regarding  "'.$record['title'].'"';
-                $message .= ' <a href="'.base_url()."".$noti_url.'"> click here </a>';
+                $subject_mail = config('site_name').' - Additional information requested regarding your "'.$record['title'].'" quote request';
+                
+                $msg = "We have reviewed your quote request and need additional information from you to process your request.<br><br>";
+                $msg .= "<a href='".base_url()."".$noti_url."'>Click here</a> to update your quote request with the following information:<br><br>";
+                $msg .=  $message.'<br><br>';
+                $msg .= "Once your information has been updated, we will review your request again and provide dental plan options for you to select.<br><br>";
+                $msg .= "If you have any questions in regards to this request, please fill out our <a href='".base_url('contact_us')."'>Contact Us form</a>.<br><br>";
             }
 
             if(!empty($record['admin_remarks'])){
@@ -162,11 +172,11 @@ class Rfp extends CI_Controller {
             $html_content=mailer('contact_inquiry','AccountActivation');
             $username= $user_data['fname'].' '.$user_data['lname'];
             $html_content = str_replace("@USERNAME@",$username,$html_content);
-            $html_content = str_replace("@MESSAGE@",$message,$html_content);            
+            $html_content = str_replace("@MESSAGE@",$msg,$html_content);            
 
             $email_config = mail_config();
             $this->email->initialize($email_config);
-            //$subject=config('site_name').' - Regarding your RFP -'.$record['title'];
+            //$subject=config('site_name').' - Regarding your Request -'.$record['title'];
             $this->email->from(config('contact_email'), config('sender_name'))
                     ->to($user_data['email_id'])
                     ->subject($subject_mail)
@@ -233,6 +243,9 @@ class Rfp extends CI_Controller {
             $this->session->set_flashdata('message', ['message'=>'Images status has been saved to private.','class'=>'success']);
             redirect('admin/rfp/view/'.encode($rfp_id));
         }
+        else{
+            redirect('admin/rfp/view/'.encode($rfp_id));
+        }
     }
 
     public function move_to_public(){
@@ -276,7 +289,10 @@ class Rfp extends CI_Controller {
             $this->session->set_flashdata('message', ['message'=>'Images status has been saved to private.','class'=>'success']);
             redirect('admin/rfp/view/'.encode($rfp_id));
 
+        }else{
+            redirect('admin/rfp/view/'.encode($rfp_id));
         }
+
         // pr($rfp_images,1);
     }
      

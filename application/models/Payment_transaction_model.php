@@ -8,13 +8,13 @@ class Payment_transaction_model extends CI_Model {
 
     
      /**
-     * @uses : this function is used to get result based on datatable in transaction list page [For Admin Side]
+     * @uses : this function is used to get result based on datatable in paypal transaction list page [For Admin Side]
      * @param : @table 
      * @author : HPA
      */
-    public function get_all_transaction() {        
+    public function get_all_paypal_transaction() {        
         
-        $this->db->select('pt.id as payment_id,paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,DATE_FORMAT(pt.created_at,"%d %b %Y <br> %l:%i %p") AS created_date', false);
+        $this->db->select('pt.id as payment_id,paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,payment_type,pt.status,DATE_FORMAT(pt.created_at,"%d %b %Y <br> %l:%i %p") AS created_date', false);
         $this->db->join('rfp','pt.rfp_id=rfp.id');       
         $this->db->join('users u','pt.user_id=u.id');       
         $this->db->join('role r','u.role_id=r.id');       
@@ -29,6 +29,7 @@ class Payment_transaction_model extends CI_Model {
             $this->db->where('date_format(pt.created_at,"%m/%d/%Y") >=', $this->session->userdata['date_filter']['from_date']);
             $this->db->where('date_format(pt.created_at,"%m/%d/%Y") <=', $this->session->userdata['date_filter']['to_date']);
         }
+        $this->db->where('pt.payment_type','0'); // 0 Means Paypal Transaction
         $this->db->order_by('pt.created_at','desc');
         $this->db->limit($this->input->get('length'), $this->input->get('start'));
         $res_data = $this->db->get('payment_transaction pt')->result_array();
@@ -36,13 +37,13 @@ class Payment_transaction_model extends CI_Model {
     }
 
     /**
-     * @uses : this function is used to count rows of transaction based on datatable in transaction list page [For Admin Side]
+     * @uses : this function is used to count rows of transaction based on datatable in paypal transaction list page [For Admin Side]
      * @param : @table 
      * @author : HPA
      */
-    public function get_transaction_count() {
+    public function get_paypal_transaction_count() {
 
-        $this->db->select('pt.id as payment_id,paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,rfp.title as rfp_title,actual_price,payable_price,discount,DATE_FORMAT(pt.created_at,"%d %b %Y <br> %l:%i %p") AS created_date', false);
+        $this->db->select('pt.id as payment_id,paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,payment_type,pt.status,DATE_FORMAT(pt.created_at,"%d %b %Y <br> %l:%i %p") AS created_date', false);
         $this->db->join('rfp','pt.rfp_id=rfp.id');       
         $this->db->join('users u','pt.user_id=u.id');       
         $this->db->join('role r','u.role_id=r.id');       
@@ -57,6 +58,65 @@ class Payment_transaction_model extends CI_Model {
             $this->db->where('date_format(pt.created_at,"%m/%d/%Y") >=', $this->session->userdata['date_filter']['from_date']);
             $this->db->where('date_format(pt.created_at,"%m/%d/%Y") <=', $this->session->userdata['date_filter']['to_date']);
         }
+        $this->db->where('pt.payment_type','0'); // 0 Means Paypal Transaction
+        $this->db->order_by('pt.created_at','desc');
+        $res_data = $this->db->get('payment_transaction pt')->num_rows();
+        return $res_data;
+    }
+
+
+      /**
+     * @uses : this function is used to get result based on datatable in manual transaction list page [For Admin Side]
+     * @param : @table 
+     * @author : HPA
+     */
+    public function get_all_manual_transaction() {        
+        
+        $this->db->select('pt.id as payment_id,paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,payment_type,pt.status,DATE_FORMAT(pt.created_at,"%d %b %Y <br> %l:%i %p") AS created_date', false);
+        $this->db->join('rfp','pt.rfp_id=rfp.id');       
+        $this->db->join('users u','pt.user_id=u.id');       
+        $this->db->join('role r','u.role_id=r.id');       
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+        
+        if (!empty($keyword['value'])) {
+            $this->db->having('paypal_token LIKE "%' . $keyword['value'] . '%" OR role_name LIKE "%' . $keyword['value'] . '%" OR user_name LIKE "%' . $keyword['value'] . '%" OR rfp_title LIKE "%' . $keyword['value'] . '%" OR actual_price LIKE "%' . $keyword['value'] . '%" OR payable_price LIKE "%' . $keyword['value'] . '%" OR discount LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+
+        if($this->session->userdata('date_filter') != ''){
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") >=', $this->session->userdata['date_filter']['from_date']);
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") <=', $this->session->userdata['date_filter']['to_date']);
+        }
+        $this->db->where('pt.payment_type','1'); // 1 Means Manual Transaction
+        $this->db->order_by('pt.created_at','desc');
+        $this->db->limit($this->input->get('length'), $this->input->get('start'));
+        $res_data = $this->db->get('payment_transaction pt')->result_array();
+        return $res_data;
+    }
+
+    /**
+     * @uses : this function is used to count rows of transaction based on datatable in manual transaction list page [For Admin Side]
+     * @param : @table 
+     * @author : HPA
+     */
+    public function get_manual_transaction_count() {
+
+        $this->db->select('pt.id as payment_id,paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,payment_type,pt.status,DATE_FORMAT(pt.created_at,"%d %b %Y <br> %l:%i %p") AS created_date', false);
+        $this->db->join('rfp','pt.rfp_id=rfp.id');       
+        $this->db->join('users u','pt.user_id=u.id');       
+        $this->db->join('role r','u.role_id=r.id');       
+        $keyword = $this->input->get('search');
+        $keyword = str_replace('"', '', $keyword);
+       
+        if (!empty($keyword['value'])) {
+            $this->db->having('paypal_token LIKE "%' . $keyword['value'] . '%" OR role_name LIKE "%' . $keyword['value'] . '%" OR user_name LIKE "%' . $keyword['value'] . '%" OR rfp_title LIKE "%' . $keyword['value'] . '%" OR actual_price LIKE "%' . $keyword['value'] . '%" OR payable_price LIKE "%' . $keyword['value'] . '%" OR discount LIKE "%' . $keyword['value'] . '%"', NULL);
+        }
+
+        if($this->session->userdata('date_filter') != ''){
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") >=', $this->session->userdata['date_filter']['from_date']);
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") <=', $this->session->userdata['date_filter']['to_date']);
+        }
+        $this->db->where('pt.payment_type','1'); // 1 Means Manual Transaction
         $this->db->order_by('pt.created_at','desc');
         $res_data = $this->db->get('payment_transaction pt')->num_rows();
         return $res_data;
@@ -90,6 +150,19 @@ class Payment_transaction_model extends CI_Model {
         }
     }
 
+    /**
+     * @uses : This function is used to update record
+     * @param : @table, @record_id, @data_array = array of update  
+     * @author : HPA
+     */
+    public function update_record($table, $condition, $data_array) {
+        $this->db->where($condition);
+        if ($this->db->update($table, $data_array)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
      /**
      * @uses : this function is used to count rows of payment history based on table in transaction list page For Patient User
@@ -192,5 +265,52 @@ class Payment_transaction_model extends CI_Model {
             }
         }       
         return $query;
+    }
+
+    public function fetch_manual_payment_csv_data($search_data,$from_date,$to_date){
+
+        $this->db->select('pt.id as payment_id,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,u.phone,u.street,u.city,s.name as state_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,pt.status,DATE_FORMAT(pt.created_at,"%m-%d-%Y") AS created_date', false);
+        $this->db->join('rfp','pt.rfp_id=rfp.id');       
+        $this->db->join('users u','pt.user_id=u.id');       
+        $this->db->join('role r','u.role_id=r.id');       
+        $this->db->join('states s','u.state_id=s.id');       
+      
+        
+        if (!empty($search_data)) {
+            $this->db->having('role_name LIKE "%' . $search_data . '%" OR user_name LIKE "%' . $search_data . '%" OR rfp_title LIKE "%' . $search_data . '%" OR actual_price LIKE "%' . $search_data . '%" OR payable_price LIKE "%' . $search_data . '%" OR discount LIKE "%' . $search_data . '%"', NULL);
+        }
+
+        if($from_date != '' && $to_date != ''){
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") >=', $from_date);
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") <=', $to_date);
+        }
+        $this->db->where('pt.payment_type','1'); // 1 Means Manual Transaction
+        $this->db->order_by('pt.created_at','desc');
+        $res_data = $this->db->get('payment_transaction pt')->result_array();
+        return $res_data;
+    }
+
+
+    public function fetch_paypal_payment_csv_data($search_data,$from_date,$to_date){
+
+        $this->db->select('pt.id as payment_id,pt.paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,u.phone,u.street,u.city,s.name as state_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,pt.status,DATE_FORMAT(pt.created_at,"%m-%d-%Y") AS created_date', false);
+        $this->db->join('rfp','pt.rfp_id=rfp.id');       
+        $this->db->join('users u','pt.user_id=u.id');       
+        $this->db->join('role r','u.role_id=r.id');       
+        $this->db->join('states s','u.state_id=s.id');       
+      
+        
+        if (!empty($search_data)) {
+            $this->db->having('paypal_token LIKE "%' . $search_data . '%" OR role_name LIKE "%' . $search_data . '%" OR user_name LIKE "%' . $search_data . '%" OR rfp_title LIKE "%' . $search_data . '%" OR actual_price LIKE "%' . $search_data . '%" OR payable_price LIKE "%' . $search_data . '%" OR discount LIKE "%' . $search_data . '%"', NULL);
+        }
+
+        if($from_date != '' && $to_date != ''){
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") >=', $from_date);
+            $this->db->where('date_format(pt.created_at,"%m/%d/%Y") <=', $to_date);
+        }
+        $this->db->where('pt.payment_type','0'); // 0 Means Paypal Transaction
+        $this->db->order_by('pt.created_at','desc');
+        $res_data = $this->db->get('payment_transaction pt')->result_array();
+        return $res_data;
     }
 }

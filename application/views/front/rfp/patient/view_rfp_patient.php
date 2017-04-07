@@ -9,12 +9,12 @@
 
 <section class="page-header page-header-xs">
 	<div class="container">
-		<h1> RFP Details </h1>
+		<h1> Request Details </h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
-			<li><a href="<?=base_url('rfp');?>">RFP List</a></li>
-			<li class="active">RFP Details</li>
+			<li><a href="<?=base_url('rfp');?>">Request List</a></li>
+			<li class="active">Request Details</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
 </section>
@@ -118,7 +118,7 @@
 								<?php endif; ?>
 							</h4>
 							<!-- <div class="col-sm-12">
-								<span class="title">RFP Title : </span> <span><?=$record['title']?></span>
+								<span class="title">Request Title : </span> <span><?=$record['title']?></span>
 							</div> -->
 							<div class="col-sm-6">
 								<span class="title">Created By : </span> <span><?=fetch_username($record['patient_id'])?></span>
@@ -338,7 +338,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="form-group">
-								<h4>RFP Price : $ <?=config('patient_fees')?></h4>
+								<h4>Request Price : $ <?=config('patient_fees')?></h4>
 							</div>	
 						</div>
 						<div class="">

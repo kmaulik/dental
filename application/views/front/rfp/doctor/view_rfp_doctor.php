@@ -31,13 +31,23 @@
 
 			<div class="col-md-12">
 				<div class="pull-right">
+					<!-- ====== For Check Payment by doctor ====== -->
+					
+					<!-- ====== End For Check Payment by doctor  ====== -->
+					
 					<!-- ====== For Check Bid Already Placed Or Not  ====== -->
 					<?php if(isset($rfp_bid) && $rfp_bid != '') :?>
+						<?php if($record['status'] == 4 && $rfp_bid['status'] == '2') :?>
+							<a href="<?=base_url('dashboard?proceed_rfp='.encode($record['id']))?>" class="btn btn-info"><i class="fa fa-check"></i> Payment</a>
+						<?php endif; ?>
+
 						<!-- ====== For Check chat is started or not ====== -->
 						<?php if($rfp_bid['is_chat_started'] == '1') : ?>
 							<a href="<?=base_url('messageboard/message/'.encode($record['id']).'/'.encode($record['patient_id']))?>" class="btn btn-info"><i class="fa fa-envelope"></i> Message</a>
 						<?php endif; ?>
-						<!-- ====== End Check chat is started or not ====== -->											
+						<!-- ====== End Check chat is started or not ====== -->	
+
+
 					<?php else : ?>
 						<!-- ====== For Check RFP status Open or not ====== -->
 						<?php if($record['status'] == 3 && $record['rfp_valid_date'] >= date("Y-m-d")) : ?> <!-- 3 Means Open RFP & rfp_valid_date >= date) For this RFP then show bid button -->
@@ -52,7 +62,7 @@
 					</a>
 					<a href="<?php echo base_url().'rfp/search_rfp'; ?>" class="btn btn-info">
 						<i class="fa fa-arrow-left"></i> 
-						Back to RFP
+						Back to Request
 					</a>
 				</div>
 			</div>	
@@ -67,12 +77,12 @@
 						<?php if(!empty($rfp_bid)) { ?>
 							<div class="my-bid-doctor">
 								<h4 class="rfp-title">My Bid Information</h4>
-								<div class="col-sm-6">						
+								<div class="col-sm-12 col-md-6">						
 									<span class="title">Bid Value ($) : </span>
 									<span><?php echo '$ '.$rfp_bid['amount']; ?></span>
 								</div>
 
-								<div class="col-sm-12 bid-title">								
+								<div class="col-md-12 col-sm-12 bid-title">								
 									<span class="title">Bid Description : </span>
 									<span><?php echo $rfp_bid['description']; ?></span>
 								</div>

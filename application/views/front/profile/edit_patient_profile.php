@@ -304,10 +304,10 @@
 						<?php if(!empty($agreement_created)) { ?>
 							<?php $paypal_email = json_decode($agreement_created['meta_arr']); ?>
 							<div class="col-sm-8">
-								<h4 class="current-paypal">Your Current Paypal A/c : <span><?php echo $paypal_email->EMAIL; ?></span></h4>	
+								<h4 class="current-paypal">Your Current Paypal Account : <span><?php echo $paypal_email->EMAIL; ?></span></h4>	
 							</div>	
 							<div class="col-sm-4">
-								<a href="<?php echo base_url().'home/create_manual_agreement'; ?>" class="btn btn-primary">Change Paypal A/c</a>
+								<a href="<?php echo base_url().'home/create_manual_agreement'; ?>" class="btn btn-primary">Change Paypal Account</a>
 							</div>	
 						<?php } else { ?>
 							<div class="col-sm-8">

@@ -23,7 +23,7 @@
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
-									<input type="text" name="search" id="search" class="form-control" placeholder="Search Transaction Id , RFP Title Wise , Patient Name" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+									<input type="text" name="search" id="search" class="form-control" placeholder="Search Transaction Id , Request Title Wise , Patient Name" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 									<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
 										<em>Filter Payment History From Here</em>
 									</span>
@@ -60,7 +60,7 @@
 						<thead>
 							<tr>
 								<th>Transaction #</th>
-								<th>RFP Title</th>
+								<th>Request Title</th>
 								<th>Patient Name</th>
 								<th>Total Fee ($)</th>
 								<th>Payment Value ($)</th>

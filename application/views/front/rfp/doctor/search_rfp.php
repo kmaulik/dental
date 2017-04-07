@@ -101,11 +101,11 @@ span.time {
 </style>-->  
 <section class="page-header page-header-xs">
 	<div class="container">
-		<h1>Search RFP</h1>
+		<h1>Search Request</h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
-			<li class="active">Search RFP</li>
+			<li class="active">Search Request</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
 </section>
@@ -170,9 +170,9 @@ span.time {
 							<div class="form-group">
 								<div class="fancy-form"><!-- input -->
 									<i class="fa fa-search"></i>
-									<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP Title, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+									<input type="text" name="search" id="search" class="form-control" placeholder="Search Request Title, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 									<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
-										<em>Search RFP From Here</em>
+										<em>Search Request From Here</em>
 									</span>
 								</div>
 							</div>
@@ -184,8 +184,8 @@ span.time {
 						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sorting">
 							<label>Sort</label>
 							<select name="sort" class="form-control" id="sort">
-								<option value="desc">Latest RFP</option>
-								<option value="asc">Oldest RFP</option>
+								<option value="desc">Latest Request</option>
+								<option value="asc">Oldest Request</option>
 							</select>
 						</div>	
 						<div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sorting">
@@ -228,8 +228,8 @@ span.time {
 							<table class="table">
 								<thead>
 									<th>Favorite</th>									
-									<th>RFP #</th>
-									<th>RPF Title</th>
+									<th>Request #</th>
+									<th>Request Title</th>
 									<th>Age</th>
 									<th>Distance (Miles.)</th>
 									<th>Bid Value ($)</th>
@@ -243,10 +243,10 @@ span.time {
 											<td>
 												<?php if(isset($record['favorite_id']) && $record['favorite_id'] != '') : ?>
 													<!-- Means Favorite RFP -->
-													<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite RFP"></span>
+												<span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite Request"></span>
 												<?php else : ?>
 													<!-- Means Not Favorite RFP -->
-													<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite RFP"></span>
+													<span class="favorite fa fa-star unfavorite_rfp" data-id="<?=encode($record['id'])?>" title="Favorite Request"></span>
 												<?php endif; ?>
 											</td>																			
 											<td class="search_rfp_info" data-rfp-id="<?=encode($record['id'])?>"><?=$record['id']?></td>
@@ -274,7 +274,7 @@ span.time {
 			
 					<?php echo $this->pagination->create_links(); ?>
 				<?php else : ?>
-					<h3>No RFP Available</h3>
+					<h3>No Request Available</h3>
 				<?php endif; ?>	
 			</div>
 		</div>
@@ -454,26 +454,26 @@ $(".favorite").on( "click", function() {
 		var data1=$(this);
 		if($.inArray('unfavorite_rfp',classNames) != '-1')
 		{
-			//bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
+			//bootbox.confirm('Are you sure to add favorite Request ?' ,function(res){
 				//if(res){
 					$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 						if(data){
 							data1.removeClass('unfavorite_rfp');
 							data1.addClass('favorite_rfp');
-							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
+							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Request added to your favorite list successfully.</div>');
 						}
 					});
 				//}	
 			//});
 		}
 		else{
-			//bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
+			//bootbox.confirm('Are you sure to remove favorite Request ?' ,function(res){
 			//	if(res){	
 					$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 						if(data){
 							data1.removeClass('favorite_rfp');
 							data1.addClass('unfavorite_rfp');
-							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP removed to your favorite list successfully. </div>');
+							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Request removed to your favorite list successfully. </div>');
 						
 						}
 					});

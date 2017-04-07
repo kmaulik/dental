@@ -127,6 +127,7 @@ class Cron extends CI_Controller {
 					$return_data = $this->Rfp_model->check_if_close_rfp($a_data['rfp_id']);
 
 					if($return_data['is_close'] == '1'){
+						$this->Rfp_model->send_close_rfp_notification($a_data['doctor_id'],$a_data['rfp_id']);
 						$this->Rfp_model->update_record('rfp',['id'=>$a_data['rfp_id']],['status'=>'7']); // Close RFP after 45 days
 					}else{
 						$this->Rfp_model->update_record('rfp',['id'=>$a_data['rfp_id']],['rfp_close_date'=>$return_data['next_date']]); // Close RFP after appointment date + 10 days
@@ -143,15 +144,41 @@ class Cron extends CI_Controller {
 
 		$res_data = $this->Rfp_model->get_result('billing_schedule',['status'=>'0','transaction_id is not null'=>null,'next_billing_date'=>date('Y-m-d')]);
 
-		// pr($res_data,1);
 		if(!empty($res_data)){
 			$return_arr = [];
 
 			foreach($res_data as $res){
 
-				$return_arr = GetTransactionDetails($res['transaction_id']);
-				$return_json = json_encode($return_arr);
-				$ack_transaction = strtoupper($return_arr['ACK']);				
+				if($res['transaction_id'] == 'MANUAL'){
+					
+					$return_arr['PAYMENTSTATUS'] = 'Completed';
+					$ack_transaction = "SUCCESS";
+
+					if($res['price'] > 0){
+						$last_transaction = $this->Rfp_model->get_result('payment_transaction',['user_id'=>$res['doctor_id'],'rfp_id'=>$res['rfp_id']],true);
+						//------------- Payment Transaction For Manual ------
+						$transaction_arr =  array(
+	        							'user_id'=>$res['doctor_id'],
+	        							'rfp_id'=>$res['rfp_id'],
+	        							'actual_price'=>$last_transaction['actual_price'],
+	        							'payable_price'=>$res['price'],
+	        							'discount'=>$last_transaction['discount'],
+	        							'promotional_code_id'=>$last_transaction['promotional_code_id'],
+	        							'payment_type' => 1, // 1 Means Manual Payment 
+	        							'status' => 0,
+	        							'created_at'=>date('Y-m-d H:i:s')
+	        						);
+
+						$this->Rfp_model->insert_record('payment_transaction',$transaction_arr);
+						//------------- End Payment Transaction ------
+					}	
+
+				}
+				else{
+					$return_arr = GetTransactionDetails($res['transaction_id']);
+					$ack_transaction = strtoupper($return_arr['ACK']);	
+				}
+							
 
 				if($ack_transaction == "SUCCESS" || $ack_transaction == "SUCCESSWITHWARNING") {
 					
@@ -167,60 +194,15 @@ class Cron extends CI_Controller {
 							pr($return_data);
 
 							if($return_data['is_close'] == '1'){
-								// ----------------------------- Patient Notification -----------------------------
-						    	$noti_data = [
-						    					'from_id'=>$res['doctor_id'],
-						    					'to_id'=>$rfp_data['patient_id'],
-						    					'rfp_id'=>$res['rfp_id'],
-						    					'noti_type'=>'rfp_close_notification',
-						    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
-						    					'noti_url'=>'dashboard'
-						    				];
-						    	$this->Notification_model->insert_rfp_notification($noti_data);
-						    	// ------------------------------------------------------------------------
-
-								// -----------------------------  Doctor Notification  -----------------------------
-						    	$noti_data = [
-						    					'from_id'=>$rfp_data['patient_id'],
-						    					'to_id'=>$res['doctor_id'],
-						    					'rfp_id'=>$res['rfp_id'],
-						    					'noti_type'=>'confirm_payment',
-						    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
-						    					'noti_url'=>'dashboard'
-						    				];
-						    	$this->Notification_model->insert_rfp_notification($noti_data);
-						    	// ------------------------------------------------------------------------
-
+								$this->Rfp_model->send_close_rfp_notification($res['doctor_id'],$res['rfp_id']);
 								$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'7']); // status : 6 - change waiting for doctor approval to close
 							}else{
 								$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['rfp_close_date'=>$return_data['next_date']]); // Close RFP after appointment date + 10 days
 								qry();
 							}
 						}else if($rfp_data['status'] == '5'){
-							// ----------------------------- Patient Notification -----------------------------
-					    	$noti_data = [
-					    					'from_id'=>$res['doctor_id'],
-					    					'to_id'=>$rfp_data['patient_id'],
-					    					'rfp_id'=>$res['rfp_id'],
-					    					'noti_type'=>'rfp_close_notification',
-					    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
-					    					'noti_url'=>'dashboard'
-					    				];
-					    	$this->Notification_model->insert_rfp_notification($noti_data);
-					    	// ------------------------------------------------------------------------
-
-							// -----------------------------  Doctor Notification  -----------------------------
-					    	$noti_data = [
-					    					'from_id'=>$rfp_data['patient_id'],
-					    					'to_id'=>$res['doctor_id'],
-					    					'rfp_id'=>$res['rfp_id'],
-					    					'noti_type'=>'confirm_payment',
-					    					'noti_msg'=>'Thank you for using our service..!! <b>'.$rfp_data['title'].'</b> has been successfully closed.',
-					    					'noti_url'=>'dashboard'
-					    				];
-					    	$this->Notification_model->insert_rfp_notification($noti_data);
-					    	// ------------------------------------------------------------------------
-
+							
+					    	$this->Rfp_model->send_close_rfp_notification($res['doctor_id'],$res['rfp_id']);
 							$this->Rfp_model->update_record('rfp',['id'=>$res['rfp_id']],['status'=>'7']); // status : 5 - change appointment pending to close
 						}elseif($rfp_data['status'] <= '4'){
 							// v! IF RFP's first payment is completed
@@ -250,7 +232,7 @@ class Cron extends CI_Controller {
 					    					'to_id'=>$rfp_data['patient_id'],
 					    					'rfp_id'=>$res['rfp_id'],
 					    					'noti_type'=>'confirm_payment',
-					    					'noti_msg'=>'Congratulation..!! Doctor has confirmed the RFP - <b>'.$rfp_data['title'].'</b>.Please contact doctor for appointment.',
+					    					'noti_msg'=>'Congratulation..!! Doctor has confirmed the Request - <b>'.$rfp_data['title'].'</b>.Please contact doctor for appointment.',
 					    					'noti_url'=>'dashboard'
 					    				];
 					    	$this->Notification_model->insert_rfp_notification($noti_data);
@@ -272,7 +254,9 @@ class Cron extends CI_Controller {
 						}
 
 						$this->Rfp_model->update_record('billing_schedule',['id'=>$res['id']],['status'=>'1']);
-						$this->Rfp_model->update_record('payment_transaction',['paypal_token'=>$res['transaction_id']],['status'=>'1']);
+						if($res['transaction_id'] != 'MANUAL'){
+							$this->Rfp_model->update_record('payment_transaction',['paypal_token'=>$res['transaction_id']],['status'=>'1']);
+						}
 
 					}
 				} // END of IF condition				
@@ -282,9 +266,15 @@ class Cron extends CI_Controller {
 
 	// Close RFp based on Rfp_close_date from rfp table
 	public function auto_close_rfp(){
-		$all_close_rfp = $this->db->get_where('rfp',['rfp_close_date'=>date('Y-m-d')])->result_array();
+	
+		$this->db->select('rfp.id,rb.doctor_id');
+		$this->db->from('rfp');
+		$this->db->join('rfp_bid rb','rfp.id = rb.rfp_id and rb.status = 2','left');
+		$this->db->where('rfp.rfp_close_date',date('Y-m-d'));
+		$all_close_rfp = $this->db->get()->result_array();
 		if(!empty($all_close_rfp)){
 			foreach($all_close_rfp as $close_rfp){
+				$this->Rfp_model->send_close_rfp_notification($close_rfp['doctor_id'],$close_rfp['id']);
 				$this->Rfp_model->update_record('rfp',['id'=>$close_rfp['id']],['status'=>'7']);				
 			}
 		}
@@ -361,15 +351,15 @@ class Cron extends CI_Controller {
 		foreach($rfp_notify_data as $notify_user){
 			if($notify_user['rfp_data']){
 					//------------------ Html Message format ------------
-					$msg = "New RFP List <br/><br/>";
+					$msg = "New Request List <br/><br/>";
 					$msg .="<table border='1' cellspacing='1' cellpadding='1' style='width:100%;'>
 							<thead>
 								<tr style='font-size:12px;font-weight:100;'>
-									<th>RFP #</th>
-									<th>RFP Title</th>
+									<th>Request #</th>
+									<th>Request Title</th>
 									<th>Patient Age</th>
 									<th>Distance (Miles.)</th>
-									<th>RFP Remaining Days</th>
+									<th>Request Remaining Days</th>
 								</tr>
 						</thead><tbody>";
 					foreach($notify_user['rfp_data'] as $notify_rfp){
@@ -392,7 +382,7 @@ class Cron extends CI_Controller {
 			       
 			        $email_config = mail_config();
 			        $this->email->initialize($email_config);
-			        $subject=config('site_name').' - New RFP Creation Notification';    
+			        $subject=config('site_name').' - New Request Creation Notification';    
 			        $this->email->from(config('contact_email'), config('sender_name'))
 			                    ->to($notify_user['doctor_email'])
 			                    ->subject($subject)

@@ -154,9 +154,9 @@
 								<div class="form-group">
 									<div class="fancy-form"><!-- input -->
 										<i class="fa fa-search"></i>
-										<input type="text" name="search" id="search" class="form-control" placeholder="Search RFP Title, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
+										<input type="text" name="search" id="search" class="form-control" placeholder="Search Request Title, Dentition Type Wise" value="<?=$this->input->get('search') ? $this->input->get('search') :''?>">
 										<span class="fancy-tooltip top-left"> <!-- positions: .top-left | .top-right -->
-											<em>Search RFP From Here</em>
+											<em>Search Request From Here</em>
 										</span>
 									</div>
 								</div>
@@ -165,8 +165,8 @@
 							<div class="col-lg-2 col-md-3 sorting">
 								<label>Sort</label>
 								<select name="sort" class="form-control" id="sort">
-									<option value="desc">Latest RFP</option>
-									<option value="asc">Oldest RFP</option>
+									<option value="desc">Latest Request</option>
+									<option value="asc">Oldest Request</option>
 								</select>
 							</div>	
 							<div class="col-lg-2 col-md-4">
@@ -211,7 +211,7 @@
 						</div>
 						<?php echo $this->pagination->create_links(); ?>
 					<?php else : ?>
-						<h3>No RFP Available</h3>
+						<h3>No Request Available</h3>
 					<?php endif; ?>			
 				</div>
 				<!-- /PERSONAL INFO TAB -->
@@ -232,25 +232,25 @@
 		var data1=$(this);
 		if($.inArray('unfavorite_rfp',classNames) != '-1')
 		{
-			bootbox.confirm('Are you sure to add favorite rfp ?' ,function(res){
+			bootbox.confirm('Are you sure to add favorite Request ?' ,function(res){
 				if(res){
 					$.post("<?=base_url('rfp/add_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 						if(data){
 							data1.removeClass('unfavorite_rfp');
 							data1.addClass('favorite_rfp');
-							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times; </button>RFP added to your favorite list successfully.</div>');
+							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times; </button>Request added to your favorite list successfully.</div>');
 						}
 					});
 				}	
 			});
 		}else{
-			bootbox.confirm('Are you sure to remove favorite rfp ?' ,function(res){
+			bootbox.confirm('Are you sure to remove favorite Request ?' ,function(res){
 				if(res){	
 					$.post("<?=base_url('rfp/remove_favorite_rfp')?>",{ 'rfp_id' : rfp_id},function(data){
 						if(data){
 							data1.removeClass('favorite_rfp');
 							data1.addClass('unfavorite_rfp');
-							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times; </button>RFP removed to your favorite list successfully. </div>');
+							$(".alert-message").html('<div class="alert alert-success margin-bottom-30"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times; </button>Request removed to your favorite list successfully. </div>');
 						}
 					});
 				}

@@ -110,7 +110,7 @@ class Messageboard extends CI_Controller {
 		        $email_config = mail_config();
 		        $this->email->initialize($email_config);
 		        $from_name =$this->session->userdata('client')['fname']." ".$this->session->userdata('client')['lname'];
-		        $subject=config('site_name').' - Message For '.$rfp_data['title'].' RFP From '.$from_name;    
+		        $subject=config('site_name').' - Message For '.$rfp_data['title'].' Request From '.$from_name;    
 		        $this->email->from(config('contact_email'), config('sender_name'))
 		                    ->to($user_data['email_id'])
 		                    ->subject($subject)

@@ -191,7 +191,7 @@
 																<?php if($active_rfp['status'] >= 5 && $bid_data['status'] == 2) :?>
 																	<!-- If Review not given for this RFP then display the review button -->	
 																	<a class="label label-info" onclick="view_chat(<?=$key?>,<?=$k?>)"  data-toggle="tooltip" data-placement="top" data-original-title="Click on this area Expands Messages"><i class="fa fa-wechat"></i></a>
-																	<?php if($active_rfp['is_rated'] == '') : ?>
+																	<?php if($active_rfp['is_rated'] == '' && $active_rfp['status'] >= 6) : ?>
 																		<a class="label label-info rfp-price" id="rated_btn_<?=$bid_data['id']?>" onclick="send_review(<?=$key?>,<?=$k?>)" title="Review" data-toggle="modal" data-target=".doctor_review"><i class="fa fa-star"></i></a> 
 																	<?php endif; ?>
 																	<!-- End Review -->
@@ -313,7 +313,7 @@
 																</ul>
 																<!-- ============= End Chat Conversation ===== -->
 																<!-- =============== Review =============== -->
-                                                                <?php if($active_rfp['is_rated'] == '') :?>
+                                                                <?php if($active_rfp['is_rated'] == '' && $active_rfp['status'] >= 6) :?>
     																<form role="form" class="cnt-form" id="chat_review_form_<?=$bid_data['id']?>">
                                                                         <input type="hidden" name="rfp_id" value="<?=$active_rfp['id']?>">
                                                                         <input type="hidden" name="doctor_id" value="<?=$bid_data['doctor_id']?>">
@@ -369,7 +369,7 @@
 								<?php endif; ?>	
 							<?php else :?>
 								<tr>
-									<td colspan="9">No Active Requests</td>
+									<td colspan="9"><b>To request a quote from a dental professional near you, please click “Request a Quote” to the right of the “Active Requests"</b></td>
 								</tr>	
 							<?php endif; ?>	
 						</tbody>	
@@ -495,13 +495,13 @@
 										</td> -->
 										<td><?=$record['dentition_type']?></td>
 										<td>
-											<!-- <a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP">
+											<!-- <a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-info" data-toggle="tooltip" data-placement="top" data-original-title="View Request">
 												<i class="fa fa-eye"></i><span>View</span>
 											</a> -->
-											<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
+											<a href="<?=base_url('rfp/view_rfp/'.encode($record['id']))?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View Request"><i class="fa fa-eye"></i></a>
 											<!-- For Check Status == 3 && valid date set and valid date >= today and patient validity not extend then display extend button--> 
 											<?php if($record['status'] == 3 && $record['rfp_valid_date'] != '' && $record['rfp_valid_date'] >= date("Y-m-d") && $record['is_extended'] == 0) :?>
-												<!-- <a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend RFP Validity For 7 Days">
+												<!-- <a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-blue btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend Request Validity For 7 Days">
 												<i class="fa fa-arrows"></i><span>Extend</span> </a>-->
 												<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($record['id']))?>" class="label label-primary btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend Request End by 7 days"><i class="fa fa-arrows-alt"></i></a>
 											<?php endif; ?>
@@ -509,20 +509,20 @@
 
 											<!-- ==== Check Status (0=draft,1=pending,2=submit Pending) then show edit & delete option -->
 											<?php if($record['status'] <= 2) : ?>
-												<!-- <a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP">
+												<!-- <a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="btn btn-3d btn-xs btn-reveal btn-green" data-toggle="tooltip" data-placement="top" data-original-title="Edit Request">
 													<i class="fa fa-edit"></i><span>Edit</span>
 												</a> -->
-												<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="label label-success" data-toggle="tooltip" data-placement="top" data-original-title="Edit RFP"><i class="fa fa-edit"></i></a>
-												<!-- <a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP">
+												<a href="<?=base_url('rfp/edit/'.encode($record['id']).'/3')?>" class="label label-success" data-toggle="tooltip" data-placement="top" data-original-title="Edit Request"><i class="fa fa-edit"></i></a>
+												<!-- <a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="btn btn-3d btn-xs btn-reveal btn-red btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete Request">
 													<i class="fa fa-trash"></i><span>Delete</span>
 												</a> -->
-												<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="label label-danger btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete RFP"><i class="fa fa-trash"></i></a>
+												<a data-href="<?=base_url('rfp/action/delete/'.encode($record['id']))?>" class="label label-danger btn_delete" data-toggle="tooltip" data-placement="top" data-original-title="Delete Request"><i class="fa fa-trash"></i></a>
 											<?php endif; ?>
 										</td>
 									</tr>
 								<?php endforeach; ?>
 							<?php else :?>
-									<tr class="text-center"><td colspan="6">No RFP Data</td></tr>
+									<tr class="text-center"><td colspan="6">No Request Data</td></tr>
 							<?php endif; ?>
 						</tbody>
 					</table>
@@ -553,7 +553,7 @@
 							<tr>
 								<th>Request Title</th>
 								<th>User Name</th>
-								<th>RFP Status</th>
+								<th>Request Status</th>
 								<th>Dentition Type</th>
 								<th>Paid Price</th>
 								<th>Refund Status</th>
@@ -974,7 +974,7 @@ $(".star-rating #rateYo").rateYo().on("rateyo.change", function (e, data) {
 $(".btn_delete").click(function(e){	
 	e.preventDefault();	
 	var href = $(this).data('href');
-	bootbox.confirm('Are you sure to delete this rfp?' ,function(res){ 	 		
+	bootbox.confirm('Are you sure to delete this Request?' ,function(res){ 	 		
 	    if(res) {
 	        window.location.href = href;
 	    }
@@ -1052,7 +1052,7 @@ $(".confirm_winner").click(function(e) {
 $(".cancel_winner").click(function(e) {
 	e.preventDefault();
 	var lHref = $(this).attr('href');
-	bootbox.confirm('Are you sure to cancel winner for this rfp ?' ,function(res){
+	bootbox.confirm('Are you sure to cancel winner for this Request ?' ,function(res){
 		if(res){
 			window.location.href = lHref;
 		}
@@ -1062,7 +1062,7 @@ $(".cancel_winner").click(function(e) {
 $(".btn_extend").click(function(e){		
 	e.preventDefault();
 	var lHref = $(this).attr('href');
-	bootbox.confirm('Are you sure to extend validity for this rfp?' ,function(res){ 	 		
+	bootbox.confirm('Are you sure to extend validity for this Request?' ,function(res){ 	 		
 	    if(res) {
 	        window.location.href = lHref;
 	    }

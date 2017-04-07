@@ -110,7 +110,7 @@
                                     <li class="<?php echo ($controller == 'rfp') ? 'active' : ''; ?>">
                                         <a href="<?php echo base_url() . 'admin/rfp'; ?>">
                                             <i class="icon-clipboard3"></i>
-                                            <span>RFP</span>
+                                            <span>Request</span>
                                         </a>
                                     </li>
                                     
@@ -137,11 +137,22 @@
                                      <!-- Payment Transaction Menu -->
                                     <?php if($role_id != 3) { ?>
                                         <li class="<?php echo ($controller == 'payment_transaction') ? 'active' : ''; ?>">
-                                            <a href="<?php echo base_url() . 'admin/payment_transaction'; ?>">
-                                                <i class="icon-coins"></i>
-                                                <span>Payment Transaction</span>
-                                            </a>
-                                        </li> 
+                                            <a href="#" class="has-ul"><i class="icon-coins"></i> <span>Payment Transaction</span></a>
+                                            <ul>
+                                                <li class="<?php echo ($this->uri->segment(3) == 'paypal_transaction') ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url() . 'admin/payment_transaction/paypal_transaction'; ?>">
+                                                        <i class="icon-paypal"></i>
+                                                        <span>Paypal Payment</span>
+                                                    </a>
+                                                </li>                                            
+                                                <li class="<?php echo ($this->uri->segment(3) == 'manual_transaction') ? 'active' : ''; ?>">
+                                                    <a href="<?php echo base_url() . 'admin/payment_transaction/manual_transaction'; ?>">
+                                                        <i class="icon-cash"></i>
+                                                        <span>Manual Payment</span>
+                                                    </a>
+                                                </li>                                     
+                                            </ul>
+                                        </li>
                                     <?php } ?>  
 
                                       <!-- Payment Refund Menu -->

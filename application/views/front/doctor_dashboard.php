@@ -151,7 +151,7 @@
 														$show_pending_payment = 0;
 														// pr($all_billing_data);
 														foreach($all_billing_data as $bill_data){
-															if($bill_data['status']=='0' && !empty($bill_data['transaction_id'])){
+															if($bill_data['status']=='0' && !empty($bill_data['transaction_id']) && $bill_data['transaction_id'] != 'MANUAL'){
 															  $show_pending_payment++;
 															}
 														}  
@@ -427,12 +427,12 @@
 									<?php if(count($rfp_data_fav) > 0) : ?>
 										<?php foreach($rfp_data_fav as $record) :?>
 											<tr>
-												<td><span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>" data-toggle="tooltip" data-placement="top" data-original-title="Favorite RFP"></span></td>
+												<td><span class="favorite fa fa-star favorite_rfp" data-id="<?=encode($record['rfp_id'])?>" data-toggle="tooltip" data-placement="top" data-original-title="Favorite Request"></span></td>
 					                    		<td><?=character_limiter(strip_tags($record['title']), 70);?></td>
 					                    		<td><span class="label label-info"><?=ucfirst($record['dentition_type'])?></span></td>
 					                    		<td><?=date("Y-m-d H:i a",strtotime($record['created_at']));?></td>
 												<td>
-													<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
+													<a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']))?>" class="label label-info" data-toggle="tooltip" data-placement="top" data-original-title="View Request"><i class="fa fa-eye"></i></a>
 												</td>
 											</tr>
 										<?php endforeach; ?>	
@@ -609,7 +609,7 @@
 							<tr>
 								<th>Request Title</th>
 								<th>User Name</th>
-								<th>RFP Status</th>
+								<th>Request Status</th>
 								<th>Dentition Type</th>
 								<th>Paid Price</th>
 								<th>Refund Status</th>
@@ -723,7 +723,7 @@
 			<!-- header modal -->
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myLargeModalLabel">Proceed with your payment for won RFP</h4>
+				<h4 class="modal-title" id="myLargeModalLabel">Proceed with your payment for won Request</h4>
 			</div>
 			<form action="<?=base_url('rfp/make_doctor_payment')?>" method="POST" id="form_doctor_payment"
 				onsubmit="$('#preloader').show();">							
@@ -795,7 +795,7 @@
 									<select name="payment_method" class="form-control">
 										<option value="paypal" <?php if($default_method == 'paypal'){ echo 'selected'; } ?>>Paypal <?=isset($paypal_email)?" - (".$paypal_email.")":''?></option>
 										<?php if(!empty($agreement_data)) { ?>
-										<option value="paypal_new" <?php if($db_data['default_payment'] == 'paypal_new'){ echo 'selected'; } ?> > New Paypal</option>
+										<option value="paypal_new" <?php if($db_data['default_payment'] == 'paypal_new'){ echo 'selected'; } ?> > Change Paypal</option>
 										<?php } ?>
 										<option value="manual" <?php if($default_method == 'manual'){ echo 'selected'; } ?>>Manual</option>
 									</select>
@@ -1177,7 +1177,7 @@
     	if($schedule_rfp != ''){ 
     		$schedule_rfp = decode($schedule_rfp);
    	?> 
-   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); $.popVar("schedule_rfp"); }, 1000);
+   		setTimeout(function(){ $("#rfp_id_<?php echo $schedule_rfp;?>").click(); $.popVar("schedule_rfp"); }, 2000);
     <?php } ?>
 
     <?php 
@@ -1185,7 +1185,7 @@
         if($proceed_rfp != ''){ 
             $proceed_rfp = decode($proceed_rfp);
     ?> 
-        setTimeout(function(){ $(".payment_rfp_<?php echo $proceed_rfp;?>").click(); $.popVar("proceed_rfp"); }, 1000);
+        setTimeout(function(){ $(".payment_rfp_<?php echo $proceed_rfp;?>").click(); $.popVar("proceed_rfp"); }, 2000);
     <?php } ?>
 
 
@@ -1297,7 +1297,7 @@
 				if(data){
 					data1.removeClass('unfavorite_rfp');
 					data1.addClass('favorite_rfp');
-					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP added to your favorite list successfully.</div>');
+					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Request added to your favorite list successfully.</div>');
 				}
 			});
 		} else {
@@ -1305,7 +1305,7 @@
 				if(data){
 					data1.removeClass('favorite_rfp');
 					data1.addClass('unfavorite_rfp');
-					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP removed to your favorite list successfully. </div>');
+					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Request removed to your favorite list successfully. </div>');
 				
 				}
 			});
@@ -1615,15 +1615,15 @@
 
     //------------------------ Delete RFP Filter -------------------
     function delete_search_filter(filter_id,key){
-    	bootbox.confirm('Are you sure to delete rfp filter ?' ,function(res){
+    	bootbox.confirm('Are you sure to delete Request filter ?' ,function(res){
     		if(res){
     			$.post("<?=base_url('dashboard/delete_search_filter/')?>",{	'filter_id' : filter_id },function(data){
     				if(data){
-    					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>RFP Filter Deleted Successfully.</div>');
+   					$(".alert-message").html('<div class="alert alert-success margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Request Filter Deleted Successfully.</div>');
     					$(".search_filter_row_"+key).hide();
     				}
     				else{
-    					$(".alert-message").html('<div class="alert alert-danger margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error Into Delete RFP Filter.</div>');
+    					$(".alert-message").html('<div class="alert alert-danger margin-bottom-30"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Error Into Delete Request Filter.</div>');
     				}
     			});
     		}

@@ -8,12 +8,12 @@
 
 <section class="page-header page-header-xs">
 	<div class="container">
-		<h1>Patient RFP</h1>
+		<h1>Patient Request</h1>
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
-			<li><a href="<?=base_url('rfp');?>">RFP List</a></li>
-			<li class="active">Patient RFP</li>
+			<li><a href="<?=base_url('rfp');?>">Request List</a></li>
+			<li class="active">Patient Request</li>
 		</ol><!-- /breadcrumbs -->
 	</div>
 </section>
