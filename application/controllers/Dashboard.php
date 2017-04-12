@@ -360,7 +360,7 @@ class Dashboard extends CI_Controller {
     /* @DHK View User Profile
     /* Param 1 : User Id
     */
-    public function view_profile($user_id){
+    public function view_profile($user_id,$rfp_id=''){
 
         $data['db_data'] = $this->Users_model->get_data(['id'=>decode($user_id)],true);
         // pr($data['db_data'],1);
@@ -374,8 +374,8 @@ class Dashboard extends CI_Controller {
         if($sess_role_id == '4'){
             $data['allow_view'] = 1;
         }else{       
-            $patient_id = $this->session->userdata('client')['id'];
-            $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile($patient_id,decode($user_id));
+            // $patient_id = $this->session->userdata('client')['id'];
+            $data['allow_view'] = $this->Rfp_model->check_if_user_view_profile(decode($user_id),decode($rfp_id));
         }        
 
         $data['tab'] = $this->input->get('tab');
@@ -458,7 +458,7 @@ class Dashboard extends CI_Controller {
             $rfp_rating_id = $this->input->post('rfp_rating_id');
             $rfp_rating_data = $this->Rfp_model->get_result('rfp_rating',['id'=>$rfp_rating_id],true);
             $rfp_data = $this->Rfp_model->get_result('rfp',['id'=>$rfp_rating_data['rfp_id']],true);            
-            $link = 'dashboard/view_profile/'.encode($doc_id);
+            $link = 'dashboard/view_profile/'.encode($doc_id).'/'.encode($rfp_rating_data['rfp_id']);
             // ------------------------------------------------------------------------
             $noti_data = [
                         'from_id'=>$this->session->userdata('client')['id'],

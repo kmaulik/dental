@@ -423,44 +423,248 @@ class Cron extends CI_Controller {
 	}
 	/* ------------------ End Send message according to search filter ---------------- */
 
-	/*--------------- For Send Message Notification to Patient (12 Days)------------------------ */
+	/*--------------- For Send Message Notification to Patient (12 Days) (Everydat run)------------------------ */
 	public function patient_notification_12_days(){
 		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
 		$this->db->from('rfp r');
 		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('u.is_deleted','0'); // 0 Means Not Deleted User
+		$this->db->where('u.is_blocked','0'); // 0 Means Not Blocked User
+		$this->db->where('r.is_deleted','0'); // 0 Means Not Deleted RFP
+		$this->db->where('r.is_blocked','0'); // 0 Means Not Blocked RFP
+		$this->db->where('r.is_extended','0'); // 0 Means Not Extend RFP
 		$this->db->where('r.status','3'); // 3 Means status open
-		$this->db->where('r.rfp_valid_date >= CURDATE()'); // For check rfp valid date >= curdate
 		$this->db->having('rfp_create_days','11'); // After 12 days from approve the rfp 
 		$data = $this->db->get()->result_array();
+		
+		foreach($data as $record){
+
+			$request_url = base_url('rfp/view_rfp_bid/'.encode($record['id']));
+			$msg ="Your Request '".$record['title']."' is approved on 12 days ago so please <a href='".$request_url."''>click here</a> to extend request or select any winner from list";
+
+			//------------ Send Mail Config-----------------
+	    	$html_content=mailer('patient_notification_12_days','AccountActivation'); 
+	        $username= $record['user_name'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $subject=config('site_name').' - Quote Request Received Day 12 Information';    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($record['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send();
+	        //------------ End Send Mail Config----------------- 
+		}
 		pr($data,1);
 	}
 	/*--------------- End For Send Message Notification to Patient (12 Days)--------------------- */
 
-	/*--------------- For Send Message Notification to Patient (20 Days) ------------------------ */
-	public function patient_notification_20_days(){
-		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
-		$this->db->from('rfp r');
-		$this->db->join('users u','r.patient_id = u.id');
-		$this->db->where('r.status','3'); // 3 Means status open
-		$this->db->where('r.rfp_valid_date >= CURDATE()'); // For check rfp valid date >= curdate
-		$this->db->where('r.is_extended','1'); // 1 Means Extend This RFP
-		$this->db->having('rfp_create_days','19'); // After 20 days from approve the rfp 
-		$data = $this->db->get()->result_array();
-		pr($data,1);
-	}
-	/*--------------- End For Send Message Notification to Patient (20 Days)--------------------- */
 
-	/*--------------- For Send Message Notification to Patient (25 Days) ------------------------ */
-	public function patient_notification_25_days(){
+	/*--------------- For Send Message Notification to Patient (14 Days) (Everydat run)------------------------ */
+	public function patient_notification_14_days(){
 		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
 		$this->db->from('rfp r');
 		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('u.is_deleted','0'); // 0 Means Not Deleted User
+		$this->db->where('u.is_blocked','0'); // 0 Means Not Blocked User
+		$this->db->where('r.is_deleted','0'); // 0 Means Not Deleted RFP
+		$this->db->where('r.is_blocked','0'); // 0 Means Not Blocked RFP
+		$this->db->where('r.is_extended','0'); // 0 Means Not Extend RFP
 		$this->db->where('r.status','3'); // 3 Means status open
-		$this->db->having('rfp_create_days','24'); // After 25 days from approve the rfp 
+		$this->db->having('rfp_create_days','14'); // After 15 days from approve the rfp 
 		$data = $this->db->get()->result_array();
+	
+		foreach($data as $record){
+
+			$request_url = base_url('rfp/view_rfp_bid/'.encode($record['id']));
+			$msg ="Your Request '".$record['title']."' is approved on 14 days ago and it's expire now.so please <a href='".$request_url."''>click here</a> to select any winner from list";
+
+			//------------ Send Mail Config-----------------
+	    	$html_content=mailer('patient_notification_14_days','AccountActivation'); 
+	        $username= $record['user_name'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $subject=config('site_name').' - Quote Request "'.$record['title'].'" is Expired';    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($record['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send();
+	        //------------ End Send Mail Config----------------- 
+		}
 		pr($data,1);
 	}
-	/*--------------- End For Send Message Notification to Patient (25 Days)--------------------- */
+	/*--------------- End For Send Message Notification to Patient (14 Days)--------------------- */
+
+	/*--------------- For Send Message Notification to Patient (21 Days) (Everydat run)------------------------ */
+	public function patient_notification_21_days(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
+		$this->db->from('rfp r');
+		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('u.is_deleted','0'); // 0 Means Not Deleted User
+		$this->db->where('u.is_blocked','0'); // 0 Means Not Blocked User
+		$this->db->where('r.is_deleted','0'); // 0 Means Not Deleted RFP
+		$this->db->where('r.is_blocked','0'); // 0 Means Not Blocked RFP
+		$this->db->where('r.is_extended','1'); // 1 Means Extend RFP
+		$this->db->where('r.status','3'); // 3 Means status open
+		$this->db->having('rfp_create_days','21'); // After 22 days from approve the rfp 
+		$data = $this->db->get()->result_array();
+	
+		foreach($data as $record){
+
+			$request_url = base_url('rfp/view_rfp_bid/'.encode($record['id']));
+			$msg ="Your Request '".$record['title']."' is approved on 21 days ago and it's expire now.so please <a href='".$request_url."''>click here</a> to select any winner from list";
+
+			//------------ Send Mail Config-----------------
+	    	$html_content=mailer('patient_notification_21_days','AccountActivation'); 
+	        $username= $record['user_name'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $subject=config('site_name').' - Quote Request "'.$record['title'].'" is Expired';    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($record['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send();
+	        //------------ End Send Mail Config----------------- 
+		}
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Patient (21 Days)--------------------- */
+
+
+	/*--------------- For Send Message Notification to Patient (27 Days) (Everydat run)------------------------ */
+	public function patient_notification_27_days(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,TIMESTAMPDIFF(DAY,r.rfp_approve_date,CURDATE()) AS rfp_create_days');
+		$this->db->from('rfp r');
+		$this->db->join('users u','r.patient_id = u.id');
+		$this->db->where('u.is_deleted','0'); // 0 Means Not Deleted User
+		$this->db->where('u.is_blocked','0'); // 0 Means Not Blocked User
+		$this->db->where('r.is_deleted','0'); // 0 Means Not Deleted RFP
+		$this->db->where('r.is_blocked','0'); // 0 Means Not Blocked RFP
+		$this->db->where('r.status','3'); // 3 Means status open
+		$this->db->having('rfp_create_days','27'); // After 28 days from approve the rfp 
+		$data = $this->db->get()->result_array();
+	
+		foreach($data as $record){
+
+			$request_url = base_url('rfp/view_rfp_bid/'.encode($record['id']));
+			$msg ="Your Request '".$record['title']."' is approved on 27 days ago and it's expire now.so please <a href='".$request_url."''>click here</a> to select any winner from list because you have last 3 days to choose winner";
+
+			//------------ Send Mail Config-----------------
+	    	$html_content=mailer('patient_notification_27_days','AccountActivation'); 
+	        $username= $record['user_name'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $subject=config('site_name').' - Quote Request "'.$record['title'].'" is Last 3 days to choose winner.';    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($record['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send();
+	        //------------ End Send Mail Config----------------- 
+		}
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Patient (27 Days)--------------------- */
+
+
+	/*--------------- For Send Message Notification to Doctor for request not confirm (Every Monday)------------------------ */
+	/* 
+	/* This cron job execute when doctor confirmation pending for particular request (only winner doctor)
+	*/
+	public function doctor_notification_no_confirm_request(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id');
+		$this->db->from('rfp r');
+		$this->db->join('rfp_bid rb','r.id = rb.rfp_id and status = 2');
+		$this->db->join('users u','rb.doctor_id = u.id');
+		$this->db->where('u.is_deleted','0'); // 0 Means Not Deleted User
+		$this->db->where('u.is_blocked','0'); // 0 Means Not Blocked User
+		$this->db->where('r.is_deleted','0'); // 0 Means Not Deleted RFP
+		$this->db->where('r.is_blocked','0'); // 0 Means Not Blocked RFP
+		$this->db->where('r.status','4'); // 4 Means status (Doctor Confirmation Pending) 
+		$data = $this->db->get()->result_array();
+	
+		foreach($data as $record){
+
+			$request_url = base_url('rfp/dashboard');
+			$msg ="Your Request <a href=".$request_url.">'".$record['title']."'</a> is still not confirm, please confirm request.";
+
+			//------------ Send Mail Config-----------------
+	    	$html_content=mailer('doctor_notification_no_confirm_request','AccountActivation'); 
+	        $username= $record['user_name'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $subject=config('site_name').' - Quote Request "'.$record['title'].'" is still not confirm';    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($record['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send();
+	        //------------ End Send Mail Config----------------- 
+		}
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Doctor for request not confirm (Every Monday) --------------------- */
+
+
+	/*--------------- For Send Message Notification to Doctor for appointment not schedule (Every Monday) ------------------------ */
+	/* 
+	/* This cron job execute when doctor confirmation request and not schedule appointment (only winner doctor)
+	*/
+	public function doctor_notification_no_appointment(){
+		$this->db->select('r.*,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,rb.doctor_id,a.id as appointment_id');
+		$this->db->from('rfp r');
+		$this->db->join('rfp_bid rb','r.id = rb.rfp_id and rb.status = 2');
+		$this->db->join('users u','rb.doctor_id = u.id');
+		$this->db->join('appointments a','rb.doctor_id = a.doc_id and rb.rfp_id = a.rfp_id','left');
+		$this->db->where('u.is_deleted','0'); // 0 Means Not Deleted User
+		$this->db->where('u.is_blocked','0'); // 0 Means Not Blocked User
+		$this->db->where('r.is_deleted','0'); // 0 Means Not Deleted RFP
+		$this->db->where('r.is_blocked','0'); // 0 Means Not Blocked RFP
+		$this->db->where('r.status','5'); // 5 Means status (Appointment Pending) 
+		$this->db->having('appointment_id is null');
+		$data = $this->db->get()->result_array();
+		//pr($data,1);
+		foreach($data as $record){
+
+			$request_url = base_url('rfp/dashboard');
+			$msg ="Your Appointment is not been created for Request <a href=".$request_url.">'".$record['title']."'</a>";
+
+			//------------ Send Mail Config-----------------
+	    	$html_content=mailer('doctor_notification_no_appointment','AccountActivation'); 
+	        $username= $record['user_name'];
+	        $html_content = str_replace("@USERNAME@",$username,$html_content);
+	        $html_content = str_replace("@MESSAGE@",$msg,$html_content);
+	       
+	        $email_config = mail_config();
+	        $this->email->initialize($email_config);
+	        $subject=config('site_name')." - Your Appointment is not been created for Request '".$record['title']."'";    
+	        $this->email->from(config('contact_email'), config('sender_name'))
+	                    ->to($record['email_id'])
+	                    ->subject($subject)
+	                    ->message($html_content);
+	        $this->email->send();
+	        //------------ End Send Mail Config----------------- 
+		}
+		pr($data,1);
+	}
+	/*--------------- End For Send Message Notification to Doctor for appointment not schedule (Every Monday) ---------------- */
 
 
 }

@@ -492,7 +492,7 @@ class Rfp_model extends CI_Model {
             foreach($data as $k=>$chat){
 
                 //----- For check Patient view doctor profile or not ------
-                $result[$key]['bid_data'][$k]['is_profile_allow'] = $this->Rfp_model->check_if_user_view_profile($this->session->userdata('client')['id'],$chat['doctor_id']);
+                $result[$key]['bid_data'][$k]['is_profile_allow'] = $this->Rfp_model->check_if_user_view_profile($chat['doctor_id'],$chat['rfp_id']);
                 //----- For check Patient view doctor profile or not ------
 
                /*------- For Chat timeline --*/
@@ -516,7 +516,7 @@ class Rfp_model extends CI_Model {
                 /*------- End Appointment timeline --*/
             }
         }
-
+        // pr($result,1);
         return $result;
     } 
 
@@ -583,28 +583,22 @@ class Rfp_model extends CI_Model {
     //----------------- End For fetch Total Review and average review for particualr doctor wise ------------
 
     //----- For check Patient view doctor profile or not ------
-    public function check_if_user_view_profile($patient_id,$doc_id){
+    public function check_if_user_view_profile($doc_id,$rfp_id){
         
-        $all_inprogress_rfps =  $this->db->select('id')->where_in('status',['5','6'])->get_where('rfp',['patient_id'=>$patient_id])->result_array();
+       $this->db->select('rb.*');
+       $this->db->join('rfp_bid rb','rfp.id = rb.rfp_id');
+       $this->db->where('rb.doctor_id',$doc_id);
+       $this->db->where('rb.status','2');
+       $this->db->where('rfp.id',$rfp_id);
+       $this->db->where('rfp.patient_id',$this->session->userdata('client')['id']);
+       $this->db->where_in('rfp.status',['5','6']);
+       $data = $this->db->get('rfp')->row_array();
 
-        $is_allow = '0';
+       $is_allow = '0';
 
-        if(!empty($all_inprogress_rfps)){
-
-            $all_rfps = array_column($all_inprogress_rfps,'id');
-
-            $this->db->where_in('rfp_id', $all_rfps);
-            $all_data = $this->db->get_where('rfp_bid',['status'=>'2'])->result_array();
-                        
-            if(!empty($all_data)){
-                $all_doctors = array_column($all_data,'doctor_id');
-                $all_doctors = array_unique($all_doctors);
-
-                if(in_array($doc_id, $all_doctors)){
-                    $is_allow = '1';
-                }
-            }
-        }        
+       if(!empty($data)){
+            $is_allow = '1';
+       }
         return $is_allow;
     } // END of Function
     //----- End For check Patient view doctor profile or not ------

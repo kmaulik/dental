@@ -235,27 +235,29 @@ class Rfp extends CI_Controller {
 
 				    $error_cnt = 0;
 				    $img_path='';
+
 				    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL)
 				    {
 						$location='uploads/rfp/';					
 						foreach($_FILES['img_path']['name'] as $key=>$data){
+							if($data){
+								$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+								
+								$size = $_FILES['img_path']['size'][$key];
+								$ext = pathinfo($data, PATHINFO_EXTENSION);
 
-							$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
-							
-							$size = $_FILES['img_path']['size'][$key];
-							$ext = pathinfo($data, PATHINFO_EXTENSION);
+								array_push($all_extensions, $ext);
+								array_push($all_size, $size);
+								array_push($all_file_names, $res);
 
-							array_push($all_extensions, $ext);
-							array_push($all_size, $size);
-							array_push($all_file_names, $res);
-
-							if($res != ''){
-								if($img_path == ''){
-									$img_path=$res;
-								}else{
-									$img_path=$img_path."|".$res;
+								if($res != ''){
+									if($img_path == ''){
+										$img_path=$res;
+									}else{
+										$img_path=$img_path."|".$res;
+									}
 								}
-							}
+							}	
 						} // END of foreach Loop
 
 						$total_size = byteFormat(array_sum($all_size),'MB');
@@ -549,6 +551,7 @@ class Rfp extends CI_Controller {
 					    $error_cnt = 0;
 					    $total_file = explode("|",$rfp_data_qry['img_path']);
 					    $img_path='';
+
 					    if(isset($_FILES['img_path']['name']) && $_FILES['img_path']['name'][0] != NULL){
 					    	//----- Check For Max 10 file upload ----
 					    	if(count($total_file) >= 10){
@@ -559,22 +562,24 @@ class Rfp extends CI_Controller {
 							$location='uploads/rfp/';					
 							foreach($_FILES['img_path']['name'] as $key=>$data){
 
-								$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
-								
-								$size = $_FILES['img_path']['size'][$key];
-								$ext = pathinfo($data, PATHINFO_EXTENSION);
+								if($data){		
+									$res=$this->filestorage->FileArrayUpload($location,'img_path',$key);
+									
+									$size = $_FILES['img_path']['size'][$key];
+									$ext = pathinfo($data, PATHINFO_EXTENSION);
 
-								array_push($all_extensions, $ext);
-								array_push($all_size, $size);
-								array_push($all_file_names, $res);
+									array_push($all_extensions, $ext);
+									array_push($all_size, $size);
+									array_push($all_file_names, $res);
 
-								if($res != ''){
-									if($img_path == ''){
-										$img_path=$res;
-									}else{
-										$img_path=$img_path."|".$res;
+									if($res != ''){
+										if($img_path == ''){
+											$img_path=$res;
+										}else{
+											$img_path=$img_path."|".$res;
+										}
 									}
-								}
+								}	
 							} // END of foreach Loop
 
 							$total_new_size = byteFormat(array_sum($all_size),'MB');
@@ -781,6 +786,7 @@ class Rfp extends CI_Controller {
 	*/
 	public function view_rfp_bid($rfp_id){
 
+		$data['rfp_data'] = $this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],true);
 		$data['rfp_bid_list']=$this->Rfp_model->get_rfp_bid_data(decode($rfp_id));	
 		$data['is_rated_rfp']=$this->Rfp_model->get_result('rfp_rating',['rfp_id' => decode($rfp_id)]);
 		
@@ -788,7 +794,7 @@ class Rfp extends CI_Controller {
 		if(!empty($data['rfp_bid_list'])){
 			foreach($data['rfp_bid_list'] as $key=>$rfp_bid_data){
 				$user_id = $this->session->userdata('client')['id'];
-				$data['rfp_bid_list'][$key]['is_profile_allow']= $this->Rfp_model->check_if_user_view_profile($user_id,$rfp_bid_data['doctor_id']);
+				$data['rfp_bid_list'][$key]['is_profile_allow']= $this->Rfp_model->check_if_user_view_profile($rfp_bid_data['doctor_id'],decode($rfp_id));
 			}
 		}
 		//----- End For check Patient view doctor profile or not ------
@@ -1904,7 +1910,7 @@ class Rfp extends CI_Controller {
     /**
     * Extend RFP Validity for 7 Days by patient
     **/
-    public function extend_rfp_validity($rfp_id){
+    public function extend_rfp_validity($rfp_id,$redirect=''){
     	
     	$rfp_data=$this->Rfp_model->get_result('rfp',['id' => decode($rfp_id)],1);
     	$rfp_valid_date = date('Y-m-d', strtotime($rfp_data['rfp_valid_date']. ' + 7 days'));
@@ -1918,7 +1924,11 @@ class Rfp extends CI_Controller {
     	}else{
     		$this->session->set_flashdata('error', 'Error Into Extend Request, Please Try Again!');
     	}
-    	redirect('rfp');
+    	if($redirect){
+    		redirect('rfp/view_rfp_bid/'.$rfp_id); // Redirect to view rfp bid page
+    	}else{
+    		redirect('rfp');
+    	}
     }
 
     /**

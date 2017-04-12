@@ -42,9 +42,17 @@
 				<li class="<?php if($tab == ''){ echo 'active'; }?>"><a href="#review" data-toggle="tab">Review</a></li>
 				<?php if(!empty($map)){ ?>
 					<li class="<?php if($tab == 'office_map'){ echo 'active'; }?>">
-						<a href="<?php echo base_url().'dashboard/view_profile/'.$encoded_user_id.'/?tab=office_map'; ?>">
-							Office Map
-						</a>					
+						<?php if($this->session->userdata('client')['role_id'] == 4) :?> <!-- (4 Means Doctor) -->
+							<a href="<?php echo base_url().'dashboard/view_profile/'.$encoded_user_id.'/?tab=office_map'; ?>">
+								Office Map
+							</a>
+						<?php else : 
+							$rfp_id = $this->uri->segment(4);
+							?>
+							<a href="<?php echo base_url().'dashboard/view_profile/'.$encoded_user_id.'/'.$rfp_id.'/?tab=office_map'; ?>">
+								Office Map
+							</a>
+						<?php endif; ?>					
 					</li>
 				<?php } ?>
 			</ul>

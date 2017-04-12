@@ -68,11 +68,12 @@
 								<th>This Payment ($)</th>
 								<th>Remaining Fees Due ($)</th>
 								<th>Pay Date</th>
+								<th>Invoice</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php if(count($transaction_list) >  0) :?>
-								<?php foreach ($transaction_list as $key => $record) : ?>
+								<?php foreach ($transaction_list as $key => $record) :?>
 									<?php if($record['discount'] != 0) {
 										$total_fee = ($record['actual_price'] - (($record['actual_price']*$record['discount'])/100));
 									}else{
@@ -86,13 +87,19 @@
 												<span class="label label-success">PAYPAL</span>
 											<?php endif; ?>
 										</td>
-										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank"><?=character_limiter($record['rfp_title'],50)?></a></td>
+										<td><a href="<?=base_url('rfp/view_rfp/'.encode($record['rfp_id']));?>" target="_blank" title="<?=$record['rfp_title']?>"><?=character_limiter($record['rfp_title'],50)?></a></td>
 										<td><?=$record['patient_name']?></td>
 										<td><?=$record['bid_amt']?></td>
 										<td><?=$total_fee?></td>
 										<td><?=$record['payable_price']?></td>
 										<td><?=$record['remaining_payment']?></td>
 										<td><?=date("m-d-Y",strtotime($record['created_at']))?></td>
+										<td>
+											<!-- If Payment is verified then view download invoice option -->
+											<?php if($record['status'] == 1) :?>
+												<a href="<?=base_url('payment_transaction/download_invoice/'.encode($record['id']))?>" target="_blank" data-toggle="tooltip" data-placement="top" data-original-title="Download Invoice"><i class="fa fa-download"></i>
+											<?php endif;?>
+										</td>	
 									</tr>
 								<?php endforeach; ?>
 							<?php else : ?>

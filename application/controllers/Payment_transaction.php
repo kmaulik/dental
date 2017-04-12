@@ -50,4 +50,28 @@ class Payment_transaction extends CI_Controller {
 	}
 
 
+	public function download_invoice($transaction_id){
+
+		$data['transaction_detail'] = $this->Payment_transaction_model->get_invoice_data(decode($transaction_id));
+		//pr($data['transaction_detail'],1);
+		if(!empty($data)){
+
+			$html =$this->load->view('invoice_sample', $data, true);
+			//echo $html;die;
+			$this->load->library('m_pdf');
+
+			$mpdf = $this->m_pdf->load();
+			 
+			$mpdf->SetDisplayMode('fullpage');
+			 		 
+			$mpdf->WriteHTML($html);
+			   
+			//$mpdf->Output();   
+
+			$mpdf->Output('Invoice.pdf','D');
+		}
+
+	}
+
+
 }

@@ -313,4 +313,17 @@ class Payment_transaction_model extends CI_Model {
         $res_data = $this->db->get('payment_transaction pt')->result_array();
         return $res_data;
     }
+
+
+    public function get_invoice_data($transaction_id){
+        
+        $this->db->select('pt.*,rfp.title as rfp_title,CONCAT(rfp.fname," ",rfp.lname) as patient_name,CONCAT(u.fname," ",u.lname) as user_name,u.street,u.city,u.zipcode,c.name as country_name');
+        $this->db->from('payment_transaction pt');
+        $this->db->join('rfp','pt.rfp_id = rfp.id');
+        $this->db->join('users u','pt.user_id = u.id');
+        $this->db->join('country c','u.country_id = c.id');
+        $this->db->where('pt.id',$transaction_id);
+        $data=$this->db->get()->row_array();
+        return $data;
+    }
 }

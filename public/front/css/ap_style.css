@@ -925,6 +925,7 @@ section.page-header .breadcrumb a:hover {
 .view_profile .text-muted h4{
   margin-top: 20px;
 }
+
 /************ End View Profile **********/
 
 .right-msg .media-body {
@@ -1637,6 +1638,7 @@ span.title{width: 50%;}
     display: inline-block;
 }
 .my-bid-doctor .bid-title{clear:both;}
+textarea.other_description{    min-height: 100px;}
 }
 
 @media (min-width:481px) and (max-width:767px){

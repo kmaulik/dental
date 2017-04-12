@@ -378,7 +378,7 @@
 								<div class="form-group">
 
 									<label>Treatment Description</label> 									
-									<textarea name="other_description" class="form-control" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php if(isset($_POST['other_description'])){ echo $_POST['other_description']; }else{ echo $record['other_description']; } ?></textarea>
+									<textarea name="other_description" class="form-control other_description" placeholder="Enter a description related to your treatment, helping the doctor obtaining a better understanding what is required to be done"><?php if(isset($_POST['other_description'])){ echo $_POST['other_description']; }else{ echo $record['other_description']; } ?></textarea>
 								</div>
 								<?php echo form_error('other_description','<div class="alert alert-mini alert-danger">','</div>'); ?>
 							</div>

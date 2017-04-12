@@ -99,7 +99,7 @@
 											<?php endif; ?>
 										</td> -->
 										<td>
-											<a href="<?=base_url('rfp/view_rfp/'.encode($active_rfp['id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View RFP"><i class="fa fa-eye"></i></a>
+											<a href="<?=base_url('rfp/view_rfp/'.encode($active_rfp['id']))?>" class="label label-info rfp-price" data-toggle="tooltip" data-placement="top" data-original-title="View Request"><i class="fa fa-eye"></i></a>
 											
 											<!-- For Expand / Compress Timeline -->
 											<?php if(count($active_rfp['bid_data']) > 0) :?>
@@ -130,7 +130,7 @@
 												<tbody>
 													<?php foreach($active_rfp['bid_data'] as $k=>$bid_data) :?> 
 														<tr>
-															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']))?>">
+															<td><a href="<?=base_url('dashboard/view_profile/'.encode($bid_data['user_id']).'/'.encode($bid_data['rfp_id']))?>">
 																	
 																	<!-- Check for allow doctor profile or not -->
 																	<?php if($bid_data['is_profile_allow'] == 1): ?>
@@ -254,27 +254,41 @@
 																	</ul>																
 																</div>
 																<!-- ============ End Avatar ==== -->
+
+
+																<!-- For Check Appointment Confirm or not -->
+																<?php 
+																$appointment_confirm = 0;
+																if(!empty($bid_data['appointment_data'])) {
+																	foreach($bid_data['appointment_data'] as $app_data) {
+																		if($app_data['is_selected'] == 1) {
+																			$appointment_confirm = 1;
+																		}
+																	}	
+																} ?>	
+																<!-- End For Check Appointment Confirm or not -->
+
 																<!-- ============= Congratulation Box ===== -->
 																<div class="cong-msg">
 																	<p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
 																	<h2>Congratulation!!</h2>
-																	<h5>Your Request is successful, next step find agree an appointment.</h5>
+																	<?php if($appointment_confirm == 1) :?>
+														            	<h5>Your Request is successful, next step find agree an appointment.</h5>
+														        	<?php else : ?>
+														        		<h5>Your Request is successful, next step: Agree on an Appointment.</h5>
+														        	<?php endif;?>
 																</div>
 																<!-- ============= End Congratulation Box === -->
 																<!-- ============= Chat Conversation ===== -->
 																<ul class="timeline timline_bid_<?=$bid_data['id']?>">
 
 																<!-- For Appointment -->	
-																<?php if(!empty($bid_data['appointment_data'])) :?>
-																	<?php foreach($bid_data['appointment_data'] as $app_data) :?>
-																		<?php if($app_data['is_selected'] == 1) :?>
-																			<li class="timeline-inverted appointment-fix">
-																				<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($app_data['appointment_date']))?>
-																				<span>Appointment Time :</span> <?=$app_data['appointment_time']?></p>
-																				<p><span>Doctor Comment : </span><?=$app_data['doc_comments']?></p>
-																			</li>
-																		<?php endif;?>	
-																	<?php endforeach;?>		
+																<?php if($appointment_confirm == 1) :?>
+																	<li class="timeline-inverted appointment-fix">
+																		<p><span>Appointment Date : </span><?=date("m-d-Y",strtotime($app_data['appointment_date']))?>
+																		<span>Appointment Time :</span> <?=$app_data['appointment_time']?></p>
+																		<p><span>Doctor Comment : </span><?=$app_data['doc_comments']?></p>
+																	</li>			
 																<?php endif; ?>	
 																<!-- End Appointment -->
 

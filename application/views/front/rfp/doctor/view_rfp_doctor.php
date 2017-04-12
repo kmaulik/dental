@@ -4,7 +4,7 @@
 		<!-- breadcrumbs -->
 		<ol class="breadcrumb">
 			<li><a href="<?=base_url('dashboard');?>">Home</a></li>
-			<li><a href="<?=base_url('rfp/search_rfp');?>">Search RFP</a></li>
+			<li><a href="<?=base_url('rfp/search_rfp');?>">Search Request</a></li>
 			<li class="active">Treatment Plan</li>
 		</ol><!-- /breadcrumbs -->
 	</div>

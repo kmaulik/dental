@@ -31,15 +31,24 @@
 				</div>
 			<?php endif; ?>
 			<!-- /ALERT -->	
-			<!-- For Back Button -->
+
+			<!-- For Button -->
 			<div class="col-sm-12">
-				<?php if(isset($rfp_bid_list[0]['id'])) :?>
-					<a href="<?=base_url('rfp/view_rfp/'.encode($rfp_bid_list[0]['id']))?>" class="btn btn-info pull-right"><i class="fa fa-arrow-left"></i> Return to Request Details</a>
-				<?php endif;?>
+				<div class="pull-right">
+					<?php if(!empty($rfp_data)) :?>
+						<!-- For Check valid date set and valid date >= today and patient validity not extend then display extend button--> 
+						<?php if($rfp_data['status'] == 3 &&  $rfp_data['rfp_valid_date'] != '' && $rfp_data['rfp_valid_date'] >= date("Y-m-d") && $rfp_data['is_extended'] == 0) :?>
+							<a href="<?=base_url('rfp/extend_rfp_validity/'.encode($rfp_data['id']).'/1')?>" class="btn btn-primary btn_extend" data-toggle="tooltip" data-placement="top" data-original-title="Extend Request End by 7 days"><i class="fa fa-arrows-alt"></i> Extend Request</a>
+						<?php endif; ?>
+						<!-- End Check Valid date -->
+						<a href="<?=base_url('rfp/view_rfp/'.encode($rfp_data['id']))?>" class="btn btn-info" data-toggle="tooltip" data-placement="top" data-original-title="Return to Request Details"><i class="fa fa-arrow-left"></i> Return to Request Details</a>
+					<?php endif;?>
+				</div>
 			</div>			
-			<!-- End For Back Button -->
+			<!-- End For Button -->
+
 			<div class="col-sm-12 rfp-title bottom_space">
-				<h3 class=""><?=isset($rfp_bid_list[0]['title'])?$rfp_bid_list[0]['title']:''?></h3>
+				<h3 class=""><?=isset($rfp_data['title'])?$rfp_data['title']:''?></h3>
 			</div>
 			<div class="col-sm-12">
 				<h4 class="win-desc-text">Select the winning doctor during the bidding period by selecting this symbol <i class="fa fa-trophy"></i></h4>
@@ -47,7 +56,7 @@
 			<div class="col-sm-12">
 				<!-- Bid List -->	
 				<?php if(count($rfp_bid_list) > 0) :  ?>
-					<?php foreach ($rfp_bid_list as $key => $bid_list) : ?>
+					<?php foreach ($rfp_bid_list as $key => $bid_list) :?>
 						<div class="the-box no-border store-list">
 							 <div class="media">
 								<a class="pull-left" href="#fakelink">
@@ -59,7 +68,7 @@
 								<div class="media-body">
 									<a href="#fakelink"></a>
 									<h4 class="media-heading">
-										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']))?>" class="my_custom_strong">
+										<a href="<?=base_url('dashboard/view_profile/'.encode($bid_list['doctor_id']).'/'.encode($bid_list['id']))?>" class="my_custom_strong">
 											<!-- Check for allow doctor profile or not -->
 											<?php if($bid_list['is_profile_allow'] == 1): ?>
 												<strong><?=$bid_list['fname']." ".$bid_list['lname']?></strong>
@@ -363,6 +372,16 @@ function send_review(key){
 // });
 
 // vague.blur();
+$(".btn_extend").click(function(e){		
+	e.preventDefault();
+	var lHref = $(this).attr('href');
+	bootbox.confirm('Are you sure to extend validity for this Request?' ,function(res){ 	 		
+	    if(res) {
+	        window.location.href = lHref;
+	    }
+	});
+});
+
 
 $(".confirm_winner").click(function(e) {
 	e.preventDefault();
