@@ -187,9 +187,13 @@
 																		$reschedule_app = 1;
 																	} ?>	
 																<?php endforeach;?>	
-
+																
+																<?php if($reschedule_app == 0) :?>
+																	<a class="label label-teal" data-toggle="tooltip" data-placement="top" data-original-title="View Appointment" onclick="view_won_rfp_app(<?=$w_rfp['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
+																<?php endif; ?>	
 																<?php if($reschedule_app == 1 && $w_rfp['rfp_close_date'] == null) :?>
-																	<a onclick="reschedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)" class="label label-warning" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
+																	<!-- <a onclick="reschedule_won_rfp_app(<?=$w_rfp['rfp_id']?>)" class="label label-warning" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>     -->
+																	<a class="label label-success" data-toggle="tooltip" data-placement="top" data-original-title="View Appointment" onclick="view_won_rfp_app(<?=$w_rfp['rfp_id']?>)"><i class="fa fa-calendar"></i></a>
 																<?php endif; ?>
 															<?php endif; ?>	
 															<!-- End For Reschedule appointment -->	
@@ -245,9 +249,9 @@
 										            <p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
 										            <h2>Congratulation!!</h2>
 										            <?php if($appointment_confirm == 1) :?>
-										            	<h5>Your Request is successful, next step find agree an appointment.</h5>
+										            	<h5>Appointment is successfully agreed between the Patient and Doctor.</h5>
 										        	<?php else : ?>
-										        		<h5>Your Request is successful, next step: Agree on an Appointment.</h5>
+										        		<h5>Your Request is successful, next step find agree an appointment.</h5>
 										        	<?php endif;?>
 										        </div>
 										        <ul class="timeline">
@@ -359,10 +363,11 @@
                                                         <?php if($appointment['appointment_id'] == '') :?>
                                                             <a class="label label-danger" title="Manage Appointment" id="rfp_id_<?=$appointment['id']?>" data-toggle="modal" data-target=".select_appointment_option" onclick="select_appointment_option(<?=$key?>)"><i class="fa fa-calendar"></i></a>
                                                         <?php else : ?>
-                                                            <a id="rfp_id_<?=$appointment['id']?>" class="label label-info" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-eye"></i></a>
                                                             <?php if($is_approve_app != 1) :?> <!-- If patient approve appointment then not display Delete Appointment -->
-                                                                <a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>
+                                                                <a id="rfp_id_<?=$appointment['id']?>" class="label label-info label-teal" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-calendar"></i></a>
+                                   								<a href="<?=base_url('dashboard/delete_appointment/'.encode($appointment['appointment_id']))?>" id="delete_rfp_id_<?=$appointment['id']?>" class="label label-danger delete_appointment" title="Delete Appointment"><i class="fa fa-trash"></i></a>
                                                             <?php elseif($appointment['rfp_close_date'] == null):?>
+                                                            	<a id="rfp_id_<?=$appointment['id']?>" class="label label-success" title="View Appointment" data-toggle="modal" data-target=".manage_appointment" onclick="view_appointment(<?=$key?>)"><i class="fa fa-calendar"></i></a>
                                                             	<a href="<?=base_url('dashboard/reschedule_appointment/'.encode($appointment['appointment_id']))?>" id="resch_rfp_id_<?=$appointment['id']?>" class="label label-warning reschedule_appointment" title="Reschedule Appointment"><i class="fa fa-calendar-minus-o"></i></a>    
                                                             <?php endif; ?>
                                                         <?php endif;?>
@@ -1173,6 +1178,7 @@
 							<a onclick="reschedule_from_view_app()" class="btn btn-warning reschedule_view_app">Reschedule Appointment</a>
 							<input type="submit" name="submit" class="btn btn-info submit_btn" value="Submit">
 							<input type="reset" name="reset" class="btn btn-default" value="Cancel" onclick=" var rfp_id= $('#appointment_rfp_id').val(); $('.close').click(); $('.schedule_app_'+rfp_id).click();">
+							<a onclick="delete_from_view_app()" class="btn btn-danger delete_view_app">Delete Appointment</a>	
 						</div>	
 					</div>	
 				</div>	
@@ -1434,6 +1440,16 @@
 	}
 	//--------------- End Appointment Re schedule from view appointment section -------
 
+	//--------------- Appointment Delete from view appointment section -------
+	function delete_from_view_app(){
+		$(".modal").removeClass("fade").modal("hide");
+		var rfp_id = $('#appointment_rfp_id').val();
+		$("#delete_rfp_id_"+rfp_id).click();
+		// reschedule_won_rfp_app(rfp_id);
+	}
+	//--------------- End Appointment Delete from view appointment section -------
+	
+
 	//--------------- Appointment schedule from won rfp section -------
 	function schedule_won_rfp_app(rfp_id){
 		$("#rfp_id_"+rfp_id).click();
@@ -1443,6 +1459,12 @@
 	function reschedule_won_rfp_app(rfp_id){
 		$("#resch_rfp_id_"+rfp_id).click();
 	}
+
+	//--------------- Appointment View from won rfp section -------
+	function view_won_rfp_app(rfp_id){
+		$("#rfp_id_"+rfp_id).click();
+	}
+	
 
 
     // ----------- For Select Appointment option -----------
@@ -1539,6 +1561,7 @@
     	$('#appointment_doc_comments').attr('readonly', false);
     	$('#frm_manage_appointment .btn_call').show();
     	$('#frm_manage_appointment .reschedule_view_app').hide();
+    	$('#frm_manage_appointment .delete_view_app').hide();
     	$("#frm_manage_appointment .submit_btn").show();
     	$(".validation-error-label").remove();
     }
@@ -1609,6 +1632,7 @@
     		$('#appointment_doc_comments').attr('readonly', false);
     		$('#frm_manage_appointment .btn_call').show();
     		$('#frm_manage_appointment .reschedule_view_app').hide();
+    		$('#frm_manage_appointment .delete_view_app').show();
     		$("#frm_manage_appointment .submit_btn").show();
     	}
     	else{
@@ -1617,6 +1641,7 @@
     		$('#appointment_doc_comments').attr('readonly', true);
     		$('#frm_manage_appointment .btn_call').hide();
     		$('#frm_manage_appointment .reschedule_view_app').show();
+    		$('#frm_manage_appointment .delete_view_app').hide();
     		$("#frm_manage_appointment .submit_btn").hide();
     	}
     	//----------------- End For Multiple Appointment Schedule (Date & Time) Submit by doctor---------

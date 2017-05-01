@@ -68,10 +68,10 @@
 						<span class="title">Name : </span>
 						<span class="desc <?php if($allow_view == '0'){ echo 'blur_1'; } ?>"> <?=$db_data['fname'] ." ".$db_data['lname']?></span>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<span class="title">Email : </span>
 						<span class="desc <?php if($allow_view == '0'){ echo 'blur_2'; } ?>"> <?=$db_data['email_id']?></span>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<span class="title">Street : </span>
 						<span class="desc <?php if($allow_view == '0'){ echo 'blur_3'; } ?>"> <?=$db_data['street']?></span>
@@ -124,7 +124,7 @@
 						<span class="desc <?php if($allow_view == '0'){ echo 'blur_9'; } ?>"> <?php echo ($db_data['public_email'] == '') ? 'N/A':$db_data['public_email']; ?></span>
 					</div>
 					<div class="form-group">
-						<span class="title">Office address : </span>
+						<span class="title">Office Description : </span>
 						<span class="desc <?php if($allow_view == '0'){ echo 'blur_10'; } ?>"> <?php echo $db_data['office_description']; ?></span>
 					</div>
 				</div>	

@@ -1421,6 +1421,9 @@ ul.process-steps li:after, ul.process-steps li:after {
 }
 .nav-tabs>li.active{margin-left:0px;}
 .nav-tabs>li a{width: 100%;}
+.label-teal {
+    background-color: #008080 !important;
+}
 /*************** ` start here 	*************/
 @media(max-width:1200px){
 #frmregister .form-group {

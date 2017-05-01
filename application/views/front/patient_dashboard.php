@@ -41,7 +41,7 @@
 		<div class="row active_rfp">
 			<div class="col-md-12 firrst_ul">
 				<h4>Active Requests
-				<a href="<?=base_url('rfp/add');?>" class="custom_btn_plus">
+				<a href="<?=base_url('rfp/add');?>" class="btn btn-success pull-right">
 					<i class="fa fa-plus"></i>Request a Quote
 				</a>	
 				</h4>	
@@ -273,9 +273,9 @@
 																	<p class="check"><i class="fa fa-check" aria-hidden="true"></i></p>
 																	<h2>Congratulation!!</h2>
 																	<?php if($appointment_confirm == 1) :?>
-														            	<h5>Your Request is successful, next step find agree an appointment.</h5>
+														            	<h5>Appointment is successfully agreed between the Patient and Doctor.</h5>
 														        	<?php else : ?>
-														        		<h5>Your Request is successful, next step: Agree on an Appointment.</h5>
+														        		<h5>Your Request is successful, next step find agree an appointment.</h5>
 														        	<?php endif;?>
 																</div>
 																<!-- ============= End Congratulation Box === -->

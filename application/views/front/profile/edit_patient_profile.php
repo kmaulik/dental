@@ -159,7 +159,23 @@
 							</div>
 							<div class="form-group">
 								<label class="control-label">Office Description</label>
-								<textarea placeholder="Office Description" name="office_description" class="form-control"><?php echo $db_data['office_description']; ?></textarea>
+								<!-- <textarea placeholder="Office Description" name="office_description" id="office_description" class="form-control"><?php echo $db_data['office_description']; ?></textarea> -->
+								
+								<div class="fancy-form">
+									<textarea rows="5" name="office_description" class="form-control char-count" data-maxlength="3000" data-info="textarea-chars-info" placeholder="Office Description"><?php echo $db_data['office_description']; ?></textarea>
+									<i class="fa fa-comments"><!-- icon --></i>
+									<span class="fancy-hint size-11 text-muted">
+										<strong>Hint:</strong> 3000 characters allowed!
+										<span class="pull-right">
+											<span id="textarea-chars-info"><span class="count-text_data">0</span>/3000</span> Characters
+											<script>
+												var text_length=$(".char-count").val().length;
+												$(".count-text_data").html(text_length);
+											</script>
+										</span>
+									</span>
+								</div>	
+
 							</div>
 						<?php endif;?>
 

@@ -346,7 +346,6 @@ class Cron extends CI_Controller {
 		       //-----------------------------------------
 	        }	
 		}
-
 		//--------------- Send Mail to user particualr RFP wise ------------------
 		foreach($rfp_notify_data as $notify_user){
 			if($notify_user['rfp_data']){
@@ -373,6 +372,7 @@ class Cron extends CI_Controller {
 								</tr>";	
 					}
 					$msg .= "</tbody></table>";
+					$msg .= "<br><br>To update or change your notification preferences, please, go to your <a href='".base_url('dashboard')."'>Dashboard </a>";
 					//------------------ End Html Message format ------------
 					//------------ Send Mail Config-----------------
 			    	$html_content=mailer('contact_inquiry','AccountActivation'); 

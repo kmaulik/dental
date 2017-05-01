@@ -60,13 +60,13 @@
 						<thead>
 							<tr>
 								<th>Transaction #</th>
-								<th>Payment Type</th>
+								<th style="width:75px;">Payment Type</th>
 								<th>Request Title</th>
 								<th>Patient Name</th>
-								<th>Total Bid Value ($)</th>
-								<th>Total Net Fee ($)</th>
-								<th>This Payment ($)</th>
-								<th>Remaining Fees Due ($)</th>
+								<th style="width:90px;">Total Bid Value ($)</th>
+								<th style="width:80px;">Total Net Fee ($)</th>
+								<th style="width:95px;">This Payment ($)</th>
+								<th style="width:100px;">Remaining Fees Due ($)</th>
 								<th>Pay Date</th>
 								<th>Invoice</th>
 							</tr>

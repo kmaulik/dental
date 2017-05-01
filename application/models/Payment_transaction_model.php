@@ -294,7 +294,7 @@ class Payment_transaction_model extends CI_Model {
     public function fetch_paypal_payment_csv_data($search_data,$from_date,$to_date){
 
         $this->db->select('pt.id as payment_id,pt.paypal_token,r.role_name as role_name,CONCAT(u.fname," ",u.lname) as user_name,u.email_id,u.phone,u.street,u.city,s.name as state_name,rfp.id as rfp_id,rfp.title as rfp_title,actual_price,payable_price,discount,pt.status,DATE_FORMAT(pt.created_at,"%m-%d-%Y") AS created_date', false);
-        $this->db->join('rfp','pt.rfp_id=rfp.id');       
+        $this->db->join('rfp','pt.rfp_id=rfp.id');
         $this->db->join('users u','pt.user_id=u.id');       
         $this->db->join('role r','u.role_id=r.id');       
         $this->db->join('states s','u.state_id=s.id');       

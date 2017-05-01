@@ -110,7 +110,9 @@
                 <h2 class="heading">
                    <?=config('contact_address')?><br/> 
                     E-mail : <?=config('contact_email')?><br />
-                    Phone : <?=config('phone')?>
+                    <?php if(config('phone') != ''){
+                        echo "Phone : ".config('phone');  
+                    } ?>
                 </h2>
             </td>
             <td rowspan="2" valign="top" align="right" style="padding:3mm;">
@@ -129,12 +131,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Transaction No : </td><td>
-                        <?php if($transaction_detail['payment_type'] == 0) {
-                            echo $transaction_detail['paypal_token'];
-                        }else{
-                            echo "-";
-                        }?>
+                        <td>Transaction No : </td>
+                        <td>
+                            <?php if($transaction_detail['payment_type'] == 0) {
+                                echo $transaction_detail['paypal_token'];
+                            }else{
+                                echo "-";
+                            }?>
                         </td>
                     </tr>
                 </table>
